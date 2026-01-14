@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 const About = () => {
     const [visibleSections, setVisibleSections] = useState({});
@@ -27,7 +28,7 @@ const About = () => {
     return (
         <div style={styles.page}>
             {/* Hero Section with Background */}
-            <section style={styles.hero}>
+            <section style={styles.hero} className="about-hero">
                 <div style={styles.heroOverlay}>
                     <div className="container">
                         <h1 style={styles.heroTitle}>À Propos de INVIK SA</h1>
@@ -39,9 +40,9 @@ const About = () => {
             {/* Histoire Section */}
             <section style={styles.section}>
                 <div className="container">
-                    <div style={styles.contentGrid}>
-                        <div style={styles.imageWrapper}>
-                            <img src="/resource/about-1.jpg" alt="Histoire INVIK SA" style={styles.sectionImage} />
+                    <div style={styles.contentGrid} className="about-content-grid">
+                        <div style={styles.imageWrapper} className="about-image-wrapper">
+                            <img src="/about-meeting.jpg" alt="Histoire INVIK SA" style={styles.sectionImage} />
                         </div>
                         <div style={styles.contentWrapper}>
                             <h2 style={styles.sectionTitle}>Notre Histoire</h2>
@@ -71,7 +72,7 @@ const About = () => {
                     <p style={styles.centerSubtitle}>
                         Des solutions bancaires complètes adaptées à vos besoins
                     </p>
-                    <div style={styles.servicesGrid}>
+                    <div style={styles.servicesGrid} className="servicesGrid">
                         <div className="service-card-hover" style={styles.serviceCard}>
                             <div style={styles.serviceIcon}>💳</div>
                             <h3 style={styles.cardTitle}>Comptes & Cartes</h3>
@@ -132,7 +133,7 @@ const About = () => {
                     </p>
 
                     {/* Timeline 10 ans */}
-                    <div style={styles.timelineContainer}>
+                    <div style={styles.timelineContainer} className="timeline-grid">
                         {/* 2025-2027 */}
                         <div className="timeline-card-hover" style={{ ...styles.timelineCard, background: 'linear-gradient(135deg, #003366 0%, #004d99 100%)' }}>
                             <div style={styles.timelineYear}>2025-2027</div>
@@ -163,7 +164,7 @@ const About = () => {
                         </div>
 
                         {/* 2031-2033 */}
-                        <div style={{ ...styles.timelineCard, background: 'linear-gradient(135deg, #0066cc 0%, #0080ff 100%)' }}>
+                        <div style={{ ...styles.timelineCard, background: 'linear-gradient(135deg, #0066cc 0%, #0080ff 100%)' }} className="timeline-card-hover">
                             <div style={styles.timelineYear}>2031-2033</div>
                             <h3 style={styles.timelineTitle}>Phase 3 : Transformation Digitale</h3>
                             <ul style={styles.timelineList}>
@@ -181,7 +182,7 @@ const About = () => {
                     {/* Objectifs Chiffrés */}
                     <div style={styles.goalsSection}>
                         <h3 style={{ ...styles.centerTitle, fontSize: '2.2rem', marginTop: '4rem' }}>Objectifs Chiffrés 2035</h3>
-                        <div style={styles.goalsGrid}>
+                        <div style={styles.goalsGrid} className="goals-grid">
                             <div className="goal-card-special" style={{ ...styles.goalCard, borderTop: '4px solid #00ccff' }}>
                                 <div style={styles.goalNumber}>10M+</div>
                                 <div style={styles.goalLabel}>Clients Actifs</div>
@@ -218,7 +219,7 @@ const About = () => {
                     {/* Actionnaires Principaux */}
                     <div style={styles.partnersSection}>
                         <h3 style={styles.partnersSectionTitle}>Actionnaires Principaux</h3>
-                        <div style={styles.partnersGrid}>
+                        <div style={styles.partnersGrid} className="partners-grid">
                             <div className="partner-card-hover" style={styles.partnerCard}>
                                 <h4 style={styles.partnerName}>Luxembourg Financial Group</h4>
                                 <p style={styles.partnerRole}>Actionnaire majoritaire - 45%</p>
@@ -240,7 +241,7 @@ const About = () => {
                     {/* Partenaires Technologiques */}
                     <div style={styles.partnersSection}>
                         <h3 style={styles.partnersSectionTitle}>Partenaires Technologiques</h3>
-                        <div style={styles.partnersGrid}>
+                        <div style={styles.partnersGrid} className="partners-grid">
                             <div className="partner-card-hover" style={styles.partnerCard}>
                                 <h4 style={styles.partnerName}>SecureBank Systems</h4>
                                 <p style={styles.partnerDesc}>Solutions de sécurité bancaire de pointe</p>
@@ -262,7 +263,7 @@ const About = () => {
                         <p style={{ ...styles.centerSubtitle, color: 'rgba(255,255,255,0.9)', marginBottom: '2rem' }}>
                             Plus de 15 000 entreprises nous font confiance
                         </p>
-                        <div style={styles.statsGrid}>
+                        <div style={styles.statsGrid} className="stats-grid">
                             <div style={styles.statCard}>
                                 <div style={styles.statNumber}>2 500+</div>
                                 <div style={styles.statLabel}>PME Partenaires</div>
@@ -288,7 +289,7 @@ const About = () => {
                         <p style={styles.ctaText}>
                             Rejoignez notre réseau de partenaires stratégiques et bénéficiez de solutions bancaires sur mesure
                         </p>
-                        <button style={styles.ctaButton}>Contactez notre équipe Corporate</button>
+                        <Link to="/contact" style={{ ...styles.ctaButton, textDecoration: 'none', display: 'inline-block' }}>Contactez notre équipe Corporate</Link>
                     </div>
                 </div>
             </section>
@@ -297,7 +298,7 @@ const About = () => {
             <section style={{ ...styles.section, backgroundColor: '#f0f4f8' }}>
                 <div className="container">
                     <h2 style={styles.centerTitle}>Nos Valeurs</h2>
-                    <div style={styles.valuesGrid}>
+                    <div style={styles.valuesGrid} className="valuesGrid">
                         <div className="value-card-hover" style={styles.valueCard}>
                             <div style={styles.valueIcon}>🔒</div>
                             <h3 style={styles.cardTitle}>Sécurité Absolue</h3>
@@ -338,11 +339,11 @@ const styles = {
         minHeight: '100vh',
     },
     hero: {
-        backgroundImage: 'url(/resource/about-9.jpg)',
+        backgroundImage: 'url(/banner-privacy.jpg)',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         position: 'relative',
-        minHeight: '500px',
+        minHeight: '400px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -453,29 +454,6 @@ const styles = {
         color: '#666',
         lineHeight: 1.6,
         fontSize: '0.95rem',
-    },
-    visionGrid: {
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(450px, 1fr))',
-        gap: '4rem',
-    },
-    visionCard: {
-        padding: '2rem',
-    },
-    ambitionsList: {
-        listStyle: 'none',
-        padding: 0,
-        margin: 0,
-    },
-    ambitionItem: {
-        padding: '1.2rem 1.5rem',
-        marginBottom: '1rem',
-        backgroundColor: '#f8f9fa',
-        borderRadius: '8px',
-        borderLeft: '4px solid var(--primary-color)',
-        fontSize: '1.05rem',
-        color: '#444',
-        lineHeight: 1.6,
     },
     partnersSection: {
         marginBottom: '4rem',

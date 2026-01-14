@@ -28,18 +28,14 @@ const Home = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
 
     // --- Simulator State & Logic ---
-    const [amount, setAmount] = useState(15000);
-    const [duration, setDuration] = useState(36);
-    const [interestRate, setInterestRate] = useState(3.0);
+    const [amount, setAmount] = useState(150000);
+    const [duration, setDuration] = useState(120);
+    const [interestRate, setInterestRate] = useState(2.99);
     const [monthlyPayment, setMonthlyPayment] = useState(0);
 
-    useEffect(() => {
-        let rate = 3.5;
-        if (amount > 50000) rate = 2.0;
-        else if (amount > 20000) rate = 2.5;
-        else if (amount > 5000) rate = 3.0;
-        setInterestRate(rate);
-    }, [amount]);
+    const rates = [
+        1.99, 2.50, 2.99, 3.50, 3.99, 4.50, 4.99, 5.50, 5.99, 6.50, 7.00
+    ];
 
     useEffect(() => {
         const monthlyRate = interestRate / 100 / 12;
@@ -113,7 +109,12 @@ const Home = () => {
 
     useEffect(() => {
         const timer = setInterval(() => {
-            setCurrentSlide((prev) => (prev + 1) % slides.length);
+            setCurrentSlide((prev) => {
+                // On mobile (window width < 768px), cycle only between first 2 slides
+                const isMobile = window.innerWidth < 768;
+                const maxSlides = isMobile ? 2 : slides.length;
+                return (prev + 1) % maxSlides;
+            });
         }, 6000);
         return () => clearInterval(timer);
     }, []);
@@ -121,10 +122,11 @@ const Home = () => {
     return (
         <div style={styles.page}>
             {/* Hero Section */}
-            <section style={styles.hero}>
+            <section style={styles.hero} className="hero-section">
                 {slides.map((slide, index) => (
                     <div
                         key={index}
+                        className="hero-slide"
                         style={{
                             ...styles.slide,
                             backgroundImage: `url(${slide.image})`,
@@ -133,19 +135,19 @@ const Home = () => {
                     />
                 ))}
 
-                <div style={styles.overlay}>
+                <div style={styles.overlay} className="hero-overlay">
                     <div className="container" style={styles.heroSplit}>
-                        <div style={styles.heroLeft} className="fadeInUp">
-                            <h1 style={styles.heroTitle}>{slides[currentSlide].title}</h1>
-                            <p style={styles.heroSubtitle}>{slides[currentSlide].subtitle}</p>
-                            <div style={styles.heroButtons}>
+                        <div style={styles.heroLeft} className="hero-content fadeInUp">
+                            <h1 style={styles.heroTitle} className="hero-title mobile-hero-title">{slides[currentSlide].title}</h1>
+                            <p style={styles.heroSubtitle} className="hero-subtitle mobile-hero-subtitle">{slides[currentSlide].subtitle}</p>
+                            <div style={styles.heroButtons} className="hero-buttons">
                                 <Link to="/register" style={styles.primaryButton}>Ouvrir un compte</Link>
                                 <Link to="/services" style={styles.secondaryButton}>Nos Services</Link>
                             </div>
                         </div>
 
-                        <div style={styles.heroRight} className="fadeInUp">
-                            <div style={styles.simulatorBox}>
+                        <div style={styles.heroRight} className="hero-right fadeInUp">
+                            <div style={styles.simulatorBox} className="simulator-card">
                                 <h3 style={styles.simTitle}>Simulateur de Crédit</h3>
                                 <p style={styles.simSubtitle}>Calculez vos mensualités en temps réel ⚡</p>
 
@@ -154,7 +156,7 @@ const Home = () => {
                                         Montant souhaité : <span style={styles.simValue}>{amount.toLocaleString()} €</span>
                                     </label>
                                     <input
-                                        type="range" min="2000" max="150000" step="1000"
+                                        type="range" min="5000" max="900000" step="5000"
                                         value={amount} onChange={(e) => setAmount(Number(e.target.value))}
                                         style={styles.range}
                                     />
@@ -162,34 +164,53 @@ const Home = () => {
 
                                 <div style={styles.simGroup}>
                                     <label style={styles.simLabel}>
-                                        Durée : <span style={styles.simValue}>{duration} mois</span>
+                                        Durée : <span style={styles.simValue}>{duration} mois ({Math.floor(duration / 12)} ans)</span>
                                     </label>
                                     <input
-                                        type="range" min="12" max="120" step="6"
+                                        type="range" min="12" max="360" step="12"
                                         value={duration} onChange={(e) => setDuration(Number(e.target.value))}
                                         style={styles.range}
                                     />
                                 </div>
 
+                                <div style={styles.simGroup}>
+                                    <label style={styles.simLabel}>
+                                        Taux d'intérêt choisi : <span style={styles.simValue}>{interestRate}%</span>
+                                    </label>
+                                    <select
+                                        value={interestRate}
+                                        onChange={(e) => setInterestRate(Number(e.target.value))}
+                                        style={styles.simSelect}
+                                    >
+                                        {rates.map(r => <option key={r} value={r}>{r}%</option>)}
+                                    </select>
+                                </div>
+
                                 <div style={styles.simResults}>
                                     <div style={styles.simResultItem}>
-                                        <span style={styles.simResLabel}>Taux (TAEG)</span>
-                                        <span style={styles.simResVal}>{interestRate}%</span>
+                                        <span style={styles.simResLabel}>Type de Taux</span>
+                                        <span style={styles.simResVal}>Fixe</span>
                                     </div>
                                     <div style={styles.simResultItem}>
                                         <span style={styles.simResLabel}>Mensualité fixe</span>
-                                        <span style={styles.simResValHighlight}>{monthlyPayment.toFixed(2)} €</span>
+                                        <span style={styles.simResValHighlight}>{monthlyPayment.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
                                     </div>
                                 </div>
 
-                                <Link to="/register" style={styles.simBtn}>Demander ce crédit</Link>
+                                <Link
+                                    to="/credit-request"
+                                    state={{ amount, duration, interestRate }}
+                                    style={styles.simBtn}
+                                >
+                                    Demander ce crédit
+                                </Link>
                                 <p style={styles.simDisclaimer}>Estimation gratuite • Réponse immmédiate</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div style={styles.dots}>
+                <div style={styles.dots} className="hero-dots">
                     {slides.map((_, index) => (
                         <button key={index} onClick={() => setCurrentSlide(index)}
                             style={{
@@ -202,10 +223,91 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* Features Info Section */}
-            <section style={styles.infoSection}>
+            {/* Mobile Hero Section - Visible only on mobile */}
+            <section className="mobile-hero-section">
+                <div className="mobile-hero-content">
+                    <h1 className="mobile-hero-h1">{slides[currentSlide].title}</h1>
+                    <p className="mobile-hero-p">{slides[currentSlide].subtitle}</p>
+                    <div className="mobile-hero-actions">
+                        <Link to="/register" className="mobile-hero-btn mobile-hero-btn-primary">
+                            Ouvrir un compte
+                        </Link>
+                        <Link to="/services" className="mobile-hero-btn mobile-hero-btn-secondary">
+                            Nos Services
+                        </Link>
+                    </div>
+                </div>
+            </section>
+
+            {/* Mobile Calculator Section - Visible only on mobile */}
+            <section className="mobile-calculator-section">
                 <div className="container">
-                    <div style={styles.infoGrid}>
+                    <div style={styles.simulatorBox} className="simulator-card mobile-simulator">
+                        <h3 style={styles.simTitle}>Simulateur de Crédit</h3>
+                        <p style={styles.simSubtitle}>Calculez vos mensualités en temps réel ⚡</p>
+
+                        <div style={styles.simGroup}>
+                            <label style={styles.simLabel}>
+                                Montant souhaité : <span style={styles.simValue}>{amount.toLocaleString()} €</span>
+                            </label>
+                            <input
+                                type="range" min="5000" max="900000" step="5000"
+                                value={amount} onChange={(e) => setAmount(Number(e.target.value))}
+                                style={styles.range}
+                            />
+                        </div>
+
+                        <div style={styles.simGroup}>
+                            <label style={styles.simLabel}>
+                                Durée : <span style={styles.simValue}>{duration} mois ({Math.floor(duration / 12)} ans)</span>
+                            </label>
+                            <input
+                                type="range" min="12" max="360" step="12"
+                                value={duration} onChange={(e) => setDuration(Number(e.target.value))}
+                                style={styles.range}
+                            />
+                        </div>
+
+                        <div style={styles.simGroup}>
+                            <label style={styles.simLabel}>
+                                Taux d'intérêt choisi : <span style={styles.simValue}>{interestRate}%</span>
+                            </label>
+                            <select
+                                value={interestRate}
+                                onChange={(e) => setInterestRate(Number(e.target.value))}
+                                style={styles.simSelect}
+                            >
+                                {rates.map(r => <option key={r} value={r}>{r}%</option>)}
+                            </select>
+                        </div>
+
+                        <div style={styles.simResults}>
+                            <div style={styles.simResultItem}>
+                                <span style={styles.simResLabel}>Type de Taux</span>
+                                <span style={styles.simResVal}>Fixe</span>
+                            </div>
+                            <div style={styles.simResultItem}>
+                                <span style={styles.simResLabel}>Mensualité fixe</span>
+                                <span style={styles.simResValHighlight}>{monthlyPayment.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
+                            </div>
+                        </div>
+
+                        <Link
+                            to="/credit-request"
+                            state={{ amount, duration, interestRate }}
+                            style={styles.simBtn}
+                        >
+                            Demander ce crédit
+                        </Link>
+                        <p style={styles.simDisclaimer}>Estimation gratuite • Réponse immmédiate</p>
+                    </div>
+                </div>
+            </section>
+
+            {/* Features Info Section */}
+            <section style={styles.infoSection} className="info-section">
+                <div className="container">
+                    <div style={styles.infoGrid} className="info-grid">
                         <div className="info-card">
                             <div className="icon-circle">🛡️</div>
                             <h3 style={styles.infoTitle}>Transactions internationales sécurisées</h3>
@@ -231,33 +333,74 @@ const Home = () => {
             </section>
 
             {/* About Section */}
-            <section style={styles.aboutSection}>
-                <div className="container" style={styles.aboutContainer}>
-                    <div style={styles.aboutImageWrapper}>
-                        <img src="/about-meeting.jpg" alt="About" style={styles.aboutImage} />
-                        <div style={styles.reviewBadge}>★★★★★<br />Banque 5 étoiles</div>
-                        <div style={styles.experienceBadge}>
+            <section style={styles.aboutSection} className="about-section">
+                <div style={styles.aboutContainer} className="container about-container">
+                    <div style={styles.aboutImageWrapper} className="about-image-wrapper">
+                        <div className="dot-pattern"></div>
+                        <img src="/about-meeting.jpg" alt="About" style={styles.aboutImage} className="about-image" />
+                        <div style={styles.reviewBadge} className="review-badge">★★★★★<br />Banque 5 étoiles</div>
+                        <div style={styles.experienceBadge} className="experience-badge">
                             <span style={styles.experienceNumber}>15</span>
                             <span style={styles.experienceText}>Années d'expertise</span>
                         </div>
                     </div>
-                    <div style={styles.aboutContent}>
+                    <div style={styles.aboutContent} className="about-content">
                         <div style={styles.aboutLabel}>À PROPOS</div>
-                        <h2 style={styles.aboutTitle}>Votre partenaire bancaire de confiance</h2>
-                        <p style={styles.aboutText}>INVIK SA est une banque en ligne innovante, dédiée à offrir des services financiers sécurisés, rapides et simples. Nous rendons la gestion de vos finances plus accessible.</p>
+                        <h2 style={styles.aboutTitle}>INVIK SA, votre partenaire bancaire en ligne de confiance</h2>
+                        <p style={styles.aboutText}>
+                            INVIK SA est une banque en ligne innovante, dédiée à offrir des services financiers sécurisés, rapides et simples. En combinant technologie de pointe et expertise bancaire, nous nous engageons à rendre la gestion de vos finances plus accessible et plus sûre, que vous soyez en France ou à l’international.
+                        </p>
+                        <p style={styles.aboutText}>
+                            Notre objectif est de simplifier l'expérience bancaire pour nos clients, avec des frais compétitifs, un support client disponible 24/7, et des solutions personnalisées, selon vos besoins.
+                        </p>
+                        <p style={styles.aboutText}>
+                            Chez INVIK SA, nous croyons en un avenir financier où la technologie simplifie chaque étape de votre expérience bancaire. En restant à l'avant-garde des innovations, nous sommes déterminés à proposer des services toujours plus adaptés aux attentes d'une clientèle moderne et connectée. Faites confiance à INVIK SA pour évoluer avec vous, aujourd'hui et demain.
+                            <br /><br />
+                            <strong>Rejoignez INVIK SA et découvrez une nouvelle manière de gérer vos finances en toute sérénité.</strong>
+                        </p>
+                        <Link to="/about" style={styles.primaryButton}>En savoir plus</Link>
+                    </div>
+                </div>
+            </section>
+
+            {/* Mobile About Section - Visible only on mobile */}
+            <section className="mobile-about-section">
+                <div className="container">
+                    <div className="mobile-about-image-container">
+                        <img src="/mobile-about-person.png" alt="Professional Banking" className="mobile-about-image" />
+                    </div>
+                    <div className="mobile-about-header">
+                        <span className="mobile-about-label">À PROPOS</span>
+                        <h2 className="mobile-about-title">INVIK SA, votre partenaire bancaire en ligne de confiance</h2>
+                    </div>
+                    <div className="mobile-about-body">
+                        <p>
+                            INVIK SA est une banque en ligne innovante, dédiée à offrir des services financiers sécurisés, rapides et simples. En combinant technologie de pointe et expertise bancaire, nous nous engageons à rendre la gestion de vos finances plus accessible et plus sûre, que vous soyez en France ou à l’international.
+                        </p>
+                        <p>
+                            Notre objectif est de simplifier l'expérience bancaire pour nos clients, avec des frais compétitifs, un support client disponible 24/7, et des solutions personnalisées, selon vos besoins.
+                        </p>
+                        <p>
+                            Chez INVIK SA, nous croyons en un avenir financier où la technologie simplifie chaque étape de votre expérience bancaire. En restant à l'avant-garde des innovations, nous sommes déterminés à proposer des services toujours plus adaptés aux attentes d'une clientèle moderne et connectée. Faites confiance à INVIK SA pour évoluer avec vous, aujourd'hui et demain.
+                        </p>
+                        <p className="mobile-about-highlight">
+                            <strong>Rejoignez INVIK SA et découvrez une nouvelle manière de gérer vos finances en toute sérénité.</strong>
+                        </p>
+                    </div>
+                    <div className="mobile-about-actions">
                         <Link to="/about" style={styles.primaryButton}>En savoir plus</Link>
                     </div>
                 </div>
             </section>
 
             {/* Services Section - 8 CARDS */}
-            <section style={styles.servicesSection}>
+            <section style={styles.servicesSection} className="services-section">
                 <div className="container">
                     <div style={styles.servicesHeader}>
                         <h2 style={styles.sectionTitle}>Nos services</h2>
                         <p style={styles.sectionSubtitle}>Des solutions bancaires conçues pour simplifier votre quotidien</p>
                     </div>
-                    <div style={styles.servicesGrid}>
+                    <div style={styles.servicesGrid} className="servicesGrid">
                         {services.map((s, i) => (
                             <div key={i} className="service-card">
                                 <div style={styles.serviceCardContent}>
@@ -288,7 +431,7 @@ const Home = () => {
                     <div style={styles.testiTrack}>
                         {/* Double the list for infinite scroll effect */}
                         {[...testimonials, ...testimonials].map((t, i) => (
-                            <div key={i} style={styles.testimonialCardSlider}>
+                            <Link key={i} to="/reviews" style={{ ...styles.testimonialCardSlider, textDecoration: 'none', color: 'inherit', display: 'block' }}>
                                 <div style={styles.tAvatar}>
                                     <img src={t.image} alt={t.name} style={styles.tImg} />
                                 </div>
@@ -296,7 +439,7 @@ const Home = () => {
                                 <p style={{ fontSize: '0.85rem', color: '#666' }}>{t.role}</p>
                                 <div style={styles.stars}>★★★★★</div>
                                 <p style={styles.testimonialText}>"{t.text}"</p>
-                            </div>
+                            </Link>
                         ))}
                     </div>
                 </div>
@@ -325,6 +468,23 @@ const styles = {
     simLabel: { display: 'block', fontSize: '0.85rem', fontWeight: '700', color: '#333', marginBottom: '0.5rem' },
     simValue: { float: 'right', color: '#00ccff', fontWeight: '800' },
     range: { width: '100%', accentColor: '#003366' },
+    simSelect: {
+        width: '100%',
+        padding: '0.8rem',
+        borderRadius: '12px',
+        border: '1px solid #ddd',
+        backgroundColor: '#fff',
+        color: '#333',
+        fontWeight: '600',
+        fontSize: '0.9rem',
+        outline: 'none',
+        cursor: 'pointer',
+        appearance: 'none',
+        backgroundImage: 'linear-gradient(45deg, transparent 50%, #003366 50%), linear-gradient(135deg, #003366 50%, transparent 50%)',
+        backgroundPosition: 'calc(100% - 20px) calc(1em + 2px), calc(100% - 15px) calc(1em + 2px)',
+        backgroundSize: '5px 5px, 5px 5px',
+        backgroundRepeat: 'no-repeat'
+    },
     simResults: { display: 'flex', justifyContent: 'space-between', backgroundColor: '#f0f7ff', padding: '1.2rem', borderRadius: '12px', marginBottom: '1.5rem' },
     simResultItem: { display: 'flex', flexDirection: 'column' },
     simResLabel: { fontSize: '0.65rem', color: '#888', textTransform: 'uppercase' },
@@ -338,7 +498,7 @@ const styles = {
     infoGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '2rem' },
     infoTitle: { color: '#003366', fontSize: '1.1rem', margin: '1rem 0', fontWeight: '700' },
     infoText: { color: '#666', fontSize: '0.9rem', lineHeight: '1.6' },
-    aboutSection: { padding: '7rem 0' },
+    aboutSection: { padding: '7rem 0', overflow: 'hidden' },
     aboutContainer: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '4rem', alignItems: 'center' },
     aboutImageWrapper: { position: 'relative' },
     aboutImage: { width: '100%', borderRadius: '12px' },

@@ -59,6 +59,10 @@ const FAQ = () => {
         {
             question: "Que faire en cas de perte ou de vol de ma carte INVIK SA ?",
             answer: "En cas de perte ou de vol, bloquez immédiatement votre carte depuis votre espace client, si cette fonctionnalité est disponible, et/ou contactez sans attendre notre service client pour mettre la carte en opposition et demander un remplacement."
+        },
+        {
+            question: "Quels sont les pays éligibles pour un crédit chez la banque INVIK ?",
+            answer: "La banque INVIK propose des crédits aux résidents de tous les pays d'Europe (Zone Euro, Union Européenne, Suisse, Royaume-Uni, etc.) et des pays des Amériques (États-Unis, Canada, Mexique, Brésil, Argentine, etc.). Pour être éligible, vous devez disposer d'un passeport valide, être en mesure de prouver votre identité et pouvoir justifier de revenus réguliers et suffisants pour le remboursement du prêt."
         }
     ];
 
@@ -70,7 +74,7 @@ const FAQ = () => {
     return (
         <div style={styles.page}>
             {/* Hero Section */}
-            <section style={styles.hero}>
+            <section style={styles.hero} className="faq-hero">
                 <div style={styles.heroOverlay}>
                     <div className="container">
                         <h1 style={styles.heroTitle}>FAQ'S</h1>
@@ -80,10 +84,10 @@ const FAQ = () => {
             </section>
 
             {/* FAQ Items Grid */}
-            <div className="container" style={styles.contentContainer}>
+            <div className="container faq-grid" style={styles.contentContainer}>
 
                 {/* Left Column */}
-                <div style={styles.column}>
+                <div style={styles.column} className="faq-column">
                     {leftColumnData.map((item, index) => (
                         <FAQItem
                             key={index}
@@ -95,7 +99,7 @@ const FAQ = () => {
                 </div>
 
                 {/* Right Column */}
-                <div style={styles.column}>
+                <div style={styles.column} className="faq-column">
                     {rightColumnData.map((item, index) => (
                         <FAQItem
                             key={index + midPoint}
@@ -109,11 +113,11 @@ const FAQ = () => {
             </div>
 
             {/* CTA Section */}
-            <section style={styles.ctaSection}>
+            <section style={styles.ctaSection} className="faq-cta-banner">
                 <div className="container" style={styles.ctaContainer}>
                     <h2 style={styles.ctaTitle}>Vous ne trouvez pas votre réponse ?</h2>
                     <p style={styles.ctaText}>Nos conseillers sont là pour vous aider ou pour vous accompagner dans l'ouverture de votre compte.</p>
-                    <div style={styles.ctaButtons}>
+                    <div style={styles.ctaButtons} className="faq-cta-buttons">
                         <button style={styles.btnPrimary} onClick={() => window.location.href = '/register'}>
                             OUVRIR UN COMPTE
                         </button>
@@ -130,8 +134,8 @@ const FAQ = () => {
 // Sub-component for individual item
 const FAQItem = ({ item, isOpen, onClick }) => {
     return (
-        <div style={styles.faqItem}>
-            <div style={styles.questionRow} onClick={onClick}>
+        <div style={styles.faqItem} className="faq-item-card">
+            <div style={styles.questionRow} onClick={onClick} className="faq-question-row">
                 <h3 style={styles.questionText}>{item.question}</h3>
                 <div style={styles.iconContainer}>
                     {isOpen ? (
@@ -148,6 +152,7 @@ const FAQItem = ({ item, isOpen, onClick }) => {
                     opacity: isOpen ? 1 : 0,
                     paddingTop: isOpen ? '1rem' : '0',
                 }}
+                className="faq-answer-container"
             >
                 <p style={styles.answerText}>{item.answer}</p>
             </div>
@@ -162,7 +167,7 @@ const styles = {
         paddingBottom: '5rem',
     },
     hero: {
-        backgroundImage: 'url(/banner-7.jpg)',
+        backgroundImage: 'url(/banner-faq.jpg)',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         position: 'relative',
@@ -279,7 +284,7 @@ const styles = {
     // CTA Section Styles
     ctaSection: {
         backgroundColor: '#003366',
-        padding: '5rem 1rem',
+        padding: '3rem 1rem',
         textAlign: 'center',
         marginTop: '4rem',
         borderRadius: '20px',

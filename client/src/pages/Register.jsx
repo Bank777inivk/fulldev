@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { countries } from '../data/countries';
+import { useAuth } from '../contexts/AuthContext';
 
 const Register = () => {
     const navigate = useNavigate();
+    const { register } = useAuth();
     const [step, setStep] = useState(0); // 0: Selection, 1: Form
     const [userType, setUserType] = useState(null); // 'personal' or 'business'
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
 
     // Joint logic for both forms
     const [formData, setFormData] = useState({
@@ -48,29 +52,55 @@ const Register = () => {
         setFormData({ ...formData, [e.target.name]: value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        setError('');
+
         if (formData.password !== formData.confirmPassword) {
-            alert("Les mots de passe ne correspondent pas.");
+            setError("Les mots de passe ne correspondent pas.");
             return;
         }
-        console.log(`Submitting ${userType} registration:`, formData);
-        alert("Demande d'ouverture de compte enregistrée ! Vous recevrez un email de confirmation sous peu.");
-        navigate('/login');
+
+        if (formData.password.length < 6) {
+            setError("Le mot de passe doit contenir au moins 6 caractères.");
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const { email, password, confirmPassword, termsAccepted, ...profileData } = formData;
+            await register(email, password, {
+                ...profileData,
+                userType,
+                displayName: userType === 'personal' ? `${formData.firstName} ${formData.lastName}` : formData.companyName
+            });
+
+            alert("Compte créé avec succès ! Veuillez vérifier votre email pour valider votre compte.");
+            navigate('/login');
+        } catch (err) {
+            console.error("Erreur d'inscription:", err);
+            if (err.code === 'auth/email-already-in-use') {
+                setError("Cette adresse email est déjà utilisée.");
+            } else {
+                setError("Une erreur est survenue lors de l'inscription. Veuillez réessayer.");
+            }
+        } finally {
+            setLoading(false);
+        }
     };
 
     // --- SUB-COMPONENTS ---
 
     const SelectionStep = () => (
-        <div style={styles.selectionContainer} className="fadeInUp">
+        <div style={styles.selectionContainer} className="fadeInUp register-selection-card">
             <h2 style={styles.gatewayTitle}>Choisissez votre type de compte</h2>
             <p style={styles.gatewaySubtitle}>Une expérience bancaire sur-mesure pour chacun de vos besoins.</p>
 
-            <div style={styles.cardsGrid}>
+            <div style={styles.cardsGrid} className="selection-grid">
                 {/* Personal Card */}
                 <div
                     style={styles.selectionCard}
-                    className="card-hover"
+                    className="card-hover register-selection-item"
                     onClick={() => handleSelectType('personal')}
                 >
                     <div style={styles.iconCircle}>👤</div>
@@ -87,7 +117,7 @@ const Register = () => {
                 {/* Business Card */}
                 <div
                     style={styles.selectionCard}
-                    className="card-hover"
+                    className="card-hover register-selection-item"
                     onClick={() => handleSelectType('business')}
                 >
                     <div style={styles.iconCircleBlue}>🏢</div>
@@ -112,7 +142,7 @@ const Register = () => {
             <form onSubmit={handleSubmit}>
                 <div style={styles.section}>
                     <h4 style={styles.sectionHeading}>1. Identité</h4>
-                    <div style={styles.formGrid}>
+                    <div style={styles.formGrid} className="register-form-grid">
                         <div style={styles.formGroup}><label style={styles.label}>Prénom *</label><input type="text" name="firstName" value={formData.firstName} onChange={handleChange} required style={styles.input} /></div>
                         <div style={styles.formGroup}><label style={styles.label}>Nom *</label><input type="text" name="lastName" value={formData.lastName} onChange={handleChange} required style={styles.input} /></div>
                         <div style={styles.formGroup}><label style={styles.label}>Date de naissance *</label><input type="date" name="dob" value={formData.dob} onChange={handleChange} required style={styles.input} /></div>
@@ -141,8 +171,8 @@ const Register = () => {
 
                 <div style={styles.section}>
                     <h4 style={styles.sectionHeading}>2. Coordonnées & Préférences</h4>
-                    <div style={styles.formGrid}>
-                        <div style={{ gridColumn: '1/-1' }}><label style={styles.label}>Adresse complète *</label><input type="text" name="address" value={formData.address} onChange={handleChange} required style={styles.input} /></div>
+                    <div style={styles.formGrid} className="register-form-grid">
+                        <div className="full-width-mobile" style={{ gridColumn: '1/-1' }}><label style={styles.label}>Adresse complète *</label><input type="text" name="address" value={formData.address} onChange={handleChange} required style={styles.input} /></div>
                         <div style={styles.formGroup}><label style={styles.label}>Code Postal *</label><input type="text" name="zipCode" value={formData.zipCode} onChange={handleChange} required style={styles.input} /></div>
                         <div style={styles.formGroup}><label style={styles.label}>Ville *</label><input type="text" name="city" value={formData.city} onChange={handleChange} required style={styles.input} /></div>
                         <div style={styles.formGroup}><label style={styles.label}>Téléphone mobile *</label><input type="tel" name="phone" value={formData.phone} onChange={handleChange} required style={styles.input} /></div>
@@ -162,7 +192,7 @@ const Register = () => {
                     </div>
                 </div>
 
-                {SecuritySection()}
+                {SecuritySection('desktop')}
             </form>
         </div>
     );
@@ -175,8 +205,8 @@ const Register = () => {
             <form onSubmit={handleSubmit}>
                 <div style={styles.section}>
                     <h4 style={styles.sectionHeading}>1. Informations Société</h4>
-                    <div style={styles.formGrid}>
-                        <div style={{ gridColumn: '1/-1' }}><label style={styles.label}>Dénomination sociale (Nom de l'entreprise) *</label><input type="text" name="companyName" value={formData.companyName} onChange={handleChange} required style={styles.input} /></div>
+                    <div style={styles.formGrid} className="register-form-grid">
+                        <div className="full-width-mobile" style={{ gridColumn: '1/-1' }}><label style={styles.label}>Dénomination sociale (Nom de l'entreprise) *</label><input type="text" name="companyName" value={formData.companyName} onChange={handleChange} required style={styles.input} /></div>
                         <div style={styles.formGroup}>
                             <label style={styles.label}>Forme juridique *</label>
                             <select name="legalForm" value={formData.legalForm} onChange={handleChange} required style={styles.select}>
@@ -192,13 +222,13 @@ const Register = () => {
                                 {countries.map(c => <option key={c} value={c}>{c}</option>)}
                             </select>
                         </div>
-                        <div style={{ gridColumn: '1/-1' }}><label style={styles.label}>Adresse du siège social *</label><input type="text" name="address" value={formData.address} onChange={handleChange} required style={styles.input} /></div>
+                        <div className="full-width-mobile" style={{ gridColumn: '1/-1' }}><label style={styles.label}>Adresse du siège social *</label><input type="text" name="address" value={formData.address} onChange={handleChange} required style={styles.input} /></div>
                     </div>
                 </div>
 
                 <div style={styles.section}>
                     <h4 style={styles.sectionHeading}>2. Représentant Légal</h4>
-                    <div style={styles.formGrid}>
+                    <div style={styles.formGrid} className="register-form-grid">
                         <div style={styles.formGroup}><label style={styles.label}>Prénom *</label><input type="text" name="firstName" value={formData.firstName} onChange={handleChange} required style={styles.input} /></div>
                         <div style={styles.formGroup}><label style={styles.label}>Nom *</label><input type="text" name="lastName" value={formData.lastName} onChange={handleChange} required style={styles.input} /></div>
                         <div style={styles.formGroup}><label style={styles.label}>Fonction *</label><input type="text" name="repFunction" placeholder="Ex: Gérant" value={formData.repFunction} onChange={handleChange} required style={styles.input} /></div>
@@ -206,55 +236,123 @@ const Register = () => {
                     </div>
                 </div>
 
-                {SecuritySection()}
+                {SecuritySection('mobile')}
             </form>
         </div>
     );
 
-    const SecuritySection = () => (
+    const SecuritySection = (suffix) => (
         <div style={styles.sectionNoBorder}>
             <h4 style={styles.sectionHeading}>SÉCURITÉ & VALIDATION</h4>
-            <div style={styles.formGrid}>
+            <div style={styles.formGrid} className="register-form-grid">
                 <div style={styles.formGroup}><label style={styles.label}>Mot de passe sécurisé *</label><input type="password" name="password" value={formData.password} onChange={handleChange} required style={styles.input} /></div>
                 <div style={styles.formGroup}><label style={styles.label}>Confirmation du mot de passe *</label><input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} required style={styles.input} /></div>
             </div>
 
             <div style={styles.checkboxGroup}>
-                <input type="checkbox" name="termsAccepted" id="terms" checked={formData.termsAccepted} onChange={handleChange} required style={styles.checkbox} />
-                <label htmlFor="terms" style={styles.checkboxLabel}>
+                <input type="checkbox" name="termsAccepted" id={`terms-${suffix}`} checked={formData.termsAccepted} onChange={handleChange} required style={styles.checkbox} />
+                <label htmlFor={`terms-${suffix}`} style={styles.checkboxLabel}>
                     Je certifie l'exactitude des informations fournies et j'accepte les <a href="#" style={styles.link}>Conditions Générales d'Utilisation</a> d'INVIK SA.
                 </label>
             </div>
 
+            {error && (
+                <div style={{
+                    backgroundColor: '#ffebee',
+                    color: '#c62828',
+                    padding: '1rem',
+                    borderRadius: '8px',
+                    marginBottom: '1.5rem',
+                    fontSize: '0.9rem',
+                    textAlign: 'center',
+                    border: '1px solid #ffcdd2'
+                }}>
+                    {error}
+                </div>
+            )}
+
             <div style={styles.submitContainer}>
-                <button type="submit" style={styles.submitBtn}>
-                    {userType === 'personal' ? "Finaliser mon compte Particulier" : "Finaliser mon compte Professionnel"}
+                <button
+                    type="submit"
+                    style={{
+                        ...styles.submitBtn,
+                        opacity: loading ? 0.7 : 1,
+                        cursor: loading ? 'not-allowed' : 'pointer'
+                    }}
+                    className="register-submit-btn"
+                    disabled={loading}
+                >
+                    {loading ? "Création en cours..." : "Finaliser"}
                 </button>
                 <div style={{ marginTop: '1.5rem' }}>
-                    <a onClick={() => setStep(0)} style={{ ...styles.link, fontSize: '0.9rem' }}>← Retour au choix du compte</a>
+                    <a onClick={() => setStep(0)} style={{ ...styles.link, fontSize: '0.9rem' }}>← Retour</a>
                 </div>
+            </div>
+        </div>
+    );
+
+    // --- MOBILE SPECIFIC RENDERING ---
+    const MobileSelection = () => (
+        <div className="mobile-selection-wrapper">
+            <div className="mobile-selection-item" onClick={() => handleSelectType('personal')}>
+                <div className="mobile-selection-icon">👤</div>
+                <div className="mobile-selection-info">
+                    <h3>Compte Particulier</h3>
+                    <p>Pour vos besoins quotidiens</p>
+                </div>
+                <i className="fas fa-chevron-right"></i>
+            </div>
+            <div className="mobile-selection-item" onClick={() => handleSelectType('business')}>
+                <div className="mobile-selection-icon blue">🏢</div>
+                <div className="mobile-selection-info">
+                    <h3>Compte Professionnel</h3>
+                    <p>Pour votre entreprise</p>
+                </div>
+                <i className="fas fa-chevron-right"></i>
             </div>
         </div>
     );
 
     // --- MAIN RENDER ---
     return (
-        <div style={styles.page}>
-            <section style={styles.hero}>
+        <div style={styles.page} className="register-page">
+            {/* Desktop Hero - Hidden on mobile */}
+            <section style={styles.hero} className="register-hero desktop-only">
                 <div style={styles.heroOverlay}>
                     <div className="container" style={{ textAlign: 'center' }}>
-                        <h1 style={styles.heroTitle}>Ouvrir un Compte</h1>
+                        <h1 style={styles.heroTitle} className="register-hero-title">Ouvrir un Compte</h1>
                         <p style={styles.heroSubtitle}>Rejoignez INVIK SA, la banque de demain.</p>
                     </div>
                 </div>
             </section>
 
+            {/* Mobile Header - Visible only on mobile */}
+            <div className="mobile-register-header">
+                <button onClick={() => step === 1 ? setStep(0) : navigate(-1)} className="mobile-back-btn">
+                    <i className="fas fa-arrow-left"></i>
+                </button>
+                <h1>{step === 0 ? "Inscription" : (userType === 'personal' ? "Particulier" : "Professionnel")}</h1>
+                <div style={{ width: '40px' }}></div> {/* Spacer */}
+            </div>
+
             <div className="container" style={styles.formContainer}>
-                {step === 0 ? <SelectionStep /> : (
-                    <div style={styles.formCard}>
-                        {userType === 'personal' ? <PersonalForm /> : <BusinessForm />}
-                    </div>
-                )}
+                {/* Desktop Version */}
+                <div className="desktop-register-view">
+                    {step === 0 ? <SelectionStep /> : (
+                        <div style={styles.formCard} className="register-form-card">
+                            {userType === 'personal' ? <PersonalForm /> : <BusinessForm />}
+                        </div>
+                    )}
+                </div>
+
+                {/* Mobile Version Rendering */}
+                <div className="mobile-register-view">
+                    {step === 0 ? <MobileSelection /> : (
+                        <div className="mobile-form-container">
+                            {userType === 'personal' ? <PersonalForm /> : <BusinessForm />}
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );

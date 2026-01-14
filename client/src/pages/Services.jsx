@@ -146,7 +146,7 @@ const Services = () => {
             useCases: [
                 {
                     title: "TechStart SaaS, Startup de 15 employés",
-                    case: "TechStart utilise INVIK Business Pro pour gérer sa trésorerie. Chaque département dispose de sa propre carte virtuelle avec limite personnalisée. Le CEO suit les dépenses en temps réel via le dashboard et exporte automatiquement les données vers leur logiciel comptable. Gain de temps : 10h/mois."
+                    case: "TechStart utilise INVIK Business Pro pour gérer sa trésorerie. Chaque département dispose de sa propre carte virtuelle avec limite personnalisée. Le CEO suit les denses en temps réel via le dashboard et exporte automatiquement les données vers leur logiciel comptable. Gain de temps : 10h/mois."
                 },
                 {
                     title: "Dupont & Fils, Commerce de détail",
@@ -159,7 +159,7 @@ const Services = () => {
     return (
         <div style={styles.page}>
             {/* Hero Section */}
-            <section style={styles.hero}>
+            <section style={styles.hero} className="services-hero">
                 <div style={styles.heroOverlay}>
                     <div className="container">
                         <h1 style={styles.heroTitle}>Nos Services</h1>
@@ -170,7 +170,7 @@ const Services = () => {
 
             {/* Services Sections */}
             {/* Navigation Anchor Buttons */}
-            <div style={styles.navContainer}>
+            <div style={styles.navContainer} className="services-nav-sticky">
                 <div className="container no-scrollbar" style={styles.navGrid}>
                     {services.map((service) => (
                         <button
@@ -197,21 +197,21 @@ const Services = () => {
                 </div>
             </div>
 
-            <div className="container" style={{ padding: '4rem 2rem' }}>
+            <div className="container services-list-container" style={{ padding: '4rem 2rem' }}>
                 {services.map((service, index) => (
-                    <section key={service.id} id={`service-${service.id}`} style={styles.serviceSection}>
+                    <section key={service.id} id={`service-${service.id}`} style={styles.serviceSection} className="service-item-card">
                         <div style={{
                             ...styles.topSection,
                             flexDirection: index % 2 === 0 ? 'row' : 'row-reverse'
-                        }}>
+                        }} className="service-top-split">
                             {/* Image */}
-                            <div className="service-image-hover" style={styles.imageContainer}>
+                            <div style={styles.imageContainer} className="service-image-hover service-image-wrapper">
                                 <img src={service.image} alt={service.title} style={styles.serviceImage} />
                             </div>
 
                             {/* Content */}
-                            <div style={styles.contentContainer}>
-                                <div style={styles.iconBadge}>{service.icon}</div>
+                            <div style={styles.contentContainer} className="service-content-wrapper">
+                                <div style={styles.iconBadge} className="service-icon-badge">{service.icon}</div>
                                 <h2 style={styles.serviceTitle}>{service.title}</h2>
                                 <p style={styles.serviceDescription}>{service.description}</p>
 
@@ -248,7 +248,7 @@ const Services = () => {
                         {/* Use Cases - Full Width Below */}
                         <div style={styles.useCasesSection}>
                             <h3 style={styles.useCasesTitle}>Cas pratiques</h3>
-                            <div style={styles.useCasesGrid}>
+                            <div style={styles.useCasesGrid} className="use-cases-grid">
                                 {service.useCases.map((useCase, idx) => (
                                     <div key={idx} className="use-case-hover" style={styles.useCaseCard}>
                                         <h4 style={styles.useCaseTitle}>{useCase.title}</h4>
@@ -262,7 +262,7 @@ const Services = () => {
             </div>
 
             {/* CTA Section */}
-            <section style={styles.ctaSection}>
+            <section style={styles.ctaSection} className="cta-banner">
                 <div className="container">
                     <h2 style={styles.ctaTitle}>Prêt à rejoindre INVIK SA ?</h2>
                     <p style={styles.ctaText}>
@@ -280,7 +280,7 @@ const styles = {
         minHeight: '100vh',
     },
     hero: {
-        backgroundImage: 'url(/service/service-7.jpg)',
+        backgroundImage: 'url(/banner-cards.jpg)',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         position: 'relative',

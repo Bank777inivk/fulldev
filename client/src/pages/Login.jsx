@@ -1,23 +1,54 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 const Login = () => {
     const navigate = useNavigate();
+    const { login } = useAuth();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Login logic here
-        alert("Connexion en cours...");
+        setError('');
+        setLoading(true);
+
+        try {
+            await login(email, password);
+            navigate('/dashboard');
+        } catch (err) {
+            console.error("Erreur de connexion:", err);
+            setError("Email ou mot de passe incorrect.");
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
-        <div style={styles.page}>
+        <div style={styles.page} className="auth-page">
             <div className="container" style={styles.container}>
-                <div style={styles.authCard}>
+                <div style={styles.authCard} className="auth-card">
 
-                    <div style={styles.formContent}>
+                    <div style={styles.formContent} className="auth-form-content">
                         <h2 style={styles.title}>Connexion Client</h2>
                         <p style={styles.subtitle}>Accédez à votre espace bancaire sécurisé</p>
+
+                        {error && (
+                            <div style={{
+                                backgroundColor: '#ffebee',
+                                color: '#c62828',
+                                padding: '1rem',
+                                borderRadius: '8px',
+                                marginBottom: '1.5rem',
+                                fontSize: '0.9rem',
+                                textAlign: 'center',
+                                border: '1px solid #ffcdd2'
+                            }}>
+                                {error}
+                            </div>
+                        )}
 
                         <form onSubmit={handleSubmit}>
                             <div style={styles.formGroup}>
@@ -26,6 +57,8 @@ const Login = () => {
                                     type="email"
                                     placeholder="votre.email@exemple.com"
                                     style={styles.input}
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
                                     required
                                 />
                             </div>
@@ -35,6 +68,8 @@ const Login = () => {
                                     type="password"
                                     placeholder="••••••••"
                                     style={styles.input}
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
                                     required
                                 />
                             </div>
@@ -42,8 +77,16 @@ const Login = () => {
                                 <a href="#" style={styles.link}>Mot de passe oublié ?</a>
                             </div>
 
-                            <button type="submit" style={styles.submitButton}>
-                                Se connecter
+                            <button
+                                type="submit"
+                                style={{
+                                    ...styles.submitButton,
+                                    opacity: loading ? 0.7 : 1,
+                                    cursor: loading ? 'not-allowed' : 'pointer'
+                                }}
+                                disabled={loading}
+                            >
+                                {loading ? "Connexion..." : "Se connecter"}
                             </button>
                         </form>
 

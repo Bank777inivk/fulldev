@@ -27,7 +27,7 @@ const Contact = () => {
     return (
         <div style={styles.page}>
             {/* Hero Section */}
-            <section style={styles.hero}>
+            <section style={styles.hero} className="contact-hero">
                 <div style={styles.heroOverlay}>
                     <div className="container contact-animate">
                         <h1 style={styles.heroTitle}>CONTACT</h1>
@@ -37,7 +37,7 @@ const Contact = () => {
             </section>
 
             {/* Form Section */}
-            <section className="container contact-animate" style={styles.formSection}>
+            <section className="container contact-animate contact-form-section" style={styles.formSection}>
                 <div style={styles.formHeader}>
                     <h4 style={styles.blueSubtitle}>CONTACTEZ-NOUS</h4>
                     <h2 style={styles.sectionTitle}>Envoyez-nous un message</h2>
@@ -46,8 +46,8 @@ const Contact = () => {
                     </p>
                 </div>
 
-                <form onSubmit={handleSubmit} style={styles.form}>
-                    <div style={styles.formGrid}>
+                <form onSubmit={handleSubmit} style={styles.form} className="contact-form-card">
+                    <div style={styles.formGrid} className="contact-form-grid">
                         {/* Row 1 */}
                         <div style={styles.formGroup}>
                             <input
@@ -160,7 +160,7 @@ const Contact = () => {
                     </div>
 
                     {/* Full Width Message */}
-                    <div style={styles.formGroupFull}>
+                    <div style={styles.formGroupFull} className="contact-form-full">
                         <textarea
                             name="message"
                             placeholder="Votre message (précisez le type d'opération, le montant éventuel, les dates concernées, et toute information utile pour le traitement de votre demande)"
@@ -191,7 +191,7 @@ const Contact = () => {
 
                     {/* Submit Button */}
                     <div style={styles.submitContainer}>
-                        <button type="submit" style={styles.submitButton} className="submit-btn-hover">
+                        <button type="submit" style={styles.submitButton} className="submit-btn-hover contact-submit-btn">
                             Envoyer le message
                         </button>
                     </div>
@@ -199,11 +199,11 @@ const Contact = () => {
             </section>
 
             {/* Info Section */}
-            <section style={styles.infoSection}>
+            <section style={styles.infoSection} className="contact-info-section">
                 <div className="container contact-animate">
                     <h2 style={styles.infoTitle}>Nous sommes là pour vous aider</h2>
 
-                    <div style={styles.infoGrid}>
+                    <div style={styles.infoGrid} className="contact-info-grid">
                         {/* Address Card */}
                         <div style={styles.infoCard} className="info-card-hover">
                             <div style={styles.iconCircle}>
@@ -246,7 +246,7 @@ const styles = {
         minHeight: '100vh',
     },
     hero: {
-        backgroundImage: 'url(/banner-8.jpg)',
+        backgroundImage: 'url(/banner-contact.jpg)',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         position: 'relative',

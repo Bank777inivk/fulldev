@@ -8,7 +8,7 @@ const Cards = () => {
     return (
         <div style={styles.page}>
             {/* Hero Section */}
-            <section style={styles.hero}>
+            <section style={styles.hero} className="cards-hero">
                 <div style={styles.heroOverlay}>
                     <div className="container">
                         <h1 style={styles.heroTitle}>NOS CARTES</h1>
@@ -26,7 +26,7 @@ const Cards = () => {
             </section>
 
             {/* Cards Grid */}
-            <div className="container" style={styles.gridContainer}>
+            <div style={styles.gridContainer} className="container cards-grid">
 
                 {/* Visual Card 1: Silver */}
                 <div style={styles.cardWrapper} className="card-hover">
@@ -56,7 +56,7 @@ const Cards = () => {
                         <p style={styles.cardDesc}>
                             Bénéficiez d'avantages exclusifs avec la Mastercard Gold, adaptée aux voyageurs et aux utilisateurs fréquents. Plafonds élevés et assurances incluses.
                         </p>
-                        <button style={styles.cardButton} onClick={() => navigate('/register')}>SE CONNECTER</button>
+                        <button style={styles.cardButton} onClick={() => navigate('/register')}>OUVRIR UN COMPTE</button>
                     </div>
                 </div>
 
@@ -79,8 +79,8 @@ const Cards = () => {
             </div>
 
             {/* Virtual Card Section */}
-            <section className="container" style={styles.virtualSection}>
-                <div style={styles.virtualContent}>
+            <section style={styles.virtualSection} className="container virtual-section">
+                <div style={styles.virtualContent} className="virtual-content">
                     <h2 style={styles.virtualTitle}>La Carte Virtuelle INVIK</h2>
                     <p style={styles.virtualDesc}>
                         Sécurisez vos achats en ligne avec nos cartes virtuelles éphémères ou permanentes.
@@ -97,14 +97,14 @@ const Cards = () => {
                 </div>
 
                 {/* 3D Flip Card Container */}
-                <div style={styles.virtualVisual} onClick={() => setIsFlipped(!isFlipped)}>
+                <div style={styles.virtualVisual} onClick={() => setIsFlipped(!isFlipped)} className="virtual-visual-wrapper">
                     <div style={{
                         ...styles.flipCardInner,
                         transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)'
-                    }}>
+                    }} className="flip-card-inner">
                         {/* Front Side */}
-                        <div style={styles.flipCardFront}>
-                            <div style={styles.virtualCard}>
+                        <div style={styles.flipCardFront} className="flip-card-front">
+                            <div style={styles.virtualCard} className="virtual-card">
                                 <div style={styles.cardTop}>
                                     <span style={{ fontWeight: 'bold', fontSize: '1.2rem', letterSpacing: '1px' }}>INVIK DIGITAL</span>
                                     <span style={{ fontSize: '0.8rem' }}>VIRTUAL</span>
@@ -123,8 +123,8 @@ const Cards = () => {
                         </div>
 
                         {/* Back Side */}
-                        <div style={styles.flipCardBack}>
-                            <div style={styles.virtualCardBack}>
+                        <div style={styles.flipCardBack} className="flip-card-back">
+                            <div style={styles.virtualCardBack} className="virtual-card virtual-card-back">
                                 <div style={styles.cardMagneticStrip}></div>
                                 <div style={styles.cardSignatureRow}>
                                     <div style={styles.cardSignature}>Authorized Signature</div>
@@ -150,7 +150,7 @@ const styles = {
         paddingBottom: '5rem',
     },
     hero: {
-        backgroundImage: 'url(/banner-7.jpg)',
+        backgroundImage: 'url(/banner-cards.jpg)',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         position: 'relative',
@@ -353,8 +353,9 @@ const styles = {
     },
     // Front Design (Re-used)
     virtualCard: {
-        width: '300px',
-        height: '190px',
+        width: '100%',
+        maxWidth: '350px',
+        height: '210px',
         background: 'linear-gradient(135deg, #00c6ff 0%, #0072ff 100%)',
         borderRadius: '16px',
         padding: '25px',
@@ -365,11 +366,13 @@ const styles = {
         justifyContent: 'space-between',
         position: 'relative',
         overflow: 'hidden',
+        margin: '0 auto',
     },
     // Back Design
     virtualCardBack: {
-        width: '300px',
-        height: '190px',
+        width: '100%',
+        maxWidth: '350px',
+        height: '210px',
         background: 'linear-gradient(135deg, #0072ff 0%, #00c6ff 100%)', // Reversed gradient
         borderRadius: '16px',
         color: 'white',
@@ -378,6 +381,7 @@ const styles = {
         flexDirection: 'column',
         overflow: 'hidden',
         position: 'relative',
+        margin: '0 auto',
     },
     cardMagneticStrip: {
         width: '100%',
