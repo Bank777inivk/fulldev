@@ -1,0 +1,586 @@
+:root {
+  --primary-color: #003366;
+  --secondary-color: #004d99;
+  --accent-color: #4CAF50;
+  --error-color: #f44336;
+  --text-color: #333;
+  --background-color: #f5f7fa;
+  --font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+
+  font-family: var(--font-family);
+  line-height: 1.6;
+  font-weight: 400;
+
+  color: var(--text-color);
+  background-color: var(--background-color);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--primary-color);
+  font-weight: 700;
+  margin-top: 0;
+}
+
+p {
+  margin-bottom: 1rem;
+}
+
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button {
+  border-radius: 6px;
+  border: none;
+  padding: 0.6em 1.2em;
+  font-size: 1rem;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: var(--primary-color);
+  color: white;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+/* Utilities */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Info Cards Hover Effects */
+.info-card {
+  padding: 2rem 1rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border-radius: 16px;
+  background-color: white;
+  /* Changed from transparent to white so border is visible against bg */
+  border: 1px solid #e0e0e0;
+  /* Added visible border */
+  cursor: default;
+}
+
+.use-case-hover:hover {
+  background-color: #e8f4f8 !important;
+  transform: translateX(10px);
+  box-shadow: 0 4px 15px rgba(0, 102, 204, 0.15);
+}
+
+.nav-button-hover:hover {
+  background: linear-gradient(135deg, var(--primary-color) 0%, #004d99 100%) !important;
+  color: white !important;
+  border-color: transparent !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 51, 102, 0.3);
+}
+
+.nav-button-hover:hover span {
+  color: white !important;
+}
+
+.info-card .icon-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: #00ccff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  transition: all 0.4s ease;
+  box-shadow: 0 4px 15px rgba(0, 204, 255, 0.3);
+}
+
+.info-card:hover .icon-circle {
+  transform: scale(1.1) rotate(5deg);
+  background-color: var(--primary-color);
+  box-shadow: 0 8px 25px rgba(0, 51, 102, 0.4);
+}
+
+.info-card:hover .info-title {
+  color: var(--primary-color);
+}
+
+/* Services Card Styles - Enhanced */
+.service-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  padding: 1.8rem 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: 2px solid transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.service-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), #00ccff);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+
+.service-card:hover::before {
+  transform: scaleX(1);
+}
+
+.service-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 51, 102, 0.15);
+  border-color: var(--primary-color);
+  background: linear-gradient(135deg, #ffffff 0%, #f0f4f8 100%);
+}
+
+.service-icon {
+  background: linear-gradient(135deg, #e6f0ff 0%, #cce0ff 100%);
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.2rem;
+  color: var(--primary-color);
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  box-shadow: 0 4px 15px rgba(0, 51, 102, 0.1);
+}
+
+.service-icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+.service-card:hover .service-icon {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  color: white;
+  transform: rotate(5deg) scale(1.1);
+  box-shadow: 0 8px 25px rgba(0, 51, 102, 0.3);
+}
+
+.service-card h3 {
+  font-size: 1.15rem;
+  margin-bottom: 1rem;
+  color: var(--primary-color);
+  font-weight: 700;
+  transition: color 0.3s ease;
+  line-height: 1.3;
+}
+
+.service-card:hover h3 {
+  color: var(--secondary-color);
+}
+
+.service-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+.service-card ul li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.6rem;
+  color: #555;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.service-card:hover ul li {
+  color: #333;
+  padding-left: 2rem;
+}
+
+.service-card ul li::before {
+  content: "✓";
+  color: var(--accent-color);
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  transition: all 0.3s ease;
+}
+
+.service-card:hover ul li::before {
+  color: var(--primary-color);
+  transform: scale(1.2);
+}
+
+/* Responsive adjustments for Services Grid */
+@media (max-width: 1200px) {
+  .service-card h3 {
+    font-size: 1.1rem;
+  }
+
+  .service-card ul li {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 992px) {
+
+  /* 2 columns on tablets */
+  .servicesGrid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 576px) {
+
+  /* 1 column on mobile */
+  .servicesGrid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Testimonial Card Hover Effects */
+.testimonial-card-hover:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 35px rgba(0, 51, 102, 0.12);
+  border-color: var(--primary-color);
+}
+
+@media (max-width: 992px) {
+  .testimonials-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* About Page Animations and Hover Effects */
+
+/* Special attractive hover for ALL cards */
+.service-card-hover,
+.value-card-hover,
+.goal-card-special,
+.timeline-card-hover,
+.partner-card-hover {
+  position: relative;
+  overflow: hidden;
+}
+
+.service-card-hover::before,
+.value-card-hover::before,
+.goal-card-special::before,
+.timeline-card-hover::before,
+.partner-card-hover::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg,
+      transparent,
+      rgba(0, 204, 255, 0.15),
+      transparent);
+  transform: rotate(45deg);
+  transition: all 0.6s ease;
+}
+
+.service-card-hover:hover::before,
+.value-card-hover:hover::before,
+.goal-card-special:hover::before,
+.timeline-card-hover:hover::before,
+.partner-card-hover:hover::before {
+  left: 100%;
+}
+
+/* Service and Value cards hover */
+.service-card-hover:hover,
+.value-card-hover:hover {
+  transform: translateY(-12px) scale(1.05) rotate(-1deg);
+  box-shadow: 0 20px 50px rgba(0, 102, 204, 0.25);
+}
+
+/* Goal cards special hover */
+.goal-card-special:hover {
+  transform: translateY(-12px) scale(1.05) rotate(-2deg);
+  box-shadow: 0 20px 50px rgba(0, 102, 204, 0.3);
+  border-top-width: 6px;
+}
+
+.goal-card-special:hover .goal-number {
+  transform: scale(1.2);
+  color: #00ccff;
+}
+
+/* Timeline cards hover */
+.timeline-card-hover:hover {
+  transform: translateY(-10px) scale(1.03) rotate(-1deg);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+/* Partner cards hover */
+.partner-card-hover:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-10px) scale(1.03) rotate(-1deg);
+  box-shadow: 0 15px 40px rgba(255, 255, 255, 0.1);
+}
+
+/* Fade in animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+/* Timeline list items */
+.timeline-list li {
+  padding: 0.8rem 0;
+  padding-left: 1.5rem;
+  position: relative;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.timeline-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  background-color: #00ccff;
+  border-radius: 50%;
+}
+
+/* Stat card animations */
+.stat-card-pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Card Animations */
+.card-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: fadeInUp 0.8s ease-out both;
+}
+
+.card-hover:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Contact Page Polish */
+.contact-animate {
+  animation: fadeInUp 0.8s ease-out 0.2s both;
+  /* Slight delay for content */
+}
+
+.contact-input {
+  transition: all 0.3s ease;
+  border: 1px solid #e1e1e1 !important;
+}
+
+.contact-input:focus,
+.contact-select:focus,
+.contact-textarea:focus {
+  border-color: #00ccff !important;
+  box-shadow: 0 0 0 4px rgba(0, 204, 255, 0.1);
+  outline: none;
+}
+
+.info-card-hover {
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+}
+
+.info-card-hover:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08) !important;
+  border-color: #eef2f5;
+  background-color: white !important;
+}
+
+.submit-btn-hover {
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.submit-btn-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 204, 255, 0.4) !important;
+  filter: brightness(1.05);
+}
+
+@keyframes scrollTestimonials {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Animations au repos pour les services */
+@keyframes floatTitle {
+
+  0%,
+  100% {
+    transform: translateY(0);
+    color: var(--primary-color);
+  }
+
+  50% {
+    transform: translateY(-5px);
+    color: #00ccff;
+  }
+}
+
+.service-card h3 {
+  animation: floatTitle 4s ease-in-out infinite;
+  display: inline-block;
+}
+
+.service-icon-wrapper {
+  width: 60px;
+  height: 60px;
+  background: rgba(0, 204, 255, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 5px 15px rgba(0, 204, 255, 0.1);
+}
+
+.service-icon-floating {
+  animation: floatIcon 3s ease-in-out infinite;
+  display: inline-block;
+}
+
+@keyframes floatIcon {
+
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+
+  50% {
+    transform: translateY(-8px) scale(1.1);
+  }
+}
+
+.service-icon-wrapper-large {
+  width: 100px;
+  height: 100px;
+  background: rgba(0, 204, 255, 0.08);
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3.5rem;
+  box-shadow: 0 15px 35px rgba(0, 204, 255, 0.1);
+}
+
+.service-icon-floating-large {
+  animation: floatLarge 5s ease-in-out infinite;
+  display: inline-block;
+}
+
+@keyframes floatLarge {
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+
+  33% {
+    transform: translate(5px, -15px) scale(1.1) rotate(5deg);
+  }
+
+  66% {
+    transform: translate(-5px, -10px) scale(1.05) rotate(-5deg);
+  }
+}
