@@ -159,7 +159,7 @@ const WalletManagement = () => {
                                             <span style={styles.ribLabel}>IBAN</span>
                                             <span style={styles.ribValue}>{wallet.iban || 'Non défini'}</span>
                                         </div>
-                                        <div style={styles.ribRow}>
+                                        <div style={{ ...styles.ribRow, borderBottom: 'none' }}>
                                             <span style={styles.ribLabel}>BIC</span>
                                             <span style={styles.ribValue}>{wallet.bic || 'Non défini'}</span>
                                         </div>
@@ -213,7 +213,7 @@ const styles = {
     userName: { margin: 0, fontSize: '1.4rem', color: '#1e293b' },
     userEmail: { fontSize: '1rem', color: '#64748b' },
     walletsGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.5rem' },
-    walletCard: { background: '#f8fafc', borderRadius: '20px', padding: '1.5rem', border: '1px solid #f1f5f9', display: 'flex', flexDirection: 'column', transition: 'transform 0.2s', ':hover': { transform: 'translateY(-5px)' } },
+    walletCard: { background: '#f8fafc', borderRadius: '20px', padding: '1.5rem', border: '1px solid #f1f5f9', display: 'flex', flexDirection: 'column', transition: 'transform 0.2s' },
     walletHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' },
     walletType: { fontSize: '0.75rem', fontWeight: '800', color: '#64748b', letterSpacing: '1px' },
     statusBadge: { fontSize: '0.7rem', fontWeight: '800', padding: '4px 10px', borderRadius: '50px' },
@@ -221,7 +221,7 @@ const styles = {
     balanceLabel: { fontSize: '0.65rem', fontWeight: '700', color: '#94a3b8', letterSpacing: '0.5px', display: 'block', marginBottom: '5px' },
     balanceValue: { fontSize: '1.8rem', fontWeight: '800', color: '#003366' },
     ribSection: { background: 'white', padding: '1rem', borderRadius: '12px', border: '1px solid #f1f5f9', marginBottom: '1.5rem' },
-    ribRow: { display: 'flex', flexDirection: 'column', marginBottom: '10px', ':last-child': { marginBottom: 0 } },
+    ribRow: { display: 'flex', flexDirection: 'column', marginBottom: '10px', paddingBottom: '10px', borderBottom: '1px solid #f1f5f9' },
     ribLabel: { fontSize: '0.65rem', fontWeight: 'bold', color: '#94a3b8', textTransform: 'uppercase' },
     ribValue: { fontSize: '0.85rem', color: '#1e293b', wordBreak: 'break-all', fontFamily: 'monospace' },
     actions: { display: 'flex', gap: '10px', marginTop: 'auto' },

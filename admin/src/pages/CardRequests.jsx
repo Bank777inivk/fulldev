@@ -354,16 +354,16 @@ const styles = {
     infoRowSmall: { fontSize: '0.75rem', color: '#64748b', marginBottom: '5px', display: 'flex', alignItems: 'center', gap: '5px' },
     actionsSmall: { display: 'flex', gap: '5px', marginTop: 'auto', paddingTop: '10px' },
     approveBtnSmall: { flex: 2, padding: '8px', borderRadius: '8px', border: 'none', background: '#10b981', color: 'white', fontWeight: 'bold', cursor: 'pointer', fontSize: '0.75rem' },
-    rejectBtnSmall: { flex: 1, padding: '8px', borderRadius: '8px', border: '1px solid #ef4444', background: 'transparent', color: '#ef4444', fontWeight: 'bold', cursor: 'pointer', fontSize: '0.75rem' },
+    rejectBtnSmall: { flex: 1, padding: '8px', borderRadius: '8px', borderWidth: '1px', borderStyle: 'solid', borderColor: '#ef4444', background: 'transparent', color: '#ef4444', fontWeight: 'bold', cursor: 'pointer', fontSize: '0.75rem' },
     resetBtnSmall: { flex: 1, padding: '8px', borderRadius: '8px', border: 'none', background: '#e2e8f0', color: '#64748b', fontWeight: 'bold', cursor: 'pointer', fontSize: '0.75rem' },
     deliverBtnSmall: { flex: 2, padding: '8px', borderRadius: '8px', border: 'none', background: '#3b82f6', color: 'white', fontWeight: 'bold', cursor: 'pointer', fontSize: '0.75rem' },
     activateRealBtnSmall: { flex: 2, padding: '8px', borderRadius: '8px', border: 'none', background: '#8b5cf6', color: 'white', fontWeight: 'bold', cursor: 'pointer', fontSize: '0.75rem' },
-    editBtnSmall: { flex: 1, padding: '8px', borderRadius: '8px', border: '1px solid #003366', background: 'transparent', color: '#003366', fontWeight: 'bold', cursor: 'pointer', fontSize: '0.75rem' },
+    editBtnSmall: { flex: 1, padding: '8px', borderRadius: '8px', borderWidth: '1px', borderStyle: 'solid', borderColor: '#003366', background: 'transparent', color: '#003366', fontWeight: 'bold', cursor: 'pointer', fontSize: '0.75rem' },
     blockBtnSmall: { flex: 2, padding: '8px', borderRadius: '8px', borderWidth: '1px', borderStyle: 'solid', borderColor: 'currentColor', background: 'transparent', fontWeight: 'bold', cursor: 'pointer', fontSize: '0.75rem' },
-    deactivateBtnSmall: { flex: 1, padding: '8px', borderRadius: '8px', border: '1px solid #64748b', background: 'transparent', color: '#64748b', fontWeight: 'bold', cursor: 'pointer', fontSize: '0.75rem' },
+    deactivateBtnSmall: { flex: 1, padding: '8px', borderRadius: '8px', borderWidth: '1px', borderStyle: 'solid', borderColor: '#64748b', background: 'transparent', color: '#64748b', fontWeight: 'bold', cursor: 'pointer', fontSize: '0.75rem' },
     deleteBtnSmall: { width: '35px', padding: '8px', borderRadius: '8px', border: 'none', background: '#fee2e2', color: '#ef4444', fontWeight: 'bold', cursor: 'pointer', fontSize: '0.75rem' },
     loading: { textAlign: 'center', padding: '5rem', color: '#64748b' },
-    emptyState: { textAlign: 'center', padding: '5rem 2rem', background: 'white', borderRadius: '24px', border: '2px dashed #e2e8f0', color: '#64748b' }
+    emptyState: { textAlign: 'center', padding: '5rem 2rem', background: 'white', borderRadius: '24px', borderWidth: '2px', borderStyle: 'dashed', borderColor: '#e2e8f0', color: '#64748b' }
 };
 
 export default CardRequests;

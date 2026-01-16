@@ -214,7 +214,7 @@ const styles = {
     rejectBtn: { flex: 1, padding: '10px', borderRadius: '10px', border: '1px solid #ef4444', background: 'transparent', color: '#ef4444', fontWeight: 'bold', cursor: 'pointer', fontSize: '0.85rem' },
     resetBtn: { flex: 1, padding: '10px', borderRadius: '10px', border: 'none', background: '#e2e8f0', color: '#64748b', fontWeight: 'bold', cursor: 'pointer', fontSize: '0.85rem' },
     deleteBtn: { padding: '10px', borderRadius: '10px', border: 'none', background: '#fee2e2', color: '#ef4444', cursor: 'pointer' },
-    emptyState: { textAlign: 'center', padding: '4rem 2rem', background: 'white', borderRadius: '24px', border: '2px dashed #e2e8f0', color: '#64748b', width: '100%', gridColumn: '1 / -1' }
+    emptyState: { textAlign: 'center', padding: '4rem 2rem', background: 'white', borderRadius: '24px', borderWidth: '2px', borderStyle: 'dashed', borderColor: '#e2e8f0', color: '#64748b', width: '100%', gridColumn: '1 / -1' }
 };
 
 export default LoanManagement;
