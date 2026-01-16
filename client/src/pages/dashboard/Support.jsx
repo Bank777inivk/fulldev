@@ -11,6 +11,30 @@ const Support = () => {
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
     const [showForm, setShowForm] = useState(false);
     const [formData, setFormData] = useState({ subject: '', message: '', category: 'technical' });
+    const [activeFaq, setActiveFaq] = useState(null);
+
+    const faqData = [
+        {
+            q: "Virements non reçus",
+            a: "Un virement SEPA classique prend généralement 1 à 2 jours ouvrables. Si vous attendez un virement international, cela peut prendre jusqu'à 5 jours. Vérifiez que l'IBAN fourni est correct."
+        },
+        {
+            q: "Plafonds de carte",
+            a: "Vous pouvez consulter vos plafonds actuels dans la section 'Cartes'. Pour une augmentation temporaire ou permanente, veuillez contacter votre conseiller via un ticket de support."
+        },
+        {
+            q: "Sécuriser mon compte",
+            a: "Activez toujours l'authentification à deux facteurs (2FA). Ne partagez jamais vos codes reçus par SMS. En cas de doute sur une transaction, bloquez immédiatement votre carte depuis l'application."
+        },
+        {
+            q: "Frais bancaires",
+            a: "Nos tarifs sont transparents. Le compte standard est gratuit. Les frais de tenue de compte pour les comptes premium sont prélevés mensuellement. Consultez notre grille tarifaire dans 'Documents'."
+        },
+        {
+            q: "Mot de passe oublié",
+            a: "Cliquez sur 'Mot de passe oublié' sur la page de connexion. Un lien de réinitialisation vous sera envoyé par email instantanément."
+        }
+    ];
 
     useEffect(() => {
         const fetchTickets = async () => {
@@ -56,6 +80,28 @@ const Support = () => {
                     <div style={styles.actionCard} onClick={() => setShowForm(!showForm)}><i className="fas fa-paper-plane"></i><span>Ticket</span></div>
                 </div>
 
+                <div style={{ marginBottom: '2rem' }}>
+                    <h3 style={{ fontSize: '1rem', marginBottom: '1rem', color: '#003366' }}>FAQ Rapide</h3>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        {faqData.map((faq, idx) => (
+                            <div key={idx} style={{ background: 'white', borderRadius: '12px', border: '1px solid #eee', overflow: 'hidden' }}>
+                                <div
+                                    onClick={() => setActiveFaq(activeFaq === idx ? null : idx)}
+                                    style={{ padding: '12px 15px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}
+                                >
+                                    <span style={{ fontSize: '0.85rem', fontWeight: 'bold', color: '#334155' }}>{faq.q}</span>
+                                    <i className={`fas fa-chevron-${activeFaq === idx ? 'up' : 'down'}`} style={{ fontSize: '0.7rem', color: '#94a3b8' }}></i>
+                                </div>
+                                {activeFaq === idx && (
+                                    <div style={{ padding: '0 15px 12px', fontSize: '0.8rem', color: '#64748b', lineHeight: '1.4' }}>
+                                        {faq.a}
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
                 {showForm && (
                     <div style={styles.mobileForm}>
                         <h3 style={{ fontSize: '1rem', marginBottom: '1rem' }}>Nouveau ticket</h3>
@@ -96,12 +142,25 @@ const Support = () => {
 
             <div style={styles.grid}>
                 <div style={styles.faqSection}>
-                    <h2 style={{ color: '#003366', marginBottom: '1.5rem' }}>FAQ & Aide rapide</h2>
+                    <h2 style={{ color: '#003366', marginBottom: '1.5rem', fontWeight: '800' }}>FAQ & Aide rapide</h2>
                     <div style={styles.faqCard}>
-                        {['Virements non reçus', 'Plafonds de carte', 'Sécuriser mon compte', 'Frais bancaires'].map(q => (
-                            <div key={q} style={styles.faqItem}>
-                                <span>{q}</span>
-                                <i className="fas fa-chevron-right"></i>
+                        {faqData.map((faq, idx) => (
+                            <div key={idx} style={{
+                                ...styles.faqItem,
+                                background: activeFaq === idx ? '#f0f7ff' : '#f8fbff',
+                                border: activeFaq === idx ? '1px solid #00336640' : '1px solid transparent',
+                                flexDirection: 'column',
+                                alignItems: 'stretch'
+                            }} onClick={() => setActiveFaq(activeFaq === idx ? null : idx)}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <span style={{ fontWeight: '700', color: activeFaq === idx ? '#003366' : '#334155' }}>{faq.q}</span>
+                                    <i className={`fas fa-chevron-${activeFaq === idx ? 'up' : 'down'}`} style={{ color: '#003366', fontSize: '0.9rem' }}></i>
+                                </div>
+                                {activeFaq === idx && (
+                                    <div style={{ marginTop: '12px', fontSize: '0.9rem', color: '#64748b', lineHeight: '1.5', borderTop: '1px solid #00336610', paddingTop: '12px' }}>
+                                        {faq.a}
+                                    </div>
+                                )}
                             </div>
                         ))}
                     </div>

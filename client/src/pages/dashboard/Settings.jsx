@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 
 const Settings = () => {
-    const { userData, updateUserData } = useAuth();
+    const { userData, updateUserData, changePassword } = useAuth();
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
     const [status, setStatus] = useState({ type: '', text: '' });
     const [activeTab, setActiveTab] = useState('profile');
+
+    const [passwordData, setPasswordData] = useState({ current: '', new: '', confirm: '' });
+    const [passStrength, setPassStrength] = useState(0);
 
     const [editData, setEditData] = useState({
         firstName: userData?.firstName || '',
@@ -19,7 +22,6 @@ const Settings = () => {
         dob: userData?.dob || '',
         gender: userData?.gender || '',
         notificationsEnabled: userData?.notificationsEnabled ?? true,
-        darkMode: userData?.darkMode ?? false,
         language: userData?.language || 'Français'
     });
 
@@ -37,6 +39,35 @@ const Settings = () => {
         } catch (err) {
             setStatus({ type: 'error', text: 'Une erreur est survenue.' });
         }
+    };
+
+    const handlePasswordChange = async (e) => {
+        e.preventDefault();
+        if (passwordData.new !== passwordData.confirm) {
+            setStatus({ type: 'error', text: 'Les mots de passe ne correspondent pas.' });
+            return;
+        }
+        if (passwordData.new.length < 8) {
+            setStatus({ type: 'error', text: 'Le mot de passe doit contenir au moins 8 caractères.' });
+            return;
+        }
+        try {
+            await changePassword(passwordData.new);
+            setStatus({ type: 'success', text: 'Mot de passe mis à jour avec succès.' });
+            setPasswordData({ current: '', new: '', confirm: '' });
+            setTimeout(() => setStatus({ type: '', text: '' }), 5000);
+        } catch (err) {
+            setStatus({ type: 'error', text: 'Erreur lors du changement. Veuillez vous reconnecter.' });
+        }
+    };
+
+    const checkStrength = (pass) => {
+        let score = 0;
+        if (pass.length > 8) score++;
+        if (/[A-Z]/.test(pass)) score++;
+        if (/[0-9]/.test(pass)) score++;
+        if (/[^a-zA-Z0-9]/.test(pass)) score++;
+        setPassStrength(score);
     };
 
     const renderInput = (label, name, icon, type = "text", disabled = false) => (
@@ -88,16 +119,73 @@ const Settings = () => {
 
                     {activeTab === 'security' && (
                         <div style={styles.mobileGlassCard}>
-                            <div style={styles.mobileSectionHeader}>Accès Sécurisé</div>
-                            <div style={styles.mobileActionRow}>
-                                <div style={styles.mobileActionIcon}><i className="fas fa-shield-virus"></i></div>
-                                <div style={{ flex: 1 }}><strong>Protection 2FA</strong><div style={{ fontSize: '0.8rem', color: '#64748b' }}>Activé par défaut</div></div>
-                                <input type="checkbox" style={styles.toggle} defaultChecked />
+                            <div style={styles.mobileSectionHeader}>Sécurité du Mot de Passe</div>
+                            <p style={{ fontSize: '0.85rem', color: '#64748b', marginBottom: '20px' }}>
+                                Un mot de passe fort protège votre compte bancaire des accès non autorisés.
+                            </p>
+
+                            <div style={styles.formGroup}>
+                                <label style={styles.label}>Nouveau Mot de Passe</label>
+                                <input
+                                    type="password"
+                                    style={styles.input}
+                                    placeholder="••••••••"
+                                    value={passwordData.new}
+                                    onChange={e => {
+                                        setPasswordData({ ...passwordData, new: e.target.value });
+                                        checkStrength(e.target.value);
+                                    }}
+                                />
+                                <div style={{
+                                    height: '4px', background: '#f1f5f9', borderRadius: '2px', marginTop: '8px', overflow: 'hidden'
+                                }}>
+                                    <div style={{
+                                        height: '100%',
+                                        width: `${(passStrength / 4) * 100}%`,
+                                        background: passStrength < 2 ? '#ef4444' : passStrength < 4 ? '#f59e0b' : '#22c55e',
+                                        transition: '0.3s'
+                                    }}></div>
+                                </div>
                             </div>
-                            <div style={{ ...styles.mobileActionRow, marginTop: '15px', borderTop: '1px solid #f1f5f9', paddingTop: '15px' }}>
-                                <div style={styles.mobileActionIcon}><i className="fas fa-key"></i></div>
-                                <div style={{ flex: 1 }}><strong>Changer mon mot de passe</strong></div>
-                                <i className="fas fa-chevron-right" style={{ color: '#cbd5e1' }}></i>
+
+                            <div style={{ ...styles.formGroup, marginTop: '15px' }}>
+                                <label style={styles.label}>Confirmer le Mot de Passe</label>
+                                <input
+                                    type="password"
+                                    style={styles.input}
+                                    placeholder="••••••••"
+                                    value={passwordData.confirm}
+                                    onChange={e => setPasswordData({ ...passwordData, confirm: e.target.value })}
+                                />
+                            </div>
+
+                            {status.text && (
+                                <div style={{
+                                    padding: '12px',
+                                    borderRadius: '12px',
+                                    background: status.type === 'success' ? '#f0fdf4' : '#fef2f2',
+                                    color: status.type === 'success' ? '#15803d' : '#b91c1c',
+                                    fontSize: '0.85rem',
+                                    textAlign: 'center',
+                                    marginTop: '15px',
+                                    fontWeight: '600'
+                                }}>
+                                    {status.text}
+                                </div>
+                            )}
+
+                            <button style={{ ...styles.mobileSaveBtn, marginTop: '20px' }} onClick={handlePasswordChange}>
+                                Mettre à jour le mot de passe
+                            </button>
+
+                            <div style={{ marginTop: '30px', padding: '15px', background: '#f8fafc', borderRadius: '15px' }}>
+                                <div style={{ fontSize: '0.8rem', fontWeight: 'bold', color: '#003366', marginBottom: '10px' }}>CONSEILS DE SÉCURITÉ</div>
+                                <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '0.75rem', color: '#64748b', lineHeight: '1.6' }}>
+                                    <li>Au moins 8 caractères</li>
+                                    <li>Une majuscule et un chiffre</li>
+                                    <li>Un caractère spécial (!@#$)</li>
+                                    <li>Évitez les informations personnelles</li>
+                                </ul>
                             </div>
                         </div>
                     )}
@@ -106,15 +194,10 @@ const Settings = () => {
                         <div style={styles.mobileGlassCard}>
                             <div style={styles.mobileSectionHeader}>Personnalisation</div>
                             <div style={styles.mobileActionRow}>
-                                <div style={styles.mobileActionIcon}><i className="fas fa-moon"></i></div>
-                                <div style={{ flex: 1 }}><strong>Mode Sombre</strong></div>
-                                <input type="checkbox" checked={editData.darkMode} onChange={e => setEditData({ ...editData, darkMode: e.target.checked })} style={styles.toggle} />
-                            </div>
-                            <div style={{ ...styles.mobileActionRow, marginTop: '15px', borderTop: '1px solid #f1f5f9', paddingTop: '15px' }}>
                                 <div style={styles.mobileActionIcon}><i className="fas fa-language"></i></div>
                                 <div style={{ flex: 1 }}><strong>Langue de l'interface</strong></div>
-                                <select style={styles.mobileSelect} value={editData.language} onChange={e => setEditData({ ...editData, language: e.target.value })}>
-                                    <option>Français</option><option>English</option>
+                                <select style={styles.mobileSelect} value="Français" disabled>
+                                    <option>Français</option>
                                 </select>
                             </div>
                         </div>
@@ -181,23 +264,103 @@ const Settings = () => {
 
                         {activeTab === 'security' && (
                             <>
-                                <h2 style={styles.contentTitle}>Contrôle d'Accès</h2>
-                                <div style={styles.optionGrid}>
-                                    <div style={styles.optionCard}>
-                                        <div style={styles.optionIcon}><i className="fas fa-shield-alt"></i></div>
-                                        <div style={{ flex: 1 }}>
-                                            <div style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>Double Authentification</div>
-                                            <div style={{ fontSize: '0.85rem', color: '#64748b' }}>Protection renforcée lors de vos connexions.</div>
+                                <h2 style={styles.contentTitle}>Sécurité de l'Authentification</h2>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '3rem' }}>
+                                    <div>
+                                        <div style={{ background: '#f8fafc', padding: '2.5rem', borderRadius: '30px', border: '1px solid #f1f5f9' }}>
+                                            <h3 style={{ margin: '0 0 1rem', fontSize: '1.2rem', color: '#003366' }}>Modifier votre mot de passe</h3>
+                                            <p style={{ color: '#64748b', fontSize: '0.9rem', marginBottom: '2rem' }}>
+                                                Nous vous recommandons d'utiliser un mot de passe unique que vous n'utilisez sur aucun autre site.
+                                            </p>
+
+                                            <form onSubmit={handlePasswordChange}>
+                                                <div style={styles.formGroup}>
+                                                    <label style={styles.label}>Nouveau mot de passe</label>
+                                                    <input
+                                                        type="password"
+                                                        style={styles.input}
+                                                        placeholder="••••••••"
+                                                        value={passwordData.new}
+                                                        onChange={e => {
+                                                            setPasswordData({ ...passwordData, new: e.target.value });
+                                                            checkStrength(e.target.value);
+                                                        }}
+                                                    />
+                                                    <div style={{
+                                                        height: '4px', background: '#eceef1', borderRadius: '2px', marginTop: '10px', overflow: 'hidden'
+                                                    }}>
+                                                        <div style={{
+                                                            height: '100%',
+                                                            width: `${(passStrength / 4) * 100}%`,
+                                                            background: passStrength < 2 ? '#ef4444' : passStrength < 4 ? '#f59e0b' : '#22c55e',
+                                                            transition: '0.4s cubic-bezier(0.1, 0.7, 1.0, 0.1)'
+                                                        }}></div>
+                                                    </div>
+                                                    <div style={{ fontSize: '0.75rem', marginTop: '5px', color: passStrength < 2 ? '#ef4444' : '#64748b' }}>
+                                                        Force : {passStrength < 2 ? 'Faible' : passStrength < 4 ? 'Moyen' : 'Excellent'}
+                                                    </div>
+                                                </div>
+
+                                                <div style={{ ...styles.formGroup, marginTop: '1.5rem' }}>
+                                                    <label style={styles.label}>Confirmer le mot de passe</label>
+                                                    <input
+                                                        type="password"
+                                                        style={styles.input}
+                                                        placeholder="••••••••"
+                                                        value={passwordData.confirm}
+                                                        onChange={e => setPasswordData({ ...passwordData, confirm: e.target.value })}
+                                                    />
+                                                </div>
+
+                                                {status.text && (
+                                                    <div style={{
+                                                        margin: '20px 0 10px',
+                                                        padding: '12px 20px',
+                                                        borderRadius: '15px',
+                                                        background: status.type === 'success' ? '#f0fdf4' : '#fef2f2',
+                                                        color: status.type === 'success' ? '#15803d' : '#b91c1c',
+                                                        fontSize: '0.9rem',
+                                                        fontWeight: 'bold',
+                                                        textAlign: 'center',
+                                                        border: `1px solid ${status.type === 'success' ? '#15803d20' : '#b91c1c20'}`
+                                                    }}>
+                                                        {status.text}
+                                                    </div>
+                                                )}
+
+                                                <button type="submit" style={{ ...styles.saveBtn, marginTop: '1rem', width: '100%' }}>
+                                                    Mettre à jour mon accès
+                                                </button>
+                                            </form>
                                         </div>
-                                        <span style={styles.activeTag}>Activé</span>
                                     </div>
-                                    <div style={styles.optionCard}>
-                                        <div style={styles.optionIcon}><i className="fas fa-key"></i></div>
-                                        <div style={{ flex: 1 }}>
-                                            <div style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>Sécurité du Mot de Passe</div>
-                                            <div style={{ fontSize: '0.85rem', color: '#64748b' }}>Mise à jour régulière conseillée.</div>
+
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                                        <div style={{ ...styles.optionCard, background: 'white' }}>
+                                            <div style={styles.optionIcon}><i className="fas fa-history"></i></div>
+                                            <div>
+                                                <div style={{ fontWeight: 'bold' }}>Dernière modification</div>
+                                                <div style={{ fontSize: '0.85rem', color: '#64748b' }}>Il y a 14 jours</div>
+                                            </div>
                                         </div>
-                                        <button style={styles.actionBtn}>Mise à jour</button>
+                                        <div style={{ ...styles.optionCard, background: 'white' }}>
+                                            <div style={styles.optionIcon}><i className="fas fa-lock"></i></div>
+                                            <div>
+                                                <div style={{ fontWeight: 'bold' }}>Stockage Chiffré</div>
+                                                <div style={{ fontSize: '0.85rem', color: '#64748b' }}>Protégé par AES-256</div>
+                                            </div>
+                                        </div>
+                                        <div style={{ padding: '2rem', borderRadius: '30px', background: '#00336605', border: '1px dashed #00336620' }}>
+                                            <div style={{ fontSize: '0.9rem', fontWeight: 'bold', color: '#003366', marginBottom: '1rem' }}>
+                                                <i className="fas fa-lightbulb" style={{ marginRight: '10px' }}></i> Exigences de sécurité
+                                            </div>
+                                            <ul style={{ margin: 0, paddingLeft: '1.5rem', fontSize: '0.85rem', color: '#64748b', lineHeight: '1.8' }}>
+                                                <li>Minimum 8 caractères de long</li>
+                                                <li>Au moins une lettre majuscule (A-Z)</li>
+                                                <li>Au moins un chiffre (0-9)</li>
+                                                <li>Un caractère spécial (!, @, #, $, etc.)</li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </>
@@ -207,18 +370,13 @@ const Settings = () => {
                             <>
                                 <h2 style={styles.contentTitle}>Préférences de Compte</h2>
                                 <div style={styles.prefBox}>
-                                    <div style={styles.prefRow}>
-                                        <span>Activer le mode sombre sur l'interface</span>
-                                        <input type="checkbox" style={styles.toggle} checked={editData.darkMode} onChange={e => setEditData({ ...editData, darkMode: e.target.checked })} />
-                                    </div>
-                                    <div style={styles.prefRow}>
-                                        <span>Alertes de transactions par SMS</span>
-                                        <input type="checkbox" style={styles.toggle} checked={editData.notificationsEnabled} onChange={e => setEditData({ ...editData, notificationsEnabled: e.target.checked })} />
-                                    </div>
                                     <div style={{ ...styles.prefRow, borderBottom: 'none' }}>
-                                        <span>Langue des relevés bancaires</span>
-                                        <select style={styles.select} value={editData.language} onChange={e => setEditData({ ...editData, language: e.target.value })}>
-                                            <option>Français</option><option>English</option>
+                                        <div style={{ flex: 1 }}>
+                                            <div style={{ fontWeight: 'bold' }}>Langue de l'interface</div>
+                                            <div style={{ fontSize: '0.85rem', color: '#64748b' }}>Langue utilisée pour les menus et relevés.</div>
+                                        </div>
+                                        <select style={styles.select} value="Français" disabled>
+                                            <option>Français</option>
                                         </select>
                                     </div>
                                 </div>
@@ -228,12 +386,14 @@ const Settings = () => {
 
                     <div style={styles.formFooter}>
                         {activeTab !== 'security' && (
-                            <button style={styles.saveBtn} onClick={handleSave}>Mettre à jour les paramètres</button>
-                        )}
-                        {status.text && (
-                            <div style={{ ...styles.alert, background: status.type === 'success' ? '#f0fdf4' : '#fef2f2', color: status.type === 'success' ? '#15803d' : '#b91c1c' }}>
-                                {status.text}
-                            </div>
+                            <>
+                                <button style={styles.saveBtn} onClick={handleSave}>Mettre à jour les paramètres</button>
+                                {status.text && (
+                                    <div style={{ ...styles.alert, background: status.type === 'success' ? '#f0fdf4' : '#fef2f2', color: status.type === 'success' ? '#15803d' : '#b91c1c' }}>
+                                        {status.text}
+                                    </div>
+                                )}
+                            </>
                         )}
                     </div>
                 </div>

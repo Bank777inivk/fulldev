@@ -4,11 +4,26 @@ import { useAuth } from '../contexts/AuthContext';
 
 const Login = () => {
     const navigate = useNavigate();
-    const { login } = useAuth();
+    const { login, resetPassword } = useAuth();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+
+    const handleForgotPassword = async (e) => {
+        e.preventDefault();
+        if (!email) {
+            setError("Veuillez saisir votre adresse email pour réinitialiser le mot de passe.");
+            return;
+        }
+        try {
+            await resetPassword(email);
+            setError('');
+            alert("Lien de réinitialisation envoyé ! Vérifiez votre boîte mail.");
+        } catch (err) {
+            setError("Impossible d'envoyer l'email de réinitialisation.");
+        }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();

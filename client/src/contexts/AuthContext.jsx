@@ -4,7 +4,9 @@ import {
     signInWithEmailAndPassword,
     createUserWithEmailAndPassword,
     signOut,
-    sendEmailVerification
+    sendEmailVerification,
+    updatePassword,
+    sendPasswordResetEmail
 } from 'firebase/auth';
 import { auth, db } from '../firebase/config';
 import { doc, getDoc, setDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
@@ -129,6 +131,15 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const changePassword = async (newPassword) => {
+        if (!currentUser) return;
+        await updatePassword(currentUser, newPassword);
+    };
+
+    const resetPassword = (email) => {
+        return sendPasswordResetEmail(auth, email);
+    };
+
     const value = {
         user: currentUser,
         currentUser,
@@ -139,6 +150,8 @@ export const AuthProvider = ({ children }) => {
         updateUserData,
         deleteAccount,
         checkEmailVerification,
+        changePassword,
+        resetPassword,
         loading
     };
 
