@@ -1,11 +1,5 @@
-```json
 {
     "version": 2,
-    "routes": [
-        {
-            "handle": "filesystem"
-        }
-    ],
     "rewrites": [
         {
             "source": "/(.*)",
@@ -13,4 +7,3 @@
         }
     ]
 }
-```
