@@ -17,6 +17,7 @@ const AdminLayout = () => {
 
     const [pendingKYC, setPendingKYC] = useState(0);
     const [pendingCards, setPendingCards] = useState(0);
+    const [pendingAccounts, setPendingAccounts] = useState(0);
 
     useEffect(() => {
         const handleResize = () => {
@@ -37,10 +38,15 @@ const AdminLayout = () => {
             setPendingCards(data.filter(c => c.status === 'pending').length);
         });
 
+        const unsubAccounts = adminService.subscribeToAccountRequests(data => {
+            setPendingAccounts(data.filter(r => r.status === 'pending').length);
+        });
+
         return () => {
             window.removeEventListener('resize', handleResize);
             unsubKYC();
             unsubCards();
+            unsubAccounts();
         };
     }, []);
 
@@ -51,6 +57,7 @@ const AdminLayout = () => {
         { path: '/kyc', icon: 'fas fa-id-card', label: 'Vérifications KYC', badge: pendingKYC || null },
         { path: '/cards', icon: 'fas fa-credit-card', label: 'Cartes Bancaires', badge: pendingCards || null },
         { path: '/wallets', icon: 'fas fa-wallet', label: 'Portefeuilles' },
+        { path: '/account-requests', icon: 'fas fa-envelope-open-text', label: 'Demandes Comptes', badge: pendingAccounts || null },
         { path: '/loans', icon: 'fas fa-hand-holding-usd', label: 'Prêts' },
     ];
 

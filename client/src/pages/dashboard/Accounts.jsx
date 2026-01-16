@@ -6,15 +6,182 @@ import { useNotifications } from '../../contexts/NotificationContext';
 import { walletService } from '../../services/walletService';
 import { cardService } from '../../services/cardService';
 import { ribService } from '../../services/ribService';
-import { kycService } from '../../services/kycService';
 import KycVerificationBanner from '../../components/dashboard/KycVerificationBanner';
+
+const RibModal = ({ isOpen, onClose, rib, wallet, showToast }) => {
+    if (!isOpen || !rib) return null;
+
+    const copyToClipboard = (text, label) => {
+        navigator.clipboard.writeText(text);
+        if (showToast) showToast(`${label} copié dans le presse-papiers !`, 'success');
+    };
+
+    return (
+        <div style={{
+            position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+            background: 'rgba(15, 23, 42, 0.7)', backdropFilter: 'blur(8px)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2000,
+            padding: '10px'
+        }} onClick={onClose}>
+            <div style={{
+                background: 'white', borderRadius: '28px', padding: '1.25rem',
+                width: '100%', maxWidth: '480px', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)',
+                position: 'relative', overflow: 'hidden'
+            }} onClick={e => e.stopPropagation()}>
+                <button onClick={onClose} style={{
+                    position: 'absolute', top: '0.75rem', right: '0.75rem', zIndex: 10,
+                    border: 'none', background: '#f1f5f9', width: '30px', height: '30px',
+                    borderRadius: '50%', cursor: 'pointer', color: '#64748b', display: 'flex', alignItems: 'center', justifyContent: 'center'
+                }}>
+                    <i className="fas fa-times" style={{ fontSize: '0.8rem' }}></i>
+                </button>
+
+                <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
+                    <div style={{
+                        width: '40px', height: '40px', borderRadius: '14px',
+                        background: 'linear-gradient(135deg, #003366, #00509e)',
+                        color: 'white', display: 'flex', alignItems: 'center',
+                        justifyContent: 'center', fontSize: '1rem', margin: '0 auto 0.5rem'
+                    }}>
+                        <i className="fas fa-file-invoice"></i>
+                    </div>
+                    <h2 style={{ fontSize: '1.1rem', fontWeight: '800', margin: 0, color: '#0f172a' }}>RIB / IBAN</h2>
+                    <p style={{ color: '#64748b', fontSize: '0.75rem', margin: '2px 0 0' }}>Coordonnées Officielles</p>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    {[
+                        { label: 'Titulaire', value: rib.holderName },
+                        { label: 'IBAN', value: rib.iban },
+                        { label: 'BIC / SWIFT', value: rib.bic },
+                        { label: 'Banque', value: 'INVIK BANK' },
+                        { label: 'Type', value: rib.accountName }
+                    ].map((item, idx) => (
+                        <div key={idx} style={{
+                            padding: '8px 12px', background: '#f8fafc', borderRadius: '12px',
+                            border: '1px solid #e2e8f0', position: 'relative'
+                        }}>
+                            <div style={{ fontSize: '0.6rem', fontWeight: '800', color: '#94a3b8', textTransform: 'uppercase', marginBottom: '1px', letterSpacing: '0.3px' }}>
+                                {item.label}
+                            </div>
+                            <div style={{ fontSize: '0.85rem', fontWeight: '700', color: '#1e293b', wordBreak: 'break-all', paddingRight: '30px', lineHeight: '1.2' }}>
+                                {item.value}
+                            </div>
+                            <button
+                                onClick={() => copyToClipboard(item.value, item.label)}
+                                style={{
+                                    position: 'absolute', right: '8px', top: '50%', transform: 'translateY(-50%)',
+                                    border: 'none', background: 'white', color: '#003366',
+                                    padding: '5px', borderRadius: '8px', cursor: 'pointer',
+                                    boxShadow: '0 2px 4px rgba(0,0,0,0.05)', display: 'flex'
+                                }}
+                            >
+                                <i className="far fa-copy" style={{ fontSize: '0.8rem' }}></i>
+                            </button>
+                        </div>
+                    ))}
+                </div>
+
+                <button onClick={onClose} style={{
+                    width: '100%', padding: '12px', borderRadius: '14px', border: 'none',
+                    background: '#003366', color: 'white', fontWeight: '800', fontSize: '0.9rem',
+                    marginTop: '1rem', cursor: 'pointer', transition: 'transform 0.2s'
+                }}>
+                    Fermer
+                </button>
+            </div>
+        </div>
+    );
+};
+
+const AccountCard = ({ wallet, isLoading, onRibClick, navigate }) => {
+    if (isLoading || !wallet) return (
+        <div style={{ background: '#f8f9fa', borderRadius: '16px', height: '240px', animation: 'pulse 1.5s infinite' }}></div>
+    );
+
+    const config = {
+        main: { label: 'Compte Courant', icon: 'fa-wallet', color: '#003366' },
+        savings: { label: 'Compte Épargne', icon: 'fa-piggy-bank', color: '#27ae60' },
+        credit: { label: 'Réserve Crédit', icon: 'fa-hand-holding-usd', color: '#c0392b' },
+        currency: { label: 'Compte Devise', icon: 'fa-globe', color: '#f39c12' }
+    }[wallet.type] || { label: 'Autre Compte', icon: 'fa-university', color: '#7f8c8d' };
+
+    return (
+        <div style={{
+            background: 'white',
+            borderRadius: '24px',
+            padding: '1.5rem',
+            boxShadow: '0 4px 25px rgba(0,0,0,0.05)',
+            border: '1px solid #edf2f7',
+            display: 'flex',
+            flexDirection: 'column',
+            minHeight: '260px',
+            position: 'relative'
+        }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem' }}>
+                <div>
+                    <div style={{ fontSize: '0.85rem', fontWeight: '800', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                        {config.label}
+                    </div>
+                </div>
+                <div style={{
+                    width: '44px', height: '44px', borderRadius: '14px',
+                    background: `${config.color}10`, color: config.color,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center'
+                }}>
+                    <i className={`fas ${config.icon}`} style={{ fontSize: '1.2rem' }}></i>
+                </div>
+            </div>
+
+            <div style={{ flex: 1 }}>
+                <div style={{
+                    fontSize: '2.2rem', fontWeight: '900',
+                    color: wallet.type === 'credit' ? '#e11d48' : '#003366',
+                    margin: '0 0 0.5rem'
+                }}>
+                    {wallet.balance.toLocaleString('fr-FR', { minimumFractionDigits: 2 })} <span style={{ fontSize: '1rem', fontWeight: '500' }}>{wallet.currency}</span>
+                </div>
+                <div style={{ fontSize: '0.85rem', color: '#94a3b8', fontFamily: 'monospace', opacity: 0.8 }}>
+                    {wallet.iban}
+                </div>
+            </div>
+
+            {/* QUICK ACTIONS */}
+            <div style={{
+                display: 'flex', gap: '8px', marginTop: '1.5rem',
+                paddingTop: '1.25rem', borderTop: '1px solid #f1f5f9'
+            }}>
+                <button
+                    onClick={() => navigate('/dashboard/transfers')}
+                    style={{ flex: 1, padding: '10px', borderRadius: '12px', border: 'none', background: '#f1f5f9', color: '#003366', fontWeight: '700', fontSize: '0.8rem', cursor: 'pointer' }}
+                >
+                    <i className="fas fa-paper-plane" style={{ marginRight: '6px' }}></i> Virer
+                </button>
+                <button
+                    onClick={() => navigate('/dashboard/deposit')}
+                    style={{ flex: 1, padding: '10px', borderRadius: '12px', border: 'none', background: '#f1f5f9', color: '#003366', fontWeight: '700', fontSize: '0.8rem', cursor: 'pointer' }}
+                >
+                    <i className="fas fa-plus" style={{ marginRight: '6px' }}></i> Déposer
+                </button>
+                <button
+                    onClick={onRibClick}
+                    style={{ flex: 1, padding: '10px', borderRadius: '12px', border: 'none', background: '#003366', color: 'white', fontWeight: '700', fontSize: '0.8rem', cursor: 'pointer' }}
+                >
+                    <i className="fas fa-file-invoice" style={{ marginRight: '6px' }}></i> RIB
+                </button>
+            </div>
+        </div>
+    );
+};
 
 const Accounts = () => {
     const { currentUser, userData } = useAuth();
-    const { wallets, kycStatus, loading } = useData();
-    const { showToast, alert: showCustomAlert } = useNotifications();
+    const { wallets, accountRequests, ribs, loading } = useData();
+    const { showToast } = useNotifications();
     const navigate = useNavigate();
-    const [activeAccount, setActiveAccount] = useState(null);
+
+    const [selectedRib, setSelectedRib] = useState(null);
+    const [isRibModalOpen, setIsRibModalOpen] = useState(false);
     const [showRequestModal, setShowRequestModal] = useState(false);
     const [requestType, setRequestType] = useState('savings');
     const [requestDetails, setRequestDetails] = useState('');
@@ -26,7 +193,40 @@ const Accounts = () => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    const isKycVerified = kycStatus?.status === 'verified';
+    // Logic: displayWallets NO SORT (Sync with Dashboard)
+    const displayWallets = React.useMemo(() => {
+        if (!wallets) return [];
+        const uniqueWallets = [];
+        const seenTypes = new Set();
+        // Skip sort to match Dashboard
+        for (const w of wallets) {
+            if (['main', 'savings', 'credit'].includes(w.type)) {
+                if (!seenTypes.has(w.type)) {
+                    uniqueWallets.push(w);
+                    seenTypes.add(w.type);
+                }
+            } else {
+                uniqueWallets.push(w);
+            }
+        }
+        return uniqueWallets;
+    }, [wallets]);
+
+    // Logic: available account types (one per category rule)
+    const availableTypes = React.useMemo(() => {
+        const types = [
+            { value: 'savings', label: 'Compte Épargne' },
+            { value: 'credit', label: 'Réserve Crédit' },
+            { value: 'currency', label: 'Compte Devise' }
+        ];
+        return types.filter(t => {
+            const hasWallet = wallets.some(w => w.type === t.value);
+            const hasPending = (accountRequests || []).some(r => r.type === t.value && r.status === 'pending');
+            return !hasWallet && !hasPending;
+        });
+    }, [wallets, accountRequests]);
+
+    const canRequest = availableTypes.length > 0;
 
     const handleRequestSubmit = async () => {
         if (!currentUser) return;
@@ -35,563 +235,140 @@ const Accounts = () => {
                 type: requestType,
                 details: requestDetails
             });
-            showToast("Votre demande a été envoyée avec succès. Un conseiller va l'étudier.", 'success');
+            showToast("Votre demande a été envoyée avec succès.", 'success');
             setShowRequestModal(false);
             setRequestDetails('');
         } catch (error) {
-            showToast("Erreur lors de l'envoi de la demande. Veuillez réessayer.", 'error');
+            showToast("Erreur lors de l'envoi de la demande.", 'error');
         }
     };
 
     // Auto-healing logic
     useEffect(() => {
         const healWallets = async () => {
-            if (currentUser && !loading && wallets.length === 0 && userData) {
-                console.log("No wallets found, creating initial wallets...");
-                try {
-                    const createdWallets = await walletService.createInitialWallets(
-                        currentUser.uid,
-                        userData.accountType || 'standard',
-                        userData.mainCurrency || 'EUR'
-                    );
-
-                    const mainWallet = createdWallets.find(w => w.type === 'main');
-                    if (mainWallet) {
-                        await cardService.createInitialCard(currentUser.uid, mainWallet.id);
-                    }
-                    await ribService.createInitialRibs(currentUser.uid, createdWallets);
-                } catch (error) {
-                    console.error("Error healing wallets:", error);
+            if (!currentUser || loading || !userData || wallets.length > 0) return;
+            try {
+                const createdWallets = await walletService.createInitialWallets(
+                    currentUser.uid,
+                    userData.accountType || 'standard',
+                    userData.mainCurrency || 'EUR'
+                );
+                const mainWallet = createdWallets.find(w => w.type === 'main');
+                if (mainWallet) {
+                    await cardService.createInitialCard(currentUser.uid, mainWallet.id);
                 }
+                await ribService.createInitialRibs(currentUser.uid, createdWallets);
+            } catch (error) {
+                console.error("Error healing wallets:", error);
             }
         };
-
         healWallets();
-    }, [currentUser, loading, wallets.length, userData]);
+    }, [currentUser, loading, userData, wallets.length]);
 
-    // Set active account once wallets are loaded
-    useEffect(() => {
-        if (wallets.length > 0 && !activeAccount) {
-            const mainWallet = wallets.find(w => w.type === 'main');
-            setActiveAccount(mainWallet?.id || wallets[0]?.id);
+    const styles = {
+        container: { paddingBottom: '80px' },
+        header: { marginBottom: '2rem' },
+        title: { fontSize: '1.8rem', fontWeight: 'bold', color: '#003366', marginBottom: '0.5rem' },
+        subtitle: { color: '#666' },
+        grid: { display: 'flex', flexDirection: 'column', gap: '1rem' },
+        desktopGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '1.5rem' },
+        addBtn: {
+            background: 'white', border: '2px dashed #ccc', borderRadius: '16px', padding: '1.5rem',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column',
+            cursor: 'pointer', color: '#666', minHeight: '180px'
+        },
+        modalOverlay: {
+            position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+            background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000
+        },
+        modal: {
+            background: 'white', borderRadius: '16px', padding: '2rem', width: '90%', maxWidth: '500px'
         }
-    }, [wallets, activeAccount]);
-
-    const getAccountInfo = (wallet) => {
-        if (!wallet) return null;
-
-        const configs = {
-            main: {
-                name: 'Compte Courant',
-                type: 'Principal',
-                color: '#003366',
-                icon: 'fas fa-wallet'
-            },
-            savings: {
-                name: 'Compte Épargne',
-                type: 'Épargne',
-                color: '#27ae60',
-                icon: 'fas fa-piggy-bank',
-                rate: '2.5%'
-            },
-            credit: {
-                name: 'Réserve Crédit',
-                type: 'Crédit',
-                color: '#e74c3c',
-                icon: 'fas fa-hand-holding-usd',
-                limit: '5000 €'
-            }
-        };
-
-        return configs[wallet.type] || configs.main;
     };
-
-    const currentAcc = wallets.find(acc => acc.id === activeAccount);
-    const currentInfo = getAccountInfo(currentAcc);
-
-    const copyToClipboard = (text, label) => {
-        navigator.clipboard.writeText(text);
-        showToast(`${label} copié dans le presse-papier !`, 'info');
-    };
-
-    if (loading && wallets.length === 0) {
-        return <div style={styles.loading}>Chargement de vos comptes...</div>;
-    }
-
-    if (wallets.length === 0) {
-        return (
-            <div style={styles.container}>
-                <header style={styles.header}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                        <h1 style={{ ...styles.title, marginBottom: 0 }}>Mes Comptes</h1>
-                        <KycVerificationBanner variant="badge" />
-                    </div>
-                    <p style={styles.subtitle}>Aucun compte trouvé. Veuillez contacter le support.</p>
-                </header>
-            </div>
-        );
-    }
 
     return (
-        <div style={styles.container}>
-            <header style={styles.header}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                    <h1 style={{ ...styles.title, marginBottom: 0 }}>Mes Comptes</h1>
-                    <KycVerificationBanner variant="badge" />
-                </div>
-                <p style={styles.subtitle}>Gérez vos portefeuilles et consultez vos coordonnées bancaires.</p>
-            </header>
-
-            <div style={styles.accountGrid}>
-                {wallets.map(acc => {
-                    const info = getAccountInfo(acc);
-                    return (
-                        <div
-                            key={acc.id}
-                            style={{
-                                ...styles.accountCard,
-                                borderLeft: `5px solid ${info.color}`,
-                                opacity: activeAccount === acc.id ? 1 : 0.8,
-                                transform: activeAccount === acc.id ? 'scale(1.02)' : 'scale(1)',
-                                boxShadow: activeAccount === acc.id ? '0 10px 20px rgba(0,0,0,0.1)' : '0 4px 6px rgba(0,0,0,0.05)'
-                            }}
-                            onClick={() => setActiveAccount(acc.id)}
-                        >
-                            <div style={styles.cardHeader}>
-                                <i className={info.icon} style={{ ...styles.cardIcon, color: info.color }}></i>
-                                <span style={styles.accountType}>{info.type}</span>
-                            </div>
-                            <h3 style={styles.accountName}>{info.name}</h3>
-                            <p style={{
-                                ...styles.balance,
-                                color: acc.balance < 0 ? '#e74c3c' : (acc.type === 'savings' ? '#27ae60' : '#003366')
-                            }}>
-                                {acc.balance.toLocaleString('fr-FR', { minimumFractionDigits: 2 })} {acc.currency}
-                            </p>
-                        </div>
-                    );
-                })}
-                <div style={styles.addAccountCard} onClick={() => setShowRequestModal(true)}>
-                    <div style={styles.addIconCircle}>
-                        <i className="fas fa-plus"></i>
+        <KycVerificationBanner>
+            <div style={styles.container}>
+                {!isMobile && (
+                    <div style={styles.header}>
+                        <h1 style={styles.title}>Mes Comptes</h1>
+                        <p style={styles.subtitle}>Gérez vos portefeuilles et consultez vos coordonnées bancaires.</p>
                     </div>
-                    <h3 style={styles.addTitle}>Ouvrir un compte</h3>
-                    <p style={styles.addText}>Compte Épargne, Crédit ou Devise</p>
+                )}
+
+                <div style={isMobile ? styles.grid : styles.desktopGrid}>
+                    {displayWallets.map(wallet => {
+                        const walletRib = (ribs || []).find(r => r.walletId === wallet.id);
+                        return (
+                            <AccountCard
+                                key={wallet.id}
+                                wallet={wallet}
+                                isLoading={loading}
+                                navigate={navigate}
+                                onRibClick={() => {
+                                    setSelectedRib(walletRib);
+                                    setIsRibModalOpen(true);
+                                }}
+                            />
+                        );
+                    })}
+
+                    {canRequest && (
+                        <div style={styles.addBtn} onClick={() => {
+                            if (availableTypes.length > 0) setRequestType(availableTypes[0].value);
+                            setShowRequestModal(true);
+                        }}>
+                            <div style={{ width: '50px', height: '50px', borderRadius: '50%', background: '#f0f4f8', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
+                                <i className="fas fa-plus" style={{ fontSize: '1.5rem', color: '#003366' }}></i>
+                            </div>
+                            <h3 style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>Ouvrir un compte</h3>
+                            <p style={{ fontSize: '0.9rem' }}>Compte Épargne, Crédit ou Devise</p>
+                        </div>
+                    )}
                 </div>
+
+                {showRequestModal && (
+                    <div style={styles.modalOverlay}>
+                        <div style={styles.modal}>
+                            <h2 style={{ marginBottom: '1.5rem', color: '#003366' }}>Ouvrir un nouveau compte</h2>
+                            <div style={{ marginBottom: '1rem' }}>
+                                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>Type de compte</label>
+                                <select
+                                    style={{ width: '100%', padding: '0.5rem', borderRadius: '8px', border: '1px solid #ddd' }}
+                                    value={requestType}
+                                    onChange={e => setRequestType(e.target.value)}
+                                >
+                                    {availableTypes.map(t => (
+                                        <option key={t.value} value={t.value}>{t.label}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div style={{ marginBottom: '1rem' }}>
+                                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>Message (optionnel)</label>
+                                <textarea
+                                    style={{ width: '100%', padding: '0.5rem', borderRadius: '8px', border: '1px solid #ddd', minHeight: '100px' }}
+                                    value={requestDetails}
+                                    onChange={e => setRequestDetails(e.target.value)}
+                                    placeholder="Dites-nous en plus..."
+                                />
+                            </div>
+                            <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+                                <button style={{ flex: 1, padding: '0.85rem', background: '#f8fafc', border: '1px solid #e2e8f0', color: '#64748b', borderRadius: '12px', cursor: 'pointer', fontWeight: '700' }} onClick={() => setShowRequestModal(false)}>Annuler</button>
+                                <button style={{ flex: 1, padding: '0.85rem', background: '#003366', color: 'white', border: 'none', borderRadius: '12px', cursor: 'pointer', fontWeight: '700' }} onClick={handleRequestSubmit}>Confirmer</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                <RibModal
+                    isOpen={isRibModalOpen}
+                    onClose={() => setIsRibModalOpen(false)}
+                    rib={selectedRib}
+                    showToast={showToast}
+                />
             </div>
-
-            {showRequestModal && !isMobile && (
-                <div style={styles.modalOverlay}>
-                    <div style={styles.modalContent}>
-                        <h2 style={styles.modalTitle}>Demande d'ouverture de compte</h2>
-                        <p style={styles.modalSubtitle}>Sélectionnez le type de compte souhaité.</p>
-
-                        <div style={styles.formGroup}>
-                            <label style={styles.label}>Type de compte</label>
-                            <select style={styles.select} value={requestType} onChange={e => setRequestType(e.target.value)}>
-                                <option value="savings">Compte Épargne (Livret)</option>
-                                <option value="currency_usd">Compte Devise (USD)</option>
-                                <option value="business">Compte Professionnel</option>
-                                <option value="other">Autre demande</option>
-                            </select>
-                        </div>
-
-                        <div style={styles.formGroup}>
-                            <label style={styles.label}>Message (Optionnel)</label>
-                            <textarea
-                                style={styles.textarea}
-                                placeholder="Précisez votre besoin..."
-                                value={requestDetails}
-                                onChange={e => setRequestDetails(e.target.value)}
-                            />
-                        </div>
-
-                        <div style={styles.modalActions}>
-                            <button style={styles.cancelBtn} onClick={() => setShowRequestModal(false)}>Annuler</button>
-                            <button style={styles.submitBtn} onClick={handleRequestSubmit}>Envoyer ma demande</button>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {showRequestModal && isMobile && (
-                <div style={styles.mobileRequestDrawer}>
-                    <div style={styles.mobileRequestHeader}>
-                        <h3 style={styles.mobileRequestTitle}>Ouvrir un compte</h3>
-                        <button style={styles.mobileCloseBtn} onClick={() => setShowRequestModal(false)}>
-                            <i className="fas fa-times"></i>
-                        </button>
-                    </div>
-                    <div style={styles.mobileRequestContent}>
-                        <div style={styles.formGroup}>
-                            <label style={styles.label}>Type de compte</label>
-                            <select style={styles.select} value={requestType} onChange={e => setRequestType(e.target.value)}>
-                                <option value="savings">Compte Épargne (Livret)</option>
-                                <option value="currency_usd">Compte Devise (USD)</option>
-                                <option value="business">Compte Professionnel</option>
-                                <option value="other">Autre demande</option>
-                            </select>
-                        </div>
-
-                        <div style={styles.formGroup}>
-                            <label style={styles.label}>Message (Optionnel)</label>
-                            <textarea
-                                style={styles.textarea}
-                                placeholder="Précisez votre besoin..."
-                                value={requestDetails}
-                                onChange={e => setRequestDetails(e.target.value)}
-                            />
-                        </div>
-                    </div>
-                    <div style={styles.mobileRequestFooter}>
-                        <button style={styles.mobileSubmitBtn} onClick={handleRequestSubmit}>Envoyer ma demande</button>
-                    </div>
-                </div>
-            )}
-
-            {currentAcc && (
-                <div style={styles.detailsSection}>
-                    <div style={styles.detailsHeader}>
-                        <div style={{ ...styles.iconBadge, backgroundColor: currentInfo.color }}>
-                            <i className={currentInfo.icon}></i>
-                        </div>
-                        <div>
-                            <h2 style={styles.detailsTitle}>{currentInfo.name}</h2>
-                            <span style={styles.statusBadge}>Compte Actif</span>
-                        </div>
-                    </div>
-
-                    <div style={styles.infoGrid}>
-                        <div style={styles.infoBox}>
-                            <label style={styles.infoLabel}>IBAN</label>
-                            <div style={styles.copyRow}>
-                                <span style={styles.infoValue}>
-                                    {isKycVerified ? currentAcc.iban : 'FR76 **** **** **** **** **** ***'}
-                                </span>
-                                {isKycVerified && (
-                                    <button onClick={() => copyToClipboard(currentAcc.iban, 'IBAN')} style={styles.copyBtn}>
-                                        <i className="far fa-copy"></i>
-                                    </button>
-                                )}
-                            </div>
-                        </div>
-                        <div style={styles.infoBox}>
-                            <label style={styles.infoLabel}>BIC / SWIFT</label>
-                            <div style={styles.copyRow}>
-                                <span style={styles.infoValue}>
-                                    {isKycVerified ? currentAcc.bic : '********'}
-                                </span>
-                                {isKycVerified && (
-                                    <button onClick={() => copyToClipboard(currentAcc.bic, 'BIC')} style={styles.copyBtn}>
-                                        <i className="far fa-copy"></i>
-                                    </button>
-                                )}
-                            </div>
-                        </div>
-                        {currentInfo.rate && (
-                            <div style={styles.infoBox}>
-                                <label style={styles.infoLabel}>Taux de rémunération</label>
-                                <span style={styles.infoValue}>{currentInfo.rate} / an</span>
-                            </div>
-                        )}
-                        {currentInfo.limit && (
-                            <div style={styles.infoBox}>
-                                <label style={styles.infoLabel}>Plafond autorisé</label>
-                                <span style={styles.infoValue}>{currentInfo.limit}</span>
-                            </div>
-                        )}
-                    </div>
-
-                    <div style={styles.actionsRow}>
-                        <button style={styles.primaryAction} onClick={() => navigate('/dashboard/transfers')}>
-                            <i className="fas fa-paper-plane" style={{ marginRight: '10px' }}></i>
-                            Effectuer un virement
-                        </button>
-                        <button
-                            style={{ ...styles.secondaryAction, opacity: isKycVerified ? 1 : 0.5, cursor: isKycVerified ? 'pointer' : 'not-allowed' }}
-                            disabled={!isKycVerified}
-                            title={!isKycVerified ? "Vérification d'identité requise" : ""}
-                            onClick={() => navigate('/dashboard/documents')}
-                        >
-                            <i className="fas fa-file-download" style={{ marginRight: '10px' }}></i>
-                            {isKycVerified ? 'Télécharger le RIB' : 'RIB (Vérif. Requise)'}
-                        </button>
-                        <button style={styles.secondaryAction} onClick={() => navigate('/dashboard/history')}>
-                            <i className="fas fa-history" style={{ marginRight: '10px' }}></i>
-                            Voir l'historique
-                        </button>
-                    </div>
-                </div>
-            )}
-        </div>
+        </KycVerificationBanner>
     );
-};
-
-const styles = {
-    container: {
-        maxWidth: '1200px',
-        margin: '0 auto',
-    },
-    loading: {
-        textAlign: 'center',
-        padding: '3rem',
-        color: '#003366',
-        fontSize: '1.2rem',
-    },
-    header: {
-        marginBottom: '2rem',
-    },
-    title: {
-        fontSize: '1.8rem',
-        color: '#003366',
-        fontWeight: '800',
-        marginBottom: '0.5rem',
-    },
-    subtitle: {
-        color: '#666',
-        fontSize: '1rem',
-    },
-    accountGrid: {
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-        gap: '1.5rem',
-        marginBottom: '2rem',
-    },
-    accountCard: {
-        backgroundColor: 'white',
-        padding: '1.5rem',
-        borderRadius: '16px',
-        cursor: 'pointer',
-        transition: 'all 0.3s ease',
-    },
-    cardHeader: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: '1rem',
-    },
-    cardIcon: {
-        fontSize: '1.5rem',
-    },
-    accountType: {
-        fontSize: '0.75rem',
-        backgroundColor: '#f0f4f8',
-        padding: '0.3rem 0.6rem',
-        borderRadius: '50px',
-        color: '#666',
-        fontWeight: '700',
-        textTransform: 'uppercase',
-    },
-    accountName: {
-        fontSize: '1.1rem',
-        color: '#333',
-        marginBottom: '0.5rem',
-    },
-    balance: {
-        fontSize: '1.5rem',
-        fontWeight: '800',
-    },
-    detailsSection: {
-        backgroundColor: 'white',
-        borderRadius: '20px',
-        padding: '2rem',
-        boxShadow: '0 4px 6px rgba(0,0,0,0.05)',
-    },
-    detailsHeader: {
-        display: 'flex',
-        alignItems: 'center',
-        gap: '1.5rem',
-        marginBottom: '2rem',
-        paddingBottom: '1.5rem',
-        borderBottom: '1px solid #eee',
-    },
-    iconBadge: {
-        width: '60px',
-        height: '60px',
-        borderRadius: '15px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: 'white',
-        fontSize: '1.8rem',
-    },
-    detailsTitle: {
-        fontSize: '1.4rem',
-        color: '#333',
-        marginBottom: '0.2rem',
-    },
-    statusBadge: {
-        fontSize: '0.8rem',
-        color: '#27ae60',
-        fontWeight: '600',
-    },
-    infoGrid: {
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-        gap: '2rem',
-        marginBottom: '2.5rem',
-    },
-    infoBox: {
-        display: 'flex',
-        flexDirection: 'column',
-    },
-    infoLabel: {
-        fontSize: '0.8rem',
-        color: '#888',
-        marginBottom: '0.5rem',
-        textTransform: 'uppercase',
-        letterSpacing: '1px',
-    },
-    copyRow: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        backgroundColor: '#f8fbff',
-        padding: '0.8rem 1rem',
-        borderRadius: '10px',
-        border: '1px solid #eef2f7',
-    },
-    infoValue: {
-        fontSize: '1rem',
-        color: '#003366',
-        fontWeight: '700',
-        fontFamily: 'monospace',
-    },
-    copyBtn: {
-        background: 'transparent',
-        color: '#00ccff',
-        border: 'none',
-        cursor: 'pointer',
-        fontSize: '1.1rem',
-        padding: '0.2rem',
-    },
-    actionsRow: {
-        display: 'flex',
-        flexWrap: 'wrap',
-        gap: '1rem',
-    },
-    primaryAction: {
-        backgroundColor: '#003366',
-        color: 'white',
-        border: 'none',
-        padding: '0.8rem 1.5rem',
-        borderRadius: '10px',
-        fontWeight: '700',
-        cursor: 'pointer',
-        flex: 1,
-        minWidth: '200px',
-    },
-    secondaryAction: {
-        backgroundColor: '#f0f4f8',
-        color: '#003366',
-        border: 'none',
-        padding: '0.8rem 1.5rem',
-        borderRadius: '10px',
-        fontWeight: '700',
-        cursor: 'pointer',
-        flex: 1,
-        minWidth: '200px',
-    },
-    addAccountCard: {
-        background: 'rgba(255,255,255,0.5)',
-        borderRadius: '25px',
-        padding: '25px',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        cursor: 'pointer',
-        border: '2px dashed #cbd5e1',
-        transition: 'all 0.3s ease',
-        minHeight: '200px',
-        textAlign: 'center'
-    },
-    addIconCircle: {
-        width: '60px',
-        height: '60px',
-        borderRadius: '50%',
-        background: '#f1f5f9',
-        color: '#64748b',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontSize: '1.5rem',
-        marginBottom: '15px',
-        transition: '0.3s'
-    },
-    addTitle: { fontSize: '1.1rem', fontWeight: 'bold', color: '#475569', marginBottom: '5px' },
-    addText: { fontSize: '0.9rem', color: '#94a3b8' },
-    modalOverlay: {
-        position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-        background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000,
-        backdropFilter: 'blur(5px)'
-    },
-    modalContent: {
-        background: 'white', padding: '2rem', borderRadius: '20px', width: '90%', maxWidth: '500px',
-        boxShadow: '0 20px 50px rgba(0,0,0,0.2)', animation: 'fadeIn 0.3s ease'
-    },
-    modalTitle: { fontSize: '1.5rem', color: '#003366', marginBottom: '0.5rem', fontWeight: 'bold' },
-    modalSubtitle: { color: '#64748b', marginBottom: '1.5rem' },
-    formGroup: { marginBottom: '1.5rem' },
-    label: { display: 'block', marginBottom: '0.5rem', color: '#475569', fontWeight: 'bold', fontSize: '0.9rem' },
-    select: { width: '100%', padding: '12px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '1rem', outline: 'none', boxSizing: 'border-box' },
-    textarea: { width: '100%', padding: '12px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '1rem', minHeight: '100px', outline: 'none', resize: 'vertical', fontFamily: 'inherit', boxSizing: 'border-box' },
-    modalActions: { display: 'flex', justifyContent: 'flex-end', gap: '1rem' },
-    cancelBtn: { padding: '12px 24px', background: '#f1f5f9', color: '#64748b', border: 'none', borderRadius: '12px', fontWeight: 'bold', cursor: 'pointer' },
-    submitBtn: { padding: '12px 24px', background: '#003366', color: 'white', border: 'none', borderRadius: '12px', fontWeight: 'bold', cursor: 'pointer' },
-    // MOBILE DRAWER STYLES
-    mobileRequestDrawer: {
-        position: 'fixed',
-        top: '65px', // Below dashboard header
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: '#f8fafc',
-        zIndex: 999,
-        display: 'flex',
-        flexDirection: 'column',
-        animation: 'slideUp 0.3s ease-out',
-    },
-    mobileRequestHeader: {
-        padding: '1.2rem',
-        background: 'white',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        borderBottom: '1px solid #e2e8f0',
-    },
-    mobileRequestTitle: {
-        margin: 0,
-        fontSize: '1.2rem',
-        color: '#003366',
-        fontWeight: 'bold',
-    },
-    mobileCloseBtn: {
-        background: 'none',
-        border: 'none',
-        fontSize: '1.2rem',
-        color: '#64748b',
-    },
-    mobileRequestContent: {
-        flex: 1,
-        padding: '1.5rem',
-        overflowY: 'auto',
-    },
-    mobileRequestFooter: {
-        padding: '1.2rem',
-        background: 'white',
-        borderTop: '1px solid #e2e8f0',
-    },
-    mobileSubmitBtn: {
-        width: '100%',
-        padding: '1.2rem',
-        background: '#003366',
-        color: 'white',
-        border: 'none',
-        borderRadius: '16px',
-        fontSize: '1.1rem',
-        fontWeight: 'bold',
-    }
 };
 
 export default Accounts;

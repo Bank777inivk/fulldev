@@ -24,6 +24,7 @@ export const DataProvider = ({ children }) => {
     const [cardRequests, setCardRequests] = useState([]);
     const [loans, setLoans] = useState([]);
     const [ribs, setRibs] = useState([]);
+    const [accountRequests, setAccountRequests] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -36,6 +37,7 @@ export const DataProvider = ({ children }) => {
             setCardRequests([]);
             setLoans([]);
             setRibs([]);
+            setAccountRequests([]);
             setLoading(false);
             return;
         }
@@ -170,6 +172,20 @@ export const DataProvider = ({ children }) => {
             console.error("Error listening to RIBs:", error);
         });
 
+        // Listen for Account Requests
+        const qAccountRequests = query(
+            collection(db, 'account_requests'),
+            where('userId', '==', currentUser.uid)
+        );
+
+        const unsubscribeAccountRequests = onSnapshot(qAccountRequests, (snapshot) => {
+            const reqData = snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+            setAccountRequests(reqData);
+        });
+
         return () => {
             unsubscribeWallets();
             unsubscribeTransactions();
@@ -179,6 +195,7 @@ export const DataProvider = ({ children }) => {
             unsubscribeCardRequests();
             unsubscribeLoans();
             unsubscribeRibs();
+            unsubscribeAccountRequests();
         };
     }, [currentUser]);
 
@@ -191,6 +208,7 @@ export const DataProvider = ({ children }) => {
         cardRequests,
         loans,
         ribs,
+        accountRequests,
         loading,
         // Helper getters
         getMainWallet: () => wallets.find(w => w.type === 'main'),

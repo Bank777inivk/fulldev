@@ -2,7 +2,44 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useData } from '../../contexts/DataContext';
 import { transactionService } from '../../services/transactionService';
+
 import KycVerificationBanner from '../../components/dashboard/KycVerificationBanner';
+
+// --- Validation Helpers ---
+const luhnCheck = (val) => {
+    let checksum = 0;
+    let j = 1;
+    for (let i = val.length - 1; i >= 0; i--) {
+        let calc = 0;
+        calc = Number(val.charAt(i)) * j;
+        if (calc > 9) {
+            checksum = checksum + 1;
+            calc = calc - 10;
+        }
+        checksum = checksum + calc;
+        if (j === 1) { j = 2; } else { j = 1; }
+    }
+    return (checksum % 10) === 0;
+};
+
+const validateExpiry = (expiry) => {
+    if (!expiry || expiry.length !== 5) return false;
+    const [month, year] = expiry.split('/');
+    if (!month || !year) return false;
+
+    const currentDate = new Date();
+    const currentYear = parseInt(currentDate.getFullYear().toString().substr(-2));
+    const currentMonth = currentDate.getMonth() + 1;
+
+    const expMonth = parseInt(month);
+    const expYear = parseInt(year);
+
+    if (expMonth < 1 || expMonth > 12) return false;
+    if (expYear < currentYear) return false;
+    if (expYear === currentYear && expMonth < currentMonth) return false;
+
+    return true;
+};
 
 const Deposit = () => {
     const { currentUser, userData } = useAuth();
@@ -46,13 +83,55 @@ const Deposit = () => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
+    // --- Input Handlers with Auto-Formatting ---
+    const handleCardNumberChange = (e) => {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 16) value = value.slice(0, 16);
+
+        // Add spaces every 4 digits
+        const formatted = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+        setCardNumber(formatted);
+    };
+
+    const handleExpiryChange = (e) => {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 4) value = value.slice(0, 4);
+
+        if (value.length >= 2) {
+            setExpiry(`${value.slice(0, 2)}/${value.slice(2)}`);
+        } else {
+            setExpiry(value);
+        }
+    };
+
+    const handleCvcChange = (e) => {
+        const value = e.target.value.replace(/\D/g, '');
+        if (value.length <= 4) setCvc(value);
+    };
+
+    // --- Validation State ---
+    const isCardValid = () => {
+        const cleanNumber = cardNumber.replace(/\s/g, '');
+        return cleanNumber.length === 16 && luhnCheck(cleanNumber);
+    };
+
+    const isExpiryValid = () => validateExpiry(expiry);
+    const isCvcValid = () => cvc.length >= 3;
+    const isAmountValid = () => parseFloat(amount) > 0;
+
+    const isFormValid = isCardValid() && isExpiryValid() && isCvcValid() && isAmountValid();
+
     const handleCardDeposit = async (e) => {
         if (e) e.preventDefault();
         setMessage({ type: '', text: '' });
+
+        if (!isFormValid) {
+            setMessage({ type: 'error', text: 'Veuillez vérifier les informations de votre carte.' });
+            return;
+        }
+
         setSubmitting(true);
         try {
-            if (cardNumber.length < 16) throw new Error("Carte invalide (16 chiffres requis)");
-
             const wallet = wallets.find(w => w.id === selectedWallet);
             const currency = wallet ? wallet.currency : 'EUR';
 
@@ -168,9 +247,12 @@ const Deposit = () => {
                                 <div style={styles.cardChip}></div>
                                 <div style={styles.cardWifi}><i className="fas fa-wifi"></i></div>
                                 <input
-                                    style={styles.cardInputNumber}
+                                    style={{
+                                        ...styles.cardInputNumber,
+                                        borderColor: cardNumber && !isCardValid() ? '#ff4d4d' : 'transparent'
+                                    }}
                                     value={cardNumber}
-                                    onChange={(e) => setCardNumber(e.target.value)}
+                                    onChange={handleCardNumberChange}
                                     placeholder="0000 0000 0000 0000"
                                     maxLength="19"
                                 />
@@ -187,9 +269,12 @@ const Deposit = () => {
                                     <div style={{ width: '60px' }}>
                                         <div style={styles.cardLabel}>EXP</div>
                                         <input
-                                            style={styles.cardInputSmall}
+                                            style={{
+                                                ...styles.cardInputSmall,
+                                                color: expiry && !isExpiryValid() ? '#ff9999' : 'white'
+                                            }}
                                             value={expiry}
-                                            onChange={(e) => setExpiry(e.target.value)}
+                                            onChange={handleExpiryChange}
                                             placeholder="MM/AA"
                                             maxLength="5"
                                         />
@@ -200,11 +285,14 @@ const Deposit = () => {
                             <div style={{ marginTop: '15px' }}>
                                 <label style={styles.label}>Code de sécurité (CVC)</label>
                                 <input
-                                    style={styles.mobileInput}
+                                    style={{
+                                        ...styles.mobileInput,
+                                        borderColor: cvc && !isCvcValid() ? 'red' : '#ddd'
+                                    }}
                                     value={cvc}
-                                    onChange={(e) => setCvc(e.target.value)}
+                                    onChange={handleCvcChange}
                                     placeholder="123"
-                                    maxLength="3"
+                                    maxLength="4"
                                 />
                             </div>
 
@@ -247,9 +335,13 @@ const Deposit = () => {
                     {activeMethod === 'card' && (
                         <div style={styles.fixedBottomBar}>
                             <button
-                                style={styles.mobileNextBtn}
                                 onClick={handleCardDeposit}
-                                disabled={submitting || !amount || !cardNumber || !expiry || !cvc}
+                                disabled={submitting || !isFormValid}
+                                style={{
+                                    ...styles.mobileNextBtn,
+                                    opacity: isFormValid ? 1 : 0.5,
+                                    background: isFormValid ? '#003366' : '#94a3b8'
+                                }}
                             >
                                 {submitting ? <i className="fas fa-spinner fa-spin"></i> : `Recharger ${amount ? amount + ' €' : ''}`}
                             </button>
@@ -309,7 +401,18 @@ const Deposit = () => {
                             <div style={styles.cardPreview}>
                                 <div style={styles.cardChip}></div>
                                 <div style={styles.cardWifi}><i className="fas fa-wifi"></i></div>
-                                <input type="text" style={styles.cardInputNumber} value={cardNumber} onChange={(e) => setCardNumber(e.target.value)} placeholder="0000 0000 0000 0000" maxLength="19" required />
+                                <input
+                                    type="text"
+                                    style={{
+                                        ...styles.cardInputNumber,
+                                        borderBottom: cardNumber && !isCardValid() ? '2px solid #ff4d4d' : 'none'
+                                    }}
+                                    value={cardNumber}
+                                    onChange={handleCardNumberChange}
+                                    placeholder="0000 0000 0000 0000"
+                                    maxLength="19"
+                                    required
+                                />
                                 <div style={styles.cardBottom}>
                                     <div style={{ flex: 1 }}>
                                         <div style={styles.cardLabel}>TITULAIRE</div>
@@ -324,7 +427,18 @@ const Deposit = () => {
                                     </div>
                                     <div style={{ width: '60px' }}>
                                         <div style={styles.cardLabel}>EXP</div>
-                                        <input type="text" style={styles.cardInputSmall} value={expiry} onChange={(e) => setExpiry(e.target.value)} placeholder="MM/YY" maxLength="5" required />
+                                        <input
+                                            type="text"
+                                            style={{
+                                                ...styles.cardInputSmall,
+                                                color: expiry && !isExpiryValid() ? '#ff9999' : 'white'
+                                            }}
+                                            value={expiry}
+                                            onChange={handleExpiryChange}
+                                            placeholder="MM/YY"
+                                            maxLength="5"
+                                            required
+                                        />
                                     </div>
                                 </div>
                             </div>
@@ -332,7 +446,18 @@ const Deposit = () => {
                             <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
                                 <div style={{ flex: 1 }}>
                                     <label style={styles.label}>CVC / CVV</label>
-                                    <input type="text" style={styles.input} value={cvc} onChange={(e) => setCvc(e.target.value)} placeholder="123" maxLength="3" required />
+                                    <input
+                                        type="text"
+                                        style={{
+                                            ...styles.input,
+                                            borderColor: cvc && !isCvcValid() ? 'red' : '#ddd'
+                                        }}
+                                        value={cvc}
+                                        onChange={handleCvcChange}
+                                        placeholder="123"
+                                        maxLength="4"
+                                        required
+                                    />
                                 </div>
                                 <div style={{ flex: 1 }}>
                                     <label style={styles.label}>Compte cible</label>
@@ -342,8 +467,23 @@ const Deposit = () => {
                                 </div>
                             </div>
 
-                            <button type="submit" style={styles.submitBtn} disabled={submitting}>
-                                {submitting ? <i className="fas fa-spinner fa-spin"></i> : `Payer ${amount || '0'} EUR`}
+                            <button
+                                type="submit"
+                                style={{
+                                    ...styles.submitBtn,
+                                    opacity: isFormValid ? 1 : 0.7,
+                                    cursor: isFormValid ? 'pointer' : 'not-allowed',
+                                    backgroundColor: isFormValid ? '#003366' : '#64748b'
+                                }}
+                                disabled={submitting || !isFormValid}
+                            >
+                                {submitting ? <i className="fas fa-spinner fa-spin"></i> : (
+                                    !isAmountValid() ? "Saisissez un montant" :
+                                        !isCardValid() ? "Numéro de carte invalide" :
+                                            !isExpiryValid() ? "Date d'expiration invalide" :
+                                                !isCvcValid() ? "CVC invalide" :
+                                                    `Payer ${amount} EUR`
+                                )}
                             </button>
                             <p style={{ textAlign: 'center', fontSize: '0.8rem', color: '#888', marginTop: '1rem' }}><i className="fas fa-lock"></i> Transaction sécurisée SSL</p>
                         </form>

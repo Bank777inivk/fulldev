@@ -13,6 +13,7 @@ import UserDetails from './pages/UserDetails';
 import ManageTransactions from './pages/ManageTransactions';
 import WalletManagement from './pages/WalletManagement';
 import LoanManagement from './pages/LoanManagement';
+import AccountRequests from './pages/AccountRequests';
 import './App.css';
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
             <Route path="cards" element={<CardRequests />} />
             <Route path="wallets" element={<WalletManagement />} />
             <Route path="loans" element={<LoanManagement />} />
+            <Route path="account-requests" element={<AccountRequests />} />
             <Route path="transactions/user/:userId" element={<ManageTransactions />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />

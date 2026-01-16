@@ -32,9 +32,9 @@ const History = () => {
 
     const getStatusLabel = (status) => {
         if (status === 'pending') return 'En attente';
-        if (status === 'in_review') return 'Examen';
+        if (status === 'in_review') return 'Examen INVIK';
         if (status === 'rejected') return 'Refusé';
-        return 'Complété'; // Par défaut pour les anciennes transactions ou 'completed'
+        return 'Complété';
     };
 
     const getStatusStyles = (status) => {
@@ -100,8 +100,12 @@ const History = () => {
                                                 fontSize: '0.65rem',
                                                 fontWeight: 'bold',
                                                 backgroundColor: getStatusStyles(tx.status).bg,
-                                                color: getStatusStyles(tx.status).color
+                                                color: getStatusStyles(tx.status).color,
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '4px'
                                             }}>
+                                                {tx.status === 'in_review' && <i className="fas fa-circle-notch fa-spin" style={{ fontSize: '0.6rem' }}></i>}
                                                 {getStatusLabel(tx.status)}
                                             </span>
                                         </div>
@@ -150,8 +154,12 @@ const History = () => {
                                     <span style={{
                                         ...styles.badge,
                                         backgroundColor: getStatusStyles(tx.status).bg,
-                                        color: getStatusStyles(tx.status).color
+                                        color: getStatusStyles(tx.status).color,
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '6px'
                                     }}>
+                                        {tx.status === 'in_review' && <i className="fas fa-circle-notch fa-spin" style={{ fontSize: '0.7rem' }}></i>}
                                         {getStatusLabel(tx.status)}
                                     </span>
                                 </td>

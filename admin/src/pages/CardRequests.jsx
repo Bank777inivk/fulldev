@@ -62,9 +62,24 @@ const CardRequests = () => {
     };
 
     const handleEditCardDetails = async (card) => {
+        const newNumber = window.prompt("Numéro de carte (16 chiffres) :", card.cardNumber);
+        if (newNumber === null) return;
+        const newExpiry = window.prompt("Date d'expiration (MM/AA) :", card.expiryDate);
+        if (newExpiry === null) return;
+        const newCvv = window.prompt("CVV :", card.cvv);
+        if (newCvv === null) return;
         const newLimit = window.prompt("Nouveau plafond :", card.limit);
         if (newLimit === null) return;
-        try { await adminService.updateActiveCardDetails(card.id, { limit: Number(newLimit) }); } catch (e) { alert('Erreur'); }
+
+        try {
+            await adminService.updateActiveCardDetails(card.id, {
+                cardNumber: newNumber,
+                expiryDate: newExpiry,
+                cvv: newCvv,
+                limit: Number(newLimit)
+            });
+            alert('Carte mise à jour');
+        } catch (e) { alert('Erreur'); }
     };
 
     const handleActivateCard = async (request) => {
@@ -177,16 +192,16 @@ const CardRequests = () => {
                                     <div style={{ ...styles.cardPreview, height: '90px', padding: '0.8rem', background: getCardColor('Black Edition') }}>
                                         <div style={styles.cardHeader}><div style={styles.cardBrand}>BanK</div><i className="fas fa-check-circle" style={{ color: '#10b981' }}></i></div>
                                         <div style={styles.cardFooter}>
-                                            <span style={{ fontSize: '0.8rem', opacity: 0.9 }}>•••• {card.cardNumber?.slice(-4)}</span>
+                                            <span style={{ fontSize: '0.8rem', opacity: 0.9, letterSpacing: '1px' }}>{card.cardNumber}</span>
                                             <span style={styles.typeLabel}>{(card.type || 'Virtual').toUpperCase()}</span>
                                         </div>
                                     </div>
                                     <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
                                         <div style={styles.infoRowSmall}><i className="fas fa-shield-alt"></i> Limite: {card.limit} {card.currency}</div>
-                                        <div style={styles.infoRowSmall}><i className="fas fa-calendar-check"></i> Exp: {card.expiryDate}</div>
+                                        <div style={styles.infoRowSmall}><i className="fas fa-calendar-check"></i> Exp: {card.expiryDate} | CVV: {card.cvv}</div>
                                     </div>
                                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '10px' }}>
-                                        <button onClick={() => handleEditCardDetails(card)} style={{ ...styles.editBtnSmall, padding: '10px' }}>MODIFIER PLAFOND</button>
+                                        <button onClick={() => handleEditCardDetails(card)} style={{ ...styles.editBtnSmall, padding: '10px' }}>MODIFIER LA CARTE</button>
                                         <button onClick={() => handleCardAction(card.id, 'toggle_status', card.status)} style={{ ...styles.blockBtnSmall, padding: '10px', color: card.status === 'active' ? '#f97316' : '#10b981', borderColor: card.status === 'active' ? '#f97316' : '#10b981' }}>
                                             {card.status === 'active' ? 'BLOQUER LA CARTE' : 'DÉBLOQUER LA CARTE'}
                                         </button>
@@ -263,10 +278,11 @@ const CardRequests = () => {
                                 <div style={styles.activeTag}>CARTE ACTIVE</div>
                                 <div style={{ ...styles.cardPreview, background: getCardColor('Black Edition'), height: '140px' }}>
                                     <div style={styles.cardHeader}><div style={styles.cardBrand}>BanK</div><i className="fas fa-check-circle"></i></div>
-                                    <div style={styles.cardFooter}><span>•••• {card.cardNumber?.slice(-4)}</span><span style={styles.typeLabel}>{card.type}</span></div>
+                                    <div style={styles.cardFooter}><span style={{ letterSpacing: '2px', fontSize: '1.1rem' }}>{card.cardNumber}</span><span style={styles.typeLabel}>{card.type}</span></div>
                                 </div>
+                                <div style={styles.infoRowSmall}><i className="fas fa-calendar-check" style={{ marginRight: '5px' }}></i> {card.expiryDate} | CVV: {card.cvv} | Limite: {card.limit}€</div>
                                 <div style={styles.actionsSmall}>
-                                    <button onClick={() => handleEditCardDetails(card)} style={styles.editBtnSmall}>Limite</button>
+                                    <button onClick={() => handleEditCardDetails(card)} style={styles.editBtnSmall}>Modifier</button>
                                     <button onClick={() => handleCardAction(card.id, 'toggle_status', card.status)} style={styles.blockBtnSmall}>{card.status === 'active' ? 'Bloquer' : 'Débloquer'}</button>
                                     <button onClick={() => handleCardAction(card.id, 'delete')} style={styles.deleteBtnSmall}><i className="fas fa-trash"></i></button>
                                 </div>

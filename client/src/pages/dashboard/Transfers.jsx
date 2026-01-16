@@ -12,6 +12,31 @@ const Transfers = () => {
     const { currentUser } = useAuth();
     const { wallets, transactions, beneficiaries, loading } = useData();
     const { showToast } = useNotifications();
+
+    // Filter wallets for display, consistent with Accounts.jsx
+    const displayWallets = React.useMemo(() => {
+        if (!wallets) return [];
+
+        // Group by type
+        const uniqueWallets = [];
+        const seenTypes = new Set();
+
+        // Prioritize: NO SORT. Sync with Dashboard and Accounts.jsx.
+        // We accept the first wallet found as the 'true' one.
+        const sortedWallets = wallets;
+
+        for (const w of sortedWallets) {
+            if (['main', 'savings', 'credit'].includes(w.type)) {
+                if (!seenTypes.has(w.type)) {
+                    uniqueWallets.push(w);
+                    seenTypes.add(w.type);
+                }
+            } else {
+                uniqueWallets.push(w);
+            }
+        }
+        return uniqueWallets;
+    }, [wallets]);
     const navigate = useNavigate();
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
@@ -34,8 +59,19 @@ const Transfers = () => {
     const [selectedBeneficiaryId, setSelectedBeneficiaryId] = useState('');
     const [beneficiaryName, setBeneficiaryName] = useState('');
     const [beneficiaryIban, setBeneficiaryIban] = useState('');
+    const [beneficiaryBic, setBeneficiaryBic] = useState('');
+    const [beneficiaryEmail, setBeneficiaryEmail] = useState('');
     const [saveBeneficiary, setSaveBeneficiary] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
+
+    // IBAN Validation
+    const validateIban = (iban) => {
+        if (!iban) return false;
+        const cleanIban = iban.replace(/\s/g, '').toUpperCase();
+        // Basic IBAN format: 2 letters + 2 digits + up to 30 alphanumeric
+        const ibanRegex = /^[A-Z]{2}[0-9]{2}[A-Z0-9]{1,30}$/;
+        return ibanRegex.test(cleanIban);
+    };
 
     const [submitting, setSubmitting] = useState(false);
     const [success, setSuccess] = useState('');
@@ -43,35 +79,88 @@ const Transfers = () => {
     const [historyPage, setHistoryPage] = useState(1);
 
     // Initialize source/destination accounts
+    // Initialize source/destination accounts
     useEffect(() => {
-        if (!loading && wallets.length > 0) {
-            if (!fromAccount) setFromAccount(wallets[0].id);
-            if (!toAccount && wallets.length > 1) {
-                const other = wallets.find(w => w.id !== (fromAccount || wallets[0].id));
+        if (!loading && displayWallets.length > 0) {
+            if (!fromAccount) setFromAccount(displayWallets[0].id);
+            if (!toAccount && displayWallets.length > 1) {
+                const other = displayWallets.find(w => w.id !== (fromAccount || displayWallets[0].id));
                 if (other) setToAccount(other.id);
             }
         }
-    }, [wallets, loading]);
+    }, [displayWallets, loading, fromAccount, toAccount]);
 
     const transferHistory = transactions.filter(tx => tx.type === 'transfer_internal' || tx.type === 'transfer_external');
 
+    const isInvikTarget = activeTab === 'internal' || activeTab === 'instant' ||
+        (activeTab === 'external' && (
+            beneficiaryType === 'saved'
+                ? transactionService.isInvikIban(beneficiaries.find(b => b.id === selectedBeneficiaryId)?.iban)
+                : transactionService.isInvikIban(beneficiaryIban)
+        ));
+
     const handleSubmit = async () => {
+        const numAmount = parseFloat(amount);
+        const fromWallet = getWallet(fromAccount);
+
+        if (!numAmount || numAmount <= 0) {
+            showToast("Veuillez saisir un montant valide", "error");
+            return;
+        }
+
+        if (fromWallet && numAmount > fromWallet.balance) {
+            showToast("Solde insuffisant pour cette opération", "error");
+            return;
+        }
+
+        if (numAmount > 50000) {
+            showToast("Le montant maximal par virement est de 50 000 €", "error");
+            return;
+        }
+
         setSubmitting(true);
         try {
             if (activeTab === 'internal') {
                 await transactionService.performInternalTransfer(currentUser.uid, fromAccount, toAccount, amount);
-                setSuccess("Transfert réussi ! Votre solde a été mis à jour.");
+                setSuccess("Transfert interne réussi ! Votre solde a été mis à jour instantanément.");
+            } else if (activeTab === 'instant') {
+                const finalName = beneficiaryType === 'saved' ? beneficiaries.find(b => b.id === selectedBeneficiaryId)?.name : beneficiaryName;
+                const finalIban = beneficiaryType === 'saved' ? beneficiaries.find(b => b.id === selectedBeneficiaryId)?.iban : beneficiaryIban;
+
+                if (!finalName || !finalIban) throw new Error("Veuillez vérifier les informations du bénéficiaire");
+                if (!transactionService.isInvikIban(finalIban)) throw new Error("Cet IBAN n'appartient pas au réseau INVIK. Utilisez l'onglet 'Virement SEPA'.");
+
+                await transactionService.performInstantTransfer(currentUser.uid, fromAccount, finalIban, finalName, amount);
+                setSuccess(`Virement instantané vers ${finalName} réussi ! Les fonds ont été transférés immédiatement via le réseau INVIK.`);
             } else {
                 const finalName = beneficiaryType === 'saved' ? beneficiaries.find(b => b.id === selectedBeneficiaryId)?.name : beneficiaryName;
                 const finalIban = beneficiaryType === 'saved' ? beneficiaries.find(b => b.id === selectedBeneficiaryId)?.iban : beneficiaryIban;
+
                 if (!finalName || !finalIban) throw new Error("Veuillez vérifier les informations du bénéficiaire");
-                await transactionService.requestExternalTransfer(currentUser.uid, fromAccount, finalName, finalIban, amount);
-                if (beneficiaryType === 'new' && saveBeneficiary) {
-                    await beneficiaryService.addBeneficiary(currentUser.uid, { name: finalName, iban: finalIban });
+
+                if (transactionService.isInvikIban(finalIban)) {
+                    // Fail-safe: even in external tab, if it's invik, do it instant
+                    await transactionService.performInstantTransfer(currentUser.uid, fromAccount, finalIban, finalName, amount);
+                    setSuccess(`Virement instantané vers ${finalName} réussi ! Les fonds ont été transférés immédiatement.`);
+                } else {
+                    // Validate IBAN before submission
+                    if (!validateIban(finalIban)) {
+                        throw new Error("Format IBAN invalide. Veuillez vérifier le numéro saisi.");
+                    }
+
+                    // Standard External Transfer
+                    await transactionService.requestExternalTransfer(currentUser.uid, fromAccount, finalName, finalIban, amount);
+                    if (beneficiaryType === 'new' && saveBeneficiary) {
+                        await beneficiaryService.addBeneficiary(currentUser.uid, {
+                            name: finalName,
+                            iban: finalIban,
+                            bic: beneficiaryBic || '',
+                            email: beneficiaryEmail || ''
+                        });
+                    }
+                    setSuccess("Virement mis en attente pour contrôle de sécurité. Délai habituel SEPA : 24h à 48h.");
                 }
-                setSuccess("Virement mis en attente pour contrôle par nos services. Pour des raisons de sécurité, tous les virements sortants de notre banque sont soumis à des contrôles rigoureux. Les fonds seront disponibles après traitement (délai habituel de 24h à 48h pour un virement SEPA).");
             }
-            // setTimeout(() => navigate('/dashboard/accounts'), 2000); // Removed redirect
         } catch (err) {
             showToast(err.message, "error");
             setSubmitting(false);
@@ -170,16 +259,22 @@ const Transfers = () => {
                             Interne
                         </button>
                         <button
+                            style={activeTab === 'instant' ? { ...styles.mobileTabActive, borderBottom: '3px solid #27ae60', color: '#27ae60' } : styles.mobileTab}
+                            onClick={() => { setActiveTab('instant'); setStep(1); }}
+                        >
+                            <i className="fas fa-bolt" style={{ marginRight: '4px' }}></i> INVIK
+                        </button>
+                        <button
                             style={activeTab === 'external' ? styles.mobileTabActive : styles.mobileTab}
                             onClick={() => { setActiveTab('external'); setStep(1); }}
                         >
-                            Externe
+                            SEPA
                         </button>
                         <button
                             style={activeTab === 'history' ? styles.mobileTabActive : styles.mobileTab}
                             onClick={() => { setActiveTab('history'); setStep(1); }}
                         >
-                            Historique
+                            Suivi
                         </button>
                     </div>
 
@@ -212,9 +307,13 @@ const Transfers = () => {
                                             fontSize: '0.75rem',
                                             fontWeight: 'bold',
                                             backgroundColor: tx.status === 'pending' ? '#fff3cd' : (tx.status === 'in_review' ? '#e8eaf6' : (tx.status === 'rejected' ? '#ffebee' : '#e8f5e9')),
-                                            color: tx.status === 'pending' ? '#856404' : (tx.status === 'in_review' ? '#283593' : (tx.status === 'rejected' ? '#c62828' : '#2e7d32'))
+                                            color: tx.status === 'pending' ? '#856404' : (tx.status === 'in_review' ? '#283593' : (tx.status === 'rejected' ? '#c62828' : '#2e7d32')),
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '4px'
                                         }}>
-                                            {tx.status === 'pending' ? 'En attente' : (tx.status === 'in_review' ? 'Examen' : (tx.status === 'rejected' ? 'Refusé' : 'Effectué'))}
+                                            {tx.status === 'in_review' && <i className="fas fa-circle-notch fa-spin"></i>}
+                                            {tx.status === 'pending' ? 'En attente' : (tx.status === 'in_review' ? 'Examen INVIK' : (tx.status === 'rejected' ? 'Refusé' : 'Effectué'))}
                                         </span>
                                     </div>
                                 ))}
@@ -232,7 +331,7 @@ const Transfers = () => {
                             {step === 1 && (
                                 <>
                                     <h3 style={styles.mobileSectionTitle}>1. Compte de départ</h3>
-                                    {wallets.map(w => (
+                                    {displayWallets.map(w => (
                                         <AccountCard key={w.id} wallet={w} selected={fromAccount} onClick={setFromAccount} compact />
                                     ))}
                                     <div style={{ height: '20px' }}></div>
@@ -240,14 +339,51 @@ const Transfers = () => {
                                     {activeTab === 'internal' ? (
                                         <>
                                             <h3 style={styles.mobileSectionTitle}>2. Compte de destination</h3>
-                                            {wallets.length < 2 ? (
+                                            {displayWallets.length < 2 ? (
                                                 <div style={styles.warningBox}>
                                                     Vous n'avez qu'un seul compte. Un virement interne nécessite au moins deux comptes.
                                                 </div>
                                             ) : (
-                                                wallets.filter(w => w.id !== fromAccount).map(w => (
+                                                displayWallets.filter(w => w.id !== fromAccount).map(w => (
                                                     <AccountCard key={w.id} wallet={w} selected={toAccount} onClick={setToAccount} type="dest" compact />
                                                 ))
+                                            )}
+                                        </>
+                                    ) : activeTab === 'instant' ? (
+                                        <>
+                                            <div style={{ ...styles.warningBox, backgroundColor: '#e3f2fd', borderColor: '#003366', color: '#003366', marginBottom: '1.5rem', display: 'flex', gap: '10px', alignItems: 'center' }}>
+                                                <i className="fas fa-bolt" style={{ fontSize: '1.2rem' }}></i>
+                                                <span><strong>Virement Instantané INVIK</strong><br />Gratuit et immédiat entre clients de la banque.</span>
+                                            </div>
+                                            <h3 style={styles.mobileSectionTitle}>2. Destinataire INVIK</h3>
+                                            <div style={styles.toggleRow}>
+                                                <button style={beneficiaryType === 'saved' ? styles.toggleBtnActive : styles.toggleBtn} onClick={() => setBeneficiaryType('saved')}>Enregistré</button>
+                                                <button style={beneficiaryType === 'new' ? styles.toggleBtnActive : styles.toggleBtn} onClick={() => setBeneficiaryType('new')}>Nouveau</button>
+                                            </div>
+
+                                            {beneficiaryType === 'saved' ? (
+                                                <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                                                    <select
+                                                        style={styles.mobileInput}
+                                                        value={selectedBeneficiaryId}
+                                                        onChange={e => setSelectedBeneficiaryId(e.target.value)}
+                                                    >
+                                                        <option value="">Sélectionnez un client INVIK</option>
+                                                        {beneficiaries.filter(b => transactionService.isInvikIban(b.iban)).map(b => (
+                                                            <option key={b.id} value={b.id}>{b.name} ({b.iban})</option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                            ) : (
+                                                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                                                    <input style={styles.mobileInput} placeholder="Nom du destinataire" value={beneficiaryName} onChange={e => setBeneficiaryName(e.target.value)} />
+                                                    <input style={styles.mobileInput} placeholder="IBAN INVIK (FR76 12345...)" value={beneficiaryIban} onChange={e => setBeneficiaryIban(e.target.value)} />
+                                                    <input style={styles.mobileInput} placeholder="BIC (optionnel)" value={beneficiaryBic} onChange={e => setBeneficiaryBic(e.target.value)} />
+                                                    <input style={styles.mobileInput} type="email" placeholder="Email (optionnel)" value={beneficiaryEmail} onChange={e => setBeneficiaryEmail(e.target.value)} />
+                                                    <label style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.9rem', color: '#666', marginTop: '5px' }}>
+                                                        <input type="checkbox" checked={saveBeneficiary} onChange={e => setSaveBeneficiary(e.target.checked)} /> Enregistrer ce bénéficiaire
+                                                    </label>
+                                                </div>
                                             )}
                                         </>
                                     ) : (
@@ -278,8 +414,10 @@ const Transfers = () => {
                                                 </div>
                                             ) : (
                                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                                                    <input style={styles.mobileInput} placeholder="Nom" value={beneficiaryName} onChange={e => setBeneficiaryName(e.target.value)} />
+                                                    <input style={styles.mobileInput} placeholder="Nom complet" value={beneficiaryName} onChange={e => setBeneficiaryName(e.target.value)} />
                                                     <input style={styles.mobileInput} placeholder="IBAN" value={beneficiaryIban} onChange={e => setBeneficiaryIban(e.target.value)} />
+                                                    <input style={styles.mobileInput} placeholder="BIC (optionnel)" value={beneficiaryBic} onChange={e => setBeneficiaryBic(e.target.value)} />
+                                                    <input style={styles.mobileInput} type="email" placeholder="Email (optionnel)" value={beneficiaryEmail} onChange={e => setBeneficiaryEmail(e.target.value)} />
                                                     <label style={{ display: 'flex', gap: '10px', fontSize: '0.9rem' }}>
                                                         <input type="checkbox" checked={saveBeneficiary} onChange={e => setSaveBeneficiary(e.target.checked)} />
                                                         Sauvegarder
@@ -297,13 +435,24 @@ const Transfers = () => {
                                     <input
                                         type="number"
                                         autoFocus
-                                        style={styles.mobileAmountInput}
+                                        style={{ ...styles.mobileAmountInput, color: (parseFloat(amount) > getWallet(fromAccount)?.balance || parseFloat(amount) > 50000) ? '#e74c3c' : '#003366' }}
                                         value={amount}
                                         onChange={e => setAmount(e.target.value)}
                                         placeholder="0"
                                     />
                                     <div style={{ fontSize: '1.2rem', color: '#888' }}>EUR</div>
                                     <p style={{ marginTop: '1rem', color: '#666' }}>Solde: {getWallet(fromAccount)?.balance.toFixed(2)} €</p>
+
+                                    {parseFloat(amount) > getWallet(fromAccount)?.balance && (
+                                        <div style={{ color: '#e74c3c', marginTop: '10px', fontSize: '0.85rem' }}>
+                                            <i className="fas fa-exclamation-triangle"></i> Solde insuffisant
+                                        </div>
+                                    )}
+                                    {parseFloat(amount) > 50000 && (
+                                        <div style={{ color: '#e74c3c', marginTop: '10px', fontSize: '0.85rem' }}>
+                                            <i className="fas fa-exclamation-circle"></i> Limite maximale de 50 000 € dépassée
+                                        </div>
+                                    )}
                                 </div>
                             )}
 
@@ -320,11 +469,14 @@ const Transfers = () => {
                                             }
                                         </strong>
                                     </div>
+                                    {isInvikTarget && (
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#27ae60', fontSize: '0.85rem', margin: '10px 0', fontWeight: 'bold' }}>
+                                            <i className="fas fa-bolt"></i> Virement instantané vers compte INVIK
+                                        </div>
+                                    )}
                                     <div style={styles.summaryRowBig}><span>Total:</span> <span style={{ color: '#003366' }}>{amount} €</span></div>
                                 </div>
                             )}
-
-                            {/* Mobile Recent Transfers Section - Completely hidden from the creation flow as it now has its own tab */}
                         </div>
                     )}
 
@@ -339,7 +491,7 @@ const Transfers = () => {
                                 onClick={step === 3 ? handleSubmit : () => setStep(s => s + 1)}
                                 disabled={
                                     (step === 1 && (!fromAccount || (activeTab === 'internal' ? !toAccount : (beneficiaryType === 'saved' ? !selectedBeneficiaryId : (!beneficiaryName || !beneficiaryIban))))) ||
-                                    (step === 2 && !amount) ||
+                                    (step === 2 && (!amount || amount <= 0 || parseFloat(amount) > getWallet(fromAccount)?.balance || parseFloat(amount) > 50000)) ||
                                     submitting
                                 }
                             >
@@ -365,11 +517,15 @@ const Transfers = () => {
                     <div style={styles.sidebar}>
                         <button style={{ ...styles.sidebarBtn, ...(activeTab === 'internal' ? styles.sidebarBtnActive : {}) }} onClick={() => { setActiveTab('internal'); setStep(1); }}>
                             <div style={styles.btnIcon}><i className="fas fa-exchange-alt"></i></div>
-                            <div style={styles.btnText}><strong>Interne</strong><span>Entre mes comptes</span></div>
+                            <div style={styles.btnText}><strong>Mes Comptes</strong><span>Transfert interne</span></div>
+                        </button>
+                        <button style={{ ...styles.sidebarBtn, ...(activeTab === 'instant' ? { ...styles.sidebarBtnActive, borderLeftColor: '#27ae60' } : {}) }} onClick={() => { setActiveTab('instant'); setStep(1); }}>
+                            <div style={{ ...styles.btnIcon, backgroundColor: activeTab === 'instant' ? '#e8f5e9' : '#f8f9fa', color: activeTab === 'instant' ? '#27ae60' : '#666' }}><i className="fas fa-bolt"></i></div>
+                            <div style={styles.btnText}><strong>Virement INVIK</strong><span>Instantané & Gratuit</span></div>
                         </button>
                         <button style={{ ...styles.sidebarBtn, ...(activeTab === 'external' ? styles.sidebarBtnActive : {}) }} onClick={() => { setActiveTab('external'); setStep(1); }}>
                             <div style={styles.btnIcon}><i className="fas fa-university"></i></div>
-                            <div style={styles.btnText}><strong>Externe</strong><span>Vers un bénéficiaire</span></div>
+                            <div style={styles.btnText}><strong>Virement SEPA</strong><span>Vers une autre banque</span></div>
                         </button>
                     </div>
 
@@ -400,22 +556,55 @@ const Transfers = () => {
                                         <>
                                             <div style={styles.sectionHeader}><i className="fas fa-sign-out-alt" style={{ color: '#e74c3c' }}></i> De quel compte ?</div>
                                             <div style={styles.accountsGrid}>
-                                                {wallets.map(w => <AccountCard key={w.id} wallet={w} selected={fromAccount} onClick={setFromAccount} />)}
+                                                {displayWallets.map(w => <AccountCard key={w.id} wallet={w} selected={fromAccount} onClick={setFromAccount} />)}
                                             </div>
                                             <div style={{ margin: '2rem 0', borderBottom: '1px solid #eee' }}></div>
                                             <div style={styles.sectionHeader}><i className="fas fa-sign-in-alt" style={{ color: '#27ae60' }}></i> Vers quel bénéficiaire ?</div>
 
                                             {activeTab === 'internal' ? (
-                                                wallets.length < 2 ? (
+                                                displayWallets.length < 2 ? (
                                                     <div style={styles.warningBox}>
                                                         <i className="fas fa-exclamation-circle" style={{ fontSize: '1.5rem' }}></i>
                                                         <div><strong>Virement interne impossible</strong><p style={{ margin: 0, fontSize: '0.9rem' }}>Vous ne possédez qu'un seul compte.</p></div>
                                                     </div>
                                                 ) : (
                                                     <div style={styles.accountsGrid}>
-                                                        {wallets.filter(w => w.id !== fromAccount).map(w => <AccountCard key={w.id} wallet={w} selected={toAccount} onClick={setToAccount} type="dest" />)}
+                                                        {displayWallets.filter(w => w.id !== fromAccount).map(w => <AccountCard key={w.id} wallet={w} selected={toAccount} onClick={setToAccount} type="dest" />)}
                                                     </div>
                                                 )
+                                            ) : activeTab === 'instant' ? (
+                                                <div style={styles.beneficiaryForm}>
+                                                    <div style={{ ...styles.warningBox, backgroundColor: '#e8f5e9', borderColor: '#27ae60', color: '#1e5e3a', marginBottom: '1.5rem', borderLeftWidth: '5px' }}>
+                                                        <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+                                                            <i className="fas fa-bolt" style={{ fontSize: '1.8rem' }}></i>
+                                                            <div>
+                                                                <strong style={{ fontSize: '1.1rem' }}>RÉSEAU INVIK INSTANTANÉ</strong>
+                                                                <p style={{ margin: '5px 0 0', fontSize: '0.9rem', opacity: 0.9 }}>Transférez des fonds en millisecondes vers n'importe quel client INVIK BANK, sans frais.</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div style={styles.radioGroup}>
+                                                        <label style={styles.radioLabel}><input type="radio" checked={beneficiaryType === 'saved'} onChange={() => setBeneficiaryType('saved')} /> Client enregistré</label>
+                                                        <label style={styles.radioLabel}><input type="radio" checked={beneficiaryType === 'new'} onChange={() => setBeneficiaryType('new')} /> Nouveau bénéficiaire INVIK</label>
+                                                    </div>
+                                                    {beneficiaryType === 'saved' ? (
+                                                        <div style={styles.inputGroup}>
+                                                            <label>Sélectionner un bénéficiaire INVIK</label>
+                                                            <select style={{ ...styles.select, borderColor: '#27ae60' }} value={selectedBeneficiaryId} onChange={(e) => setSelectedBeneficiaryId(e.target.value)}>
+                                                                <option value="">-- Choisir un client --</option>
+                                                                {beneficiaries.filter(b => transactionService.isInvikIban(b.iban)).map(b => (
+                                                                    <option key={b.id} value={b.id}>{b.name} ({b.iban})</option>
+                                                                ))}
+                                                            </select>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="fadeIn">
+                                                            <div style={styles.inputGroup}><label>Nom complet</label><input style={{ ...styles.input, borderColor: '#27ae60' }} value={beneficiaryName} onChange={e => setBeneficiaryName(e.target.value)} placeholder="Ex: Jean Dupont" /></div>
+                                                            <div style={styles.inputGroup}><label>IBAN INVIK</label><input style={{ ...styles.input, borderColor: '#27ae60' }} value={beneficiaryIban} onChange={e => setBeneficiaryIban(e.target.value)} placeholder="FR76 12345..." /></div>
+                                                            <label style={{ display: 'flex', gap: '10px', fontSize: '0.9rem', color: '#666' }}><input type="checkbox" checked={saveBeneficiary} onChange={e => setSaveBeneficiary(e.target.checked)} /> Enregistrer pour mes prochains virements</label>
+                                                        </div>
+                                                    )}
+                                                </div>
                                             ) : (
                                                 <div style={styles.beneficiaryForm}>
                                                     <div style={styles.radioGroup}>
@@ -450,13 +639,31 @@ const Transfers = () => {
                                         <div style={{ textAlign: 'center', padding: '2rem 0' }}>
                                             <h3 style={styles.sectionTitle}>Combien souhaitez-vous virer ?</h3>
                                             <div style={styles.amountContainer}>
-                                                <input type="number" style={styles.amountInput} value={amount} onChange={e => setAmount(e.target.value)} autoFocus placeholder="0.00" />
+                                                <input
+                                                    type="number"
+                                                    style={{ ...styles.amountInput, color: (parseFloat(amount) > getWallet(fromAccount)?.balance || parseFloat(amount) > 50000) ? '#e74c3c' : '#003366' }}
+                                                    value={amount}
+                                                    onChange={e => setAmount(e.target.value)}
+                                                    autoFocus
+                                                    placeholder="0.00"
+                                                />
                                                 <span style={styles.currencyLabel}>EUR</span>
                                             </div>
-                                            <p style={styles.balanceInfo}>Solde disponible : <strong style={{ color: '#27ae60' }}>{getWallet(fromAccount)?.balance.toFixed(2)} EUR</strong></p>
+                                            <p style={styles.balanceInfo}>Solde disponible : <strong style={{ color: (parseFloat(amount) > getWallet(fromAccount)?.balance) ? '#e74c3c' : '#27ae60' }}>{getWallet(fromAccount)?.balance.toFixed(2)} EUR</strong></p>
+
+                                            {parseFloat(amount) > 50000 && (
+                                                <p style={{ color: '#e74c3c', fontWeight: 'bold' }}><i className="fas fa-exclamation-circle"></i> Limite maximale autorisée : 50 000 € par virement</p>
+                                            )}
+
                                             <div style={styles.btnRow}>
                                                 <button style={styles.backBtn} onClick={() => setStep(1)}>Retour</button>
-                                                <button style={styles.nextBtn} onClick={() => setStep(3)} disabled={!amount || amount <= 0}>Suivant</button>
+                                                <button
+                                                    style={styles.nextBtn}
+                                                    onClick={() => setStep(3)}
+                                                    disabled={!amount || amount <= 0 || parseFloat(amount) > getWallet(fromAccount)?.balance || parseFloat(amount) > 50000}
+                                                >
+                                                    Suivant
+                                                </button>
                                             </div>
                                         </div>
                                     )}
@@ -467,6 +674,17 @@ const Transfers = () => {
                                             <div style={styles.summaryCard}>
                                                 <div style={styles.summaryRow}><span style={styles.summaryLabel}>De</span><span style={styles.summaryValue}>{getWallet(fromAccount)?.type === 'main' ? 'Compte Courant' : 'Epargne'}</span></div>
                                                 <div style={styles.summaryRow}><span style={styles.summaryLabel}>Vers</span><span style={styles.summaryValue}>{activeTab === 'internal' ? (getWallet(toAccount)?.type === 'main' ? 'Compte Courant' : 'Epargne') : (beneficiaryType === 'saved' ? beneficiaries.find(b => b.id === selectedBeneficiaryId)?.name : beneficiaryName)}</span></div>
+                                                {isInvikTarget && (
+                                                    <div style={{ padding: '12px 16px', backgroundColor: '#e8f5e9', color: '#2e7d32', borderRadius: '12px', fontSize: '0.9rem', marginBottom: '1.5rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '12px', border: '1px solid #c8e6c9' }}>
+                                                        <div style={{ width: '30px', height: '30px', borderRadius: '50%', backgroundColor: '#2e7d32', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                            <i className="fas fa-bolt" style={{ fontSize: '0.8rem' }}></i>
+                                                        </div>
+                                                        <div>
+                                                            <div style={{ fontSize: '1rem' }}>Virement Instantané Certifié</div>
+                                                            <div style={{ fontWeight: 'normal', fontSize: '0.8rem', opacity: 0.8 }}>Exécution immédiate via le réseau sécurisé INVIK BANK.</div>
+                                                        </div>
+                                                    </div>
+                                                )}
                                                 <div style={styles.summaryDivider}></div>
                                                 <div style={styles.summaryTotal}><span>Montant</span><span>{parseFloat(amount).toFixed(2)} EUR</span></div>
                                             </div>
@@ -501,8 +719,12 @@ const Transfers = () => {
                                                 fontSize: '0.8rem',
                                                 fontWeight: 'bold',
                                                 backgroundColor: tx.status === 'pending' ? '#fff3cd' : (tx.status === 'in_review' ? '#e8eaf6' : (tx.status === 'rejected' ? '#ffebee' : '#e8f5e9')),
-                                                color: tx.status === 'pending' ? '#856404' : (tx.status === 'in_review' ? '#283593' : (tx.status === 'rejected' ? '#c62828' : '#2e7d32'))
+                                                color: tx.status === 'pending' ? '#856404' : (tx.status === 'in_review' ? '#283593' : (tx.status === 'rejected' ? '#c62828' : '#2e7d32')),
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '6px'
                                             }}>
+                                                {tx.status === 'in_review' && <i className="fas fa-circle-notch fa-spin"></i>}
                                                 {tx.status === 'pending' ? 'En attente' : (tx.status === 'in_review' ? 'Examen INVIK' : (tx.status === 'rejected' ? 'Refusé' : 'Terminé'))}
                                             </span>
                                         </div>

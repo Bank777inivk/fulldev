@@ -70,6 +70,8 @@ const UserDetails = () => {
     // --- ALL INITIAL HOOKS AT TOP ---
     const [user, setUser] = useState(null);
     const [transactions, setTransactions] = useState([]);
+    const [cards, setCards] = useState([]);
+    const [beneficiaries, setBeneficiaries] = useState([]);
     const [kycData, setKycData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
@@ -88,15 +90,18 @@ const UserDetails = () => {
             if (!id) return;
             try {
                 setLoading(true);
-                const [userData, userTransactions, userKYC] = await Promise.all([
+                const [userData, userTransactions, userKYC, userCards, userBeneficiaries] = await Promise.all([
                     adminService.getUser(id),
                     adminService.getUserTransactions(id),
-                    adminService.getUserKYC(id)
+                    adminService.getUserKYC(id),
+                    adminService.getUserCards(id),
+                    adminService.getUserBeneficiaries(id)
                 ]);
-
                 setUser(userData);
                 setTransactions(userTransactions);
                 setKycData(userKYC);
+                setCards(userCards);
+                setBeneficiaries(userBeneficiaries);
             } catch (error) {
                 console.error('Error loading user details:', error);
             } finally {
@@ -154,6 +159,41 @@ const UserDetails = () => {
         } catch (error) {
             console.error('Error updating user:', error);
             alert("Erreur lors de l'enregistrement");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleEditCard = async (card) => {
+        const newNumber = window.prompt("Numéro de carte (16 chiffres) :", card.cardNumber);
+        if (newNumber === null) return;
+        const newExpiry = window.prompt("Date d'expiration (MM/AA) :", card.expiryDate);
+        if (newExpiry === null) return;
+        const newCvv = window.prompt("CVV :", card.cvv);
+        if (newCvv === null) return;
+        const newLimit = window.prompt("Limite de paiement :", card.limit);
+        if (newLimit === null) return;
+
+        try {
+            setLoading(true);
+            await adminService.updateActiveCardDetails(card.id, {
+                cardNumber: newNumber,
+                expiryDate: newExpiry,
+                cvv: newCvv,
+                limit: Number(newLimit)
+            });
+            // Update local state
+            setCards(prev => prev.map(c => c.id === card.id ? {
+                ...c,
+                cardNumber: newNumber,
+                expiryDate: newExpiry,
+                cvv: newCvv,
+                limit: Number(newLimit)
+            } : c));
+            alert('Carte mise à jour avec succès');
+        } catch (error) {
+            console.error('Error updating card:', error);
+            alert('Erreur lors de la mise à jour de la carte');
         } finally {
             setLoading(false);
         }
@@ -265,6 +305,62 @@ const UserDetails = () => {
                     <RenderField label="Téléphone" name="phone" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
                     <RenderField label="Ville" name="city" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
                     <RenderField label="Pays" name="countryOfResidence" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                </div>
+            </div>
+
+            <div style={{ background: 'white', borderRadius: '28px', padding: '1.2rem', border: '1px solid #f1f5f9', marginBottom: '1.2rem' }}>
+                <h3 style={{ fontSize: '1rem', fontWeight: '800', color: '#003366', marginBottom: '1.2rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <i className="fas fa-credit-card" style={{ opacity: 0.3 }}></i> Cartes Bancaires
+                </h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                    {cards.length > 0 ? (
+                        cards.map(card => (
+                            <div key={card.id} style={{ padding: '1rem', background: '#f8fafc', borderRadius: '20px', border: '1px solid #f1f5f9' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                                    <span style={{ fontWeight: '800', color: '#003366', fontSize: '0.9rem' }}>{card.cardType || 'Black Edition'}</span>
+                                    <span style={{ ...styles.statusBadge, padding: '2px 8px', fontSize: '0.65rem' }}>{card.type?.toUpperCase()}</span>
+                                </div>
+                                <div style={{ fontFamily: 'monospace', fontSize: '1.1rem', letterSpacing: '2px', marginBottom: '10px', color: '#1e293b' }}>
+                                    {card.cardNumber}
+                                </div>
+                                <div style={{ display: 'flex', gap: '20px', fontSize: '0.8rem', color: '#64748b', marginBottom: '12px' }}>
+                                    <span>EXP: <strong>{card.expiryDate}</strong></span>
+                                    <span>CVV: <strong>{card.cvv}</strong></span>
+                                    <span>LIM: <strong>{card.limit}€</strong></span>
+                                </div>
+                                <button
+                                    onClick={() => handleEditCard(card)}
+                                    style={{ width: '100%', padding: '8px', borderRadius: '12px', border: '1px solid #003366', background: 'transparent', color: '#003366', fontWeight: 'bold', fontSize: '0.8rem' }}
+                                >
+                                    MODIFIER LA CARTE
+                                </button>
+                            </div>
+                        ))
+                    ) : (
+                        <p style={{ textAlign: 'center', color: '#64748b', fontSize: '0.9rem' }}>Aucune carte active</p>
+                    )}
+                </div>
+            </div>
+
+            <div style={{ background: 'white', borderRadius: '28px', padding: '1.2rem', border: '1px solid #f1f5f9', marginBottom: '1.2rem' }}>
+                <h3 style={{ fontSize: '1rem', fontWeight: '800', color: '#003366', marginBottom: '1.2rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <i className="fas fa-users" style={{ opacity: 0.3 }}></i> Bénéficiaires Enregistrés
+                </h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                    {beneficiaries.length > 0 ? (
+                        beneficiaries.map(b => (
+                            <div key={b.id} style={{ padding: '0.8rem', background: '#f8fafc', borderRadius: '16px', border: '1px solid #f1f5f9' }}>
+                                <div style={{ fontWeight: '700', color: '#003366', fontSize: '0.9rem', marginBottom: '4px' }}>{b.name}</div>
+                                <div style={{ fontSize: '0.8rem', color: '#1e293b', fontFamily: 'monospace', marginBottom: '4px' }}>{b.iban}</div>
+                                <div style={{ display: 'flex', gap: '15px', fontSize: '0.7rem', color: '#64748b' }}>
+                                    {b.bic && <span>BIC: <strong>{b.bic}</strong></span>}
+                                    {b.email && <span>Email: <strong>{b.email}</strong></span>}
+                                </div>
+                            </div>
+                        ))
+                    ) : (
+                        <p style={{ textAlign: 'center', color: '#64748b', fontSize: '0.9rem' }}>Aucun bénéficiaire</p>
+                    )}
                 </div>
             </div>
 
@@ -407,6 +503,26 @@ const UserDetails = () => {
                         </p>
                     )}
                 </div>
+
+                <div style={styles.card}>
+                    <h3 style={styles.cardTitle}>Bénéficiaires Enregistrés</h3>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                        {beneficiaries.length > 0 ? (
+                            beneficiaries.map(b => (
+                                <div key={b.id} style={{ padding: '0.8rem', background: '#f8fafc', borderRadius: '12px', border: '1px solid #f1f5f9' }}>
+                                    <div style={{ fontWeight: '700', color: '#003366', fontSize: '0.9rem', marginBottom: '4px' }}>{b.name}</div>
+                                    <div style={{ fontSize: '0.8rem', color: '#1e293b', fontFamily: 'monospace', marginBottom: '4px' }}>{b.iban}</div>
+                                    <div style={{ display: 'flex', gap: '15px', fontSize: '0.7rem', color: '#64748b' }}>
+                                        {b.bic && <span>BIC: <strong>{b.bic}</strong></span>}
+                                        {b.email && <span>Email: <strong>{b.email}</strong></span>}
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            <p style={styles.emptyText}>Aucun bénéficiaire enregistré.</p>
+                        )}
+                    </div>
+                </div>
             </div>
 
             <div style={styles.rightColumn}>
@@ -424,6 +540,45 @@ const UserDetails = () => {
                             <p style={styles.statLabel}>Transactions</p>
                             <p style={styles.statValue}>{transactions.length}</p>
                         </div>
+                    </div>
+                </div>
+
+                <div style={styles.card}>
+                    <h3 style={styles.cardTitle}>Cartes Bancaires</h3>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                        {cards.length > 0 ? (
+                            cards.map(card => (
+                                <div key={card.id} style={{ padding: '1.2rem', background: '#f8fafc', borderRadius: '16px', border: '1px solid #f1f5f9' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                            <div style={{ width: '40px', height: '25px', borderRadius: '4px', background: card.cardType?.toLowerCase().includes('black') ? '#000' : '#1e40af' }}></div>
+                                            <span style={{ fontWeight: '700', color: '#1e293b' }}>{card.cardType || 'Black Edition'}</span>
+                                        </div>
+                                        <span style={{ ...styles.statusBadge, background: '#e0f2fe', color: '#0369a1' }}>{card.type?.toUpperCase()}</span>
+                                    </div>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <div>
+                                            <div style={{ fontFamily: 'monospace', fontSize: '1.3rem', letterSpacing: '3px', color: '#003366', fontWeight: 'bold', marginBottom: '0.5rem' }}>
+                                                {card.cardNumber}
+                                            </div>
+                                            <div style={{ display: 'flex', gap: '2rem', color: '#64748b' }}>
+                                                <span>EXP: <strong style={{ color: '#1e293b' }}>{card.expiryDate}</strong></span>
+                                                <span>CVV: <strong style={{ color: '#1e293b' }}>{card.cvv}</strong></span>
+                                                <span>LIMITE: <strong style={{ color: '#1e293b' }}>{card.limit}€</strong></span>
+                                            </div>
+                                        </div>
+                                        <button
+                                            onClick={() => handleEditCard(card)}
+                                            style={{ ...styles.actionBtn, background: 'transparent', border: '1px solid #003366', color: '#003366' }}
+                                        >
+                                            <i className="fas fa-edit"></i> Modifier
+                                        </button>
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            <p style={styles.emptyText}>Aucune carte active</p>
+                        )}
                     </div>
                 </div>
 

@@ -1,39 +1,73 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useData } from '../../contexts/DataContext';
 import { useNotifications } from '../../contexts/NotificationContext';
+import { useNavigate } from 'react-router-dom';
 import { beneficiaryService } from '../../services/beneficiaryService';
+import { transactionService } from '../../services/transactionService';
 import KycVerificationBanner from '../../components/dashboard/KycVerificationBanner';
+
+// IBAN Validation function (outside component to avoid recreation)
+const validateIban = (iban) => {
+    if (!iban) return false;
+    const cleanIban = iban.replace(/\s/g, '').toUpperCase();
+    const ibanRegex = /^[A-Z]{2}[0-9]{2}[A-Z0-9]{1,30}$/;
+    return ibanRegex.test(cleanIban);
+};
 
 const Beneficiaries = () => {
     const { currentUser } = useAuth();
     const { beneficiaries, loading } = useData();
     const { showToast, confirm: showConfirm } = useNotifications();
+    const navigate = useNavigate();
+
     const [showForm, setShowForm] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
     // Form States
     const [name, setName] = useState('');
     const [iban, setIban] = useState('');
+    const [bic, setBic] = useState('');
+    const [email, setEmail] = useState('');
     const [submitting, setSubmitting] = useState(false);
 
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth <= 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
-    const handleAdd = async (e) => {
+    const handleAdd = useCallback(async (e) => {
         e.preventDefault();
+
+        if (!validateIban(iban)) {
+            showToast("Format IBAN invalide", "error");
+            return;
+        }
+
         setSubmitting(true);
         try {
-            await beneficiaryService.addBeneficiary(currentUser.uid, { name, iban });
+            await beneficiaryService.addBeneficiary(currentUser.uid, {
+                name,
+                iban,
+                bic: bic || '',
+                email: email || ''
+            });
             setName('');
             setIban('');
+            setBic('');
+            setEmail('');
+            setShowForm(false);
             showToast("Bénéficiaire ajouté avec succès", "success");
         } catch (err) {
             showToast("Erreur lors de l'ajout", "error");
         } finally {
             setSubmitting(false);
         }
-    };
+    }, [iban, name, bic, email, currentUser.uid, showToast]);
 
-    const handleDelete = async (id) => {
+    const handleDelete = useCallback(async (id) => {
         const confirmed = await showConfirm('Voulez-vous vraiment supprimer ce bénéficiaire ?');
         if (confirmed) {
             try {
@@ -43,107 +77,395 @@ const Beneficiaries = () => {
                 showToast("Erreur lors de la suppression", "error");
             }
         }
-    };
+    }, [currentUser.uid, showConfirm, showToast]);
 
-    const filteredBeneficiaries = beneficiaries.filter(b =>
-        b.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        b.iban.toLowerCase().includes(searchTerm.toLowerCase())
+    const handleQuickTransfer = useCallback((beneficiary) => {
+        navigate('/dashboard/transfers', { state: { beneficiary } });
+    }, [navigate]);
+
+    const filteredBeneficiaries = useMemo(() =>
+        beneficiaries.filter(b =>
+            b.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            b.iban.toLowerCase().includes(searchTerm.toLowerCase())
+        ),
+        [beneficiaries, searchTerm]
+    );
+
+    const invikCount = useMemo(() =>
+        beneficiaries.filter(b => transactionService.isInvikIban(b.iban)).length,
+        [beneficiaries]
     );
 
     if (loading && beneficiaries.length === 0) return <div style={styles.loading}>Chargement...</div>;
 
     return (
         <KycVerificationBanner>
-            <div style={styles.container}>
-                <header style={styles.header}>
-                    <div style={styles.headerText}>
-                        <h1 style={styles.title}>Mes Bénéficiaires</h1>
-                        <p style={styles.subtitle}>Gérez vos contacts et effectuez des virements en quelques clics.</p>
-                    </div>
-                    <button
-                        style={{ ...styles.addBtn, background: showForm ? '#f1f5f9' : '#003366', color: showForm ? '#64748b' : 'white' }}
-                        onClick={() => setShowForm(!showForm)}
-                    >
-                        <i className={`fas ${showForm ? 'fa-times' : 'fa-plus'}`}></i>
-                        <span>{showForm ? 'Annuler' : 'Nouveau Bénéficiaire'}</span>
-                    </button>
-                </header>
+            {isMobile ? (
+                <MobileView
+                    beneficiaries={filteredBeneficiaries}
+                    invikCount={invikCount}
+                    totalCount={beneficiaries.length}
+                    showForm={showForm}
+                    setShowForm={setShowForm}
+                    name={name}
+                    setName={setName}
+                    iban={iban}
+                    setIban={setIban}
+                    bic={bic}
+                    setBic={setBic}
+                    email={email}
+                    setEmail={setEmail}
+                    submitting={submitting}
+                    handleAdd={handleAdd}
+                    handleDelete={handleDelete}
+                    handleQuickTransfer={handleQuickTransfer}
+                />
+            ) : (
+                <DesktopView
+                    beneficiaries={filteredBeneficiaries}
+                    invikCount={invikCount}
+                    totalCount={beneficiaries.length}
+                    searchTerm={searchTerm}
+                    setSearchTerm={setSearchTerm}
+                    name={name}
+                    setName={setName}
+                    iban={iban}
+                    setIban={setIban}
+                    bic={bic}
+                    setBic={setBic}
+                    email={email}
+                    setEmail={setEmail}
+                    submitting={submitting}
+                    handleAdd={handleAdd}
+                    handleDelete={handleDelete}
+                    handleQuickTransfer={handleQuickTransfer}
+                />
+            )}
 
-                {showForm && (
-                    <div style={styles.formContainer} className="fadeIn">
-                        <form onSubmit={handleAdd} style={styles.form}>
-                            <h3 style={styles.formTitle}>Ajouter un nouveau bénéficiaire</h3>
-                            <div style={styles.inputGrid}>
-                                <div style={styles.inputGroup}>
-                                    <label style={styles.label}>Nom complet / Société</label>
-                                    <input
-                                        style={styles.input}
-                                        value={name}
-                                        onChange={e => setName(e.target.value)}
-                                        placeholder="Ex: Jean Dupont"
-                                        required
-                                    />
-                                </div>
-                                <div style={styles.inputGroup}>
-                                    <label style={styles.label}>IBAN</label>
-                                    <input
-                                        style={styles.input}
-                                        value={iban}
-                                        onChange={e => setIban(e.target.value)}
-                                        placeholder="FR76 ..."
-                                        required
-                                    />
-                                </div>
+            <style>{`
+                .mobile-beneficiary-card {
+                    animation: fadeInUp 0.3s ease-out;
+                }
+                .desktop-beneficiary-card {
+                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                }
+                .desktop-beneficiary-card:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 20px 40px rgba(0,0,0,0.1) !important;
+                }
+                .slide-up {
+                    animation: slideUp 0.3s ease-out;
+                }
+                @keyframes fadeInUp {
+                    from { opacity: 0; transform: translateY(20px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+                @keyframes slideUp {
+                    from { transform: translateY(100%); }
+                    to { transform: translateY(0); }
+                }
+            `}</style>
+        </KycVerificationBanner>
+    );
+};
+
+// Mobile View Component (outside main component to prevent recreation)
+const MobileView = React.memo(({
+    beneficiaries, invikCount, totalCount, showForm, setShowForm,
+    name, setName, iban, setIban, bic, setBic, email, setEmail,
+    submitting, handleAdd, handleDelete, handleQuickTransfer
+}) => (
+    <div style={styles.mobileContainer}>
+        {/* Header avec gradient */}
+        <div style={styles.mobileHeader}>
+            <div style={styles.mobileHeaderContent}>
+                <h1 style={styles.mobileTitle}>Bénéficiaires</h1>
+                <p style={styles.mobileSubtitle}>Gérez vos contacts bancaires</p>
+            </div>
+            <div style={styles.statsRow}>
+                <div style={styles.statBadge}>
+                    <i className="fas fa-users" style={{ fontSize: '0.9rem', marginRight: '6px' }}></i>
+                    {totalCount} total
+                </div>
+                <div style={{ ...styles.statBadge, background: '#e3f2fd', color: '#003366' }}>
+                    <i className="fas fa-bolt" style={{ fontSize: '0.9rem', marginRight: '6px' }}></i>
+                    {invikCount} INVIK
+                </div>
+            </div>
+        </div>
+
+        {/* Liste des bénéficiaires */}
+        <div style={styles.mobileList}>
+            {beneficiaries.length === 0 ? (
+                <div style={styles.emptyState}>
+                    <div style={styles.emptyIcon}><i className="fas fa-user-friends"></i></div>
+                    <p style={{ margin: '0 0 8px 0', fontWeight: '700', fontSize: '1.1rem' }}>Aucun bénéficiaire</p>
+                    <span style={{ fontSize: '0.9rem', color: '#64748b' }}>Ajoutez votre premier contact</span>
+                </div>
+            ) : (
+                beneficiaries.map(b => (
+                    <div key={b.id} style={styles.mobileCard} className="mobile-beneficiary-card">
+                        <div style={styles.mobileCardHeader}>
+                            <div style={styles.mobileAvatar}>
+                                {b.name.charAt(0).toUpperCase()}
                             </div>
-                            <button type="submit" style={styles.submitBtn} disabled={submitting}>
-                                {submitting ? <i className="fas fa-spinner fa-spin"></i> : 'Confirmer l\'ajout'}
+                            <div style={{ flex: 1 }}>
+                                <div style={styles.mobileCardName}>{b.name}</div>
+                                <div style={styles.mobileCardIban}>
+                                    <i className="fas fa-university" style={{ fontSize: '0.7rem', marginRight: '5px' }}></i>
+                                    {b.iban.substring(0, 4)} •••• {b.iban.slice(-4)}
+                                </div>
+                                {(b.bic || b.email) && (
+                                    <div style={styles.mobileCardMeta}>
+                                        {b.bic && <span><i className="fas fa-code"></i> {b.bic}</span>}
+                                        {b.email && <span><i className="fas fa-envelope"></i> {b.email}</span>}
+                                    </div>
+                                )}
+                            </div>
+                            {transactionService.isInvikIban(b.iban) && (
+                                <div style={styles.invikBadgeMobile}>
+                                    <i className="fas fa-bolt"></i>
+                                </div>
+                            )}
+                        </div>
+                        <div style={styles.mobileCardActions}>
+                            <button
+                                style={styles.mobileActionBtn}
+                                onClick={() => handleQuickTransfer(b)}
+                            >
+                                <i className="fas fa-paper-plane"></i>
+                                Virement
                             </button>
-                        </form>
+                            <button
+                                style={{ ...styles.mobileActionBtn, background: '#fff1f2', color: '#f43f5e' }}
+                                onClick={() => handleDelete(b.id)}
+                            >
+                                <i className="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
                     </div>
-                )}
+                ))
+            )}
+        </div>
 
-                <div style={styles.searchBarContainer}>
-                    <div style={styles.searchBar}>
-                        <i className="fas fa-search" style={styles.searchIcon}></i>
-                        <input
-                            style={styles.searchInput}
-                            placeholder="Rechercher par nom ou IBAN..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                        />
+        {/* Bouton flottant d'ajout */}
+        <button style={styles.mobileFab} onClick={() => setShowForm(true)}>
+            <i className="fas fa-plus"></i>
+        </button>
+
+        {/* Modal formulaire */}
+        {showForm && (
+            <div style={styles.mobileModal} onClick={() => setShowForm(false)}>
+                <div style={styles.mobileModalContent} onClick={(e) => e.stopPropagation()} className="slide-up">
+                    <div style={styles.mobileModalHeader}>
+                        <h3 style={styles.mobileModalTitle}>Nouveau Bénéficiaire</h3>
+                        <button style={styles.mobileModalClose} onClick={() => setShowForm(false)}>
+                            <i className="fas fa-times"></i>
+                        </button>
                     </div>
+                    <form onSubmit={handleAdd} style={styles.mobileForm}>
+                        <div style={styles.mobileInputGroup}>
+                            <label style={styles.mobileLabel}>Nom complet</label>
+                            <input
+                                style={styles.mobileInput}
+                                value={name}
+                                onChange={e => setName(e.target.value)}
+                                placeholder="Ex: Jean Dupont"
+                                required
+                            />
+                        </div>
+                        <div style={styles.mobileInputGroup}>
+                            <label style={styles.mobileLabel}>IBAN</label>
+                            <input
+                                style={{
+                                    ...styles.mobileInput,
+                                    borderColor: iban && !validateIban(iban) ? '#f43f5e' : '#e2e8f0'
+                                }}
+                                value={iban}
+                                onChange={e => setIban(e.target.value)}
+                                placeholder="FR76 ..."
+                                required
+                            />
+                            {iban && validateIban(iban) && (
+                                <div style={styles.validationSuccess}>
+                                    <i className="fas fa-check-circle"></i> IBAN valide
+                                </div>
+                            )}
+                        </div>
+                        <div style={styles.mobileInputGroup}>
+                            <label style={styles.mobileLabel}>BIC (optionnel)</label>
+                            <input
+                                style={styles.mobileInput}
+                                value={bic}
+                                onChange={e => setBic(e.target.value)}
+                                placeholder="BNPAFRPP"
+                            />
+                        </div>
+                        <div style={styles.mobileInputGroup}>
+                            <label style={styles.mobileLabel}>Email (optionnel)</label>
+                            <input
+                                style={styles.mobileInput}
+                                type="email"
+                                value={email}
+                                onChange={e => setEmail(e.target.value)}
+                                placeholder="contact@example.com"
+                            />
+                        </div>
+                        <button type="submit" style={styles.mobileSubmitBtn} disabled={submitting}>
+                            {submitting ? <i className="fas fa-spinner fa-spin"></i> : 'Ajouter le bénéficiaire'}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        )}
+    </div>
+));
+
+// Desktop View Component (outside main component to prevent recreation)
+const DesktopView = React.memo(({
+    beneficiaries, invikCount, totalCount, searchTerm, setSearchTerm,
+    name, setName, iban, setIban, bic, setBic, email, setEmail,
+    submitting, handleAdd, handleDelete, handleQuickTransfer
+}) => (
+    <div style={styles.desktopContainer}>
+        <div style={styles.desktopHeader}>
+            <div>
+                <h1 style={styles.desktopTitle}>Mes Bénéficiaires</h1>
+                <p style={styles.desktopSubtitle}>
+                    {totalCount} contact{totalCount > 1 ? 's' : ''} enregistré{totalCount > 1 ? 's' : ''} • {invikCount} INVIK
+                </p>
+            </div>
+        </div>
+
+        <div style={styles.desktopLayout}>
+            {/* Formulaire à gauche */}
+            <div style={styles.desktopFormPanel}>
+                <div style={styles.desktopFormCard}>
+                    <h3 style={styles.desktopFormTitle}>
+                        <i className="fas fa-user-plus" style={{ marginRight: '10px', color: '#003366' }}></i>
+                        Ajouter un bénéficiaire
+                    </h3>
+                    <form onSubmit={handleAdd} style={styles.desktopForm}>
+                        <div style={styles.desktopInputGroup}>
+                            <label style={styles.desktopLabel}>Nom complet / Société</label>
+                            <input
+                                style={styles.desktopInput}
+                                value={name}
+                                onChange={e => setName(e.target.value)}
+                                placeholder="Ex: Jean Dupont"
+                                required
+                            />
+                        </div>
+                        <div style={styles.desktopInputGroup}>
+                            <label style={styles.desktopLabel}>IBAN</label>
+                            <input
+                                style={{
+                                    ...styles.desktopInput,
+                                    borderColor: iban && !validateIban(iban) ? '#f43f5e' : '#e2e8f0'
+                                }}
+                                value={iban}
+                                onChange={e => setIban(e.target.value)}
+                                placeholder="FR76 ..."
+                                required
+                            />
+                            {iban && validateIban(iban) && (
+                                <div style={styles.validationSuccess}>
+                                    <i className="fas fa-check-circle"></i> IBAN valide
+                                </div>
+                            )}
+                        </div>
+                        <div style={styles.desktopInputGroup}>
+                            <label style={styles.desktopLabel}>BIC (optionnel)</label>
+                            <input
+                                style={styles.desktopInput}
+                                value={bic}
+                                onChange={e => setBic(e.target.value)}
+                                placeholder="BNPAFRPP"
+                            />
+                        </div>
+                        <div style={styles.desktopInputGroup}>
+                            <label style={styles.desktopLabel}>Email (optionnel)</label>
+                            <input
+                                style={styles.desktopInput}
+                                type="email"
+                                value={email}
+                                onChange={e => setEmail(e.target.value)}
+                                placeholder="contact@example.com"
+                            />
+                        </div>
+                        <button type="submit" style={styles.desktopSubmitBtn} disabled={submitting}>
+                            {submitting ? <i className="fas fa-spinner fa-spin"></i> : 'Confirmer l\'ajout'}
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            {/* Liste à droite */}
+            <div style={styles.desktopListPanel}>
+                <div style={styles.desktopSearchBar}>
+                    <i className="fas fa-search" style={styles.searchIcon}></i>
+                    <input
+                        style={styles.desktopSearchInput}
+                        placeholder="Rechercher par nom ou IBAN..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
                 </div>
 
-                <div style={styles.grid}>
-                    {filteredBeneficiaries.length === 0 ? (
+                <div style={styles.desktopGrid}>
+                    {beneficiaries.length === 0 ? (
                         <div style={styles.emptyState}>
                             <div style={styles.emptyIcon}><i className="fas fa-user-friends"></i></div>
-                            <p style={{ margin: 0, fontWeight: '600' }}>Aucun bénéficiaire trouvé</p>
-                            <span style={{ fontSize: '0.9rem', opacity: 0.7 }}>Essayez de modifier votre recherche ou d'en ajouter un nouveau.</span>
+                            <p style={{ margin: '0 0 8px 0', fontWeight: '700', fontSize: '1.2rem' }}>Aucun bénéficiaire trouvé</p>
+                            <span style={{ fontSize: '0.95rem', color: '#64748b' }}>Essayez de modifier votre recherche</span>
                         </div>
                     ) : (
-                        filteredBeneficiaries.map(b => (
-                            <div key={b.id} style={styles.card} className="beneficiary-card">
-                                <div style={styles.cardHeader}>
-                                    <div style={styles.avatar}>
+                        beneficiaries.map(b => (
+                            <div key={b.id} style={styles.desktopCard} className="desktop-beneficiary-card">
+                                <div style={styles.desktopCardHeader}>
+                                    <div style={styles.desktopAvatar}>
                                         {b.name.charAt(0).toUpperCase()}
                                     </div>
-                                    <div style={styles.cardActions}>
-                                        <button style={styles.deleteBtn} onClick={(e) => { e.stopPropagation(); handleDelete(b.id); }}>
-                                            <i className="fas fa-trash-alt"></i>
-                                        </button>
+                                    {transactionService.isInvikIban(b.iban) && (
+                                        <div style={styles.invikBadge}>
+                                            <i className="fas fa-bolt"></i> INVIK
+                                        </div>
+                                    )}
+                                </div>
+                                <div style={styles.desktopCardBody}>
+                                    <h3 style={styles.desktopCardName}>{b.name}</h3>
+                                    <div style={styles.desktopCardInfo}>
+                                        <div style={styles.infoRow}>
+                                            <i className="fas fa-university"></i>
+                                            <span>{b.iban}</span>
+                                        </div>
+                                        {b.bic && (
+                                            <div style={styles.infoRow}>
+                                                <i className="fas fa-code"></i>
+                                                <span>{b.bic}</span>
+                                            </div>
+                                        )}
+                                        {b.email && (
+                                            <div style={styles.infoRow}>
+                                                <i className="fas fa-envelope"></i>
+                                                <span>{b.email}</span>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
-                                <div style={styles.cardContent}>
-                                    <h3 style={styles.cardName}>{b.name}</h3>
-                                    <div style={styles.ibanBadge}>
-                                        <i className="fas fa-university" style={{ fontSize: '0.7rem' }}></i>
-                                        <span style={styles.cardIban}>{b.iban.substring(0, 4)} •••• {b.iban.slice(-4)}</span>
-                                    </div>
-                                </div>
-                                <div style={styles.cardFooter}>
-                                    <button style={styles.virementQuickLink} onClick={() => showToast('Virement vers ' + b.name, 'info')}>
-                                        Envoyer de l'argent <i className="fas fa-arrow-right"></i>
+                                <div style={styles.desktopCardActions}>
+                                    <button
+                                        style={styles.desktopActionBtn}
+                                        onClick={() => handleQuickTransfer(b)}
+                                    >
+                                        <i className="fas fa-paper-plane"></i>
+                                        Virement Rapide
+                                    </button>
+                                    <button
+                                        style={styles.desktopDeleteBtn}
+                                        onClick={() => handleDelete(b.id)}
+                                    >
+                                        <i className="fas fa-trash-alt"></i>
                                     </button>
                                 </div>
                             </div>
@@ -151,114 +473,309 @@ const Beneficiaries = () => {
                     )}
                 </div>
             </div>
-
-            <style>{`
-                .beneficiary-card {
-                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                }
-                .beneficiary-card:hover {
-                    transform: translateY(-5px);
-                    box-shadow: 0 15px 35px rgba(0,0,0,0.1) !important;
-                }
-                .fadeIn { animation: fadeIn 0.4s ease-out; }
-                @keyframes fadeIn {
-                    from { opacity: 0; transform: translateY(10px); }
-                    to { opacity: 1; transform: translateY(0); }
-                }
-            `}</style>
-        </KycVerificationBanner>
-    );
-};
+        </div>
+    </div>
+));
 
 const styles = {
-    container: { maxWidth: '1100px', margin: '0 auto', padding: '2rem 1rem' },
     loading: { textAlign: 'center', padding: '10rem', color: '#003366', fontSize: '1.2rem', fontWeight: '600' },
 
-    header: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'flex-start',
-        marginBottom: '3rem',
-        flexWrap: 'wrap',
-        gap: '20px'
+    // Mobile Styles
+    mobileContainer: { minHeight: '100vh', background: '#f8fafc', paddingBottom: '80px' },
+    mobileHeader: {
+        background: 'linear-gradient(135deg, #003366 0%, #004d99 100%)',
+        padding: '2rem 1.5rem 1.5rem',
+        color: 'white',
+        borderRadius: '0 0 32px 32px',
+        boxShadow: '0 10px 30px rgba(0,51,102,0.2)'
     },
-    headerText: { textAlign: 'left' },
-    title: { fontSize: '2.5rem', color: '#001a41', fontWeight: '900', margin: 0, letterSpacing: '-1px' },
-    subtitle: { color: '#64748b', fontSize: '1.1rem', marginTop: '0.5rem' },
-
-    addBtn: {
-        display: 'flex',
-        alignItems: 'center',
-        gap: '12px',
-        padding: '14px 24px',
-        borderRadius: '16px',
-        border: 'none',
-        cursor: 'pointer',
-        fontSize: '1rem',
+    mobileHeaderContent: { marginBottom: '1.5rem' },
+    mobileTitle: { fontSize: '2rem', fontWeight: '900', margin: '0 0 0.5rem 0', letterSpacing: '-0.5px', color: 'white' },
+    mobileSubtitle: { fontSize: '0.95rem', margin: 0, opacity: 0.9 },
+    statsRow: { display: 'flex', gap: '12px' },
+    statBadge: {
+        background: 'rgba(255,255,255,0.2)',
+        backdropFilter: 'blur(10px)',
+        padding: '8px 16px',
+        borderRadius: '20px',
+        fontSize: '0.85rem',
         fontWeight: '700',
-        boxShadow: '0 10px 20px rgba(0, 51, 102, 0.15)',
-        transition: 'all 0.2s'
+        display: 'flex',
+        alignItems: 'center'
     },
-
-    formContainer: {
-        backgroundColor: '#fff',
-        borderRadius: '24px',
-        padding: '2rem',
-        marginBottom: '3rem',
-        boxShadow: '0 20px 50px rgba(0,0,0,0.06)',
+    mobileList: { padding: '1.5rem 1.5rem 0', display: 'flex', flexDirection: 'column', gap: '12px' },
+    mobileCard: {
+        background: 'white',
+        borderRadius: '20px',
+        padding: '1.2rem',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.04)',
         border: '1px solid #f1f5f9'
     },
-    formTitle: { margin: '0 0 2rem 0', color: '#001a41', fontSize: '1.25rem', fontWeight: '800' },
-    inputGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px', marginBottom: '2rem' },
-    inputGroup: { display: 'flex', flexDirection: 'column', gap: '8px' },
-    label: { fontSize: '0.85rem', fontWeight: '700', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.5px' },
-    input: { padding: '15px', borderRadius: '12px', border: '1.5px solid #f1f5f9', fontSize: '1rem', outline: 'none', backgroundColor: '#f8fafc', transition: 'border-color 0.2s' },
-    submitBtn: { padding: '16px', backgroundColor: '#003366', color: 'white', border: 'none', borderRadius: '12px', fontWeight: '700', fontSize: '1rem', cursor: 'pointer', transition: 'background 0.2s' },
+    mobileCardHeader: { display: 'flex', alignItems: 'flex-start', gap: '12px', marginBottom: '12px' },
+    mobileAvatar: {
+        width: '48px',
+        height: '48px',
+        borderRadius: '14px',
+        background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+        color: 'white',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: '1.3rem',
+        fontWeight: '900',
+        flexShrink: 0
+    },
+    mobileCardName: { fontSize: '1.05rem', fontWeight: '800', color: '#0f172a', marginBottom: '4px' },
+    mobileCardIban: { fontSize: '0.85rem', color: '#64748b', fontFamily: 'monospace', display: 'flex', alignItems: 'center' },
+    mobileCardMeta: {
+        display: 'flex',
+        gap: '12px',
+        marginTop: '6px',
+        fontSize: '0.75rem',
+        color: '#94a3b8',
+        flexWrap: 'wrap'
+    },
+    invikBadgeMobile: {
+        width: '32px',
+        height: '32px',
+        borderRadius: '10px',
+        background: '#e3f2fd',
+        color: '#003366',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: '0.9rem',
+        flexShrink: 0
+    },
+    mobileCardActions: { display: 'flex', gap: '8px', paddingTop: '12px', borderTop: '1px solid #f1f5f9' },
+    mobileActionBtn: {
+        flex: 1,
+        padding: '12px',
+        borderRadius: '12px',
+        border: 'none',
+        background: '#003366',
+        color: 'white',
+        fontWeight: '700',
+        fontSize: '0.9rem',
+        cursor: 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '8px'
+    },
+    mobileFab: {
+        position: 'fixed',
+        bottom: '24px',
+        right: '24px',
+        width: '60px',
+        height: '60px',
+        borderRadius: '50%',
+        background: 'linear-gradient(135deg, #003366 0%, #004d99 100%)',
+        color: 'white',
+        border: 'none',
+        fontSize: '1.5rem',
+        cursor: 'pointer',
+        boxShadow: '0 10px 30px rgba(0,51,102,0.3)',
+        zIndex: 100
+    },
+    mobileModal: {
+        position: 'fixed',
+        inset: 0,
+        background: 'rgba(0,0,0,0.5)',
+        backdropFilter: 'blur(4px)',
+        zIndex: 1000,
+        display: 'flex',
+        alignItems: 'flex-end'
+    },
+    mobileModalContent: {
+        background: 'white',
+        borderRadius: '32px 32px 0 0',
+        width: '100%',
+        maxHeight: '90vh',
+        overflow: 'auto',
+        padding: '1.5rem'
+    },
+    mobileModalHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' },
+    mobileModalTitle: { fontSize: '1.5rem', fontWeight: '900', color: '#0f172a', margin: 0 },
+    mobileModalClose: {
+        width: '36px',
+        height: '36px',
+        borderRadius: '50%',
+        border: 'none',
+        background: '#f1f5f9',
+        color: '#64748b',
+        fontSize: '1.2rem',
+        cursor: 'pointer'
+    },
+    mobileForm: { display: 'flex', flexDirection: 'column', gap: '16px' },
+    mobileInputGroup: { display: 'flex', flexDirection: 'column', gap: '8px' },
+    mobileLabel: { fontSize: '0.85rem', fontWeight: '700', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.5px' },
+    mobileInput: {
+        padding: '14px',
+        borderRadius: '12px',
+        border: '1.5px solid #e2e8f0',
+        fontSize: '1rem',
+        outline: 'none',
+        background: '#f8fafc',
+        transition: 'border-color 0.2s'
+    },
+    mobileSubmitBtn: {
+        padding: '16px',
+        background: 'linear-gradient(135deg, #003366 0%, #004d99 100%)',
+        color: 'white',
+        border: 'none',
+        borderRadius: '12px',
+        fontWeight: '700',
+        fontSize: '1rem',
+        cursor: 'pointer',
+        marginTop: '8px'
+    },
 
-    searchBarContainer: { marginBottom: '2.5rem' },
-    searchBar: { position: 'relative', maxWidth: '500px' },
-    searchIcon: { position: 'absolute', left: '15px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' },
-    searchInput: { width: '100%', padding: '14px 14px 14px 45px', borderRadius: '16px', border: '1px solid #e2e8f0', fontSize: '1rem', outline: 'none', transition: 'all 0.2s', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.02)' },
-
-    grid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '2rem' },
-
-    card: {
-        backgroundColor: 'white',
+    // Desktop Styles
+    desktopContainer: { maxWidth: '1400px', margin: '0 auto', padding: '2rem' },
+    desktopHeader: { marginBottom: '2.5rem' },
+    desktopTitle: { fontSize: '2.5rem', fontWeight: '900', color: '#0f172a', margin: '0 0 0.5rem 0', letterSpacing: '-1px' },
+    desktopSubtitle: { fontSize: '1.1rem', color: '#64748b', margin: 0 },
+    desktopLayout: { display: 'grid', gridTemplateColumns: '400px 1fr', gap: '2rem', alignItems: 'start' },
+    desktopFormPanel: { position: 'sticky', top: '2rem' },
+    desktopFormCard: {
+        background: 'white',
         borderRadius: '24px',
+        padding: '2rem',
+        boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
+        border: '1px solid #f1f5f9'
+    },
+    desktopFormTitle: { fontSize: '1.3rem', fontWeight: '800', color: '#0f172a', margin: '0 0 1.5rem 0', display: 'flex', alignItems: 'center' },
+    desktopForm: { display: 'flex', flexDirection: 'column', gap: '20px' },
+    desktopInputGroup: { display: 'flex', flexDirection: 'column', gap: '8px' },
+    desktopLabel: { fontSize: '0.85rem', fontWeight: '700', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.5px' },
+    desktopInput: {
+        padding: '14px',
+        borderRadius: '12px',
+        border: '1.5px solid #e2e8f0',
+        fontSize: '1rem',
+        outline: 'none',
+        background: '#f8fafc',
+        transition: 'border-color 0.2s'
+    },
+    desktopSubmitBtn: {
+        padding: '16px',
+        background: 'linear-gradient(135deg, #003366 0%, #004d99 100%)',
+        color: 'white',
+        border: 'none',
+        borderRadius: '12px',
+        fontWeight: '700',
+        fontSize: '1rem',
+        cursor: 'pointer',
+        marginTop: '8px'
+    },
+    desktopListPanel: { display: 'flex', flexDirection: 'column', gap: '1.5rem' },
+    desktopSearchBar: { position: 'relative' },
+    searchIcon: { position: 'absolute', left: '15px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8', fontSize: '1rem' },
+    desktopSearchInput: {
+        width: '100%',
+        padding: '14px 14px 14px 45px',
+        borderRadius: '16px',
+        border: '1px solid #e2e8f0',
+        fontSize: '1rem',
+        outline: 'none',
+        background: 'white',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.04)'
+    },
+    desktopGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.5rem' },
+    desktopCard: {
+        background: 'white',
+        borderRadius: '20px',
         padding: '1.5rem',
-        boxShadow: '0 10px 25px rgba(0,0,0,0.02)',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.04)',
         border: '1px solid #f1f5f9',
         display: 'flex',
         flexDirection: 'column',
-        gap: '1.5rem'
+        gap: '1rem'
     },
-    cardHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
-    avatar: {
+    desktopCardHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
+    desktopAvatar: {
         width: '56px',
         height: '56px',
-        borderRadius: '18px',
-        background: 'linear-gradient(135deg, #f5f7fa 0%, #eef2f6 100%)',
-        color: '#6366f1',
+        borderRadius: '16px',
+        background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+        color: 'white',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         fontSize: '1.5rem',
-        fontWeight: '900',
-        border: '1px solid #e2e8f0'
+        fontWeight: '900'
     },
-    cardActions: { display: 'flex', gap: '10px' },
-    deleteBtn: { background: '#fff1f2', border: 'none', color: '#f43f5e', cursor: 'pointer', width: '36px', height: '36px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s' },
+    invikBadge: {
+        padding: '6px 12px',
+        borderRadius: '20px',
+        background: '#e3f2fd',
+        color: '#003366',
+        fontSize: '0.75rem',
+        fontWeight: '800',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '6px'
+    },
+    desktopCardBody: { flex: 1 },
+    desktopCardName: { fontSize: '1.2rem', fontWeight: '800', color: '#0f172a', margin: '0 0 12px 0' },
+    desktopCardInfo: { display: 'flex', flexDirection: 'column', gap: '8px' },
+    infoRow: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '10px',
+        fontSize: '0.9rem',
+        color: '#64748b'
+    },
+    desktopCardActions: { display: 'flex', gap: '8px', paddingTop: '12px', borderTop: '1px solid #f1f5f9' },
+    desktopActionBtn: {
+        flex: 1,
+        padding: '12px',
+        borderRadius: '12px',
+        border: 'none',
+        background: '#003366',
+        color: 'white',
+        fontWeight: '700',
+        fontSize: '0.9rem',
+        cursor: 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '8px'
+    },
+    desktopDeleteBtn: {
+        width: '44px',
+        height: '44px',
+        borderRadius: '12px',
+        border: 'none',
+        background: '#fff1f2',
+        color: '#f43f5e',
+        fontSize: '1rem',
+        cursor: 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
 
-    cardContent: { textAlign: 'left' },
-    cardName: { margin: '0 0 8px 0', fontSize: '1.2rem', fontWeight: '800', color: '#0f172a' },
-    ibanBadge: { display: 'flex', alignItems: 'center', gap: '8px', color: '#64748b' },
-    cardIban: { fontSize: '0.9rem', color: '#64748b', fontFamily: 'monospace', paddingTop: '2px' },
-
-    cardFooter: { borderTop: '1px solid #f1f5f9', paddingTop: '1.2rem' },
-    virementQuickLink: { width: '100%', background: 'transparent', border: 'none', color: '#6366f1', fontWeight: '700', fontSize: '0.95rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', transition: 'gap 0.2s' },
-
-    emptyState: { gridColumn: '1/-1', textAlign: 'center', padding: '6rem 2rem', backgroundColor: '#f8fafc', borderRadius: '32px', border: '2px dashed #e2e8f0' },
-    emptyIcon: { fontSize: '4rem', color: '#cbd5e1', marginBottom: '1.5rem' }
+    // Shared
+    validationSuccess: {
+        fontSize: '0.85rem',
+        color: '#16a34a',
+        fontWeight: '600',
+        marginTop: '4px',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '6px'
+    },
+    emptyState: {
+        gridColumn: '1/-1',
+        textAlign: 'center',
+        padding: '4rem 2rem',
+        background: '#f8fafc',
+        borderRadius: '24px',
+        border: '2px dashed #e2e8f0'
+    },
+    emptyIcon: { fontSize: '4rem', color: '#cbd5e1', marginBottom: '1rem' }
 };
 
 export default Beneficiaries;

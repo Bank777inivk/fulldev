@@ -7,12 +7,26 @@ import {
     doc,
     setDoc,
     serverTimestamp,
-    addDoc
+    addDoc,
+    deleteDoc // Added
 } from 'firebase/firestore';
 
 const WALLETS_COLLECTION = 'wallets';
 
 export const walletService = {
+    // ... (existing methods)
+
+    // Delete a wallet
+    deleteWallet: async (walletId) => {
+        try {
+            await deleteDoc(doc(db, WALLETS_COLLECTION, walletId));
+        } catch (error) {
+            console.error("Error deleting wallet:", error);
+            throw error;
+        }
+    },
+
+    // Fetch all wallets for a specific user
     // Fetch all wallets for a specific user
     getUserWallets: async (userId) => {
         try {
@@ -97,6 +111,26 @@ export const walletService = {
             console.error("Error submitting account request:", error);
             throw error;
         }
+    },
+
+    // Create a specific wallet (e.g., credit)
+    createWallet: async (userId, type, amount = 0, currency = 'EUR') => {
+        try {
+            const walletData = {
+                userId,
+                type,
+                currency,
+                balance: amount,
+                iban: generateIBAN(type, userId),
+                bic: 'INVKFR2P',
+                createdAt: serverTimestamp()
+            };
+            const docRef = await addDoc(collection(db, WALLETS_COLLECTION), walletData);
+            return { id: docRef.id, ...walletData };
+        } catch (error) {
+            console.error(`Error creating ${type} wallet:`, error);
+            throw error;
+        }
     }
 };
 
@@ -105,7 +139,7 @@ const generateIBAN = (type, userId) => {
     const country = 'FR76';
     const bankCode = '12345';
     const branchCode = '67890';
-    const suffix = type === 'main' ? '01' : (type === 'savings' ? '02' : '03');
+    const suffix = type === 'main' ? '01' : (type === 'savings' ? '02' : (type === 'credit' ? '03' : '99'));
     const userPart = userId.substring(0, 8).toUpperCase().replace(/[^A-Z0-9]/g, 'X');
     return `${country} ${bankCode} ${branchCode} ${userPart} ${suffix}`;
 };

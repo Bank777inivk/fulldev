@@ -28,10 +28,20 @@ const WalletManagement = () => {
         return () => { unsubscribeUsers(); unsubscribeWallets(); };
     }, []);
 
-    const handleUpdateBalance = async (walletId, currentBalance) => {
-        const newBalance = window.prompt("Nouveau solde (€) :", currentBalance);
-        if (newBalance === null || isNaN(newBalance)) return;
-        try { await adminService.updateWalletBalance(walletId, newBalance); } catch (e) { alert('Erreur'); }
+    const handleUpdateBalance = async (userId, walletId, currentBalance) => {
+        const newBalanceInput = window.prompt("Nouveau solde (€) :", currentBalance);
+        if (newBalanceInput === null || isNaN(newBalanceInput)) return;
+
+        const newBalance = Number(newBalanceInput);
+        const amount = newBalance - Number(currentBalance);
+
+        try {
+            await adminService.createAdminDeposit(userId, walletId, amount, newBalance);
+            alert('Solde mis à jour avec succès');
+        } catch (e) {
+            console.error(e);
+            alert('Erreur lors de la mise à jour du solde');
+        }
     };
 
     const handleEditDetails = async (wallet) => {
@@ -132,7 +142,7 @@ const WalletManagement = () => {
 
                                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                                         <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                            <button onClick={() => handleUpdateBalance(wallet.id, wallet.balance)} style={{ ...styles.actionBtn, padding: '12px' }}>
+                                            <button onClick={() => handleUpdateBalance(wallet.userId, wallet.id, wallet.balance)} style={{ ...styles.actionBtn, padding: '12px' }}>
                                                 <i className="fas fa-coins"></i> SOLDE
                                             </button>
                                             <button onClick={() => handleEditDetails(wallet)} style={{ ...styles.actionBtn, padding: '12px' }}>
@@ -230,7 +240,7 @@ const WalletManagement = () => {
                                         </div>
                                     </div>
                                     <div style={styles.actions}>
-                                        <button onClick={() => handleUpdateBalance(wallet.id, wallet.balance)} style={styles.actionBtn}><i className="fas fa-coins"></i> Solde</button>
+                                        <button onClick={() => handleUpdateBalance(wallet.userId, wallet.id, wallet.balance)} style={styles.actionBtn}><i className="fas fa-coins"></i> Solde</button>
                                         <button onClick={() => handleEditDetails(wallet)} style={styles.actionBtn}><i className="fas fa-edit"></i> RIB</button>
                                         <button onClick={() => handleToggleStatus(wallet.id, wallet.status)} style={{ ...styles.actionBtn, color: wallet.status === 'active' ? '#ef4444' : '#10b981' }}><i className={wallet.status === 'active' ? 'fas fa-lock' : 'fas fa-lock-open'}></i> {wallet.status === 'active' ? 'Bloquer' : 'Débloquer'}</button>
                                     </div>

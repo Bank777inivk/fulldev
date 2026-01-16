@@ -2,26 +2,122 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useData } from '../../contexts/DataContext';
 import { loanService } from '../../services/loanService';
+import { notificationService } from '../../services/notificationService';
+import { walletService } from '../../services/walletService'; // Added walletService
+import { useNotifications } from '../../contexts/NotificationContext';
+import { useNavigate } from 'react-router-dom';
 import KycVerificationBanner from '../../components/dashboard/KycVerificationBanner';
+
+const ConfirmationModal = ({ isOpen, onClose, onConfirm, details, submitting }) => {
+    if (!isOpen) return null;
+
+    return (
+        <div style={styles.modalOverlay}>
+            <div style={styles.modalContent} className="fadeInUp">
+                <h3 style={styles.modalTitle}>Confirmer votre demande</h3>
+                <div style={styles.modalBody}>
+                    <div style={styles.modalRow}>
+                        <span>Type de projet :</span>
+                        <strong>{details.type}</strong>
+                    </div>
+                    <div style={styles.modalRow}>
+                        <span>Montant :</span>
+                        <strong>{details.amount.toLocaleString()} €</strong>
+                    </div>
+                    <div style={styles.modalRow}>
+                        <span>Durée :</span>
+                        <strong>{details.duration} mois</strong>
+                    </div>
+                    <div style={styles.modalRow}>
+                        <span>Mensualité :</span>
+                        <strong>{details.monthlyPayment} €</strong>
+                    </div>
+                    <div style={{ ...styles.modalRow, flexDirection: 'column', alignItems: 'flex-start', gap: '5px' }}>
+                        <span>Description :</span>
+                        <p style={styles.modalDesc}>{details.description}</p>
+                    </div>
+                </div>
+                <div style={styles.modalActions}>
+                    <button style={styles.cancelBtn} onClick={onClose} disabled={submitting}>Modifier</button>
+                    <button style={styles.confirmBtn} onClick={onConfirm} disabled={submitting}>
+                        {submitting ? <i className="fas fa-spinner fa-spin"></i> : 'Confirmer et Envoyer'}
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+};
 
 const Credits = () => {
     const { currentUser } = useAuth();
-    const { loans: history, loading } = useData();
+    const { loans: history, wallets, loading } = useData(); // Added wallets
+    const { showToast } = useNotifications();
+    const navigate = useNavigate();
+
+    // Form States
     const [amount, setAmount] = useState(100000);
     const [duration, setDuration] = useState(120); // months
     const [interestRate] = useState(2.5); // 2.5% annual
     const [projectType, setProjectType] = useState('Personnel');
     const [otherType, setOtherType] = useState('');
+    const [projectDescription, setProjectDescription] = useState('');
+
     const [submitting, setSubmitting] = useState(false);
     const [message, setMessage] = useState({ type: '', text: '' });
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+    const [showConfirmation, setShowConfirmation] = useState(false);
 
+    // Logic: Check for pending loans
+    const pendingRequest = history.find(l => l.status === 'pending');
+    const hasPendingLoan = !!pendingRequest;
 
     useEffect(() => {
         const handleResize = () => setIsMobile(window.innerWidth <= 768);
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, []);
+
+    // Check Approval & Create Wallet Logic
+    useEffect(() => {
+        const checkAndNotify = async () => {
+            if (!currentUser) return;
+            const approvedLoan = history.find(l => l.status === 'approved' || l.status === 'accepted');
+
+            if (approvedLoan) {
+                // 1. Auto-Create Credit Wallet if missing
+                const creditWallet = wallets.find(w => w.type === 'credit');
+                if (!creditWallet) {
+                    console.log("Approved loan found but no credit wallet. Creating one...");
+                    try {
+                        await walletService.createWallet(currentUser.uid, 'credit', approvedLoan.amount);
+                        showToast("Votre Compte Crédit a été ouvert et les fonds versés.", 'success');
+                    } catch (e) {
+                        console.error("Failed to auto-create credit wallet", e);
+                    }
+                }
+
+                // 2. Notification Logic
+                const alreadyNotified = await notificationService.checkNotificationExists(currentUser.uid, 'loanId', approvedLoan.id);
+                if (!alreadyNotified) {
+                    console.log("New approved loan detected, sending notification...");
+
+                    await notificationService.addNotification(
+                        currentUser.uid,
+                        'Crédit Approuvé 🎉',
+                        `Votre demande de crédit de ${approvedLoan.amount.toLocaleString()} € a été approuvée. Les fonds sont disponibles.`,
+                        'success',
+                        { loanId: approvedLoan.id, type: 'credit_approval' }
+                    );
+
+                    showToast(`Félicitations ! Votre crédit de ${approvedLoan.amount.toLocaleString()} € est disponible.`, 'success');
+                }
+            }
+        };
+
+        if (!loading && history.length > 0) {
+            checkAndNotify();
+        }
+    }, [history, wallets, loading, currentUser, showToast]);
 
     const calculateMonthly = () => {
         const r = (interestRate / 100) / 12;
@@ -32,20 +128,39 @@ const Credits = () => {
         return monthly.toFixed(2);
     };
 
-    const handleApply = async () => {
-        setSubmitting(true);
+    const handleInitialSubmit = () => {
         setMessage({ type: '', text: '' });
+
+        if (hasPendingLoan) {
+            setMessage({ type: 'error', text: "Vous avez déjà une demande en cours." });
+            return;
+        }
+
+        if (projectDescription.length < 10) {
+            setMessage({ type: 'error', text: "Veuillez décrire votre projet (min. 10 caractères)." });
+            return;
+        }
+
+        setShowConfirmation(true);
+    };
+
+    const handleConfirmApply = async () => {
+        setSubmitting(true);
         try {
             await loanService.applyForLoan(currentUser.uid, {
                 amount,
                 duration,
                 monthlyPayment: calculateMonthly(),
                 interestRate,
-                type: projectType === 'Autre' ? otherType : projectType
+                type: projectType === 'Autre' ? otherType : projectType,
+                description: projectDescription
             });
             setMessage({ type: 'success', text: 'Demande envoyée ! Un conseiller vous contactera.' });
+            setShowConfirmation(false);
+            setProjectDescription('');
         } catch (err) {
             setMessage({ type: 'error', text: 'Erreur lors de la demande.' });
+            setShowConfirmation(false);
         } finally {
             setSubmitting(false);
         }
@@ -53,60 +168,197 @@ const Credits = () => {
 
     if (loading && history.length === 0) return <div style={{ textAlign: 'center', padding: '5rem' }}>Chargement...</div>;
 
+    const renderLockedOverlay = () => hasPendingLoan && (
+        <div style={styles.lockedOverlay}>
+            <div style={styles.lockedContent}>
+                <i className="fas fa-file-contract" style={{ fontSize: '3rem', color: '#003366', marginBottom: '1rem' }}></i>
+                <h3 style={{ color: '#003366', marginBottom: '10px' }}>Dossier en cours d'étude</h3>
+                <p style={{ color: '#555', marginBottom: '1.5rem' }}>
+                    Nous étudions actuellement votre demande de <strong>{pendingRequest.amount.toLocaleString()} €</strong>.
+                    <br /><br />
+                    Vous serez informé de la progression en temps réel par <strong>mail</strong>. Pour toute modification, contactez le support.
+                </p>
+                <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+                    <button onClick={() => navigate('/dashboard/support')} style={{ ...styles.supportLink, border: 'none', cursor: 'pointer', fontSize: '0.9rem' }}>Contacter le support</button>
+                </div>
+            </div>
+        </div>
+    );
+
+    const getStatusBadge = (status) => {
+        switch (status) {
+            case 'pending': return { label: 'Étude en cours', color: '#e65100', bg: '#fff3e0' };
+            case 'approved':
+            case 'accepted':
+                return { label: 'Approuvé ✅', color: '#2e7d32', bg: '#e8f5e9' };
+            case 'rejected': return { label: 'Refusé', color: '#c62828', bg: '#ffebee' };
+            default: return { label: status, color: '#555', bg: '#f5f7fa' };
+        }
+    };
+
+    const renderHistoryItemContent = (loan) => {
+        const badge = getStatusBadge(loan.status);
+        const isApproved = loan.status === 'approved' || loan.status === 'accepted';
+
+        if (isApproved) {
+            return (
+                <div style={{ width: '100%' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                        <div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                                <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#003366' }}>{loan.amount.toLocaleString()} €</span>
+                                <i className="fas fa-check-circle" style={{ color: '#2e7d32', fontSize: '1.2rem' }} title="Approuvé"></i>
+                            </div>
+                            <div style={{ fontSize: '0.85rem', color: '#666' }}>
+                                {loan.type} • {loan.duration} mois
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style={{
+                        marginTop: '12px',
+                        padding: '12px',
+                        background: 'linear-gradient(to right, #f1f8e9, #ffffff)',
+                        borderRadius: '10px',
+                        borderLeft: '4px solid #2e7d32',
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+                    }}>
+                        <p style={{ margin: '0 0 10px', fontSize: '0.9rem', color: '#1b5e20', fontWeight: '600', display: 'flex', alignItems: 'center' }}>
+                            <i className="fas fa-coins" style={{ marginRight: '8px' }}></i>
+                            Fonds disponibles sur votre espace
+                        </p>
+                        <button
+                            onClick={() => navigate('/dashboard/accounts')}
+                            style={{
+                                background: '#2e7d32',
+                                color: 'white',
+                                border: 'none',
+                                padding: '8px 16px',
+                                borderRadius: '8px',
+                                fontSize: '0.85rem',
+                                cursor: 'pointer',
+                                fontWeight: '600',
+                                width: '100%',
+                                textAlign: 'center',
+                                boxShadow: '0 2px 4px rgba(46, 125, 50, 0.2)',
+                                transition: 'all 0.2s',
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                gap: '8px'
+                            }}
+                        >
+                            Accéder à mon Crédit
+                            <i className="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
+        return (
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                <div style={{ flex: 1 }}>
+                    <div style={{ fontWeight: 'bold' }}>{loan.amount.toLocaleString()} €</div>
+                    <div style={{ fontSize: '0.8rem', color: '#888' }}>{loan.type} • {loan.duration} mois</div>
+                </div>
+                <div style={{ textAlign: 'right' }}>
+                    <div style={{ fontSize: '0.75rem', display: 'inline-block', padding: '4px 12px', borderRadius: '50px', backgroundColor: badge.bg, fontWeight: 'bold', color: badge.color }}>
+                        {badge.label}
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
+    const commonFormContent = (
+        <>
+            <div style={styles.inputGroup}>
+                <label style={styles.label}>Type de projet</label>
+                <select
+                    style={styles.select}
+                    value={projectType}
+                    onChange={(e) => setProjectType(e.target.value)}
+                    disabled={hasPendingLoan}
+                >
+                    <option value="Personnel">Prêt Personnel</option>
+                    <option value="Immobilier">Crédit Immobilier</option>
+                    <option value="Véhicule">Crédit Véhicule</option>
+                    <option value="Professionnel">Projet Professionnel</option>
+                    <option value="Autre">Autre (Préciser...)</option>
+                </select>
+
+                {projectType === 'Autre' && (
+                    <div style={{ marginTop: '1rem' }}>
+                        <label style={styles.label}>Votre projet spécifique</label>
+                        <input
+                            style={styles.select}
+                            placeholder="Décrivez brièvement votre projet..."
+                            value={otherType}
+                            onChange={(e) => setOtherType(e.target.value)}
+                            disabled={hasPendingLoan}
+                        />
+                    </div>
+                )}
+            </div>
+
+            <div style={styles.inputGroup}>
+                <label style={styles.label}>Description du projet (Obligatoire)</label>
+                <textarea
+                    style={styles.textarea}
+                    placeholder="Détaillez votre projet en quelques lignes (objet, contexte, apport personnel éventuel...)..."
+                    value={projectDescription}
+                    onChange={(e) => setProjectDescription(e.target.value)}
+                    rows="3"
+                    disabled={hasPendingLoan}
+                />
+            </div>
+
+            <div style={styles.inputGroup}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <label style={styles.label}>Montant du prêt</label>
+                    <span style={styles.valueDisplay}>{amount.toLocaleString()} €</span>
+                </div>
+                <input type="range" min="5000" max="900000" step="5000" value={amount} onChange={(e) => setAmount(Number(e.target.value))} style={styles.range} disabled={hasPendingLoan} />
+            </div>
+
+            <div style={styles.inputGroup}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <label style={styles.label}>Durée du remboursement</label>
+                    <span style={styles.valueDisplay}>{duration} mois ({Math.floor(duration / 12)} ans)</span>
+                </div>
+                <input type="range" min="12" max="300" step="12" value={duration} onChange={(e) => setDuration(Number(e.target.value))} style={styles.range} disabled={hasPendingLoan} />
+            </div>
+        </>
+    );
+
     if (isMobile) {
         return (
             <KycVerificationBanner>
-                <div style={{ padding: '1rem' }}>
+                <div style={{ padding: '1rem', position: 'relative' }}>
                     <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#003366', marginBottom: '1.5rem' }}>Crédits</h1>
 
-                    <div style={styles.mobileCard}>
+                    {message.text && !showConfirmation && (
+                        <div style={{ ...styles.alert, background: message.type === 'success' ? '#e8f5e9' : '#ffebee', color: message.type === 'success' ? '#2e7d32' : '#c62828', marginBottom: '1rem' }}>
+                            {message.text}
+                        </div>
+                    )}
+
+                    <div style={{ ...styles.mobileCard, position: 'relative', overflow: 'hidden' }}>
+                        {hasPendingLoan && renderLockedOverlay()}
+
                         <h3 style={{ fontSize: '1rem', color: '#003366', marginBottom: '1.5rem' }}>Simulateur</h3>
 
-                        <div style={{ marginBottom: '1.5rem' }}>
-                            <label style={styles.label}>Projet</label>
-                            <select
-                                style={styles.select}
-                                value={projectType}
-                                onChange={(e) => setProjectType(e.target.value)}
-                            >
-                                <option value="Personnel">Prêt Personnel</option>
-                                <option value="Immobilier">Crédit Immobilier</option>
-                                <option value="Véhicule">Crédit Véhicule</option>
-                                <option value="Autre">Autre (Préciser...)</option>
-                            </select>
-                        </div>
-
-                        {projectType === 'Autre' && (
-                            <div style={{ marginBottom: '1.5rem' }}>
-                                <label style={styles.label}>Précisez votre projet</label>
-                                <input
-                                    style={styles.select}
-                                    placeholder="Ex: Voyage, Mariage, Travaux..."
-                                    value={otherType}
-                                    onChange={(e) => setOtherType(e.target.value)}
-                                />
-                            </div>
-                        )}
-
-                        <div style={{ marginBottom: '1.5rem' }}>
-                            <label style={styles.label}>Montant: <strong>{amount.toLocaleString()} €</strong></label>
-                            <input type="range" min="1000" max="900000" step="5000" value={amount} onChange={(e) => setAmount(Number(e.target.value))} style={styles.range} />
-                        </div>
-
-                        <div style={{ marginBottom: '1.5rem' }}>
-                            <label style={styles.label}>Durée: <strong>{duration} mois</strong></label>
-                            <input type="range" min="12" max="300" step="12" value={duration} onChange={(e) => setDuration(Number(e.target.value))} style={styles.range} />
-                        </div>
+                        {commonFormContent}
 
                         <div style={styles.mobileResult}>
                             <div style={{ fontSize: '0.8rem', opacity: 0.8 }}>Mensualité</div>
                             <div style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>{calculateMonthly()} €</div>
                         </div>
 
-                        <button style={styles.mobileSubmitBtn} onClick={handleApply} disabled={submitting}>
+                        <button style={styles.mobileSubmitBtn} onClick={handleInitialSubmit} disabled={submitting || hasPendingLoan}>
                             {submitting ? 'Envoi...' : 'Demander ce prêt'}
                         </button>
-                        {message.text && <p style={{ color: message.type === 'success' ? '#2ecc71' : '#e74c3c', fontSize: '0.85rem', marginTop: '10px', textAlign: 'center' }}>{message.text}</p>}
                     </div>
 
                     <div style={{ marginTop: '2rem' }}>
@@ -117,23 +369,32 @@ const Credits = () => {
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                                 {history.map(loan => (
                                     <div key={loan.id} style={styles.mobileHistoryItem}>
-                                        <div>
-                                            <div style={{ fontSize: '0.9rem', fontWeight: 'bold' }}>{loan.amount.toLocaleString()} €</div>
-                                            <div style={{ fontSize: '0.75rem', color: '#888' }}>{loan.duration} mois • {loan.type}</div>
-                                        </div>
-                                        <div style={{ fontSize: '0.75rem', padding: '4px 8px', borderRadius: '50px', background: '#fff3e0', color: '#e65100', fontWeight: 'bold' }}>
-                                            {loan.status}
-                                        </div>
+                                        {renderHistoryItemContent(loan)}
                                     </div>
                                 ))}
                             </div>
                         )}
                     </div>
+
+                    <ConfirmationModal
+                        isOpen={showConfirmation}
+                        onClose={() => setShowConfirmation(false)}
+                        onConfirm={handleConfirmApply}
+                        details={{
+                            type: projectType === 'Autre' ? otherType : projectType,
+                            amount,
+                            duration,
+                            monthlyPayment: calculateMonthly(),
+                            description: projectDescription
+                        }}
+                        submitting={submitting}
+                    />
                 </div>
             </KycVerificationBanner>
         );
     }
 
+    // DESKTOP
     return (
         <KycVerificationBanner>
             <div style={styles.container}>
@@ -143,60 +404,21 @@ const Credits = () => {
                 </header>
 
                 <div style={styles.grid}>
-                    <div style={styles.card}>
+                    <div style={{ ...styles.card, position: 'relative', overflow: 'hidden' }}>
+                        {hasPendingLoan && renderLockedOverlay()}
+
                         <h2 style={{ color: '#003366', marginBottom: '1.5rem' }}>Votre simulation</h2>
 
-                        <div style={styles.inputGroup}>
-                            <label style={styles.label}>Type de projet</label>
-                            <select
-                                style={styles.select}
-                                value={projectType}
-                                onChange={(e) => setProjectType(e.target.value)}
-                            >
-                                <option value="Personnel">Prêt Personnel</option>
-                                <option value="Immobilier">Crédit Immobilier</option>
-                                <option value="Véhicule">Crédit Véhicule</option>
-                                <option value="Professionnel">Projet Professionnel</option>
-                                <option value="Autre">Autre (Préciser...)</option>
-                            </select>
-
-                            {projectType === 'Autre' && (
-                                <div style={{ marginTop: '1rem' }}>
-                                    <label style={styles.label}>Votre projet spécifique</label>
-                                    <input
-                                        style={styles.select}
-                                        placeholder="Décrivez brièvement votre projet..."
-                                        value={otherType}
-                                        onChange={(e) => setOtherType(e.target.value)}
-                                    />
-                                </div>
-                            )}
-                        </div>
-
-                        <div style={styles.inputGroup}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <label style={styles.label}>Montant du prêt</label>
-                                <span style={styles.valueDisplay}>{amount.toLocaleString()} €</span>
-                            </div>
-                            <input type="range" min="5000" max="900000" step="5000" value={amount} onChange={(e) => setAmount(Number(e.target.value))} style={styles.range} />
-                        </div>
-
-                        <div style={styles.inputGroup}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <label style={styles.label}>Durée du remboursement</label>
-                                <span style={styles.valueDisplay}>{duration} mois ({Math.floor(duration / 12)} ans)</span>
-                            </div>
-                            <input type="range" min="12" max="300" step="12" value={duration} onChange={(e) => setDuration(Number(e.target.value))} style={styles.range} />
-                        </div>
+                        {commonFormContent}
 
                         <div style={styles.summaryBox}>
                             <div style={styles.summRow}><span>Taux d'intérêt (TAEG)</span><strong>{interestRate}%</strong></div>
                             <div style={styles.summRow}><span>Mensualité estimée</span><strong style={{ fontSize: '1.4rem', color: '#003366' }}>{calculateMonthly()} €</strong></div>
-                            <button style={styles.applyBtn} onClick={handleApply} disabled={submitting}>
+                            <button style={styles.applyBtn} onClick={handleInitialSubmit} disabled={submitting || hasPendingLoan}>
                                 {submitting ? 'Traitement...' : 'Faire une demande officielle'}
                             </button>
                         </div>
-                        {message.text && <div style={{ ...styles.alert, background: message.type === 'success' ? '#e8f5e9' : '#ffebee' }}>{message.text}</div>}
+                        {message.text && <div style={{ ...styles.alert, background: message.type === 'success' ? '#e8f5e9' : '#ffebee', color: message.type === 'success' ? '#2e7d32' : '#c62828' }}>{message.text}</div>}
                     </div>
 
                     <div style={styles.historyCard}>
@@ -207,21 +429,35 @@ const Credits = () => {
                             <div style={styles.loanList}>
                                 {history.map(loan => (
                                     <div key={loan.id} style={styles.loanItem}>
-                                        <div style={{ flex: 1 }}>
-                                            <div style={{ fontWeight: 'bold' }}>{loan.amount.toLocaleString()} €</div>
-                                            <div style={{ fontSize: '0.8rem', color: '#888' }}>{loan.type} • {loan.duration} mois</div>
-                                        </div>
-                                        <div style={{ textAlign: 'right' }}>
-                                            <div style={{ fontSize: '0.75rem', display: 'inline-block', padding: '4px 12px', borderRadius: '50px', backgroundColor: '#f5f7fa', fontWeight: 'bold', color: '#555' }}>
-                                                {loan.status === 'pending' ? 'Étude en cours' : loan.status}
-                                            </div>
-                                        </div>
+                                        {renderHistoryItemContent(loan)}
                                     </div>
                                 ))}
                             </div>
                         )}
+
+                        {/* Service Client Banner */}
+                        <div style={{ marginTop: '2rem', padding: '1.5rem', background: '#f8fbff', borderRadius: '12px', border: '1px solid #e3f2fd', textAlign: 'center' }}>
+                            <i className="fas fa-headset" style={{ fontSize: '2rem', color: '#003366', marginBottom: '1rem' }}></i>
+                            <h4 style={{ margin: '0 0 10px', color: '#003366' }}>Besoin d'un accompagnement ?</h4>
+                            <p style={{ fontSize: '0.9rem', color: '#666', marginBottom: '1rem' }}>Nos conseillers sont disponibles pour étudier votre dossier complexe.</p>
+                            <button onClick={() => navigate('/dashboard/support')} style={{ ...styles.supportLinkOutline, border: '2px solid #003366', cursor: 'pointer', background: 'transparent', fontSize: '0.9rem' }}>Contacter un conseiller</button>
+                        </div>
                     </div>
                 </div>
+
+                <ConfirmationModal
+                    isOpen={showConfirmation}
+                    onClose={() => setShowConfirmation(false)}
+                    onConfirm={handleConfirmApply}
+                    details={{
+                        type: projectType === 'Autre' ? otherType : projectType,
+                        amount,
+                        duration,
+                        monthlyPayment: calculateMonthly(),
+                        description: projectDescription
+                    }}
+                    submitting={submitting}
+                />
             </div>
         </KycVerificationBanner>
     );
@@ -236,7 +472,8 @@ const styles = {
     card: { backgroundColor: 'white', padding: '2rem', borderRadius: '20px', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' },
     inputGroup: { marginBottom: '2rem' },
     label: { fontSize: '0.9rem', color: '#555', fontWeight: '600', display: 'block', marginBottom: '8px' },
-    select: { width: '100%', padding: '12px', borderRadius: '12px', border: '1px solid #eef2f6', fontSize: '1rem', outline: 'none', backgroundColor: '#f8fafc', marginBottom: '1rem' },
+    select: { width: '100%', padding: '12px', borderRadius: '12px', border: '1px solid #eef2f6', fontSize: '1rem', outline: 'none', backgroundColor: '#f8fafc' },
+    textarea: { width: '100%', padding: '12px', borderRadius: '12px', border: '1px solid #eef2f6', fontSize: '1rem', outline: 'none', backgroundColor: '#f8fafc', fontFamily: 'inherit', resize: 'vertical' },
     valueDisplay: { color: '#003366', fontWeight: '800', fontSize: '1.1rem' },
     range: { width: '100%', cursor: 'pointer', margin: '15px 0' },
     summaryBox: { background: '#f8fbff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #e3f2fd' },
@@ -252,7 +489,25 @@ const styles = {
     mobileCard: { background: 'white', padding: '1.5rem', borderRadius: '16px', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' },
     mobileResult: { background: '#003366', color: 'white', padding: '1.2rem', borderRadius: '12px', textAlign: 'center', marginBottom: '1.5rem' },
     mobileSubmitBtn: { width: '100%', padding: '14px', background: '#003366', color: 'white', border: 'none', borderRadius: '12px', fontWeight: 'bold' },
-    mobileHistoryItem: { background: 'white', padding: '12px', borderRadius: '10px', border: '1px solid #eee', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }
+    mobileHistoryItem: { background: 'white', padding: '12px', borderRadius: '10px', border: '1px solid #eee', display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
+
+    // OVERLAY & MODAL
+    lockedOverlay: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(2px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10, padding: '2rem', borderRadius: '16px' },
+    lockedContent: { textAlign: 'center', background: 'white', padding: '2rem', borderRadius: '20px', boxShadow: '0 10px 40px rgba(0,0,0,0.1)', maxWidth: '400px' },
+    lockedBtnDisabled: { padding: '10px 20px', background: '#e0e0e0', color: '#999', border: 'none', borderRadius: '50px', fontWeight: 'bold' },
+    supportLink: { padding: '10px 20px', background: '#00ccff', color: 'white', borderRadius: '50px', textDecoration: 'none', fontWeight: 'bold', fontSize: '0.9rem' },
+    supportLinkOutline: { display: 'inline-block', padding: '10px 20px', border: '2px solid #003366', color: '#003366', borderRadius: '50px', textDecoration: 'none', fontWeight: 'bold', fontSize: '0.9rem' },
+
+    // Modal Confirm
+    modalOverlay: { position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' },
+    modalContent: { backgroundColor: 'white', borderRadius: '20px', width: '100%', maxWidth: '500px', padding: '2rem', boxShadow: '0 20px 60px rgba(0,0,0,0.2)' },
+    modalTitle: { textAlign: 'center', color: '#003366', marginBottom: '1.5rem', fontWeight: '800' },
+    modalBody: { marginBottom: '2rem' },
+    modalRow: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid #eee' },
+    modalDesc: { fontSize: '0.9rem', color: '#666', lineHeight: '1.5', background: '#f8f9fa', padding: '10px', borderRadius: '8px', width: '100%', boxSizing: 'border-box' },
+    modalActions: { display: 'flex', gap: '15px' },
+    cancelBtn: { flex: 1, padding: '12px', background: '#f5f5f5', color: '#555', border: 'none', borderRadius: '10px', fontWeight: 'bold', cursor: 'pointer' },
+    confirmBtn: { flex: 1, padding: '12px', background: '#003366', color: 'white', border: 'none', borderRadius: '10px', fontWeight: 'bold', cursor: 'pointer' }
 };
 
 export default Credits;

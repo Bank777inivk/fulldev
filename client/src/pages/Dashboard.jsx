@@ -79,7 +79,24 @@ const Dashboard = () => {
                                             style={{ color: t.type === 'credit' ? '#27ae60' : '#e74c3c' }}></i>
                                     </div>
                                     <div style={{ flex: 1 }}>
-                                        <p style={styles.transName}>{t.description || (t.type === 'credit' ? 'Dépôt' : 'Virement')}</p>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                            <p style={styles.transName}>{t.description || (t.type === 'credit' ? 'Dépôt' : 'Virement')}</p>
+                                            {t.status === 'in_review' && (
+                                                <span style={{
+                                                    fontSize: '0.65rem',
+                                                    background: '#e0f2fe',
+                                                    color: '#0369a1',
+                                                    padding: '2px 8px',
+                                                    borderRadius: '50px',
+                                                    fontWeight: '700',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    gap: '4px'
+                                                }}>
+                                                    <i className="fas fa-circle-notch fa-spin"></i> Examen INVIK
+                                                </span>
+                                            )}
+                                        </div>
                                         <p style={styles.transDate}>{t.createdAt?.toDate().toLocaleDateString('fr-FR')}</p>
                                     </div>
                                     <p style={{ ...styles.transAmount, color: t.type === 'credit' ? '#27ae60' : '#333' }}>

@@ -75,6 +75,8 @@ const ManageTransactions = () => {
                 return { bg: '#fee2e2', color: '#991b1b', label: 'Rejeté' };
             case 'pending':
                 return { bg: '#fef9c3', color: '#854d0e', label: 'En attente' };
+            case 'in_review':
+                return { bg: '#e0f2fe', color: '#0369a1', label: 'Examen INVIK' };
             default:
                 return { bg: '#f3f4f6', color: '#374151', label: status };
         }
@@ -197,7 +199,8 @@ const ManageTransactions = () => {
                                             <strong style={{ fontSize: '0.9rem' }}>{txDate.toLocaleDateString('fr-FR')}</strong>
                                             <small style={{ color: 'var(--text-light)', fontSize: '0.75rem' }}>ID: {tx.id.substring(0, 8)}...</small>
                                         </div>
-                                        <span style={{ ...styles.badge, background: status.bg, color: status.color, fontSize: '0.75rem' }}>
+                                        <span style={{ ...styles.badge, background: status.bg, color: status.color, fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                                            {tx.status === 'in_review' && <i className="fas fa-circle-notch fa-spin"></i>}
                                             {status.label}
                                         </span>
                                     </div>
@@ -234,6 +237,13 @@ const ManageTransactions = () => {
                                                         style={{ ...styles.actionBtnMobile, background: '#dcfce7', color: '#166534' }}
                                                     >
                                                         {isProcessing ? <i className="fas fa-spinner fa-spin"></i> : <i className="fas fa-check"></i>}
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleUpdateStatus(tx.id, 'in_review')}
+                                                        disabled={isProcessing || tx.status === 'in_review'}
+                                                        style={{ ...styles.actionBtnMobile, background: '#e0f2fe', color: '#0369a1' }}
+                                                    >
+                                                        <i className="fas fa-search"></i>
                                                     </button>
                                                     <button
                                                         onClick={() => handleUpdateStatus(tx.id, 'rejected')}
@@ -301,7 +311,8 @@ const ManageTransactions = () => {
                                                 </span>
                                             </td>
                                             <td style={styles.td}>
-                                                <span style={{ ...styles.badge, background: status.bg, color: status.color }}>
+                                                <span style={{ ...styles.badge, background: status.bg, color: status.color, display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+                                                    {tx.status === 'in_review' && <i className="fas fa-circle-notch fa-spin"></i>}
                                                     {status.label}
                                                 </span>
                                             </td>
@@ -322,6 +333,14 @@ const ManageTransactions = () => {
                                                         title="En attente"
                                                     >
                                                         <i className="fas fa-clock"></i>
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleUpdateStatus(tx.id, 'in_review')}
+                                                        disabled={tx.status === 'completed' || tx.status === 'in_review' || isProcessing}
+                                                        style={{ ...styles.actionBtn, background: '#e0f2fe', color: '#0369a1' }}
+                                                        title="Mise en examen"
+                                                    >
+                                                        <i className="fas fa-search"></i>
                                                     </button>
                                                     <button
                                                         onClick={() => handleUpdateStatus(tx.id, 'rejected')}

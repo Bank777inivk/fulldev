@@ -5,7 +5,9 @@ import {
     serverTimestamp,
     query,
     where,
-    getDocs
+    getDocs,
+    getDoc,
+    doc
 } from 'firebase/firestore';
 
 const RIBS_COLLECTION = 'ribs';
@@ -14,16 +16,26 @@ export const ribService = {
     // Create a RIB document for a specific wallet
     createRib: async (userId, wallet) => {
         try {
-            // Check if RIB already exists for this iban to avoid duplicates (optional logic)
-            // For now, we trust the flow
+            // Extract components from IBAN if possible (assuming FR standard)
+            // FR76 12345 67890 AYTUQ19E 01
+            const ibanClean = (wallet.iban || '').replace(/\s+/g, '');
+            const bankCode = ibanClean.substring(4, 9) || '12345';
+            const branchCode = ibanClean.substring(9, 14) || '67890';
+            const accountNumber = ibanClean.substring(14, ibanClean.length - 2) || '00000000';
+            const ribKey = ibanClean.substring(ibanClean.length - 2) || '00';
 
             const ribData = {
                 userId,
                 walletId: wallet.id,
                 walletType: wallet.type,
                 accountName: `Compte ${wallet.type === 'main' ? 'Courant' : (wallet.type === 'savings' ? 'Épargne' : 'Crédit')}`,
+                holderName: wallet.holderName || 'Non défini',
                 iban: wallet.iban,
-                bic: wallet.bic,
+                bic: wallet.bic || 'INVKFR2P',
+                bankCode,
+                branchCode,
+                accountNumber,
+                ribKey,
                 bankName: 'INVIK BANK',
                 bankAddress: '12 Avenue de la Finance, 75008 Paris',
                 status: 'active',
@@ -41,9 +53,13 @@ export const ribService = {
     // Create RIBs for all provided wallets
     createInitialRibs: async (userId, wallets) => {
         try {
+            // Fetch user data for the holder name
+            const userDoc = await getDoc(doc(db, 'users', userId));
+            const userData = userDoc.exists() ? userDoc.data() : {};
+            const holderName = `${userData.firstName || ''} ${userData.lastName || ''}`.trim() || 'Titulaire Inconnu';
+
             const promises = wallets.map(wallet => {
-                // We create RIBs for Main and Savings. Credit might not have a standard RIB for deposit usually, but let's include all.
-                return ribService.createRib(userId, wallet);
+                return ribService.createRib(userId, { ...wallet, holderName });
             });
             return await Promise.all(promises);
         } catch (error) {
