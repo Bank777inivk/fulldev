@@ -8,6 +8,13 @@ const KYCVerification = () => {
     const [loading, setLoading] = useState(true);
     const [selectedImage, setSelectedImage] = useState(null);
     const [filterStatus, setFilterStatus] = useState('pending');
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024);
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth <= 1024);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     useEffect(() => {
         // Subscribe to users to get names/emails
@@ -65,11 +72,11 @@ const KYCVerification = () => {
                     <h1 style={styles.title}>Vérification KYC</h1>
                     <p style={styles.subtitle}>Gérez les demandes de vérification d'identité</p>
                 </div>
-                <div style={styles.filterWrapper}>
+                <div style={{ width: isMobile ? '100%' : 'auto' }}>
                     <select
                         value={filterStatus}
                         onChange={(e) => setFilterStatus(e.target.value)}
-                        style={styles.select}
+                        style={{ ...styles.select, width: isMobile ? '100%' : 'auto' }}
                     >
                         <option value="pending">En attente / Soumis</option>
                         <option value="submitted">Soumis</option>
@@ -86,7 +93,7 @@ const KYCVerification = () => {
                     <p style={{ marginTop: '1rem' }}>Chargement des demandes...</p>
                 </div>
             ) : filteredRequests.length > 0 ? (
-                <div style={styles.grid}>
+                <div style={styles.requestGrid}>
                     {filteredRequests.map((req) => {
                         const user = users[req.id] || {}; // KYC ID is the same as User ID
                         const docs = req.documents || {};
@@ -95,12 +102,17 @@ const KYCVerification = () => {
 
                         return (
                             <div key={req.id} style={styles.card} className="card-hover">
-                                <div style={styles.cardHeader}>
-                                    <div style={styles.userInfo}>
+                                <div style={{
+                                    ...styles.cardHeader,
+                                    flexDirection: isMobile ? 'column-reverse' : 'row',
+                                    gap: isMobile ? '1rem' : '0',
+                                    alignItems: isMobile ? 'flex-start' : 'flex-start'
+                                }}>
+                                    <div style={{ ...styles.userInfo, minWidth: 0 }}>
                                         <div style={styles.avatar}>
                                             {(user.firstName || '?').charAt(0)}{(user.lastName || '?').charAt(0)}
                                         </div>
-                                        <div>
+                                        <div style={{ minWidth: 0, flex: 1 }}>
                                             <h3 style={styles.userName}>{user.firstName} {user.lastName}</h3>
                                             <p style={styles.userEmail}>{user.email}</p>
                                         </div>
@@ -110,7 +122,9 @@ const KYCVerification = () => {
                                         background: isVerified ? '#dcfce7' :
                                             status === 'unverified' ? '#fee2e2' : '#fef9c3',
                                         color: isVerified ? '#166534' :
-                                            status === 'unverified' ? '#991b1b' : '#854d0e'
+                                            status === 'unverified' ? '#991b1b' : '#854d0e',
+                                        alignSelf: isMobile ? 'flex-start' : 'auto',
+                                        marginBottom: isMobile ? '0.25rem' : '0'
                                     }}>
                                         {isVerified ? 'Vérifié' :
                                             status === 'unverified' ? 'Rejeté' : 'En attente'}
@@ -215,6 +229,8 @@ const styles = {
         justifyContent: 'space-between',
         alignItems: 'end',
         marginBottom: '2rem',
+        flexWrap: 'wrap', // Allow wrapping
+        gap: '1rem', // Add gap when wrapped
     },
     title: {
         fontSize: '1.8rem',
@@ -234,19 +250,23 @@ const styles = {
         background: 'white',
         minWidth: '200px',
     },
-    grid: {
+    requestGrid: {
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
         gap: '1.5rem',
+        marginBottom: '2rem'
     },
     card: {
         background: 'white',
         borderRadius: '16px',
-        padding: '1.5rem',
+        padding: '1rem', // Reverted padding
         boxShadow: 'var(--shadow-sm)',
         border: '1px solid var(--border)',
         display: 'flex',
         flexDirection: 'column',
+        width: '100%', // Ensure card stays within container
+        maxWidth: '100%',
+        boxSizing: 'border-box',
     },
     cardHeader: {
         display: 'flex',
@@ -275,10 +295,16 @@ const styles = {
         fontWeight: '700',
         marginBottom: '0.25rem',
         color: 'var(--text-main)',
+        maxWidth: '28ch', // Force wrapping
+        overflowWrap: 'break-word',
+        wordBreak: 'break-all',
     },
     userEmail: {
         fontSize: '0.85rem',
         color: 'var(--text-light)',
+        maxWidth: '28ch', // Force wrap after approx 28 chars
+        overflowWrap: 'break-word',
+        wordBreak: 'break-all', // Break anywhere if needed
     },
     badge: {
         padding: '0.25rem 0.75rem',
@@ -315,19 +341,16 @@ const styles = {
     },
     docThumb: {
         width: '100%',
-        height: '80px',
+        height: '80px', // Reverted height
         objectFit: 'cover',
         borderRadius: '8px',
         border: '1px solid var(--border)',
         marginBottom: '0.5rem',
         transition: 'transform 0.2s',
-        ':hover': {
-            transform: 'scale(1.05)',
-        }
     },
     docPlaceholder: {
         width: '100%',
-        height: '80px',
+        height: '80px', // Reverted height
         borderRadius: '8px',
         border: '1px dashed var(--border)',
         display: 'flex',
@@ -344,88 +367,13 @@ const styles = {
     },
     actions: {
         display: 'flex',
-        gap: '1rem',
-    },
-    approveBtn: {
-        flex: 1,
-        padding: '0.75rem',
-        borderRadius: '10px',
-        border: 'none',
-        background: 'var(--success)',
-        color: 'white',
-        fontWeight: '600',
-        cursor: 'pointer',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
         gap: '0.5rem',
-        transition: 'opacity 0.2s',
-        ':disabled': {
-            opacity: 0.5,
-            cursor: 'not-allowed',
-        }
+        flexWrap: 'wrap', // Allow buttons to wrap on mobile
     },
-    rejectBtn: {
-        flex: 1,
-        padding: '0.75rem',
-        borderRadius: '10px',
-        border: 'none',
-        background: 'rgba(239, 68, 68, 0.1)',
-        color: 'var(--danger)',
-        fontWeight: '600',
-        cursor: 'pointer',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '0.5rem',
-        border: '1px solid currentColor',
-        transition: 'background 0.2s',
-        ':disabled': {
-            opacity: 0.5,
-            cursor: 'not-allowed',
-        }
-    },
-    pendingBtn: {
-        flex: 1,
-        padding: '0.75rem',
-        borderRadius: '10px',
-        border: 'none',
-        background: 'rgba(243, 156, 18, 0.1)',
-        color: '#f39c12',
-        fontWeight: '600',
-        cursor: 'pointer',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '0.5rem',
-        border: '1px solid currentColor',
-        transition: 'background 0.2s',
-        ':disabled': {
-            opacity: 0.5,
-            cursor: 'not-allowed',
-        }
-    },
-    resetBtn: {
-        width: '100%',
-        marginTop: '1rem',
-        padding: '0.75rem',
-        borderRadius: '10px',
-        border: '1px solid var(--border)',
-        background: '#f8fafc',
-        color: '#64748b',
-        fontWeight: '600',
-        cursor: 'pointer',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '0.5rem',
-        transition: 'all 0.2s',
-        ':hover': {
-            background: '#f1f5f9',
-            borderColor: '#cbd5e1',
-            color: 'var(--text-main)'
-        }
-    },
+    approveBtn: { flex: 1, padding: '0.75rem', borderRadius: '10px', border: 'none', background: 'var(--success)', color: 'white', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', transition: 'opacity 0.2s' },
+    rejectBtn: { flex: 1, padding: '0.75rem', borderRadius: '10px', borderWidth: '1px', borderStyle: 'solid', borderColor: 'currentColor', background: 'rgba(239, 68, 68, 0.1)', color: 'var(--danger)', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', transition: 'background 0.2s' },
+    pendingBtn: { flex: 1, padding: '0.75rem', borderRadius: '10px', borderWidth: '1px', borderStyle: 'solid', borderColor: 'currentColor', background: 'rgba(243, 156, 18, 0.1)', color: '#f39c12', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', transition: 'background 0.2s' },
+    resetBtn: { width: '100%', marginTop: '1rem', padding: '0.75rem', borderRadius: '10px', borderWidth: '1px', borderStyle: 'solid', borderColor: 'var(--border)', background: '#f8fafc', color: '#64748b', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', transition: 'all 0.2s' },
     loading: {
         display: 'flex',
         flexDirection: 'column',

@@ -75,6 +75,13 @@ const UserDetails = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [isEditing, setIsEditing] = useState(false);
     const [editFormData, setEditFormData] = useState({});
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024);
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth <= 1024);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     useEffect(() => {
         const loadUserData = async () => {
@@ -207,230 +214,347 @@ const UserDetails = () => {
     const totalPages = Math.ceil(transactions.length / transactionsPerPage);
     const kycColors = getKYCColor(effectiveLevel);
 
+    const MobileView = () => (
+        <div style={{ padding: '0.75rem' }} className="animate-fade-in">
+            <div style={{ background: 'white', borderRadius: '32px', padding: '1.5rem', border: '1px solid #f1f5f9', boxShadow: '0 4px 20px rgba(0,0,0,0.03)', marginBottom: '1.2rem', textAlign: 'center' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '1.5rem' }}>
+                    <div style={{ ...styles.avatar, width: '90px', height: '90px', borderRadius: '24px', fontSize: '2.2rem', marginBottom: '1rem', boxShadow: '0 8px 16px rgba(0,51,102,0.15)' }}>
+                        {user?.firstName?.[0]}{user?.lastName?.[0]}
+                    </div>
+                    <h2 style={{ fontSize: '1.6rem', fontWeight: '800', color: '#003366', margin: '0 0 0.25rem 0' }}>{user?.firstName} {user?.lastName}</h2>
+                    <p style={{ color: '#64748b', fontSize: '0.9rem', marginBottom: '1rem' }}>{user?.email}</p>
+                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center' }}>
+                        <div style={{ ...styles.statusBadge, background: user?.accountStatus === 'active' ? '#dcfce7' : '#fee2e2', color: user?.accountStatus === 'active' ? '#166534' : '#991b1b', fontSize: '0.7rem' }}>
+                            {user?.accountStatus?.toUpperCase()}
+                        </div>
+                        <div style={{ ...styles.statusBadge, background: '#e0f2fe', color: '#0369a1', fontSize: '0.7rem' }}>
+                            {user?.userType === 'business' ? 'PRO' : 'PARTICULIER'}
+                        </div>
+                    </div>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', padding: '1rem', background: '#f8fafc', borderRadius: '20px' }}>
+                    <div style={{ textAlign: 'left' }}>
+                        <span style={{ fontSize: '0.65rem', fontWeight: '800', color: '#94a3b8', display: 'block' }}>SOLDE ACTUEL</span>
+                        <div style={{ fontSize: '1.3rem', fontWeight: '800', color: '#003366' }}>€{user?.balance?.toFixed(2) || '0.00'}</div>
+                    </div>
+                    <div style={{ textAlign: 'left', borderLeft: '1px solid #e2e8f0', paddingLeft: '1rem' }}>
+                        <span style={{ fontSize: '0.65rem', fontWeight: '800', color: '#94a3b8', display: 'block' }}>COMPTE</span>
+                        <div style={{ fontSize: '1rem', fontWeight: '700', color: '#1e293b' }}>{user?.accountType === 'savings' ? 'Épargne' : 'Standard'}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style={{ background: 'white', borderRadius: '28px', padding: '1.2rem', border: '1px solid #f1f5f9', marginBottom: '1.2rem' }}>
+                <h3 style={{ fontSize: '1rem', fontWeight: '800', color: '#003366', marginBottom: '1.2rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <i className="fas fa-user-circle" style={{ opacity: 0.3 }}></i> Détails Personnels
+                </h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                    <RenderField label="Prénom" name="firstName" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                    <RenderField label="Nom" name="lastName" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                    <RenderField label="Né le" name="dob" type="date" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                    <RenderField label="Nationalité" name="nationality" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                </div>
+            </div>
+
+            <div style={{ background: 'white', borderRadius: '28px', padding: '1.2rem', border: '1px solid #f1f5f9', marginBottom: '1.2rem' }}>
+                <h3 style={{ fontSize: '1rem', fontWeight: '800', color: '#003366', marginBottom: '1.2rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <i className="fas fa-map-marker-alt" style={{ opacity: 0.3 }}></i> Coordonnées
+                </h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                    <RenderField label="Téléphone" name="phone" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                    <RenderField label="Ville" name="city" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                    <RenderField label="Pays" name="countryOfResidence" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                </div>
+            </div>
+
+            {/* Transactions Section */}
+            <div style={{ background: 'white', borderRadius: '28px', padding: '1.2rem', border: '1px solid #f1f5f9', marginBottom: '1.2rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.2rem' }}>
+                    <h3 style={{ fontSize: '1rem', fontWeight: '800', color: '#003366', margin: 0 }}>Transactions</h3>
+                    <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: '600' }}>{transactions.length} total</span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                    {transactions.slice(0, 5).map(tx => (
+                        <div key={tx.id} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '0.8rem', background: '#f8fafc', borderRadius: '16px' }}>
+                            <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: tx.type === 'credit' ? '#dcfce7' : '#fee2e2', color: tx.type === 'credit' ? '#166534' : '#991b1b', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <i className={`fas fa-arrow-${tx.type === 'credit' ? 'down' : 'up'}`}></i>
+                            </div>
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                                <div style={{ fontWeight: '700', fontSize: '0.85rem', color: '#1e293b', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{tx.description || 'Transaction'}</div>
+                                <div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>{formatDate(tx.createdAt)}</div>
+                            </div>
+                            <div style={{ fontWeight: '800', color: tx.type === 'credit' ? '#166534' : '#991b1b', fontSize: '0.9rem' }}>
+                                {tx.type === 'credit' ? '+' : '-'}{tx.amount}€
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+
+    const DesktopView = () => (
+        <div style={styles.grid}>
+            <div style={styles.leftColumn}>
+                <div style={styles.card}>
+                    <div style={styles.profileHeader}>
+                        <div style={styles.avatar}>
+                            {user?.firstName?.charAt(0).toUpperCase()}
+                            {user?.lastName?.charAt(0).toUpperCase()}
+                        </div>
+                        <h2 style={styles.name}>{user?.displayName || `${user?.firstName} ${user?.lastName}`}</h2>
+                        <p style={styles.email}>{user?.email}</p>
+                        <div style={styles.badgesRow}>
+                            <div style={{
+                                ...styles.statusBadge,
+                                background: user?.accountStatus === 'active' ? '#dcfce7' : '#fee2e2',
+                                color: user?.accountStatus === 'active' ? '#166534' : '#991b1b'
+                            }}>
+                                {user?.accountStatus === 'active' ? 'Actif' : 'Bloqué'}
+                            </div>
+                            <div style={{
+                                ...styles.statusBadge,
+                                background: user?.userType === 'business' ? '#dbeafe' : '#f3e8ff',
+                                color: user?.userType === 'business' ? '#1e40af' : '#6b21a8'
+                            }}>
+                                {user?.userType === 'business' ? 'Professionnel' : 'Particulier'}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style={styles.divider}></div>
+
+                    <div style={styles.section}>
+                        <h3 style={styles.sectionTitle}>Informations Personnelles</h3>
+                        <RenderField label="Prénom" name="firstName" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                        <RenderField label="Nom" name="lastName" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                        <RenderField label="Date de naissance" name="dob" type="date" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                        <RenderField label="Genre" name="gender" type="select" options={[
+                            { value: 'M', label: 'Masculin' },
+                            { value: 'F', label: 'Féminin' }
+                        ]} data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                        <RenderField label="Nationalité" name="nationality" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                        <RenderField label="Téléphone" name="phone" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                    </div>
+
+                    <div style={styles.divider}></div>
+
+                    <div style={styles.section}>
+                        <h3 style={styles.sectionTitle}>Adresse</h3>
+                        <RenderField label="Adresse" name="address" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                        <RenderField label="Code Postal" name="zipCode" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                        <RenderField label="Ville" name="city" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                        <RenderField label="Pays" name="countryOfResidence" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                    </div>
+
+                    <div style={styles.divider}></div>
+
+                    <div style={styles.section}>
+                        <h3 style={styles.sectionTitle}>Détails Compte</h3>
+                        <div style={styles.infoRow}>
+                            <span style={styles.label}>Inscrit le</span>
+                            <span style={styles.value}>{formatDate(user?.createdAt)}</span>
+                        </div>
+                        <RenderField label="Type de Compte" name="accountType" type="select" options={[
+                            { value: 'standard', label: 'Standard' },
+                            { value: 'savings', label: 'Standard + Épargne' }
+                        ]} data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                        <RenderField label="Devise Principale" name="currency" type="select" options={[
+                            { value: 'EUR', label: 'EUR' },
+                            { value: 'USD', label: 'USD' }
+                        ]} data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                    </div>
+                </div>
+
+                {(user?.userType === 'business' || user?.companyName) && (
+                    <div style={styles.card}>
+                        <h3 style={styles.cardTitle}>Informations Business</h3>
+                        <div style={styles.divider}></div>
+                        <div style={styles.section}>
+                            <RenderField label="Société" name="companyName" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                            <RenderField label="Forme Juridique" name="legalForm" type="select" options={[
+                                { value: 'SARL', label: 'SARL / EURL' },
+                                { value: 'SAS', label: 'SAS / SASU' },
+                                { value: 'SA', label: 'SA' },
+                                { value: 'AUTO', label: 'Auto-entrepreneur' },
+                                { value: 'ASSOC', label: 'Association' },
+                                { value: 'OTHER', label: 'Autre' }
+                            ]} data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                            <RenderField label="SIRET / Enreg." name="registrationNumber" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                            <RenderField label="Secteur" name="activitySector" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                            <RenderField label="Représentant" name="repFunction" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                        </div>
+                    </div>
+                )}
+
+                <div style={styles.card}>
+                    <div style={styles.kycHeader}>
+                        <h3 style={styles.cardTitle}>Statut KYC</h3>
+                        <span style={{
+                            ...styles.badge,
+                            background: kycColors.bg,
+                            color: kycColors.text
+                        }}>
+                            {getKYCLabel(effectiveLevel)}
+                        </span>
+                    </div>
+                    {effectiveLevel < 2 && (
+                        <p style={styles.kycNote}>
+                            {effectiveLevel === 1
+                                ? "L'utilisateur a soumis ses documents. Vérification en attente."
+                                : "L'utilisateur n'a pas encore vérifié son identité."}
+                        </p>
+                    )}
+                </div>
+            </div>
+
+            <div style={styles.rightColumn}>
+                <div style={styles.statsGrid}>
+                    <div style={styles.statCard}>
+                        <div style={styles.statIcon}><i className="fas fa-wallet"></i></div>
+                        <div>
+                            <p style={styles.statLabel}>Solde Total</p>
+                            <p style={styles.statValue}>€{user?.balance?.toFixed(2) || '0.00'}</p>
+                        </div>
+                    </div>
+                    <div style={styles.statCard}>
+                        <div style={styles.statIconPurple}><i className="fas fa-exchange-alt"></i></div>
+                        <div>
+                            <p style={styles.statLabel}>Transactions</p>
+                            <p style={styles.statValue}>{transactions.length}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div style={styles.card}>
+                    <h3 style={styles.cardTitle}>Historique des Transactions</h3>
+                    <div style={styles.transactionList}>
+                        {currentTransactions.length > 0 ? (
+                            currentTransactions.map(tx => (
+                                <div key={tx.id} style={styles.transactionItem}>
+                                    <div style={{
+                                        ...styles.txIcon,
+                                        background: tx.type === 'credit' ? '#dcfce7' : '#fee2e2',
+                                        color: tx.type === 'credit' ? '#166534' : '#991b1b'
+                                    }}>
+                                        <i className={`fas fa-arrow-${tx.type === 'credit' ? 'down' : 'up'}`}></i>
+                                    </div>
+                                    <div style={styles.txInfo}>
+                                        <span style={styles.txTitle}>{tx.description || 'Transaction'}</span>
+                                        <span style={styles.txDate}>{formatDate(tx.createdAt)}</span>
+                                    </div>
+                                    <span style={{
+                                        ...styles.txAmount,
+                                        color: tx.type === 'credit' ? '#166534' : '#991b1b'
+                                    }}>
+                                        {tx.type === 'credit' ? '+' : '-'}{tx.amount} {tx.currency}
+                                    </span>
+                                </div>
+                            ))
+                        ) : (
+                            <p style={styles.emptyText}>Aucune transaction enregistrée.</p>
+                        )}
+                    </div>
+
+                    {transactions.length > 0 && (
+                        <div style={styles.pagination}>
+                            <span style={styles.pageInfo}>
+                                {indexOfFirstTx + 1}-{Math.min(indexOfLastTx, transactions.length)} sur {transactions.length}
+                            </span>
+                            <div style={styles.pageControls}>
+                                <button
+                                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                                    disabled={currentPage === 1}
+                                    style={{ ...styles.pageBtn, opacity: currentPage === 1 ? 0.5 : 1 }}
+                                >
+                                    <i className="fas fa-chevron-left"></i>
+                                </button>
+                                <button
+                                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                    disabled={currentPage === totalPages}
+                                    style={{ ...styles.pageBtn, opacity: currentPage === totalPages ? 0.5 : 1 }}
+                                >
+                                    <i className="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+
     return (
         <div className="animate-fade-in" style={styles.pageContainer}>
             {/* Header */}
-            <div style={styles.header}>
-                <button onClick={() => navigate('/users')} style={styles.backBtn}>
-                    <i className="fas fa-arrow-left"></i> Retour
+            <div style={{
+                ...styles.header,
+                flexDirection: isMobile ? 'column' : 'row',
+                alignItems: isMobile ? 'stretch' : 'center',
+                gap: isMobile ? '1.5rem' : '0',
+                marginBottom: isMobile ? '1.5rem' : '2rem'
+            }}>
+                <button onClick={() => navigate('/users')} style={{ ...styles.backBtn, padding: isMobile ? '0.5rem 0' : '0.5rem' }}>
+                    <i className="fas fa-arrow-left"></i> Retour à la liste
                 </button>
-                <div style={styles.headerActions}>
-                    {!isEditing ? (
-                        <button onClick={handleEdit} style={{ ...styles.actionBtn, background: '#f3f4f6', color: '#374151' }}>
-                            <i className="fas fa-edit"></i> Modifier
-                        </button>
-                    ) : (
-                        <>
-                            <button onClick={handleCancel} style={{ ...styles.actionBtn, background: '#f3f4f6', color: '#374151' }}>
-                                Annuler
+                <div style={{
+                    ...styles.headerActions,
+                    width: isMobile ? '100%' : 'auto',
+                    flexDirection: isMobile ? 'column' : 'row',
+                    gap: isMobile ? '0.8rem' : '1rem'
+                }}>
+                    <div style={{ display: 'flex', gap: '0.8rem', width: isMobile ? '100%' : 'auto' }}>
+                        {!isEditing ? (
+                            <button onClick={handleEdit} style={{
+                                ...styles.actionBtn,
+                                background: '#f3f4f6',
+                                color: '#374151',
+                                flex: isMobile ? 1 : 'none',
+                                padding: isMobile ? '12px' : '0.6rem 1.2rem',
+                                justifyContent: 'center'
+                            }}>
+                                <i className="fas fa-edit"></i> Modifier
                             </button>
-                            <button onClick={handleSave} style={{ ...styles.actionBtn, background: '#0ea5e9', color: 'white' }}>
-                                Enregistrer
-                            </button>
-                        </>
-                    )}
+                        ) : (
+                            <>
+                                <button onClick={handleCancel} style={{
+                                    ...styles.actionBtn,
+                                    background: '#f3f4f6',
+                                    color: '#374151',
+                                    flex: isMobile ? 1 : 'none',
+                                    padding: isMobile ? '12px' : '0.6rem 1.2rem',
+                                    justifyContent: 'center'
+                                }}>Annuler</button>
+                                <button onClick={handleSave} style={{
+                                    ...styles.actionBtn,
+                                    background: '#0ea5e9',
+                                    color: 'white',
+                                    flex: isMobile ? 1 : 'none',
+                                    padding: isMobile ? '12px' : '0.6rem 1.2rem',
+                                    justifyContent: 'center'
+                                }}>Sauvegarder</button>
+                            </>
+                        )}
+                    </div>
                     <button
                         onClick={() => handleAction('toggleStatus')}
                         style={{
                             ...styles.actionBtn,
                             background: user?.accountStatus === 'active' ? '#fee2e2' : '#dcfce7',
-                            color: user?.accountStatus === 'active' ? '#991b1b' : '#166534'
+                            color: user?.accountStatus === 'active' ? '#991b1b' : '#166534',
+                            width: isMobile ? '100%' : 'auto',
+                            padding: isMobile ? '12px' : '0.6rem 1.2rem',
+                            justifyContent: 'center'
                         }}
                     >
                         <i className={`fas fa-${user?.accountStatus === 'active' ? 'ban' : 'unlock'}`}></i>
-                        {user?.accountStatus === 'active' ? 'Bloquer' : 'Débloquer'}
+                        {user?.accountStatus === 'active' ? 'Bloquer le compte' : 'Débloquer le compte'}
                     </button>
                 </div>
             </div>
 
-            <div style={styles.grid}>
-                <div style={styles.leftColumn}>
-                    <div style={styles.card}>
-                        <div style={styles.profileHeader}>
-                            <div style={styles.avatar}>
-                                {user?.firstName?.charAt(0).toUpperCase()}
-                                {user?.lastName?.charAt(0).toUpperCase()}
-                            </div>
-                            <h2 style={styles.name}>{user?.displayName || `${user?.firstName} ${user?.lastName}`}</h2>
-                            <p style={styles.email}>{user?.email}</p>
-                            <div style={styles.badgesRow}>
-                                <div style={{
-                                    ...styles.statusBadge,
-                                    background: user?.accountStatus === 'active' ? '#dcfce7' : '#fee2e2',
-                                    color: user?.accountStatus === 'active' ? '#166534' : '#991b1b'
-                                }}>
-                                    {user?.accountStatus === 'active' ? 'Actif' : 'Bloqué'}
-                                </div>
-                                <div style={{
-                                    ...styles.statusBadge,
-                                    background: user?.userType === 'business' ? '#dbeafe' : '#f3e8ff',
-                                    color: user?.userType === 'business' ? '#1e40af' : '#6b21a8'
-                                }}>
-                                    {user?.userType === 'business' ? 'Professionnel' : 'Particulier'}
-                                </div>
-                            </div>
-                        </div>
-
-                        <div style={styles.divider}></div>
-
-                        <div style={styles.section}>
-                            <h3 style={styles.sectionTitle}>Informations Personnelles</h3>
-                            <RenderField label="Prénom" name="firstName" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
-                            <RenderField label="Nom" name="lastName" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
-                            <RenderField label="Date de naissance" name="dob" type="date" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
-                            <RenderField label="Genre" name="gender" type="select" options={[
-                                { value: 'M', label: 'Masculin' },
-                                { value: 'F', label: 'Féminin' }
-                            ]} data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
-                            <RenderField label="Nationalité" name="nationality" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
-                            <RenderField label="Téléphone" name="phone" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
-                        </div>
-
-                        <div style={styles.divider}></div>
-
-                        <div style={styles.section}>
-                            <h3 style={styles.sectionTitle}>Adresse</h3>
-                            <RenderField label="Adresse" name="address" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
-                            <RenderField label="Code Postal" name="zipCode" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
-                            <RenderField label="Ville" name="city" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
-                            <RenderField label="Pays" name="countryOfResidence" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
-                        </div>
-
-                        <div style={styles.divider}></div>
-
-                        <div style={styles.section}>
-                            <h3 style={styles.sectionTitle}>Détails Compte</h3>
-                            <div style={styles.infoRow}>
-                                <span style={styles.label}>Inscrit le</span>
-                                <span style={styles.value}>{formatDate(user?.createdAt)}</span>
-                            </div>
-                            <RenderField label="Type de Compte" name="accountType" type="select" options={[
-                                { value: 'standard', label: 'Standard' },
-                                { value: 'savings', label: 'Standard + Épargne' }
-                            ]} data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
-                            <RenderField label="Devise Principale" name="currency" type="select" options={[
-                                { value: 'EUR', label: 'EUR' },
-                                { value: 'USD', label: 'USD' }
-                            ]} data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
-                        </div>
-                    </div>
-
-                    {(user?.userType === 'business' || user?.companyName) && (
-                        <div style={styles.card}>
-                            <h3 style={styles.cardTitle}>Informations Business</h3>
-                            <div style={styles.divider}></div>
-                            <div style={styles.section}>
-                                <RenderField label="Société" name="companyName" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
-                                <RenderField label="Forme Juridique" name="legalForm" type="select" options={[
-                                    { value: 'SARL', label: 'SARL / EURL' },
-                                    { value: 'SAS', label: 'SAS / SASU' },
-                                    { value: 'SA', label: 'SA' },
-                                    { value: 'AUTO', label: 'Auto-entrepreneur' },
-                                    { value: 'ASSOC', label: 'Association' },
-                                    { value: 'OTHER', label: 'Autre' }
-                                ]} data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
-                                <RenderField label="SIRET / Enreg." name="registrationNumber" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
-                                <RenderField label="Secteur" name="activitySector" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
-                                <RenderField label="Représentant" name="repFunction" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
-                            </div>
-                        </div>
-                    )}
-
-                    <div style={styles.card}>
-                        <div style={styles.kycHeader}>
-                            <h3 style={styles.cardTitle}>Statut KYC</h3>
-                            <span style={{
-                                ...styles.badge,
-                                background: kycColors.bg,
-                                color: kycColors.text
-                            }}>
-                                {getKYCLabel(effectiveLevel)}
-                            </span>
-                        </div>
-                        {effectiveLevel < 2 && (
-                            <p style={styles.kycNote}>
-                                {effectiveLevel === 1
-                                    ? "L'utilisateur a soumis ses documents. Vérification en attente."
-                                    : "L'utilisateur n'a pas encore vérifié son identité."}
-                            </p>
-                        )}
-                    </div>
-                </div>
-
-                <div style={styles.rightColumn}>
-                    <div style={styles.statsGrid}>
-                        <div style={styles.statCard}>
-                            <div style={styles.statIcon}><i className="fas fa-wallet"></i></div>
-                            <div>
-                                <p style={styles.statLabel}>Solde Total</p>
-                                <p style={styles.statValue}>€{user?.balance?.toFixed(2) || '0.00'}</p>
-                            </div>
-                        </div>
-                        <div style={styles.statCard}>
-                            <div style={styles.statIconPurple}><i className="fas fa-exchange-alt"></i></div>
-                            <div>
-                                <p style={styles.statLabel}>Transactions</p>
-                                <p style={styles.statValue}>{transactions.length}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div style={styles.card}>
-                        <h3 style={styles.cardTitle}>Historique des Transactions</h3>
-                        <div style={styles.transactionList}>
-                            {currentTransactions.length > 0 ? (
-                                currentTransactions.map(tx => (
-                                    <div key={tx.id} style={styles.transactionItem}>
-                                        <div style={{
-                                            ...styles.txIcon,
-                                            background: tx.type === 'credit' ? '#dcfce7' : '#fee2e2',
-                                            color: tx.type === 'credit' ? '#166534' : '#991b1b'
-                                        }}>
-                                            <i className={`fas fa-arrow-${tx.type === 'credit' ? 'down' : 'up'}`}></i>
-                                        </div>
-                                        <div style={styles.txInfo}>
-                                            <span style={styles.txTitle}>{tx.description || 'Transaction'}</span>
-                                            <span style={styles.txDate}>{formatDate(tx.createdAt)}</span>
-                                        </div>
-                                        <span style={{
-                                            ...styles.txAmount,
-                                            color: tx.type === 'credit' ? '#166534' : '#991b1b'
-                                        }}>
-                                            {tx.type === 'credit' ? '+' : '-'}{tx.amount} {tx.currency}
-                                        </span>
-                                    </div>
-                                ))
-                            ) : (
-                                <p style={styles.emptyText}>Aucune transaction enregistrée.</p>
-                            )}
-                        </div>
-
-                        {transactions.length > 0 && (
-                            <div style={styles.pagination}>
-                                <span style={styles.pageInfo}>
-                                    {indexOfFirstTx + 1}-{Math.min(indexOfLastTx, transactions.length)} sur {transactions.length}
-                                </span>
-                                <div style={styles.pageControls}>
-                                    <button
-                                        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                                        disabled={currentPage === 1}
-                                        style={{ ...styles.pageBtn, opacity: currentPage === 1 ? 0.5 : 1 }}
-                                    >
-                                        <i className="fas fa-chevron-left"></i>
-                                    </button>
-                                    <button
-                                        onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                                        disabled={currentPage === totalPages}
-                                        style={{ ...styles.pageBtn, opacity: currentPage === totalPages ? 0.5 : 1 }}
-                                    >
-                                        <i className="fas fa-chevron-right"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                </div>
-            </div>
+            {isMobile ? <MobileView /> : <DesktopView />}
         </div>
     );
 };
@@ -445,7 +569,15 @@ const styles = {
     grid: { display: 'grid', gridTemplateColumns: 'minmax(350px, 1fr) 2fr', gap: '1rem', alignItems: 'start' },
     leftColumn: { display: 'flex', flexDirection: 'column', gap: '1rem' },
     rightColumn: { display: 'flex', flexDirection: 'column', gap: '1rem' },
-    card: { background: 'white', borderRadius: '16px', padding: '1.5rem', boxShadow: 'var(--shadow-sm)', border: '1px solid var(--border)' },
+    card: {
+        background: 'white',
+        borderRadius: '16px',
+        padding: window.innerWidth <= 768 ? '1rem' : '1.5rem',
+        boxShadow: 'var(--shadow-sm)',
+        border: '1px solid var(--border)',
+        width: '100%',
+        boxSizing: 'border-box'
+    },
     profileHeader: { display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: '2rem' },
     avatar: { width: '80px', height: '80px', borderRadius: '20px', background: 'var(--gradient-primary)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem', fontWeight: 'bold', marginBottom: '1rem' },
     name: { fontSize: '1.5rem', fontWeight: '700', color: 'var(--text-main)', marginBottom: '0.25rem' },
@@ -454,9 +586,24 @@ const styles = {
     statusBadge: { padding: '0.5rem 1rem', borderRadius: '20px', fontSize: '0.85rem', fontWeight: '600' },
     divider: { height: '1px', background: 'var(--border)', margin: '0 -1.5rem 1.5rem' },
     sectionTitle: { fontSize: '1.1rem', fontWeight: '700', color: 'var(--text-main)', marginBottom: '1rem' },
-    infoRow: { display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px dashed var(--border)' },
-    label: { color: 'var(--text-light)', fontSize: '0.9rem' },
-    value: { color: 'var(--text-main)', fontWeight: '500', textAlign: 'right' },
+    infoRow: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        padding: '0.5rem 0',
+        borderBottom: '1px dashed var(--border)',
+        flexWrap: 'wrap',
+        gap: '0.5rem',
+        alignItems: 'baseline'
+    },
+    label: { color: 'var(--text-light)', fontSize: '0.9rem', minWidth: '100px' },
+    value: {
+        color: 'var(--text-main)',
+        fontWeight: '500',
+        textAlign: 'right',
+        flex: 1,
+        minWidth: '150px',
+        wordBreak: 'break-word'
+    },
     kycHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' },
     cardTitle: { fontSize: '1.2rem', fontWeight: '700', color: 'var(--text-main)', marginBottom: '1.5rem' },
     badge: { padding: '0.35rem 0.85rem', borderRadius: '20px', fontSize: '0.85rem', fontWeight: '700' },
@@ -480,7 +627,9 @@ const styles = {
     pageInfo: { fontSize: '0.85rem', color: 'var(--text-light)' },
     pageControls: { display: 'flex', gap: '0.5rem' },
     pageBtn: { width: '30px', height: '30px', borderRadius: '8px', border: '1px solid var(--border)', background: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' },
-    input: { flex: 1, padding: '0.4rem', borderRadius: '6px', border: '1px solid var(--border)', fontSize: '0.9rem', textAlign: 'right', background: 'var(--bg-main)', outline: 'none' }
+    input: { flex: 1, padding: '0.4rem', borderRadius: '6px', border: '1px solid var(--border)', fontSize: '0.9rem', textAlign: 'right', background: 'var(--bg-main)', outline: 'none' },
+    linkBtn: { background: 'none', border: 'none', color: 'var(--primary)', fontWeight: '600', cursor: 'pointer', padding: '0.5rem', fontSize: '0.9rem' },
+    mobileContainer: { display: 'flex', flexDirection: 'column', gap: '1rem', overflowX: 'hidden' }
 };
 
 export default UserDetails;

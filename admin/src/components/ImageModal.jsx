@@ -58,10 +58,7 @@ const styles = {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        transition: 'background 0.2s',
-        ':hover': {
-            background: 'rgba(0, 0, 0, 0.8)',
-        }
+        transition: 'background 0.2s'
     }
 };
 

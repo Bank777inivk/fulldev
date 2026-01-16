@@ -16,6 +16,13 @@ const Dashboard = () => {
     const [recentActivity, setRecentActivity] = useState([]);
     const [loading, setLoading] = useState(true);
     const [dateRange, setDateRange] = useState('month');
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024);
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth <= 1024);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     // Mock data for charts (replace with real data later)
     const chartData = [
@@ -128,14 +135,93 @@ const Dashboard = () => {
 
     if (loading) {
         return (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem' }}>
+            <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+                gap: '1.5rem'
+            }}>
                 {[1, 2, 3, 4].map(i => <LoadingSkeleton key={i} type="card" height="160px" />)}
             </div>
         );
     }
 
-    return (
-        <div className="animate-fade-in">
+    const MobileView = () => (
+        <div className="mobile-dashboard">
+            {/* Horizontal Scroll Stats */}
+            <div style={styles.mobileStatsGrid}>
+                {statCards.map((stat, index) => (
+                    <div key={index} style={{ ...styles.statCardMobile, borderLeft: `4px solid ${stat.color}` }}>
+                        <div style={styles.statIconSmall}>
+                            <i className={stat.icon} style={{ color: stat.color }}></i>
+                        </div>
+                        <div>
+                            <p style={styles.statTitleSmall}>{stat.title}</p>
+                            <h3 style={styles.statValueSmall}>{stat.value}</h3>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            {/* Quick Actions Grid */}
+            <div style={{ marginTop: '1.5rem' }}>
+                <h3 style={styles.sectionTitleMobile}>Actions Rapides</h3>
+                <div style={styles.quickActionsMobile}>
+                    <button style={styles.quickActionBtnMobile}>
+                        <i className="fas fa-user-plus"></i>
+                        <span>Utilisateur</span>
+                    </button>
+                    <button style={styles.quickActionBtnMobile}>
+                        <i className="fas fa-file-invoice"></i>
+                        <span>Rapport</span>
+                    </button>
+                    <button style={styles.quickActionBtnMobile}>
+                        <i className="fas fa-envelope"></i>
+                        <span>Message</span>
+                    </button>
+                    <button style={styles.quickActionBtnMobile}>
+                        <i className="fas fa-shield-alt"></i>
+                        <span>Sécurité</span>
+                    </button>
+                </div>
+            </div>
+
+            {/* Simplified Chart */}
+            <div style={{ ...styles.chartCard, marginTop: '1.5rem', padding: '1rem' }}>
+                <h3 style={styles.chartTitleSmall}>Activité Hebdomadaire</h3>
+                <div style={{ width: '100%', height: 180 }}>
+                    <ResponsiveContainer>
+                        <AreaChart data={chartData}>
+                            <Area type="monotone" dataKey="transactions" stroke="#00ccff" fill="#e0f2fe" strokeWidth={2} />
+                        </AreaChart>
+                    </ResponsiveContainer>
+                </div>
+            </div>
+
+            {/* Recent Activity List */}
+            <div style={{ marginTop: '1.5rem', paddingBottom: '2rem' }}>
+                <h3 style={styles.sectionTitleMobile}>Dernières Opérations</h3>
+                <div style={styles.activityListMobile}>
+                    {recentActivity.map((activity) => (
+                        <div key={activity.id} style={styles.activityItemMobile}>
+                            <div style={{ ...styles.activityIconSmall, color: activity.type === 'credit' ? '#10b981' : '#ef4444' }}>
+                                <i className={`fas fa-${activity.type === 'credit' ? 'arrow-down' : 'arrow-up'}`}></i>
+                            </div>
+                            <div style={{ flex: 1 }}>
+                                <p style={styles.activityTextSmall}>{activity.description || 'Transaction'}</p>
+                                <span style={styles.activityDateSmall}>{activity.createdAt?.toDate().toLocaleDateString('fr-FR')}</span>
+                            </div>
+                            <span style={{ ...styles.activityAmountSmall, color: activity.type === 'credit' ? '#10b981' : '#ef4444' }}>
+                                {activity.amount}€
+                            </span>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+
+    const DesktopView = () => (
+        <>
             {/* Page Header */}
             <div style={styles.pageHeader}>
                 <div>
@@ -332,6 +418,12 @@ const Dashboard = () => {
                     </div>
                 </div>
             </div>
+        </>
+    );
+
+    return (
+        <div className="animate-fade-in">
+            {isMobile ? <MobileView /> : <DesktopView />}
         </div>
     );
 };
@@ -426,7 +518,7 @@ const styles = {
     },
     chartsGrid: {
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
         gap: '1.5rem',
         marginBottom: '2rem',
     },
@@ -480,17 +572,7 @@ const styles = {
         flexDirection: 'column',
         gap: '1rem',
     },
-    activityItem: {
-        display: 'flex',
-        alignItems: 'center',
-        gap: '1rem',
-        padding: '0.75rem',
-        borderRadius: '12px',
-        transition: 'background 0.2s',
-        ':hover': {
-            background: 'var(--bg-main)',
-        },
-    },
+    activityItem: { display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.75rem', borderRadius: '12px', transition: 'background 0.2s' },
     activityIcon: {
         width: '40px',
         height: '40px',
@@ -521,23 +603,7 @@ const styles = {
         gridTemplateColumns: '1fr 1fr',
         gap: '1rem',
     },
-    quickActionBtn: {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: '0.75rem',
-        padding: '1.25rem',
-        background: 'var(--bg-main)',
-        border: '1px solid transparent',
-        borderRadius: '12px',
-        cursor: 'pointer',
-        transition: 'all 0.2s',
-        ':hover': {
-            background: 'white',
-            borderColor: 'var(--border)',
-            boxShadow: 'var(--shadow-sm)',
-        },
-    },
+    quickActionBtn: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem', padding: '1.25rem', background: 'var(--bg-main)', border: '1px solid transparent', borderRadius: '12px', cursor: 'pointer', transition: 'all 0.2s' },
     quickActionIcon: {
         width: '48px',
         height: '48px',
@@ -588,6 +654,114 @@ const styles = {
         textAlign: 'center',
         padding: '2rem',
         color: 'var(--text-light)',
+    },
+    // Mobile Styles
+    mobileStatsGrid: {
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr',
+        gap: '0.75rem',
+        padding: '0.5rem 0',
+    },
+    statCardMobile: {
+        background: 'white',
+        borderRadius: '12px',
+        padding: '0.85rem',
+        boxShadow: '0 2px 10px rgba(0,0,0,0.03)',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '0.4rem',
+        border: '1px solid var(--border)',
+    },
+    statIconSmall: {
+        width: '32px',
+        height: '32px',
+        borderRadius: '8px',
+        background: '#f8fafc',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: '0.9rem',
+    },
+    statTitleSmall: {
+        color: '#64748b',
+        fontSize: '0.75rem',
+        margin: 0,
+    },
+    statValueSmall: {
+        fontSize: '1.1rem',
+        fontWeight: '700',
+        color: '#1e293b',
+        margin: 0,
+    },
+    sectionTitleMobile: {
+        fontSize: '1rem',
+        fontWeight: '700',
+        color: '#1e293b',
+        marginBottom: '1rem',
+    },
+    quickActionsMobile: {
+        display: 'grid',
+        gridTemplateColumns: 'repeat(2, 1fr)',
+        gap: '1rem',
+    },
+    quickActionBtnMobile: {
+        background: 'white',
+        border: '1px solid #f1f5f9',
+        borderRadius: '16px',
+        padding: '1.25rem',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '0.75rem',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.02)',
+    },
+    chartTitleSmall: {
+        fontSize: '0.9rem',
+        fontWeight: '700',
+        color: '#1e293b',
+        marginBottom: '1.5rem',
+    },
+    activityListMobile: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '0.75rem',
+    },
+    activityItemMobile: {
+        background: 'white',
+        borderRadius: '14px',
+        padding: '1rem',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '1rem',
+        boxShadow: '0 2px 6px rgba(0,0,0,0.02)',
+    },
+    activityIconSmall: {
+        width: '36px',
+        height: '36px',
+        borderRadius: '10px',
+        background: '#f8fafc',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: '0.9rem',
+    },
+    activityTextSmall: {
+        fontSize: '0.85rem',
+        fontWeight: '600',
+        color: '#1e293b',
+        margin: 0,
+        display: '-webkit-box',
+        WebkitLineClamp: 1,
+        WebkitBoxOrient: 'vertical',
+        overflow: 'hidden',
+    },
+    activityDateSmall: {
+        fontSize: '0.7rem',
+        color: '#94a3b8',
+    },
+    activityAmountSmall: {
+        fontSize: '0.9rem',
+        fontWeight: '700',
     },
 };
 

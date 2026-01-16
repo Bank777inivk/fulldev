@@ -245,19 +245,7 @@ const styles = {
         fontSize: '0.9rem',
         margin: 0,
     },
-    closeBtn: {
-        background: 'transparent',
-        border: 'none',
-        color: 'var(--text-light)',
-        fontSize: '1.2rem',
-        cursor: 'pointer',
-        padding: '0.5rem',
-        borderRadius: '8px',
-        transition: 'all 0.2s',
-        ':hover': {
-            background: 'var(--bg-main)',
-        }
-    },
+    closeBtn: { background: 'transparent', border: 'none', color: 'var(--text-light)', fontSize: '1.2rem', cursor: 'pointer', padding: '0.5rem', borderRadius: '8px', transition: 'all 0.2s' },
     content: {
         padding: '2rem',
         overflowY: 'auto',
@@ -281,15 +269,7 @@ const styles = {
         fontSize: '0.9rem',
         opacity: 0.8,
     },
-    grid: {
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
-        gap: '2rem',
-        marginBottom: '2rem',
-        '@media (max-width: 640px)': {
-            gridTemplateColumns: '1fr',
-        }
-    },
+    grid: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', marginBottom: '2rem' },
     section: {
         marginBottom: '1.5rem',
     },
