@@ -3,11 +3,17 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 import { AuthProvider } from './contexts/AuthContext'
+import { DataProvider } from './contexts/DataContext'
+import { NotificationProvider } from './contexts/NotificationContext'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <AuthProvider>
-      <App />
+      <DataProvider>
+        <NotificationProvider>
+          <App />
+        </NotificationProvider>
+      </DataProvider>
     </AuthProvider>
   </StrictMode>,
 )

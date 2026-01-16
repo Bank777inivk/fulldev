@@ -1,0 +1,486 @@
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { adminService } from '../services/adminService';
+
+// Helper to format date
+const formatDate = (date) => {
+    if (!date) return 'Non renseigné';
+    if (date?.toDate) return date.toDate().toLocaleDateString('fr-FR');
+    const d = new Date(date);
+    return isNaN(d.getTime()) ? 'Invalid Date' : d.toLocaleDateString('fr-FR');
+};
+
+// Helper for date input
+const getInputValue = (dateVal) => {
+    if (!dateVal) return '';
+    if (dateVal.toDate) {
+        return dateVal.toDate().toISOString().split('T')[0];
+    }
+    const d = new Date(dateVal);
+    return !isNaN(d.getTime()) ? d.toISOString().split('T')[0] : '';
+};
+
+// RenderField component moved outside to avoid re-creation and potential hook issues
+const RenderField = ({ label, name, type = 'text', options = null, isEditing, data, onChange, editData }) => {
+    if (!isEditing) {
+        let displayValue = data[name];
+        if (type === 'date') displayValue = formatDate(data[name]);
+        if (name === 'gender') displayValue = data.gender === 'M' ? 'Masculin' : data.gender === 'F' ? 'Féminin' : data.gender;
+        if (name === 'accountType') displayValue = data.accountType === 'savings' ? 'Standard + Épargne' : 'Standard';
+
+        return (
+            <div style={styles.infoRow}>
+                <span style={styles.label}>{label}</span>
+                <span style={styles.value}>{displayValue || 'Non renseigné'}</span>
+            </div>
+        );
+    }
+
+    return (
+        <div style={styles.infoRow}>
+            <label style={styles.label}>{label}</label>
+            {type === 'select' ? (
+                <select
+                    name={name}
+                    value={editData[name] || ''}
+                    onChange={onChange}
+                    style={styles.input}
+                >
+                    {options.map(opt => (
+                        <option key={opt.value} value={opt.value}>{opt.label}</option>
+                    ))}
+                </select>
+            ) : (
+                <input
+                    type={type}
+                    name={name}
+                    value={type === 'date' ? getInputValue(editData[name]) : (editData[name] || '')}
+                    onChange={onChange}
+                    style={styles.input}
+                />
+            )}
+        </div>
+    );
+};
+
+const UserDetails = () => {
+    const { id } = useParams();
+    const navigate = useNavigate();
+
+    // --- ALL INITIAL HOOKS AT TOP ---
+    const [user, setUser] = useState(null);
+    const [transactions, setTransactions] = useState([]);
+    const [kycData, setKycData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [isEditing, setIsEditing] = useState(false);
+    const [editFormData, setEditFormData] = useState({});
+
+    useEffect(() => {
+        const loadUserData = async () => {
+            if (!id) return;
+            try {
+                setLoading(true);
+                const [userData, userTransactions, userKYC] = await Promise.all([
+                    adminService.getUser(id),
+                    adminService.getUserTransactions(id),
+                    adminService.getUserKYC(id)
+                ]);
+
+                setUser(userData);
+                setTransactions(userTransactions);
+                setKycData(userKYC);
+            } catch (error) {
+                console.error('Error loading user details:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadUserData();
+    }, [id]);
+
+    useEffect(() => {
+        if (user) {
+            setEditFormData({ ...user });
+        }
+    }, [user]);
+
+    // --- HANDLERS ---
+    const handleAction = async (action) => {
+        if (action === 'toggleStatus' && user) {
+            try {
+                const newStatus = user.accountStatus === 'active' ? 'blocked' : 'active';
+                if (window.confirm(`Êtes-vous sûr de vouloir ${newStatus === 'active' ? 'débloquer' : 'bloquer'} cet utilisateur ?`)) {
+                    await adminService.updateUserStatus(user.id, newStatus);
+                    setUser(prev => ({ ...prev, accountStatus: newStatus }));
+                }
+            } catch (error) {
+                console.error('Error updating user status:', error);
+                alert('Erreur lors de la mise à jour du statut');
+            }
+        }
+    };
+
+    const handleEdit = () => {
+        setEditFormData({ ...user });
+        setIsEditing(true);
+    };
+
+    const handleCancel = () => {
+        setIsEditing(false);
+        setEditFormData({ ...user });
+    };
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setEditFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleSave = async () => {
+        try {
+            setLoading(true);
+            await adminService.updateUser(user.id, editFormData);
+            setUser(prev => ({ ...prev, ...editFormData }));
+            setIsEditing(false);
+            alert('Modifications enregistrées avec succès');
+        } catch (error) {
+            console.error('Error updating user:', error);
+            alert("Erreur lors de l'enregistrement");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // --- RENDER EARLY RETURNS ---
+    if (loading && !user) { // Only show loading if we don't have user yet (prevents flash during save)
+        return (
+            <div style={styles.loadingContainer}>
+                <i className="fas fa-spinner fa-spin" style={{ fontSize: '2rem', color: 'var(--primary)' }}></i>
+                <p>Chargement du profil...</p>
+            </div>
+        );
+    }
+
+    if (!user && !loading) {
+        return (
+            <div style={styles.errorContainer}>
+                <h2>Utilisateur introuvable</h2>
+                <button onClick={() => navigate('/users')} style={styles.backBtn}>
+                    Retour à la liste
+                </button>
+            </div>
+        );
+    }
+
+    // --- DERIVED DATA (No hooks below this point) ---
+    const effectiveLevel = (() => {
+        let level = kycData?.verificationLevel || 0;
+        const status = kycData?.status;
+        if (level === 0) {
+            if (status === 'approved' || status === 'verified') return 2;
+            if (status === 'pending') return 1;
+        }
+        return level;
+    })();
+
+    const getKYCLabel = (level) => {
+        switch (Number(level)) {
+            case 2: return 'Niveau 2 - Vérifié';
+            case 1: return 'Niveau 1 - En attente';
+            default: return 'Niveau 0 - Non vérifié';
+        }
+    };
+
+    const getKYCColor = (level) => {
+        switch (Number(level)) {
+            case 2: return { bg: '#dcfce7', text: '#166534' };
+            case 1: return { bg: '#ffedd5', text: '#9a3412' };
+            default: return { bg: '#fee2e2', text: '#991b1b' };
+        }
+    };
+
+    const transactionsPerPage = 10;
+    const indexOfLastTx = currentPage * transactionsPerPage;
+    const indexOfFirstTx = indexOfLastTx - transactionsPerPage;
+    const currentTransactions = transactions.slice(indexOfFirstTx, indexOfLastTx);
+    const totalPages = Math.ceil(transactions.length / transactionsPerPage);
+    const kycColors = getKYCColor(effectiveLevel);
+
+    return (
+        <div className="animate-fade-in" style={styles.pageContainer}>
+            {/* Header */}
+            <div style={styles.header}>
+                <button onClick={() => navigate('/users')} style={styles.backBtn}>
+                    <i className="fas fa-arrow-left"></i> Retour
+                </button>
+                <div style={styles.headerActions}>
+                    {!isEditing ? (
+                        <button onClick={handleEdit} style={{ ...styles.actionBtn, background: '#f3f4f6', color: '#374151' }}>
+                            <i className="fas fa-edit"></i> Modifier
+                        </button>
+                    ) : (
+                        <>
+                            <button onClick={handleCancel} style={{ ...styles.actionBtn, background: '#f3f4f6', color: '#374151' }}>
+                                Annuler
+                            </button>
+                            <button onClick={handleSave} style={{ ...styles.actionBtn, background: '#0ea5e9', color: 'white' }}>
+                                Enregistrer
+                            </button>
+                        </>
+                    )}
+                    <button
+                        onClick={() => handleAction('toggleStatus')}
+                        style={{
+                            ...styles.actionBtn,
+                            background: user?.accountStatus === 'active' ? '#fee2e2' : '#dcfce7',
+                            color: user?.accountStatus === 'active' ? '#991b1b' : '#166534'
+                        }}
+                    >
+                        <i className={`fas fa-${user?.accountStatus === 'active' ? 'ban' : 'unlock'}`}></i>
+                        {user?.accountStatus === 'active' ? 'Bloquer' : 'Débloquer'}
+                    </button>
+                </div>
+            </div>
+
+            <div style={styles.grid}>
+                <div style={styles.leftColumn}>
+                    <div style={styles.card}>
+                        <div style={styles.profileHeader}>
+                            <div style={styles.avatar}>
+                                {user?.firstName?.charAt(0).toUpperCase()}
+                                {user?.lastName?.charAt(0).toUpperCase()}
+                            </div>
+                            <h2 style={styles.name}>{user?.displayName || `${user?.firstName} ${user?.lastName}`}</h2>
+                            <p style={styles.email}>{user?.email}</p>
+                            <div style={styles.badgesRow}>
+                                <div style={{
+                                    ...styles.statusBadge,
+                                    background: user?.accountStatus === 'active' ? '#dcfce7' : '#fee2e2',
+                                    color: user?.accountStatus === 'active' ? '#166534' : '#991b1b'
+                                }}>
+                                    {user?.accountStatus === 'active' ? 'Actif' : 'Bloqué'}
+                                </div>
+                                <div style={{
+                                    ...styles.statusBadge,
+                                    background: user?.userType === 'business' ? '#dbeafe' : '#f3e8ff',
+                                    color: user?.userType === 'business' ? '#1e40af' : '#6b21a8'
+                                }}>
+                                    {user?.userType === 'business' ? 'Professionnel' : 'Particulier'}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style={styles.divider}></div>
+
+                        <div style={styles.section}>
+                            <h3 style={styles.sectionTitle}>Informations Personnelles</h3>
+                            <RenderField label="Prénom" name="firstName" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                            <RenderField label="Nom" name="lastName" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                            <RenderField label="Date de naissance" name="dob" type="date" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                            <RenderField label="Genre" name="gender" type="select" options={[
+                                { value: 'M', label: 'Masculin' },
+                                { value: 'F', label: 'Féminin' }
+                            ]} data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                            <RenderField label="Nationalité" name="nationality" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                            <RenderField label="Téléphone" name="phone" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                        </div>
+
+                        <div style={styles.divider}></div>
+
+                        <div style={styles.section}>
+                            <h3 style={styles.sectionTitle}>Adresse</h3>
+                            <RenderField label="Adresse" name="address" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                            <RenderField label="Code Postal" name="zipCode" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                            <RenderField label="Ville" name="city" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                            <RenderField label="Pays" name="countryOfResidence" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                        </div>
+
+                        <div style={styles.divider}></div>
+
+                        <div style={styles.section}>
+                            <h3 style={styles.sectionTitle}>Détails Compte</h3>
+                            <div style={styles.infoRow}>
+                                <span style={styles.label}>Inscrit le</span>
+                                <span style={styles.value}>{formatDate(user?.createdAt)}</span>
+                            </div>
+                            <RenderField label="Type de Compte" name="accountType" type="select" options={[
+                                { value: 'standard', label: 'Standard' },
+                                { value: 'savings', label: 'Standard + Épargne' }
+                            ]} data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                            <RenderField label="Devise Principale" name="currency" type="select" options={[
+                                { value: 'EUR', label: 'EUR' },
+                                { value: 'USD', label: 'USD' }
+                            ]} data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                        </div>
+                    </div>
+
+                    {(user?.userType === 'business' || user?.companyName) && (
+                        <div style={styles.card}>
+                            <h3 style={styles.cardTitle}>Informations Business</h3>
+                            <div style={styles.divider}></div>
+                            <div style={styles.section}>
+                                <RenderField label="Société" name="companyName" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                                <RenderField label="Forme Juridique" name="legalForm" type="select" options={[
+                                    { value: 'SARL', label: 'SARL / EURL' },
+                                    { value: 'SAS', label: 'SAS / SASU' },
+                                    { value: 'SA', label: 'SA' },
+                                    { value: 'AUTO', label: 'Auto-entrepreneur' },
+                                    { value: 'ASSOC', label: 'Association' },
+                                    { value: 'OTHER', label: 'Autre' }
+                                ]} data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                                <RenderField label="SIRET / Enreg." name="registrationNumber" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                                <RenderField label="Secteur" name="activitySector" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                                <RenderField label="Représentant" name="repFunction" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                            </div>
+                        </div>
+                    )}
+
+                    <div style={styles.card}>
+                        <div style={styles.kycHeader}>
+                            <h3 style={styles.cardTitle}>Statut KYC</h3>
+                            <span style={{
+                                ...styles.badge,
+                                background: kycColors.bg,
+                                color: kycColors.text
+                            }}>
+                                {getKYCLabel(effectiveLevel)}
+                            </span>
+                        </div>
+                        {effectiveLevel < 2 && (
+                            <p style={styles.kycNote}>
+                                {effectiveLevel === 1
+                                    ? "L'utilisateur a soumis ses documents. Vérification en attente."
+                                    : "L'utilisateur n'a pas encore vérifié son identité."}
+                            </p>
+                        )}
+                    </div>
+                </div>
+
+                <div style={styles.rightColumn}>
+                    <div style={styles.statsGrid}>
+                        <div style={styles.statCard}>
+                            <div style={styles.statIcon}><i className="fas fa-wallet"></i></div>
+                            <div>
+                                <p style={styles.statLabel}>Solde Total</p>
+                                <p style={styles.statValue}>€{user?.balance?.toFixed(2) || '0.00'}</p>
+                            </div>
+                        </div>
+                        <div style={styles.statCard}>
+                            <div style={styles.statIconPurple}><i className="fas fa-exchange-alt"></i></div>
+                            <div>
+                                <p style={styles.statLabel}>Transactions</p>
+                                <p style={styles.statValue}>{transactions.length}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style={styles.card}>
+                        <h3 style={styles.cardTitle}>Historique des Transactions</h3>
+                        <div style={styles.transactionList}>
+                            {currentTransactions.length > 0 ? (
+                                currentTransactions.map(tx => (
+                                    <div key={tx.id} style={styles.transactionItem}>
+                                        <div style={{
+                                            ...styles.txIcon,
+                                            background: tx.type === 'credit' ? '#dcfce7' : '#fee2e2',
+                                            color: tx.type === 'credit' ? '#166534' : '#991b1b'
+                                        }}>
+                                            <i className={`fas fa-arrow-${tx.type === 'credit' ? 'down' : 'up'}`}></i>
+                                        </div>
+                                        <div style={styles.txInfo}>
+                                            <span style={styles.txTitle}>{tx.description || 'Transaction'}</span>
+                                            <span style={styles.txDate}>{formatDate(tx.createdAt)}</span>
+                                        </div>
+                                        <span style={{
+                                            ...styles.txAmount,
+                                            color: tx.type === 'credit' ? '#166534' : '#991b1b'
+                                        }}>
+                                            {tx.type === 'credit' ? '+' : '-'}{tx.amount} {tx.currency}
+                                        </span>
+                                    </div>
+                                ))
+                            ) : (
+                                <p style={styles.emptyText}>Aucune transaction enregistrée.</p>
+                            )}
+                        </div>
+
+                        {transactions.length > 0 && (
+                            <div style={styles.pagination}>
+                                <span style={styles.pageInfo}>
+                                    {indexOfFirstTx + 1}-{Math.min(indexOfLastTx, transactions.length)} sur {transactions.length}
+                                </span>
+                                <div style={styles.pageControls}>
+                                    <button
+                                        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                                        disabled={currentPage === 1}
+                                        style={{ ...styles.pageBtn, opacity: currentPage === 1 ? 0.5 : 1 }}
+                                    >
+                                        <i className="fas fa-chevron-left"></i>
+                                    </button>
+                                    <button
+                                        onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                        disabled={currentPage === totalPages}
+                                        style={{ ...styles.pageBtn, opacity: currentPage === totalPages ? 0.5 : 1 }}
+                                    >
+                                        <i className="fas fa-chevron-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const styles = {
+    pageContainer: { width: '100%', margin: '0 auto', paddingBottom: '2rem' },
+    loadingContainer: { display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '60vh', gap: '1rem' },
+    errorContainer: { textAlign: 'center', marginTop: '4rem' },
+    header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' },
+    backBtn: { background: 'none', border: 'none', fontSize: '1rem', color: 'var(--text-light)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem' },
+    headerActions: { display: 'flex', gap: '1rem' },
+    grid: { display: 'grid', gridTemplateColumns: 'minmax(350px, 1fr) 2fr', gap: '1rem', alignItems: 'start' },
+    leftColumn: { display: 'flex', flexDirection: 'column', gap: '1rem' },
+    rightColumn: { display: 'flex', flexDirection: 'column', gap: '1rem' },
+    card: { background: 'white', borderRadius: '16px', padding: '1.5rem', boxShadow: 'var(--shadow-sm)', border: '1px solid var(--border)' },
+    profileHeader: { display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: '2rem' },
+    avatar: { width: '80px', height: '80px', borderRadius: '20px', background: 'var(--gradient-primary)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem', fontWeight: 'bold', marginBottom: '1rem' },
+    name: { fontSize: '1.5rem', fontWeight: '700', color: 'var(--text-main)', marginBottom: '0.25rem' },
+    email: { color: 'var(--text-light)', marginBottom: '1rem' },
+    badgesRow: { display: 'flex', gap: '0.5rem', justifyContent: 'center', flexWrap: 'wrap' },
+    statusBadge: { padding: '0.5rem 1rem', borderRadius: '20px', fontSize: '0.85rem', fontWeight: '600' },
+    divider: { height: '1px', background: 'var(--border)', margin: '0 -1.5rem 1.5rem' },
+    sectionTitle: { fontSize: '1.1rem', fontWeight: '700', color: 'var(--text-main)', marginBottom: '1rem' },
+    infoRow: { display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px dashed var(--border)' },
+    label: { color: 'var(--text-light)', fontSize: '0.9rem' },
+    value: { color: 'var(--text-main)', fontWeight: '500', textAlign: 'right' },
+    kycHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' },
+    cardTitle: { fontSize: '1.2rem', fontWeight: '700', color: 'var(--text-main)', marginBottom: '1.5rem' },
+    badge: { padding: '0.35rem 0.85rem', borderRadius: '20px', fontSize: '0.85rem', fontWeight: '700' },
+    kycNote: { color: 'var(--text-light)', fontSize: '0.9rem', lineHeight: '1.5' },
+    statsGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem' },
+    statCard: { background: 'white', borderRadius: '16px', padding: '1.5rem', boxShadow: 'var(--shadow-sm)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '1rem' },
+    statIcon: { width: '48px', height: '48px', borderRadius: '12px', background: 'var(--gradient-success)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' },
+    statIconPurple: { width: '48px', height: '48px', borderRadius: '12px', background: 'var(--gradient-secondary)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' },
+    statLabel: { color: 'var(--text-light)', fontSize: '0.9rem' },
+    statValue: { fontSize: '1.5rem', fontWeight: '700', color: 'var(--text-main)' },
+    transactionList: { marginTop: '1rem' },
+    transactionItem: { display: 'flex', alignItems: 'center', padding: '0.75rem', background: 'var(--bg-main)', borderRadius: '12px', marginBottom: '0.5rem' },
+    txIcon: { width: '36px', height: '36px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '1rem', flexShrink: 0 },
+    txInfo: { flex: 1, minWidth: 0 },
+    txTitle: { display: 'block', fontWeight: '600', color: 'var(--text-main)', fontSize: '0.9rem' },
+    txDate: { fontSize: '0.8rem', color: 'var(--text-light)' },
+    txAmount: { fontWeight: '700', fontSize: '0.95rem', marginLeft: '1rem' },
+    emptyText: { textAlign: 'center', padding: '2rem', color: 'var(--text-light)' },
+    actionBtn: { padding: '0.6rem 1.2rem', borderRadius: '50px', border: 'none', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem' },
+    pagination: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 0 0', borderTop: '1px solid var(--border)', marginTop: '1rem' },
+    pageInfo: { fontSize: '0.85rem', color: 'var(--text-light)' },
+    pageControls: { display: 'flex', gap: '0.5rem' },
+    pageBtn: { width: '30px', height: '30px', borderRadius: '8px', border: '1px solid var(--border)', background: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' },
+    input: { flex: 1, padding: '0.4rem', borderRadius: '6px', border: '1px solid var(--border)', fontSize: '0.9rem', textAlign: 'right', background: 'var(--bg-main)', outline: 'none' }
+};
+
+export default UserDetails;

@@ -7,7 +7,11 @@ import {
     sendEmailVerification
 } from 'firebase/auth';
 import { auth, db } from '../firebase/config';
-import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
+import { walletService } from '../services/walletService';
+import { cardService } from '../services/cardService';
+import { ribService } from '../services/ribService';
+import { userService } from '../services/userService';
 
 const AuthContext = createContext();
 
@@ -31,11 +35,38 @@ export const AuthProvider = ({ children }) => {
             uid: user.uid,
             email: user.email,
             ...profileData,
-            kycStatus: 'pending',
             accountStatus: 'active',
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp()
         });
+
+        // Create separate KYC document
+        await setDoc(doc(db, "kyc", user.uid), {
+            userId: user.uid,
+            status: 'pending',
+            submittedAt: null,
+            reviewedAt: null,
+            documents: {},
+            verificationLevel: 0,
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp()
+        });
+
+        // Create initial wallets/accounts
+        const wallets = await walletService.createInitialWallets(
+            user.uid,
+            profileData.accountType || 'standard',
+            profileData.mainCurrency || 'EUR'
+        );
+
+        // Find main wallet for card creation
+        const mainWallet = wallets.find(w => w.type === 'main');
+        if (mainWallet) {
+            await cardService.createInitialCard(user.uid, mainWallet.id);
+        }
+
+        // Create RIBs for all wallets
+        await ribService.createInitialRibs(user.uid, wallets);
 
         // Send email verification
         await sendEmailVerification(user);
@@ -65,12 +96,49 @@ export const AuthProvider = ({ children }) => {
         return unsubscribe;
     }, []);
 
+    const updateUserData = async (newProfileData) => {
+        if (!currentUser) return;
+        const userRef = doc(db, "users", currentUser.uid);
+        await updateDoc(userRef, {
+            ...newProfileData,
+            updatedAt: serverTimestamp()
+        });
+        // Refresh local state
+        setUserData(prev => ({ ...prev, ...newProfileData }));
+    };
+
+    const deleteAccount = async () => {
+        if (!currentUser) return;
+        const uid = currentUser.uid;
+
+        // 1. Purge all Firestore data
+        await userService.purgeFullUserData(uid);
+
+        // 2. Logout (we don't delete from Auth directly as it requires re-auth/admin)
+        await logout();
+    };
+
+    const checkEmailVerification = async () => {
+        if (!currentUser) return;
+        await currentUser.reload();
+        setCurrentUser({ ...currentUser });
+        // Also refresh user data
+        const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+        if (userDoc.exists()) {
+            setUserData(userDoc.data());
+        }
+    };
+
     const value = {
+        user: currentUser,
         currentUser,
         userData,
         login,
         register,
         logout,
+        updateUserData,
+        deleteAccount,
+        checkEmailVerification,
         loading
     };
 

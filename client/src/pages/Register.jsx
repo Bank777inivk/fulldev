@@ -75,8 +75,8 @@ const Register = () => {
                 displayName: userType === 'personal' ? `${formData.firstName} ${formData.lastName}` : formData.companyName
             });
 
-            alert("Compte créé avec succès ! Veuillez vérifier votre email pour valider votre compte.");
-            navigate('/login');
+            alert("Compte créé avec succès ! Un email de vérification a été envoyé à votre adresse.");
+            navigate('/email-verification-pending');
         } catch (err) {
             console.error("Erreur d'inscription:", err);
             if (err.code === 'auth/email-already-in-use') {
@@ -134,7 +134,7 @@ const Register = () => {
         </div>
     );
 
-    const PersonalForm = () => (
+    const PersonalForm = ({ view }) => (
         <div className="fadeInUp">
             <h2 style={styles.formTitle}>Inscription Particulier</h2>
             <p style={styles.formSubtitle}>Veuillez remplir vos informations personnelles obligatoires.</p>
@@ -192,12 +192,12 @@ const Register = () => {
                     </div>
                 </div>
 
-                {SecuritySection('desktop')}
+                {SecuritySection(view)}
             </form>
         </div>
     );
 
-    const BusinessForm = () => (
+    const BusinessForm = ({ view }) => (
         <div className="fadeInUp">
             <h2 style={styles.formTitle}>Inscription Professionnel</h2>
             <p style={styles.formSubtitle}>Formulaire complet pour les entreprises et indépendants.</p>
@@ -236,7 +236,7 @@ const Register = () => {
                     </div>
                 </div>
 
-                {SecuritySection('mobile')}
+                {SecuritySection(view)}
             </form>
         </div>
     );
@@ -340,7 +340,7 @@ const Register = () => {
                 <div className="desktop-register-view">
                     {step === 0 ? <SelectionStep /> : (
                         <div style={styles.formCard} className="register-form-card">
-                            {userType === 'personal' ? <PersonalForm /> : <BusinessForm />}
+                            {userType === 'personal' ? <PersonalForm view="desktop" /> : <BusinessForm view="desktop" />}
                         </div>
                     )}
                 </div>
@@ -349,7 +349,7 @@ const Register = () => {
                 <div className="mobile-register-view">
                     {step === 0 ? <MobileSelection /> : (
                         <div className="mobile-form-container">
-                            {userType === 'personal' ? <PersonalForm /> : <BusinessForm />}
+                            {userType === 'personal' ? <PersonalForm view="mobile" /> : <BusinessForm view="mobile" />}
                         </div>
                     )}
                 </div>

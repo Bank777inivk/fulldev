@@ -23,6 +23,11 @@ const ProtectedRoute = ({ children }) => {
         return <Navigate to="/login" />;
     }
 
+    // Check if email is verified
+    if (!currentUser.emailVerified) {
+        return <Navigate to="/email-verification-pending" />;
+    }
+
     return children;
 };
 
