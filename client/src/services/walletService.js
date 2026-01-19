@@ -141,5 +141,5 @@ const generateIBAN = (type, userId) => {
     const branchCode = '67890';
     const suffix = type === 'main' ? '01' : (type === 'savings' ? '02' : (type === 'credit' ? '03' : '99'));
     const userPart = userId.substring(0, 8).toUpperCase().replace(/[^A-Z0-9]/g, 'X');
-    return `${country} ${bankCode} ${branchCode} ${userPart} ${suffix}`;
+    return `${country}${bankCode}${branchCode}${userPart}${suffix}`;
 };

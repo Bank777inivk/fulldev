@@ -21,10 +21,11 @@ service cloud.firestore {
     // Individual collection rules for clients
     // (Existing clients still need their specific rules for privacy)
     
+    
     // Transactions
     match /transactions/{transactionId} {
       allow read: if request.auth != null && resource.data.userId == request.auth.uid;
-      allow create: if request.auth != null;
+      allow create, update: if request.auth != null;
     }
 
     // KYC Records
@@ -46,7 +47,7 @@ service cloud.firestore {
     
     // Wallets
     match /wallets/{walletId} {
-       allow read: if request.auth != null && resource.data.userId == request.auth.uid;
+       allow read, update: if request.auth != null && resource.data.userId == request.auth.uid;
     }
 
     // Loans

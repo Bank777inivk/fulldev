@@ -96,16 +96,6 @@ const Cards = () => {
         }
     };
 
-    const handleDeactivateCard = async (cardId) => {
-        if (!window.confirm("Voulez-vous désactiver cette carte ? Elle ne pourra plus être utilisée pour des paiements.")) return;
-        try {
-            await cardService.updateCard(cardId, { status: 'inactive' });
-            showToast("Carte désactivée.", "warning");
-        } catch (error) {
-            console.error("Error deactivating card:", error);
-            showToast("Erreur lors de la désactivation.", "error");
-        }
-    };
 
     const handleDeleteRequest = async (requestId) => {
         if (!window.confirm("Annuler et supprimer cette demande de carte ?")) return;
@@ -217,14 +207,6 @@ const Cards = () => {
                                         <button style={styles.mobileActionBtn} onClick={(e) => { e.stopPropagation(); handleShowOptions(card); }}>
                                             <i className="fas fa-cog"></i>
                                             <span>Options</span>
-                                        </button>
-                                        <button
-                                            style={{ ...styles.mobileActionBtn, color: '#64748b' }}
-                                            onClick={(e) => { e.stopPropagation(); handleDeactivateCard(card.id); }}
-                                            disabled={card.status === 'inactive'}
-                                        >
-                                            <i className="fas fa-power-off"></i>
-                                            <span>Off</span>
                                         </button>
                                         <button style={{ ...styles.mobileActionBtn, color: '#e74c3c' }} onClick={(e) => { e.stopPropagation(); handleDeleteCard(card.id); }}>
                                             <i className="fas fa-trash"></i>
@@ -389,14 +371,6 @@ const Cards = () => {
                                                 </button>
                                                 <button style={styles.actionBtn} onClick={() => handleShowOptions(card)}><i className="fas fa-cog"></i><span>Options</span></button>
                                                 <button style={styles.actionBtn} onClick={() => toggleFlip(card.id)}><i className="fas fa-sync"></i><span>Tourner</span></button>
-                                                <button
-                                                    style={{ ...styles.actionBtn, color: '#64748b' }}
-                                                    onClick={() => handleDeactivateCard(card.id)}
-                                                    disabled={card.status === 'inactive'}
-                                                >
-                                                    <i className="fas fa-power-off"></i>
-                                                    <span>Off</span>
-                                                </button>
                                                 <button style={{ ...styles.actionBtn, color: '#e74c3c' }} onClick={() => handleDeleteCard(card.id)}>
                                                     <i className="fas fa-trash"></i>
                                                     <span>Suppr.</span>

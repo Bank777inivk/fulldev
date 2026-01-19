@@ -57,7 +57,7 @@ const Dashboard = () => {
                 {/* Credit Card */}
                 <div style={styles.card}>
                     <div style={styles.cardHeader}>
-                        <h3 style={styles.cardLabel}>Réserve Crédit</h3>
+                        <h3 style={styles.cardLabel}>Compte Crédit</h3>
                         <i className="fas fa-file-invoice-dollar" style={{ ...styles.cardIcon, color: '#e74c3c' }}></i>
                     </div>
                     <p style={{ ...styles.balance, color: '#e74c3c' }} className="balance-mobile">

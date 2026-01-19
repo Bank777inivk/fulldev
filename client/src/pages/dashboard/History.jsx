@@ -30,6 +30,46 @@ const History = () => {
         }
     };
 
+    const getDetailedDescription = (tx) => {
+        let details = [];
+
+        // Base description
+        if (tx.description) {
+            details.push(tx.description);
+        }
+
+        // Recipient information
+        if (tx.recipientName) {
+            details.push(`Destinataire: ${tx.recipientName}`);
+        } else if (tx.toAccountName) {
+            details.push(`Vers: ${tx.toAccountName}`);
+        }
+
+        // Sender information
+        if (tx.senderName) {
+            details.push(`De: ${tx.senderName}`);
+        } else if (tx.fromAccountName) {
+            details.push(`De: ${tx.fromAccountName}`);
+        }
+
+        // IBAN information
+        if (tx.recipientIban) {
+            details.push(`IBAN: ${tx.recipientIban}`);
+        }
+
+        // Reference
+        if (tx.reference) {
+            details.push(`Réf: ${tx.reference}`);
+        }
+
+        // If no details, fallback to type
+        if (details.length === 0) {
+            return getTypeLabel(tx.type);
+        }
+
+        return details.join(' • ');
+    };
+
     const getStatusLabel = (status) => {
         if (status === 'pending') return 'En attente';
         if (status === 'in_review') return 'Examen INVIK';
@@ -91,7 +131,7 @@ const History = () => {
                                         <i className={tx.type === 'deposit' ? "fas fa-arrow-down" : "fas fa-arrow-up"}></i>
                                     </div>
                                     <div style={{ flex: 1 }}>
-                                        <div style={{ fontSize: '0.9rem', fontWeight: 'bold' }}>{tx.description || getTypeLabel(tx.type)}</div>
+                                        <div style={{ fontSize: '0.9rem', fontWeight: 'bold' }}>{getDetailedDescription(tx)}</div>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
                                             <div style={{ fontSize: '0.75rem', color: '#888' }}>{formatDate(tx.createdAt)}</div>
                                             <span style={{
@@ -148,7 +188,7 @@ const History = () => {
                         {currentTransactions.map(tx => (
                             <tr key={tx.id} style={styles.trBody}>
                                 <td style={styles.td}>{formatDate(tx.createdAt)}</td>
-                                <td style={styles.td}>{tx.description}</td>
+                                <td style={styles.td}>{getDetailedDescription(tx)}</td>
                                 <td style={styles.td}>{getTypeLabel(tx.type)}</td>
                                 <td style={styles.td}>
                                     <span style={{

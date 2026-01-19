@@ -135,14 +135,21 @@ export const transactionService = {
             // Check Daily Limit
             await transactionService.checkDailyLimit(userId, amount);
 
-            // 1. Find the target wallet by IBAN
-            const q = query(collection(db, WALLETS_COLLECTION), where("iban", "==", targetIban));
+            // 1. Normalize IBAN (remove spaces) for accurate matching
+            const normalizedIban = targetIban.replace(/\s/g, '');
+            console.log('Searching for wallet with IBAN:', normalizedIban);
+
+            // 2. Find the target wallet by IBAN
+            const q = query(collection(db, WALLETS_COLLECTION), where("iban", "==", normalizedIban));
             const querySnapshot = await getDocs(q);
 
             if (querySnapshot.empty) {
                 // If not found, fall back to external transfer request
+                console.warn('Target wallet NOT found for IBAN:', normalizedIban, '- Creating external transfer (pending)');
                 return await transactionService.requestExternalTransfer(userId, fromWalletId, beneficiaryName, targetIban, amount);
             }
+
+            console.log('Target wallet FOUND! Proceeding with instant transfer');
 
             const targetWalletDoc = querySnapshot.docs[0];
             const targetWalletId = targetWalletDoc.id;

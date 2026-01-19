@@ -102,7 +102,7 @@ const AccountCard = ({ wallet, isLoading, onRibClick, navigate }) => {
     const config = {
         main: { label: 'Compte Courant', icon: 'fa-wallet', color: '#003366' },
         savings: { label: 'Compte Épargne', icon: 'fa-piggy-bank', color: '#27ae60' },
-        credit: { label: 'Réserve Crédit', icon: 'fa-hand-holding-usd', color: '#c0392b' },
+        credit: { label: 'Compte Crédit', icon: 'fa-hand-holding-usd', color: '#c0392b' },
         currency: { label: 'Compte Devise', icon: 'fa-globe', color: '#f39c12' }
     }[wallet.type] || { label: 'Autre Compte', icon: 'fa-university', color: '#7f8c8d' };
 
@@ -222,7 +222,7 @@ const Accounts = () => {
     const availableTypes = React.useMemo(() => {
         const types = [
             { value: 'savings', label: 'Compte Épargne' },
-            { value: 'credit', label: 'Réserve Crédit' },
+            { value: 'credit', label: 'Compte Crédit' },
             { value: 'currency', label: 'Compte Devise' }
         ];
         return types.filter(t => {
