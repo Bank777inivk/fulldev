@@ -45,5 +45,20 @@ export const loanService = {
             console.error("Fetch loans error:", error);
             throw error;
         }
+    },
+
+    // Create a lead from public credit request
+    createLead: async (leadData) => {
+        try {
+            const docRef = await addDoc(collection(db, 'loan_leads'), {
+                ...leadData,
+                status: 'new',
+                createdAt: serverTimestamp()
+            });
+            return { id: docRef.id, success: true };
+        } catch (error) {
+            console.error("Create lead error:", error);
+            throw error;
+        }
     }
 };

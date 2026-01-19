@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
+import { loanService } from '../services/loanService';
+import { useNotifications } from '../contexts/NotificationContext';
+
 const CreditRequestMobile = () => {
     const navigate = useNavigate();
     const location = useLocation();
+    const { showToast } = useNotifications();
 
     // Initial values from calculator
     const initialAmount = location.state?.amount || 10000;
@@ -29,6 +33,8 @@ const CreditRequestMobile = () => {
         civilite: 'M.',
         nom: '',
         prenom: '',
+        email: '',
+        telephone: '',
         dateNaissance: '',
         adresseRue: '',
         adresseCodePostal: '',
@@ -67,6 +73,8 @@ const CreditRequestMobile = () => {
         if (step === 2) {
             if (!formData.nom) newErrors.nom = "Nom requis";
             if (!formData.prenom) newErrors.prenom = "Prénom requis";
+            if (!formData.email) newErrors.email = "Email requis";
+            if (!formData.telephone) newErrors.telephone = "Téléphone requis";
             if (!formData.dateNaissance) newErrors.dateNaissance = "Date requise";
         }
         if (step === 3) {
@@ -104,14 +112,26 @@ const CreditRequestMobile = () => {
         return 'GREEN';
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
-        setTimeout(() => {
-            setScore(calculateScore());
-            setIsSubmitting(false);
+
+        try {
+            const finalScore = calculateScore();
+            // Persistence to Firestore
+            await loanService.createLead({
+                ...formData,
+                score: finalScore
+            });
+
+            setScore(finalScore);
             setStep(8);
-        }, 2000);
+        } catch (error) {
+            console.error("Error submitting lead (mobile):", error);
+            showToast("Erreur lors de l'envoi. Veuillez réessayer.", "error");
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const renderStep = () => {
@@ -162,6 +182,16 @@ const CreditRequestMobile = () => {
                             <label style={styles.mobileLabel}>Prénom</label>
                             <input type="text" name="prenom" value={formData.prenom} onChange={handleInputChange} style={styles.mobileInput} placeholder="Votre prénom" />
                             {errors.prenom && <span style={styles.mobileError}>{errors.prenom}</span>}
+                        </div>
+                        <div style={styles.mobileGroup}>
+                            <label style={styles.mobileLabel}>Email</label>
+                            <input type="email" name="email" value={formData.email} onChange={handleInputChange} style={styles.mobileInput} placeholder="votre@email.com" />
+                            {errors.email && <span style={styles.mobileError}>{errors.email}</span>}
+                        </div>
+                        <div style={styles.mobileGroup}>
+                            <label style={styles.mobileLabel}>Téléphone</label>
+                            <input type="tel" name="telephone" value={formData.telephone} onChange={handleInputChange} style={styles.mobileInput} placeholder="06 00 00 00 00" />
+                            {errors.telephone && <span style={styles.mobileError}>{errors.telephone}</span>}
                         </div>
                         <div style={styles.mobileGroup}>
                             <label style={styles.mobileLabel}>Date de naissance</label>
@@ -444,7 +474,9 @@ const styles = {
         width: '100%',
         padding: '1rem',
         borderRadius: '16px',
-        border: '1px solid #e2e8f0',
+        borderStyle: 'solid',
+        borderWidth: '1px',
+        borderColor: '#e2e8f0',
         backgroundColor: '#fff',
         fontSize: '1rem',
         outline: 'none',
@@ -463,7 +495,9 @@ const styles = {
         width: '100%',
         padding: '1rem',
         borderRadius: '16px',
-        border: '1px solid #e2e8f0',
+        borderStyle: 'solid',
+        borderWidth: '1px',
+        borderColor: '#e2e8f0',
         backgroundColor: '#fff',
         fontSize: '1rem',
         minHeight: '100px',

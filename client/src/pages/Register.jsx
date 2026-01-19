@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { countries } from '../data/countries';
 import { useAuth } from '../contexts/AuthContext';
+import { useNotifications } from '../contexts/NotificationContext';
 
 // --- SUB-COMPONENTS (Extracted to prevent re-renders) ---
 
@@ -247,6 +248,7 @@ const MobileSelection = ({ handleSelectType }) => (
 const Register = () => {
     const navigate = useNavigate();
     const { register } = useAuth();
+    const { showToast } = useNotifications();
     const [step, setStep] = useState(0); // 0: Selection, 1: Form
     const [userType, setUserType] = useState(null); // 'personal' or 'business'
     const [error, setError] = useState('');
@@ -317,7 +319,7 @@ const Register = () => {
                 displayName: userType === 'personal' ? `${formData.firstName} ${formData.lastName}` : formData.companyName
             });
 
-            alert("Compte créé avec succès ! Un email de vérification a été envoyé à votre adresse.");
+            showToast("Compte créé avec succès ! Un email de vérification a été envoyé à votre adresse.", 'success');
             navigate('/email-verification-pending');
         } catch (err) {
             console.error("Erreur d'inscription:", err);

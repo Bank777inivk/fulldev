@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useNotifications } from '../contexts/NotificationContext';
 
 const Login = () => {
     const navigate = useNavigate();
     const { login, resetPassword } = useAuth();
+    const { showToast } = useNotifications();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -19,7 +21,7 @@ const Login = () => {
         try {
             await resetPassword(email);
             setError('');
-            alert("Lien de réinitialisation envoyé ! Vérifiez votre boîte mail.");
+            showToast("Lien de réinitialisation envoyé ! Vérifiez votre boîte mail.", 'info');
         } catch (err) {
             setError("Impossible d'envoyer l'email de réinitialisation.");
         }

@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
+import { contactService } from '../services/contactService';
+import { useNotifications } from '../contexts/NotificationContext';
 
 const Contact = () => {
+    const { showToast } = useNotifications();
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -12,16 +15,36 @@ const Contact = () => {
         message: '',
         consent: false
     });
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleChange = (e) => {
         const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
         setFormData({ ...formData, [e.target.name]: value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Form data:', formData);
-        alert('Message envoyé ! Nous vous répondrons sous 24h.');
+        setIsSubmitting(true);
+        try {
+            await contactService.submitContactForm(formData);
+            showToast('Message envoyé ! Nous vous répondrons sous 24h.', 'success');
+            setFormData({
+                name: '',
+                email: '',
+                phone: '',
+                status: '',
+                subject: '',
+                clientNumber: '',
+                contactMode: '',
+                message: '',
+                consent: false
+            });
+        } catch (error) {
+            console.error("Error submitting contact form:", error);
+            showToast("Une erreur est survenue lors de l'envoi de votre message. Veuillez réessayer.", "error");
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -191,8 +214,8 @@ const Contact = () => {
 
                     {/* Submit Button */}
                     <div style={styles.submitContainer}>
-                        <button type="submit" style={styles.submitButton} className="submit-btn-hover contact-submit-btn">
-                            Envoyer le message
+                        <button type="submit" style={styles.submitButton} className="submit-btn-hover contact-submit-btn" disabled={isSubmitting}>
+                            {isSubmitting ? 'Envoi en cours...' : 'Envoyer le message'}
                         </button>
                     </div>
                 </form>

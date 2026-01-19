@@ -495,6 +495,36 @@ export const adminService = {
         );
     },
 
+    subscribeToLeads: (callback) => {
+        return onSnapshot(
+            query(collection(db, 'loan_leads'), orderBy('createdAt', 'desc')),
+            (snapshot) => {
+                const leads = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                callback(leads);
+            }
+        );
+    },
+
+    subscribeToContactMessages: (callback) => {
+        return onSnapshot(
+            query(collection(db, 'contact_messages'), orderBy('createdAt', 'desc')),
+            (snapshot) => {
+                const messages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                callback(messages);
+            }
+        );
+    },
+
+    subscribeToSupportTickets: (callback) => {
+        return onSnapshot(
+            query(collection(db, 'support_tickets'), orderBy('createdAt', 'desc')),
+            (snapshot) => {
+                const tickets = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                callback(tickets);
+            }
+        );
+    },
+
     updateLoanStatus: async (loanId, status, reviewNotes = '') => {
         await updateDoc(doc(db, 'loans', loanId), {
             status,

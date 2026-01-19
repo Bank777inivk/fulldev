@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
+import { loanService } from '../services/loanService';
+import { useNotifications } from '../contexts/NotificationContext';
+
 const CreditRequest = () => {
     const navigate = useNavigate();
     const location = useLocation();
+    const { showToast } = useNotifications();
 
     // Initial values from calculator if available
     const initialAmount = location.state?.amount || 10000;
@@ -31,6 +35,8 @@ const CreditRequest = () => {
         civilite: 'M.',
         nom: '',
         prenom: '',
+        email: '',
+        telephone: '',
         dateNaissance: '',
         lieuNaissance: '',
         nationalite: 'Française',
@@ -97,6 +103,8 @@ const CreditRequest = () => {
         if (step === 2) {
             if (!formData.nom) newErrors.nom = "Le nom est obligatoire";
             if (!formData.prenom) newErrors.prenom = "Le prénom est obligatoire";
+            if (!formData.email) newErrors.email = "L'email est obligatoire";
+            if (!formData.telephone) newErrors.telephone = "Le téléphone est obligatoire";
             if (!formData.dateNaissance) newErrors.dateNaissance = "La date de naissance est obligatoire";
         }
         if (step === 3) {
@@ -150,17 +158,26 @@ const CreditRequest = () => {
         }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
 
-        // Simulate analysis delay
-        setTimeout(() => {
+        try {
             const finalScore = calculateScore();
+            // Persistence to Firestore
+            await loanService.createLead({
+                ...formData,
+                score: finalScore
+            });
+
             setScore(finalScore);
-            setIsSubmitting(false);
             setStep(8); // Success/Result step
-        }, 2500);
+        } catch (error) {
+            console.error("Error submitting lead:", error);
+            showToast("Une erreur est survenue lors de l'envoi de votre demande. Veuillez réessayer.", "error");
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const renderStep = () => {
@@ -231,6 +248,18 @@ const CreditRequest = () => {
                                 <label>Prénom(s) *</label>
                                 <input type="text" name="prenom" value={formData.prenom} onChange={handleInputChange} style={{ ...styles.input, borderColor: errors.prenom ? 'red' : '#e0e0e0' }} />
                                 {errors.prenom && <span style={styles.errorText}>{errors.prenom}</span>}
+                            </div>
+                        </div>
+                        <div style={styles.row}>
+                            <div style={styles.formGroup}>
+                                <label>Email *</label>
+                                <input type="email" name="email" value={formData.email} onChange={handleInputChange} style={{ ...styles.input, borderColor: errors.email ? 'red' : '#e0e0e0' }} placeholder="votre@email.com" />
+                                {errors.email && <span style={styles.errorText}>{errors.email}</span>}
+                            </div>
+                            <div style={styles.formGroup}>
+                                <label>Téléphone *</label>
+                                <input type="tel" name="telephone" value={formData.telephone} onChange={handleInputChange} style={{ ...styles.input, borderColor: errors.telephone ? 'red' : '#e0e0e0' }} placeholder="06 00 00 00 00" />
+                                {errors.telephone && <span style={styles.errorText}>{errors.telephone}</span>}
                             </div>
                         </div>
                         <div style={styles.formGroup}>
@@ -549,7 +578,9 @@ const styles = {
     input: {
         padding: '0.8rem 1rem',
         borderRadius: '12px',
-        border: '1px solid #e0e0e0',
+        borderStyle: 'solid',
+        borderWidth: '1px',
+        borderColor: '#e0e0e0',
         fontSize: '1rem',
         outline: 'none',
         transition: 'all 0.3s'
@@ -557,7 +588,9 @@ const styles = {
     textarea: {
         padding: '0.8rem 1rem',
         borderRadius: '12px',
-        border: '1px solid #e0e0e0',
+        borderStyle: 'solid',
+        borderWidth: '1px',
+        borderColor: '#e0e0e0',
         fontSize: '1rem',
         minHeight: '100px',
         outline: 'none'

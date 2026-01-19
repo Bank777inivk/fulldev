@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useNotifications } from '../contexts/NotificationContext';
 
 const Simulator = () => {
+    const { showToast } = useNotifications();
     const [amount, setAmount] = useState(10000);
     const [duration, setDuration] = useState(24);
     const [email, setEmail] = useState('');
@@ -28,7 +30,7 @@ const Simulator = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        alert(`Simulation envoyée à ${email} (Simulation)`);
+        showToast(`Simulation envoyée à ${email} (Simulation)`, 'success');
         // Here we would send data to backend
     };
 
