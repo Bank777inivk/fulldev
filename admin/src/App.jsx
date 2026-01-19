@@ -14,6 +14,9 @@ import ManageTransactions from './pages/ManageTransactions';
 import WalletManagement from './pages/WalletManagement';
 import LoanManagement from './pages/LoanManagement';
 import AccountRequests from './pages/AccountRequests';
+import Prospects from './pages/Prospects';
+import ContactMessages from './pages/ContactMessages';
+import SupportTickets from './pages/SupportTickets';
 import './App.css';
 
 function App() {
@@ -36,6 +39,9 @@ function App() {
             <Route path="wallets" element={<WalletManagement />} />
             <Route path="loans" element={<LoanManagement />} />
             <Route path="account-requests" element={<AccountRequests />} />
+            <Route path="prospects" element={<Prospects />} />
+            <Route path="messages" element={<ContactMessages />} />
+            <Route path="support" element={<SupportTickets />} />
             <Route path="transactions/user/:userId" element={<ManageTransactions />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />

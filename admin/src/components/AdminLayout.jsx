@@ -18,6 +18,9 @@ const AdminLayout = () => {
     const [pendingKYC, setPendingKYC] = useState(0);
     const [pendingCards, setPendingCards] = useState(0);
     const [pendingAccounts, setPendingAccounts] = useState(0);
+    const [newLeads, setNewLeads] = useState(0);
+    const [newMessages, setNewMessages] = useState(0);
+    const [openTickets, setOpenTickets] = useState(0);
 
     useEffect(() => {
         const handleResize = () => {
@@ -42,11 +45,26 @@ const AdminLayout = () => {
             setPendingAccounts(data.filter(r => r.status === 'pending').length);
         });
 
+        const unsubLeads = adminService.subscribeToLeads(data => {
+            setNewLeads(data.filter(l => l.status === 'new').length);
+        });
+
+        const unsubMessages = adminService.subscribeToContactMessages(data => {
+            setNewMessages(data.filter(m => m.status === 'new').length);
+        });
+
+        const unsubTickets = adminService.subscribeToSupportTickets(data => {
+            setOpenTickets(data.filter(t => t.status === 'open').length);
+        });
+
         return () => {
             window.removeEventListener('resize', handleResize);
             unsubKYC();
             unsubCards();
             unsubAccounts();
+            unsubLeads();
+            unsubMessages();
+            unsubTickets();
         };
     }, []);
 
@@ -59,6 +77,9 @@ const AdminLayout = () => {
         { path: '/wallets', icon: 'fas fa-wallet', label: 'Portefeuilles' },
         { path: '/account-requests', icon: 'fas fa-envelope-open-text', label: 'Demandes Comptes', badge: pendingAccounts || null },
         { path: '/loans', icon: 'fas fa-hand-holding-usd', label: 'Prêts' },
+        { path: '/prospects', icon: 'fas fa-user-tie', label: 'Prospects (Leads)', badge: newLeads || null },
+        { path: '/messages', icon: 'fas fa-comment-alt', label: 'Messages Contact', badge: newMessages || null },
+        { path: '/support', icon: 'fas fa-headset', label: 'Tickets Support', badge: openTickets || null },
     ];
 
     const handleLogout = async () => {
