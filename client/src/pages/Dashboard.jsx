@@ -6,7 +6,7 @@ import KycVerificationBanner from '../components/dashboard/KycVerificationBanner
 
 const Dashboard = () => {
     const { currentUser, userData } = useAuth();
-    const { wallets, transactions: allTransactions, loading } = useData();
+    const { wallets, transactions: allTransactions, loading, kycStatus } = useData();
     const navigate = useNavigate();
 
     const transactions = allTransactions.slice(0, 5);
@@ -39,7 +39,13 @@ const Dashboard = () => {
                     <p style={{ ...styles.balance, color: 'white' }} className="balance-mobile">
                         {mainAcc.balance.toLocaleString('fr-FR', { minimumFractionDigits: 2 })} {mainAcc.currency}
                     </p>
-                    <p style={{ ...styles.cardInfo, color: 'rgba(255,255,255,0.6)' }}>IBAN: {mainAcc.iban.substring(0, 15)}...</p>
+                    {kycStatus?.status === 'verified' ? (
+                        <p style={{ ...styles.cardInfo, color: 'rgba(255,255,255,0.6)' }}>IBAN: {mainAcc.iban.substring(0, 15)}...</p>
+                    ) : (
+                        <p style={{ ...styles.cardInfo, color: 'rgba(255,255,255,0.6)', fontStyle: 'italic', fontSize: '0.8rem' }}>
+                            <i className="fas fa-lock" style={{ marginRight: '5px' }}></i> IBAN masqué (Vérification requise)
+                        </p>
+                    )}
                 </div>
 
                 {/* Savings Card */}

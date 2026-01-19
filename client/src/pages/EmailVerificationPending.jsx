@@ -4,9 +4,18 @@ import { useAuth } from '../contexts/AuthContext';
 import { sendEmailVerification } from 'firebase/auth';
 
 const EmailVerificationPending = () => {
-    const { user, checkEmailVerification } = useAuth();
+    const { user, checkEmailVerification, logout } = useAuth();
     const navigate = useNavigate();
     const [resendStatus, setResendStatus] = useState('');
+
+    const handleLogout = async () => {
+        try {
+            await logout();
+            navigate('/login');
+        } catch (error) {
+            console.error("Logout failed", error);
+        }
+    };
 
     useEffect(() => {
         // If user is verified, redirect to dashboard
@@ -67,6 +76,9 @@ const EmailVerificationPending = () => {
                     </div>
                     <button style={styles.secondaryBtn} onClick={handleResendEmail}>
                         Renvoyer l'email de vérification
+                    </button>
+                    <button style={styles.logoutBtn} onClick={handleLogout}>
+                        Retour à la connexion
                     </button>
                 </div>
 
