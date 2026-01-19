@@ -2106,8 +2106,8 @@ button:active {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    flex: 0 !important;
-    /* Stop taking up all space */
+    flex: none !important;
+    /* Fix: Allow menu to show instead of collapsing to zero height */
   }
 
   .sidebar-link {
