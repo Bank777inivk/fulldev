@@ -108,25 +108,31 @@ const AccountCard = ({ wallet, isLoading, onRibClick, navigate }) => {
 
     return (
         <div style={{
-            background: 'white',
+            background: wallet.type === 'main' ? 'linear-gradient(135deg, #003366 0%, #00509e 100%)' : 'white',
             borderRadius: '24px',
             padding: '1.5rem',
-            boxShadow: '0 4px 25px rgba(0,0,0,0.05)',
-            border: '1px solid #edf2f7',
+            boxShadow: wallet.type === 'main' ? '0 10px 30px rgba(0, 51, 102, 0.2)' : '0 4px 25px rgba(0,0,0,0.05)',
+            border: wallet.type === 'main' ? 'none' : '1px solid #edf2f7',
             display: 'flex',
             flexDirection: 'column',
             minHeight: '260px',
-            position: 'relative'
+            position: 'relative',
+            color: wallet.type === 'main' ? 'white' : 'inherit'
         }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem' }}>
                 <div>
-                    <div style={{ fontSize: '0.85rem', fontWeight: '800', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                    <div style={{
+                        fontSize: '0.85rem', fontWeight: '800',
+                        color: wallet.type === 'main' ? 'rgba(255,255,255,0.8)' : '#94a3b8',
+                        textTransform: 'uppercase', letterSpacing: '0.5px'
+                    }}>
                         {config.label}
                     </div>
                 </div>
                 <div style={{
                     width: '44px', height: '44px', borderRadius: '14px',
-                    background: `${config.color}10`, color: config.color,
+                    background: wallet.type === 'main' ? 'rgba(255,255,255,0.15)' : `${config.color}10`,
+                    color: wallet.type === 'main' ? 'white' : config.color,
                     display: 'flex', alignItems: 'center', justifyContent: 'center'
                 }}>
                     <i className={`fas ${config.icon}`} style={{ fontSize: '1.2rem' }}></i>
@@ -136,12 +142,12 @@ const AccountCard = ({ wallet, isLoading, onRibClick, navigate }) => {
             <div style={{ flex: 1 }}>
                 <div style={{
                     fontSize: '2.2rem', fontWeight: '900',
-                    color: wallet.type === 'credit' ? '#e11d48' : '#003366',
+                    color: wallet.type === 'main' ? 'white' : (wallet.type === 'credit' ? '#e11d48' : '#003366'),
                     margin: '0 0 0.5rem'
                 }}>
-                    {wallet.balance.toLocaleString('fr-FR', { minimumFractionDigits: 2 })} <span style={{ fontSize: '1rem', fontWeight: '500' }}>{wallet.currency}</span>
+                    {wallet.balance.toLocaleString('fr-FR', { minimumFractionDigits: 2 })} <span style={{ fontSize: '1rem', fontWeight: '500', color: wallet.type === 'main' ? 'rgba(255,255,255,0.7)' : '#94a3b8' }}>{wallet.currency}</span>
                 </div>
-                <div style={{ fontSize: '0.85rem', color: '#94a3b8', fontFamily: 'monospace', opacity: 0.8 }}>
+                <div style={{ fontSize: '0.85rem', color: wallet.type === 'main' ? 'rgba(255,255,255,0.6)' : '#94a3b8', fontFamily: 'monospace', opacity: 0.8 }}>
                     {wallet.iban}
                 </div>
             </div>
@@ -149,23 +155,23 @@ const AccountCard = ({ wallet, isLoading, onRibClick, navigate }) => {
             {/* QUICK ACTIONS */}
             <div style={{
                 display: 'flex', gap: '8px', marginTop: '1.5rem',
-                paddingTop: '1.25rem', borderTop: '1px solid #f1f5f9'
+                paddingTop: '1.25rem', borderTop: wallet.type === 'main' ? '1px solid rgba(255,255,255,0.1)' : '1px solid #f1f5f9'
             }}>
                 <button
                     onClick={() => navigate('/dashboard/transfers')}
-                    style={{ flex: 1, padding: '10px', borderRadius: '12px', border: 'none', background: '#f1f5f9', color: '#003366', fontWeight: '700', fontSize: '0.8rem', cursor: 'pointer' }}
+                    style={{ flex: 1, padding: '10px', borderRadius: '12px', border: 'none', background: wallet.type === 'main' ? 'rgba(255,255,255,0.1)' : '#f1f5f9', color: wallet.type === 'main' ? 'white' : '#003366', fontWeight: '700', fontSize: '0.8rem', cursor: 'pointer' }}
                 >
                     <i className="fas fa-paper-plane" style={{ marginRight: '6px' }}></i> Virer
                 </button>
                 <button
                     onClick={() => navigate('/dashboard/deposit')}
-                    style={{ flex: 1, padding: '10px', borderRadius: '12px', border: 'none', background: '#f1f5f9', color: '#003366', fontWeight: '700', fontSize: '0.8rem', cursor: 'pointer' }}
+                    style={{ flex: 1, padding: '10px', borderRadius: '12px', border: 'none', background: wallet.type === 'main' ? 'rgba(255,255,255,0.1)' : '#f1f5f9', color: wallet.type === 'main' ? 'white' : '#003366', fontWeight: '700', fontSize: '0.8rem', cursor: 'pointer' }}
                 >
                     <i className="fas fa-plus" style={{ marginRight: '6px' }}></i> Déposer
                 </button>
                 <button
                     onClick={onRibClick}
-                    style={{ flex: 1, padding: '10px', borderRadius: '12px', border: 'none', background: '#003366', color: 'white', fontWeight: '700', fontSize: '0.8rem', cursor: 'pointer' }}
+                    style={{ flex: 1, padding: '10px', borderRadius: '12px', border: 'none', background: wallet.type === 'main' ? 'white' : '#003366', color: wallet.type === 'main' ? '#003366' : 'white', fontWeight: '700', fontSize: '0.8rem', cursor: 'pointer' }}
                 >
                     <i className="fas fa-file-invoice" style={{ marginRight: '6px' }}></i> RIB
                 </button>

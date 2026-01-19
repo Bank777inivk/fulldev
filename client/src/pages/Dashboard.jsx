@@ -31,15 +31,15 @@ const Dashboard = () => {
 
             <div style={styles.statsGrid} className="stats-grid-mobile">
                 {/* Main Account Card */}
-                <div style={styles.card}>
+                <div style={styles.mainCard}>
                     <div style={styles.cardHeader}>
-                        <h3 style={styles.cardLabel}>Compte Principal</h3>
-                        <i className="fas fa-wallet" style={styles.cardIcon}></i>
+                        <h3 style={{ ...styles.cardLabel, color: 'rgba(255,255,255,0.8)' }}>Compte Principal</h3>
+                        <i className="fas fa-wallet" style={{ ...styles.cardIcon, color: 'white' }}></i>
                     </div>
-                    <p style={styles.balance} className="balance-mobile">
+                    <p style={{ ...styles.balance, color: 'white' }} className="balance-mobile">
                         {mainAcc.balance.toLocaleString('fr-FR', { minimumFractionDigits: 2 })} {mainAcc.currency}
                     </p>
-                    <p style={styles.cardInfo}>IBAN: {mainAcc.iban.substring(0, 15)}...</p>
+                    <p style={{ ...styles.cardInfo, color: 'rgba(255,255,255,0.6)' }}>IBAN: {mainAcc.iban.substring(0, 15)}...</p>
                 </div>
 
                 {/* Savings Card */}
@@ -164,6 +164,15 @@ const styles = {
         gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
         gap: '1.5rem',
         marginBottom: '2.5rem',
+    },
+    mainCard: {
+        background: 'linear-gradient(135deg, #003366 0%, #00509e 100%)',
+        padding: '1.8rem',
+        borderRadius: '20px',
+        boxShadow: '0 10px 30px rgba(0, 51, 102, 0.2)',
+        color: 'white',
+        position: 'relative',
+        overflow: 'hidden'
     },
     card: {
         backgroundColor: 'white',
