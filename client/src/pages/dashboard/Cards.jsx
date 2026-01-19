@@ -609,7 +609,7 @@ const styles = {
     // MOBILE
     mobileCarousel: { display: 'flex', flexDirection: 'column', gap: '1.5rem' },
     mobileCardItem: { display: 'flex', flexDirection: 'column', gap: '10px' },
-    mobileActions: { display: 'flex', gap: '10px' },
+    mobileActions: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' },
     mobileActionBtn: { flex: 1, padding: '12px', background: 'white', border: '1px solid #eee', borderRadius: '12px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px', fontSize: '0.75rem', color: '#333', fontWeight: '600' },
     mobileOrderBtn: { padding: '12px 24px', background: '#003366', color: 'white', border: 'none', borderRadius: '12px', fontWeight: 'bold', marginTop: '1rem' },
     mobileDetailRow: { display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderBottom: '1px solid #eee', fontSize: '0.85rem' }

@@ -798,13 +798,63 @@ button:active {
   }
 
   .nav-mobile-user {
-    display: flex !important;
-    color: var(--primary-color);
-    font-size: 1.5rem;
-    text-decoration: none;
-    transition: transform 0.2s ease;
+    display: none !important;
+  }
+}
+
+/* Fix Contact Form Mobile Layout */
+@media (max-width: 768px) {
+  .contact-form-section {
+    padding: 0 1rem !important;
+    margin-bottom: 4rem !important;
   }
 
+  .contact-form-card {
+    padding: 1.5rem !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .contact-form-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1.5rem !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  .contact-form-grid>div {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .contact-input,
+  .contact-select,
+  .contact-textarea {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    font-size: 16px !important;
+    /* Prevent zoom on iOS */
+  }
+
+  .contact-submit-btn {
+    width: 100% !important;
+    padding: 1rem !important;
+  }
+
+  .hero-title {
+    font-size: 2.5rem !important;
+  }
+
+  .checkbox-group {
+    flex-direction: column !important;
+    gap: 0.5rem !important;
+  }
+}
+
+
+
+/* Continue Mobile Styles */
+@media (max-width: 768px) {
   .nav-mobile-user:active {
     transform: scale(0.9);
   }
