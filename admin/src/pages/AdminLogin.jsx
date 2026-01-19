@@ -1,14 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAdminAuth } from '../contexts/AdminAuthContext';
 
 const AdminLogin = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
     const { login } = useAdminAuth();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth <= 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -25,9 +33,194 @@ const AdminLogin = () => {
         }
     };
 
+    const styles = {
+        container: {
+            minHeight: '100dvh',
+            width: '100%',
+            display: 'flex',
+            alignItems: isMobile ? 'flex-start' : 'center',
+            justifyContent: 'center',
+            background: isMobile ? 'white' : 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
+            position: 'relative',
+            overflow: 'hidden',
+        },
+        overlay: {
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: !isMobile ? 'radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.15) 0%, transparent 70%)' : 'none',
+            pointerEvents: 'none',
+        },
+        content: {
+            position: 'relative',
+            zIndex: 1,
+            width: '100%',
+            maxWidth: isMobile ? '100%' : '480px',
+            padding: isMobile ? '0' : '2rem',
+        },
+        loginCard: {
+            background: isMobile ? 'white' : 'rgba(255, 255, 255, 0.05)',
+            backdropFilter: isMobile ? 'none' : 'blur(20px)',
+            borderRadius: isMobile ? '0' : '32px',
+            padding: isMobile ? '3rem 1.5rem' : '4rem 3.5rem',
+            width: '100%',
+            boxShadow: isMobile ? 'none' : '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+            border: isMobile ? 'none' : '1px solid rgba(255, 255, 255, 0.1)',
+            transition: 'all 0.3s ease',
+        },
+        header: {
+            textAlign: 'center',
+            marginBottom: '3.5rem',
+        },
+        logoWrapper: {
+            position: 'relative',
+            width: '90px',
+            height: '90px',
+            margin: '0 auto 2rem',
+        },
+        iconCircle: {
+            width: '100%',
+            height: '100%',
+            borderRadius: '24px',
+            background: 'linear-gradient(135deg, #38bdf8 0%, #1d4ed8 100%)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'relative',
+            zIndex: 2,
+            boxShadow: '0 20px 40px rgba(29, 78, 216, 0.3)',
+            transform: 'rotate(-5deg)',
+        },
+        icon: {
+            fontSize: '2.5rem',
+            color: 'white',
+        },
+        title: {
+            fontSize: isMobile ? '2.2rem' : '2.8rem',
+            fontWeight: '900',
+            color: isMobile ? '#1e293b' : 'white',
+            margin: '0 0 0.75rem 0',
+            letterSpacing: '-1.5px',
+        },
+        subtitle: {
+            color: '#38bdf8',
+        },
+        description: {
+            color: isMobile ? '#64748b' : '#94a3b8',
+            fontSize: '1rem',
+            fontWeight: '600',
+            margin: 0,
+            textTransform: 'uppercase',
+            letterSpacing: '1px',
+        },
+        form: {
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1.75rem',
+        },
+        error: {
+            background: '#fef2f2',
+            color: '#dc2626',
+            padding: '1.25rem',
+            borderRadius: '16px',
+            fontSize: '0.9rem',
+            fontWeight: '700',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '1rem',
+            border: '1px solid #fee2e2',
+        },
+        inputGroup: {
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.75rem',
+        },
+        label: {
+            fontSize: '0.85rem',
+            fontWeight: '800',
+            color: isMobile ? '#1e293b' : 'white',
+            textTransform: 'uppercase',
+            letterSpacing: '0.5px',
+            marginLeft: '0.5rem',
+        },
+        inputWrapper: {
+            position: 'relative',
+        },
+        inputIcon: {
+            position: 'absolute',
+            left: '1.5rem',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            color: '#94a3b8',
+            fontSize: '1.1rem',
+        },
+        input: {
+            width: '100%',
+            padding: '1.1rem 3.5rem 1.1rem 3.5rem',
+            borderRadius: '16px',
+            border: isMobile ? '2px solid #f1f5f9' : '2px solid rgba(255, 255, 255, 0.1)',
+            fontSize: '1rem',
+            fontWeight: '600',
+            outline: 'none',
+            transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+            background: isMobile ? '#f8fafc' : 'rgba(255, 255, 255, 0.03)',
+            color: isMobile ? '#1e293b' : 'white',
+            boxSizing: 'border-box'
+        },
+        button: {
+            padding: '1.25rem',
+            borderRadius: '16px',
+            border: 'none',
+            background: 'linear-gradient(135deg, #38bdf8 0%, #1d4ed8 100%)',
+            color: 'white',
+            fontSize: '1.1rem',
+            fontWeight: '900',
+            cursor: 'pointer',
+            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+            boxShadow: '0 20px 40px rgba(29, 78, 216, 0.2)',
+            marginTop: '1rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '1rem',
+            textTransform: 'uppercase',
+            letterSpacing: '1px',
+        },
+        buttonDisabled: {
+            opacity: 0.6,
+            cursor: 'not-allowed',
+        },
+        footer: {
+            marginTop: '4rem',
+            textAlign: 'center',
+            borderTop: isMobile ? '1px solid #f1f5f9' : '1px solid rgba(255, 255, 255, 0.1)',
+            paddingTop: '2rem',
+        },
+        secureBadge: {
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.75rem',
+            padding: '0.75rem 1.5rem',
+            background: isMobile ? '#f0fdf4' : 'rgba(34, 197, 94, 0.1)',
+            color: '#22c55e',
+            borderRadius: '30px',
+            fontSize: '0.85rem',
+            fontWeight: '800',
+            marginBottom: '1.5rem',
+        },
+        copyright: {
+            color: '#64748b',
+            fontSize: '0.85rem',
+            fontWeight: '600',
+            margin: 0,
+        },
+    };
+
     return (
         <div style={styles.container}>
-            <div style={styles.overlay}></div>
+            {!isMobile && <div style={styles.overlay}></div>}
             <div style={styles.content}>
                 <div style={styles.loginCard} className="animate-slide-up">
                     <div style={styles.header}>
@@ -35,47 +228,67 @@ const AdminLogin = () => {
                             <div style={styles.iconCircle}>
                                 <i className="fas fa-shield-alt" style={styles.icon}></i>
                             </div>
-                            <div style={styles.pulseRing}></div>
                         </div>
                         <h1 style={styles.title}>BanK <span style={styles.subtitle}>Admin</span></h1>
-                        <p style={styles.description}>Portail sécurisé d'administration</p>
+                        <p style={styles.description}>Accès Restreint & Sécurisé</p>
                     </div>
 
                     <form onSubmit={handleSubmit} style={styles.form}>
                         {error && (
                             <div style={styles.error} className="animate-fade-in">
-                                <i className="fas fa-exclamation-circle"></i>
+                                <i className="fas fa-exclamation-triangle"></i>
                                 {error}
                             </div>
                         )}
 
                         <div style={styles.inputGroup}>
-                            <label style={styles.label}>Email</label>
+                            <label style={styles.label}>Email Administrateur</label>
                             <div style={styles.inputWrapper}>
-                                <i className="fas fa-envelope" style={styles.inputIcon}></i>
+                                <i className="fas fa-user-shield" style={styles.inputIcon}></i>
                                 <input
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     required
                                     style={styles.input}
-                                    placeholder="admin@inviksa.com"
+                                    placeholder="admin@banque.com"
                                 />
                             </div>
                         </div>
 
                         <div style={styles.inputGroup}>
-                            <label style={styles.label}>Mot de passe</label>
+                            <label style={styles.label}>Clé d'Accès</label>
                             <div style={styles.inputWrapper}>
-                                <i className="fas fa-lock" style={styles.inputIcon}></i>
+                                <i className="fas fa-key" style={styles.inputIcon}></i>
                                 <input
-                                    type="password"
+                                    type={showPassword ? "text" : "password"}
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     required
                                     style={styles.input}
                                     placeholder="••••••••"
                                 />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    style={{
+                                        position: 'absolute',
+                                        right: '1.5rem',
+                                        top: '50%',
+                                        transform: 'translateY(-50%)',
+                                        background: 'none',
+                                        border: 'none',
+                                        color: '#94a3b8',
+                                        cursor: 'pointer',
+                                        fontSize: '1.1rem',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        zIndex: 5
+                                    }}
+                                >
+                                    <i className={`fas ${showPassword ? 'fa-eye' : 'fa-eye-slash'}`}></i>
+                                </button>
                             </div>
                         </div>
 
@@ -86,13 +299,13 @@ const AdminLogin = () => {
                         >
                             {loading ? (
                                 <>
-                                    <i className="fas fa-circle-notch fa-spin"></i>
-                                    Connexion en cours...
+                                    <i className="fas fa-spinner fa-spin"></i>
+                                    AUTHENTIFICATION...
                                 </>
                             ) : (
                                 <>
-                                    Se connecter
-                                    <i className="fas fa-arrow-right"></i>
+                                    ACCÉDER AU PANEL
+                                    <i className="fas fa-lock-open"></i>
                                 </>
                             )}
                         </button>
@@ -100,199 +313,15 @@ const AdminLogin = () => {
 
                     <div style={styles.footer}>
                         <div style={styles.secureBadge}>
-                            <i className="fas fa-lock"></i>
-                            <span>Connexion Sécurisée SSL</span>
+                            <i className="fas fa-fingerprint"></i>
+                            <span>CRYPTAGE AES-256 SSL</span>
                         </div>
-                        <p style={styles.copyright}>© 2026 Invik SA. Accès restreint.</p>
+                        <p style={styles.copyright}>© 2026 Admin Portal. All Rights Reserved.</p>
                     </div>
                 </div>
             </div>
         </div>
     );
-};
-
-const styles = {
-    container: {
-        minHeight: '100vh',
-        width: '100%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: 'linear-gradient(135deg, #001e3c 0%, #003366 100%)',
-        position: 'relative',
-        overflow: 'hidden',
-    },
-    overlay: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        background: 'radial-gradient(circle at 50% 50%, rgba(0, 204, 255, 0.1) 0%, transparent 70%)',
-        pointerEvents: 'none',
-    },
-    content: {
-        position: 'relative',
-        zIndex: 1,
-        padding: '2rem',
-        width: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-    },
-    loginCard: {
-        background: 'rgba(255, 255, 255, 0.95)',
-        backdropFilter: 'blur(20px)',
-        borderRadius: '24px',
-        padding: '3rem',
-        width: '100%',
-        maxWidth: '480px',
-        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-        border: '1px solid rgba(255, 255, 255, 0.5)',
-    },
-    header: {
-        textAlign: 'center',
-        marginBottom: '2.5rem',
-    },
-    logoWrapper: {
-        position: 'relative',
-        width: '80px',
-        height: '80px',
-        margin: '0 auto 1.5rem',
-    },
-    iconCircle: {
-        width: '100%',
-        height: '100%',
-        borderRadius: '50%',
-        background: 'var(--gradient-primary)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        position: 'relative',
-        zIndex: 2,
-        boxShadow: '0 10px 25px rgba(0, 51, 102, 0.3)',
-    },
-    pulseRing: {
-        position: 'absolute',
-        top: '-10px',
-        left: '-10px',
-        right: '-10px',
-        bottom: '-10px',
-        borderRadius: '50%',
-        border: '2px solid rgba(0, 204, 255, 0.3)',
-        animation: 'pulse 2s infinite',
-    },
-    icon: {
-        fontSize: '2rem',
-        color: 'white',
-    },
-    title: {
-        fontSize: '2.5rem',
-        fontWeight: '800',
-        color: 'var(--primary)',
-        margin: '0 0 0.5rem 0',
-        letterSpacing: '-1px',
-    },
-    subtitle: {
-        color: 'var(--secondary)',
-    },
-    description: {
-        color: 'var(--text-light)',
-        fontSize: '1rem',
-        margin: 0,
-    },
-    form: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '1.5rem',
-    },
-    error: {
-        background: 'var(--danger-light)',
-        color: 'var(--danger)',
-        padding: '1rem',
-        borderRadius: '12px',
-        fontSize: '0.9rem',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '0.75rem',
-        border: '1px solid rgba(231, 76, 60, 0.2)',
-    },
-    inputGroup: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '0.5rem',
-    },
-    label: {
-        fontSize: '0.9rem',
-        fontWeight: '600',
-        color: 'var(--text-main)',
-        marginLeft: '0.25rem',
-    },
-    inputWrapper: {
-        position: 'relative',
-    },
-    inputIcon: {
-        position: 'absolute',
-        left: '1.25rem',
-        top: '50%',
-        transform: 'translateY(-50%)',
-        color: 'var(--text-light)',
-        transition: '0.2s',
-    },
-    input: {
-        width: '100%',
-        padding: '1rem 1.25rem 1rem 3rem',
-        borderRadius: '12px',
-        border: '2px solid var(--border)',
-        fontSize: '1rem',
-        outline: 'none',
-        transition: 'all 0.2s ease',
-        background: 'var(--bg-main)',
-        fontFamily: 'inherit',
-    },
-    button: {
-        padding: '1.1rem',
-        borderRadius: '12px',
-        border: 'none',
-        background: 'var(--gradient-primary)',
-        color: 'white',
-        fontSize: '1.1rem',
-        fontWeight: '700',
-        cursor: 'pointer',
-        transition: 'all 0.3s ease',
-        boxShadow: '0 10px 20px rgba(0, 51, 102, 0.2)',
-        marginTop: '0.5rem',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '0.75rem',
-    },
-    buttonDisabled: {
-        opacity: 0.7,
-        cursor: 'not-allowed',
-    },
-    footer: {
-        marginTop: '2.5rem',
-        textAlign: 'center',
-        borderTop: '1px solid var(--border)',
-        paddingTop: '1.5rem',
-    },
-    secureBadge: {
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: '0.5rem',
-        padding: '0.5rem 1rem',
-        background: 'var(--success-light)',
-        color: 'var(--success)',
-        borderRadius: '20px',
-        fontSize: '0.8rem',
-        fontWeight: '600',
-        marginBottom: '1rem',
-    },
-    copyright: {
-        color: 'var(--text-light)',
-        fontSize: '0.85rem',
-        margin: 0,
-    },
 };
 
 export default AdminLogin;

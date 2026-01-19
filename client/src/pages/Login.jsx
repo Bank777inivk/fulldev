@@ -9,6 +9,7 @@ const Login = () => {
     const { showToast } = useNotifications();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
@@ -81,14 +82,37 @@ const Login = () => {
                             </div>
                             <div style={styles.formGroup}>
                                 <label style={styles.label}>Mot de passe</label>
-                                <input
-                                    type="password"
-                                    placeholder="••••••••"
-                                    style={styles.input}
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    required
-                                />
+                                <div style={{ position: 'relative' }}>
+                                    <input
+                                        type={showPassword ? "text" : "password"}
+                                        placeholder="••••••••"
+                                        style={{ ...styles.input, paddingRight: '3.5rem' }}
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        required
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        style={{
+                                            position: 'absolute',
+                                            right: '1rem',
+                                            top: '50%',
+                                            transform: 'translateY(-50%)',
+                                            background: 'none',
+                                            border: 'none',
+                                            color: '#94a3b8',
+                                            cursor: 'pointer',
+                                            fontSize: '1rem',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            zIndex: 2
+                                        }}
+                                    >
+                                        <i className={`fas ${showPassword ? 'fa-eye' : 'fa-eye-slash'}`}></i>
+                                    </button>
+                                </div>
                             </div>
                             <div style={styles.forgot}>
                                 <a href="#" style={styles.link}>Mot de passe oublié ?</a>

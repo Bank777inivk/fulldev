@@ -49,55 +49,106 @@ const SelectionStep = ({ handleSelectType, styles }) => (
     </div>
 );
 
-const SecuritySection = ({ formData, handleChange, loading, error, styles, setStep, suffix }) => (
-    <div style={styles.sectionNoBorder}>
-        <h4 style={styles.sectionHeading}>SÉCURITÉ & VALIDATION</h4>
-        <div style={styles.formGrid} className="register-form-grid">
-            <div style={styles.formGroup}><label style={styles.label}>Mot de passe sécurisé *</label><input type="password" name="password" value={formData.password} onChange={handleChange} required style={styles.input} /></div>
-            <div style={styles.formGroup}><label style={styles.label}>Confirmation du mot de passe *</label><input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} required style={styles.input} /></div>
-        </div>
+const SecuritySection = ({ formData, handleChange, loading, error, styles, setStep, suffix }) => {
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-        <div style={styles.checkboxGroup}>
-            <input type="checkbox" name="termsAccepted" id={`terms-${suffix}`} checked={formData.termsAccepted} onChange={handleChange} required style={styles.checkbox} />
-            <label htmlFor={`terms-${suffix}`} style={styles.checkboxLabel}>
-                Je certifie l'exactitude des informations fournies et j'accepte les <a href="#" style={styles.link}>Conditions Générales d'Utilisation</a> d'INVIK SA.
-            </label>
-        </div>
+    const eyeButtonStyle = {
+        position: 'absolute',
+        right: '1rem',
+        top: '50%',
+        transform: 'translateY(-50%)',
+        background: 'none',
+        border: 'none',
+        color: '#94a3b8',
+        cursor: 'pointer',
+        fontSize: '1rem',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 2
+    };
 
-        {error && (
-            <div style={{
-                backgroundColor: '#ffebee',
-                color: '#c62828',
-                padding: '1rem',
-                borderRadius: '8px',
-                marginBottom: '1.5rem',
-                fontSize: '0.9rem',
-                textAlign: 'center',
-                border: '1px solid #ffcdd2'
-            }}>
-                {error}
+    return (
+        <div style={styles.sectionNoBorder}>
+            <h4 style={styles.sectionHeading}>SÉCURITÉ & VALIDATION</h4>
+            <div style={styles.formGrid} className="register-form-grid">
+                <div style={styles.formGroup}>
+                    <label style={styles.label}>Mot de passe sécurisé *</label>
+                    <div style={{ position: 'relative' }}>
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            name="password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            required
+                            style={{ ...styles.input, paddingRight: '3.5rem' }}
+                        />
+                        <button type="button" onClick={() => setShowPassword(!showPassword)} style={eyeButtonStyle}>
+                            <i className={`fas ${showPassword ? 'fa-eye' : 'fa-eye-slash'}`}></i>
+                        </button>
+                    </div>
+                </div>
+                <div style={styles.formGroup}>
+                    <label style={styles.label}>Confirmation du mot de passe *</label>
+                    <div style={{ position: 'relative' }}>
+                        <input
+                            type={showConfirmPassword ? "text" : "password"}
+                            name="confirmPassword"
+                            value={formData.confirmPassword}
+                            onChange={handleChange}
+                            required
+                            style={{ ...styles.input, paddingRight: '3.5rem' }}
+                        />
+                        <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} style={eyeButtonStyle}>
+                            <i className={`fas ${showConfirmPassword ? 'fa-eye' : 'fa-eye-slash'}`}></i>
+                        </button>
+                    </div>
+                </div>
             </div>
-        )}
 
-        <div style={styles.submitContainer}>
-            <button
-                type="submit"
-                style={{
-                    ...styles.submitBtn,
-                    opacity: loading ? 0.7 : 1,
-                    cursor: loading ? 'not-allowed' : 'pointer'
-                }}
-                className="register-submit-btn"
-                disabled={loading}
-            >
-                {loading ? "Création en cours..." : "Finaliser"}
-            </button>
-            <div style={{ marginTop: '1.5rem' }}>
-                <a onClick={() => setStep(0)} style={{ ...styles.link, fontSize: '0.9rem' }}>← Retour</a>
+            <div style={styles.checkboxGroup}>
+                <input type="checkbox" name="termsAccepted" id={`terms-${suffix}`} checked={formData.termsAccepted} onChange={handleChange} required style={styles.checkbox} />
+                <label htmlFor={`terms-${suffix}`} style={styles.checkboxLabel}>
+                    Je certifie l'exactitude des informations fournies et j'accepte les <a href="#" style={styles.link}>Conditions Générales d'Utilisation</a> d'INVIK SA.
+                </label>
+            </div>
+
+            {error && (
+                <div style={{
+                    backgroundColor: '#ffebee',
+                    color: '#c62828',
+                    padding: '1rem',
+                    borderRadius: '8px',
+                    marginBottom: '1.5rem',
+                    fontSize: '0.9rem',
+                    textAlign: 'center',
+                    border: '1px solid #ffcdd2'
+                }}>
+                    {error}
+                </div>
+            )}
+
+            <div style={styles.submitContainer}>
+                <button
+                    type="submit"
+                    style={{
+                        ...styles.submitBtn,
+                        opacity: loading ? 0.7 : 1,
+                        cursor: loading ? 'not-allowed' : 'pointer'
+                    }}
+                    className="register-submit-btn"
+                    disabled={loading}
+                >
+                    {loading ? "Création en cours..." : "Finaliser"}
+                </button>
+                <div style={{ marginTop: '1.5rem' }}>
+                    <a onClick={() => setStep(0)} style={{ ...styles.link, fontSize: '0.9rem' }}>← Retour</a>
+                </div>
             </div>
         </div>
-    </div>
-);
+    );
+};
 
 const PersonalForm = ({ formData, handleChange, handleSubmit, loading, error, setStep, view, styles }) => (
     <div className="fadeInUp">
@@ -111,6 +162,7 @@ const PersonalForm = ({ formData, handleChange, handleSubmit, loading, error, se
                     <div style={styles.formGroup}><label style={styles.label}>Prénom *</label><input type="text" name="firstName" value={formData.firstName} onChange={handleChange} required style={styles.input} /></div>
                     <div style={styles.formGroup}><label style={styles.label}>Nom *</label><input type="text" name="lastName" value={formData.lastName} onChange={handleChange} required style={styles.input} /></div>
                     <div style={styles.formGroup}><label style={styles.label}>Date de naissance *</label><input type="date" name="dob" value={formData.dob} onChange={handleChange} required style={styles.input} /></div>
+                    <div style={styles.formGroup}><label style={styles.label}>Lieu de naissance *</label><input type="text" name="birthPlace" placeholder="Ex: Paris" value={formData.birthPlace} onChange={handleChange} required style={styles.input} /></div>
                     <div style={styles.formGroup}>
                         <label style={styles.label}>Sexe *</label>
                         <select name="gender" value={formData.gender} onChange={handleChange} required style={styles.select}>
@@ -204,6 +256,7 @@ const BusinessForm = ({ formData, handleChange, handleSubmit, loading, error, se
                 <div style={styles.formGrid} className="register-form-grid">
                     <div style={styles.formGroup}><label style={styles.label}>Prénom *</label><input type="text" name="firstName" value={formData.firstName} onChange={handleChange} required style={styles.input} /></div>
                     <div style={styles.formGroup}><label style={styles.label}>Nom *</label><input type="text" name="lastName" value={formData.lastName} onChange={handleChange} required style={styles.input} /></div>
+                    <div style={styles.formGroup}><label style={styles.label}>Lieu de naissance *</label><input type="text" name="birthPlace" placeholder="Ex: Paris" value={formData.birthPlace} onChange={handleChange} required style={styles.input} /></div>
                     <div style={styles.formGroup}><label style={styles.label}>Fonction *</label><input type="text" name="repFunction" placeholder="Ex: Gérant" value={formData.repFunction} onChange={handleChange} required style={styles.input} /></div>
                     <div style={styles.formGroup}><label style={styles.label}>Email professionnel *</label><input type="email" name="email" value={formData.email} onChange={handleChange} required style={styles.input} /></div>
                 </div>
@@ -267,6 +320,7 @@ const Register = () => {
         firstName: '',
         lastName: '',
         dob: '',
+        birthPlace: '',
         gender: '',
         nationality: '',
         countryOfResidence: '',

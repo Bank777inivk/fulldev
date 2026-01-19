@@ -6,6 +6,9 @@ import {
     where,
     orderBy,
     getDocs,
+    doc,
+    onSnapshot,
+    updateDoc,
     serverTimestamp
 } from 'firebase/firestore';
 
@@ -20,7 +23,9 @@ export const supportService = {
                 ...ticketData,
                 status: 'open',
                 createdAt: serverTimestamp(),
-                updatedAt: serverTimestamp()
+                updatedAt: serverTimestamp(),
+                clientHasUnread: false,
+                adminHasUnread: true
             });
             return { id: docRef.id, success: true };
         } catch (error) {
@@ -46,5 +51,80 @@ export const supportService = {
             console.error("Fetch support tickets error:", error);
             throw error;
         }
+    },
+
+    // Real-time listener for user's tickets
+    subscribeToUserTickets: (userId, callback) => {
+        const q = query(
+            collection(db, TICKETS_COLLECTION),
+            where('userId', '==', userId),
+            orderBy('createdAt', 'desc')
+        );
+        return onSnapshot(q, (snapshot) => {
+            const tickets = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            callback(tickets);
+        });
+    },
+
+    // Real-time listener for ticket messages
+    subscribeToTicketMessages: (ticketId, callback) => {
+        const q = query(
+            collection(db, TICKETS_COLLECTION, ticketId, 'messages'),
+            orderBy('createdAt', 'asc')
+        );
+        return onSnapshot(q, (snapshot) => {
+            const messages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            callback(messages);
+        });
+    },
+
+    // Add a message to a ticket
+    addMessage: async (ticketId, messageData) => {
+        try {
+            const ticketRef = doc(db, TICKETS_COLLECTION, ticketId);
+            const messagesRef = collection(ticketRef, 'messages');
+
+            await addDoc(messagesRef, {
+                ...messageData,
+                createdAt: serverTimestamp()
+            });
+
+            // Update ticket's updatedAt and flag for admin
+            await updateDoc(ticketRef, {
+                updatedAt: serverTimestamp(),
+                lastMessageAt: serverTimestamp(),
+                adminHasUnread: true,
+                clientHasUnread: false // User just sent a message, they've seen the chat
+            });
+
+            return { success: true };
+        } catch (error) {
+            console.error("Add message error:", error);
+            throw error;
+        }
+    },
+
+    // Mark ticket as seen by client
+    markAsSeen: async (ticketId) => {
+        try {
+            const ticketRef = doc(db, TICKETS_COLLECTION, ticketId);
+            await updateDoc(ticketRef, {
+                clientHasUnread: false
+            });
+        } catch (error) {
+            console.error("Mark as seen error:", error);
+        }
+    },
+
+    // Subscribe to total unread count for client
+    subscribeToUnreadCount: (userId, callback) => {
+        const q = query(
+            collection(db, TICKETS_COLLECTION),
+            where('userId', '==', userId),
+            where('clientHasUnread', '==', true)
+        );
+        return onSnapshot(q, (snapshot) => {
+            callback(snapshot.size);
+        });
     }
 };

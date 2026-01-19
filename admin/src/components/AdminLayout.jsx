@@ -69,17 +69,17 @@ const AdminLayout = () => {
     }, []);
 
     const menuItems = [
-        { path: '/', icon: 'fas fa-chart-line', label: 'Tableau de bord' },
+        { path: '/', icon: 'fas fa-chart-line', label: 'Dashboard' },
         { path: '/users', icon: 'fas fa-users', label: 'Utilisateurs' },
-        { path: '/transactions', icon: 'fas fa-exchange-alt', label: 'Transactions' },
         { path: '/kyc', icon: 'fas fa-id-card', label: 'Vérifications KYC', badge: pendingKYC || null },
-        { path: '/cards', icon: 'fas fa-credit-card', label: 'Cartes Bancaires', badge: pendingCards || null },
+        { path: '/transactions', icon: 'fas fa-exchange-alt', label: 'Transactions' },
         { path: '/wallets', icon: 'fas fa-wallet', label: 'Portefeuilles' },
+        { path: '/cards', icon: 'fas fa-credit-card', label: 'Cartes Bancaires', badge: pendingCards || null },
         { path: '/account-requests', icon: 'fas fa-envelope-open-text', label: 'Demandes Comptes', badge: pendingAccounts || null },
         { path: '/loans', icon: 'fas fa-hand-holding-usd', label: 'Prêts' },
         { path: '/prospects', icon: 'fas fa-user-tie', label: 'Prospects (Leads)', badge: newLeads || null },
-        { path: '/messages', icon: 'fas fa-comment-alt', label: 'Messages Contact', badge: newMessages || null },
         { path: '/support', icon: 'fas fa-headset', label: 'Tickets Support', badge: openTickets || null },
+        { path: '/messages', icon: 'fas fa-comment-alt', label: 'Messages Contact', badge: newMessages || null },
     ];
 
     const handleLogout = async () => {
@@ -138,12 +138,12 @@ const AdminLayout = () => {
             justifyContent: 'center',
         },
         sidebarHeader: {
-            padding: isMobile ? '0.75rem 1.5rem' : '2rem 1.5rem',
+            padding: isMobile ? '0.5rem 1rem' : '1rem 1.25rem',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             borderBottom: '1px solid rgba(255,255,255,0.05)',
-            height: isMobile ? '60px' : '88px',
+            height: isMobile ? '50px' : '70px',
         },
         logo: {
             display: 'flex',
@@ -177,28 +177,28 @@ const AdminLayout = () => {
         navWrapper: {
             flex: 1,
             overflowY: 'auto',
-            padding: isMobile ? '0.5rem 0' : '1.5rem 0',
+            padding: '1rem 0',
         },
         nav: {
             display: 'flex',
             flexDirection: 'column',
-            gap: isMobile ? '2px' : '0.5rem',
+            gap: '2px',
         },
         navItem: {
             display: 'flex',
             alignItems: 'center',
-            padding: isMobile ? '0.5rem 1.25rem' : '1rem 1.5rem',
+            padding: isMobile ? '0.4rem 1rem' : '0.6rem 1.25rem',
             textDecoration: 'none',
             borderRadius: '0 50px 50px 0',
-            margin: '2px 0',
+            margin: '1px 0',
             transition: 'var(--transition-fast)',
-            gap: '1rem',
-            height: isMobile ? '44px' : '56px',
+            gap: '0.75rem',
+            height: isMobile ? '38px' : '46px',
             position: 'relative',
             overflow: 'hidden',
         },
         navIcon: {
-            fontSize: isMobile ? '1.1rem' : '1.25rem',
+            fontSize: isMobile ? '1rem' : '1.1rem',
             width: '24px',
             textAlign: 'center',
             transition: 'color 0.2s',
@@ -220,12 +220,12 @@ const AdminLayout = () => {
             boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
         },
         sidebarFooter: {
-            padding: isMobile ? '0.75rem 1.5rem' : '1.5rem',
+            padding: '0.75rem 1rem',
             borderTop: '1px solid rgba(255,255,255,0.05)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            gap: '1rem',
+            gap: '0.75rem',
         },
         logoutBtn: {
             display: 'flex',

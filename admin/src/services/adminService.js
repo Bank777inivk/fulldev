@@ -628,10 +628,12 @@ export const adminService = {
             createdAt: serverTimestamp()
         });
 
-        // Update ticket's updatedAt
+        // Update ticket's updatedAt and flag for client
         await updateDoc(ticketRef, {
             updatedAt: serverTimestamp(),
-            lastMessageAt: serverTimestamp()
+            lastMessageAt: serverTimestamp(),
+            clientHasUnread: true,
+            adminHasUnread: false // Admin just sent a message, they've seen current context
         });
     },
 

@@ -8,6 +8,8 @@ const Settings = () => {
     const [activeTab, setActiveTab] = useState('profile');
 
     const [passwordData, setPasswordData] = useState({ current: '', new: '', confirm: '' });
+    const [showNewPassword, setShowNewPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [passStrength, setPassStrength] = useState(0);
 
     const [editData, setEditData] = useState({
@@ -20,6 +22,7 @@ const Settings = () => {
         countryOfResidence: userData?.countryOfResidence || '',
         nationality: userData?.nationality || '',
         dob: userData?.dob || '',
+        birthPlace: userData?.birthPlace || '',
         gender: userData?.gender || '',
         notificationsEnabled: userData?.notificationsEnabled ?? true,
         language: userData?.language || 'Français'
@@ -107,12 +110,37 @@ const Settings = () => {
                             </div>
                             {renderInput('Prénom', 'firstName', 'fas fa-user')}
                             {renderInput('Nom', 'lastName', 'fas fa-id-card')}
+                            {renderInput('Date de naissance', 'dob', 'fas fa-calendar-alt', 'date')}
+                            {renderInput('Lieu de naissance', 'birthPlace', 'fas fa-map-marker-alt')}
                             {renderInput('Téléphone', 'phone', 'fas fa-phone')}
                             <div style={{ ...styles.mobileSectionHeader, marginTop: '20px' }}>Localisation</div>
                             {renderInput('Adresse', 'address', 'fas fa-map-marker-alt')}
                             <div style={{ display: 'flex', gap: '10px' }}>
                                 {renderInput('Ville', 'city', null)}
                                 {renderInput('CP', 'zipCode', null)}
+                            </div>
+
+                            <div style={{ ...styles.mobileSectionHeader, marginTop: '30px', borderTop: '1px solid #f1f5f9', paddingTop: '20px' }}>Mon Conseiller Financier</div>
+                            <div style={styles.advisorCardMobile}>
+                                <img src={userData?.advisorPhoto || "/advisor.png"} alt="Conseiller" style={styles.advisorAvatarMobile} />
+                                <div style={{ flex: 1 }}>
+                                    <div style={{ fontWeight: 'bold', color: '#003366', fontSize: '1.1rem' }}>{userData?.advisorName || 'Thomas Muller'}</div>
+                                    <div style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '4px' }}>{userData?.advisorRole || 'Conseiller Senior Patrimonial'}</div>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.85rem', color: '#16a34a', fontWeight: 'bold' }}>
+                                        <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#22c55e' }}></div> Disponible
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style={styles.advisorMobileDetails}>
+                                <a href={`mailto:${userData?.advisorEmail || 't.muller@invik-sa.com'}`} style={styles.advisorMobileItem}>
+                                    <i className="fas fa-envelope" style={{ color: '#003366', width: '20px' }}></i>
+                                    <span style={{ color: '#64748b', fontSize: '0.9rem' }}>{userData?.advisorEmail || 't.muller@invik-sa.com'}</span>
+                                </a>
+                                <a href={`tel:${userData?.advisorPhone || '+33170950000'}`} style={styles.advisorMobileItem}>
+                                    <i className="fas fa-phone-alt" style={{ color: '#003366', width: '20px' }}></i>
+                                    <span style={{ color: '#64748b', fontSize: '0.9rem' }}>{userData?.advisorPhone || '+33 1 70 95 00 00'}</span>
+                                </a>
                             </div>
                         </div>
                     )}
@@ -126,16 +154,36 @@ const Settings = () => {
 
                             <div style={styles.formGroup}>
                                 <label style={styles.label}>Nouveau Mot de Passe</label>
-                                <input
-                                    type="password"
-                                    style={styles.input}
-                                    placeholder="••••••••"
-                                    value={passwordData.new}
-                                    onChange={e => {
-                                        setPasswordData({ ...passwordData, new: e.target.value });
-                                        checkStrength(e.target.value);
-                                    }}
-                                />
+                                <div style={{ position: 'relative' }}>
+                                    <input
+                                        type={showNewPassword ? "text" : "password"}
+                                        style={{ ...styles.input, paddingRight: '3.5rem' }}
+                                        placeholder="••••••••"
+                                        value={passwordData.new}
+                                        onChange={e => {
+                                            setPasswordData({ ...passwordData, new: e.target.value });
+                                            checkStrength(e.target.value);
+                                        }}
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowNewPassword(!showNewPassword)}
+                                        style={{
+                                            position: 'absolute',
+                                            right: '1rem',
+                                            top: '50%',
+                                            transform: 'translateY(-50%)',
+                                            background: 'none',
+                                            border: 'none',
+                                            color: '#94a3b8',
+                                            cursor: 'pointer',
+                                            fontSize: '1rem',
+                                            zIndex: 2
+                                        }}
+                                    >
+                                        <i className={`fas ${showNewPassword ? 'fa-eye' : 'fa-eye-slash'}`}></i>
+                                    </button>
+                                </div>
                                 <div style={{
                                     height: '4px', background: '#f1f5f9', borderRadius: '2px', marginTop: '8px', overflow: 'hidden'
                                 }}>
@@ -150,13 +198,33 @@ const Settings = () => {
 
                             <div style={{ ...styles.formGroup, marginTop: '15px' }}>
                                 <label style={styles.label}>Confirmer le Mot de Passe</label>
-                                <input
-                                    type="password"
-                                    style={styles.input}
-                                    placeholder="••••••••"
-                                    value={passwordData.confirm}
-                                    onChange={e => setPasswordData({ ...passwordData, confirm: e.target.value })}
-                                />
+                                <div style={{ position: 'relative' }}>
+                                    <input
+                                        type={showConfirmPassword ? "text" : "password"}
+                                        style={{ ...styles.input, paddingRight: '3.5rem' }}
+                                        placeholder="••••••••"
+                                        value={passwordData.confirm}
+                                        onChange={e => setPasswordData({ ...passwordData, confirm: e.target.value })}
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                        style={{
+                                            position: 'absolute',
+                                            right: '1rem',
+                                            top: '50%',
+                                            transform: 'translateY(-50%)',
+                                            background: 'none',
+                                            border: 'none',
+                                            color: '#94a3b8',
+                                            cursor: 'pointer',
+                                            fontSize: '1rem',
+                                            zIndex: 2
+                                        }}
+                                    >
+                                        <i className={`fas ${showConfirmPassword ? 'fa-eye' : 'fa-eye-slash'}`}></i>
+                                    </button>
+                                </div>
                             </div>
 
                             {status.text && (
@@ -255,9 +323,44 @@ const Settings = () => {
                                     {renderInput('Nom', 'lastName', 'fas fa-id-card')}
                                     {renderInput('Téléphone', 'phone', 'fas fa-phone-alt')}
                                     {renderInput('Nationalité', 'nationality', 'fas fa-flag')}
+                                    {renderInput('Date de naissance', 'dob', 'fas fa-calendar-alt', 'date')}
+                                    {renderInput('Lieu de naissance', 'birthPlace', 'fas fa-map-marker-alt')}
                                     <div style={{ gridColumn: '1 / -1' }}>{renderInput('Adresse de résidence', 'address', 'fas fa-map-marked-alt')}</div>
                                     {renderInput('Ville', 'city', null)}
+                                    {renderInput('Ville', 'city', null)}
                                     {renderInput('Code Postal', 'zipCode', null)}
+                                </div>
+
+                                <div style={{ marginTop: '4rem', borderTop: '1px solid #f1f5f9', paddingTop: '3rem' }}>
+                                    <h3 style={{ ...styles.label, marginBottom: '2rem', color: '#003366' }}>MON CONSEILLER FINANCIER</h3>
+                                    <div style={styles.advisorCard}>
+                                        <div style={styles.advisorInfo}>
+                                            <img src={userData?.advisorPhoto || "/advisor.png"} alt={userData?.advisorName || "Thomas Muller"} style={styles.advisorAvatar} />
+                                            <div>
+                                                <div style={styles.advisorName}>{userData?.advisorName || 'Thomas Muller'}</div>
+                                                <div style={styles.advisorRole}>{userData?.advisorRole || 'Conseiller Senior en Gestion de Patrimoine'}</div>
+                                                <div style={styles.advisorStatus}>
+                                                    <span style={styles.statusDot}></span> Actuellement disponible
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div style={styles.advisorContacts}>
+                                            <div style={styles.advisorContactItem}>
+                                                <i className="fas fa-envelope" style={styles.contactIcon}></i>
+                                                <div>
+                                                    <div style={styles.contactLabel}>EMAIL PROFESSIONNEL</div>
+                                                    <div style={styles.contactValue}>{userData?.advisorEmail || 't.muller@invik-sa.com'}</div>
+                                                </div>
+                                            </div>
+                                            <div style={styles.advisorContactItem}>
+                                                <i className="fas fa-phone-alt" style={styles.contactIcon}></i>
+                                                <div>
+                                                    <div style={styles.contactLabel}>LIGNE DIRECTE</div>
+                                                    <div style={styles.contactValue}>{userData?.advisorPhone || '+33 1 70 95 00 00'}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </>
                         )}
@@ -276,16 +379,36 @@ const Settings = () => {
                                             <form onSubmit={handlePasswordChange}>
                                                 <div style={styles.formGroup}>
                                                     <label style={styles.label}>Nouveau mot de passe</label>
-                                                    <input
-                                                        type="password"
-                                                        style={styles.input}
-                                                        placeholder="••••••••"
-                                                        value={passwordData.new}
-                                                        onChange={e => {
-                                                            setPasswordData({ ...passwordData, new: e.target.value });
-                                                            checkStrength(e.target.value);
-                                                        }}
-                                                    />
+                                                    <div style={{ position: 'relative' }}>
+                                                        <input
+                                                            type={showNewPassword ? "text" : "password"}
+                                                            style={{ ...styles.input, paddingRight: '3.5rem' }}
+                                                            placeholder="••••••••"
+                                                            value={passwordData.new}
+                                                            onChange={e => {
+                                                                setPasswordData({ ...passwordData, new: e.target.value });
+                                                                checkStrength(e.target.value);
+                                                            }}
+                                                        />
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => setShowNewPassword(!showNewPassword)}
+                                                            style={{
+                                                                position: 'absolute',
+                                                                right: '1rem',
+                                                                top: '50%',
+                                                                transform: 'translateY(-50%)',
+                                                                background: 'none',
+                                                                border: 'none',
+                                                                color: '#94a3b8',
+                                                                cursor: 'pointer',
+                                                                fontSize: '1rem',
+                                                                zIndex: 2
+                                                            }}
+                                                        >
+                                                            <i className={`fas ${showNewPassword ? 'fa-eye' : 'fa-eye-slash'}`}></i>
+                                                        </button>
+                                                    </div>
                                                     <div style={{
                                                         height: '4px', background: '#eceef1', borderRadius: '2px', marginTop: '10px', overflow: 'hidden'
                                                     }}>
@@ -303,13 +426,33 @@ const Settings = () => {
 
                                                 <div style={{ ...styles.formGroup, marginTop: '1.5rem' }}>
                                                     <label style={styles.label}>Confirmer le mot de passe</label>
-                                                    <input
-                                                        type="password"
-                                                        style={styles.input}
-                                                        placeholder="••••••••"
-                                                        value={passwordData.confirm}
-                                                        onChange={e => setPasswordData({ ...passwordData, confirm: e.target.value })}
-                                                    />
+                                                    <div style={{ position: 'relative' }}>
+                                                        <input
+                                                            type={showConfirmPassword ? "text" : "password"}
+                                                            style={{ ...styles.input, paddingRight: '3.5rem' }}
+                                                            placeholder="••••••••"
+                                                            value={passwordData.confirm}
+                                                            onChange={e => setPasswordData({ ...passwordData, confirm: e.target.value })}
+                                                        />
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                                            style={{
+                                                                position: 'absolute',
+                                                                right: '1rem',
+                                                                top: '50%',
+                                                                transform: 'translateY(-50%)',
+                                                                background: 'none',
+                                                                border: 'none',
+                                                                color: '#94a3b8',
+                                                                cursor: 'pointer',
+                                                                fontSize: '1rem',
+                                                                zIndex: 2
+                                                            }}
+                                                        >
+                                                            <i className={`fas ${showConfirmPassword ? 'fa-eye' : 'fa-eye-slash'}`}></i>
+                                                        </button>
+                                                    </div>
                                                 </div>
 
                                                 {status.text && (
@@ -455,7 +598,27 @@ const styles = {
     mobileActionRow: { display: 'flex', alignItems: 'center', gap: '15px' },
     mobileActionIcon: { width: '44px', height: '44px', background: '#f1f5f9', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#003366' },
     mobileSaveBtn: { width: '100%', padding: '22px', background: '#003366', color: 'white', border: 'none', borderRadius: '25px', fontSize: '1.1rem', fontWeight: 'bold', marginTop: '2.5rem', boxShadow: '0 20px 40px rgba(0, 51, 102, 0.15)' },
-    mobileSelect: { padding: '10px 20px', borderRadius: '12px', border: '1px solid #e2e8f0' }
+    mobileSelect: { padding: '10px 20px', borderRadius: '12px', border: '1px solid #e2e8f0' },
+
+    // Advisor Styles
+    advisorCard: { background: '#f8fafc', padding: '40px', borderRadius: '40px', border: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
+    advisorInfo: { display: 'flex', alignItems: 'center', gap: '30px' },
+    advisorAvatar: { width: '100px', height: '100px', borderRadius: '35px', objectFit: 'cover', border: '4px solid white', boxShadow: '0 10px 25px rgba(0,0,0,0.08)' },
+    advisorName: { fontSize: '1.4rem', fontWeight: 'bold', color: '#003366' },
+    advisorRole: { fontSize: '0.9rem', color: '#64748b', marginTop: '4px' },
+    advisorStatus: { display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', color: '#16a34a', fontWeight: 'bold', marginTop: '12px', background: 'rgba(34, 197, 94, 0.08)', padding: '6px 14px', borderRadius: '50px', width: 'fit-content' },
+    statusDot: { width: '8px', height: '8px', background: '#22c55e', borderRadius: '50%' },
+    advisorContacts: { display: 'flex', flexDirection: 'column', gap: '20px' },
+    advisorContactItem: { display: 'flex', alignItems: 'center', gap: '15px' },
+    contactIcon: { width: '44px', height: '44px', background: 'white', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#003366', boxShadow: '0 5px 15px rgba(0,0,0,0.04)' },
+    contactLabel: { fontSize: '0.65rem', color: '#94a3b8', fontWeight: 'bold', letterSpacing: '1px' },
+    contactValue: { fontSize: '0.9rem', color: '#0f172a', fontWeight: '600' },
+
+    advisorCardMobile: { background: '#f8fafc', padding: '25px', borderRadius: '30px', display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '15px', border: '1px solid #f1f5f9' },
+    advisorAvatarMobile: { width: '70px', height: '70px', borderRadius: '24px', objectFit: 'cover', border: '2px solid white', boxShadow: '0 5px 15px rgba(0,0,0,0.05)' },
+    advisorMobileDetails: { display: 'flex', flexDirection: 'column', gap: '12px', background: 'white', padding: '20px', borderRadius: '25px', border: '1px solid #f1f5f9' },
+    advisorMobileItem: { display: 'flex', alignItems: 'center', gap: '15px', textDecoration: 'none' },
+    advisorActionBtnMobile: { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', width: '100%', padding: '18px', background: 'white', border: '1px solid #e2e8f0', borderRadius: '20px', color: '#003366', fontWeight: 'bold', textDecoration: 'none', fontSize: '0.9rem' }
 };
 
 export default Settings;

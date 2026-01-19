@@ -1564,6 +1564,7 @@ button:active {
   z-index: 1100;
   transition: all 0.3s ease;
   box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+  overflow-x: hidden;
 }
 
 .sidebar-header {
@@ -1961,14 +1962,23 @@ button:active {
 }
 
 .profile-avatar {
-  width: 40px;
-  height: 40px;
-  background: #f0f4f8;
-  border-radius: 10px;
+  width: 42px;
+  height: 42px;
+  background: #00ccff;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--primary-color);
+  font-weight: 800;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 204, 255, 0.2);
+}
+
+.header-profile:hover .profile-avatar {
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(0, 204, 255, 0.3);
 }
 
 /* Content Container */

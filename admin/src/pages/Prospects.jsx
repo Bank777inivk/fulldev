@@ -7,18 +7,31 @@ const Prospects = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [filterStatus, setFilterStatus] = useState('all');
     const [selectedProspect, setSelectedProspect] = useState(null);
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+    const [currentPage, setCurrentPage] = useState(1);
+    const prospectsPerPage = 5;
 
     useEffect(() => {
         const unsubscribe = adminService.subscribeToLeads((data) => {
             setProspects(data);
             setLoading(false);
         });
-        return () => unsubscribe();
+
+        const handleResize = () => setIsMobile(window.innerWidth <= 768);
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            unsubscribe();
+            window.removeEventListener('resize', handleResize);
+        };
     }, []);
 
     const handleStatusChange = async (id, newStatus) => {
         try {
             await adminService.updateLeadStatus(id, newStatus);
+            if (selectedProspect && selectedProspect.id === id) {
+                setSelectedProspect({ ...selectedProspect, status: newStatus });
+            }
         } catch (error) {
             console.error("Error updating lead status:", error);
         }
@@ -33,6 +46,15 @@ const Prospects = () => {
         }
     };
 
+    const getStatusStyle = (status) => {
+        switch (status) {
+            case 'new': return { bg: '#eff6ff', color: '#1d4ed8', label: 'Nouveau' };
+            case 'contacted': return { bg: '#fef3c7', color: '#b45309', label: 'Contacté' };
+            case 'closed': return { bg: '#f1f5f9', color: '#475569', label: 'Clôturé' };
+            default: return { bg: '#f1f5f9', color: '#475569', label: 'Inconnu' };
+        }
+    };
+
     const filteredProspects = prospects.filter(p => {
         const matchesSearch =
             p.nom?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -42,238 +64,567 @@ const Prospects = () => {
         return matchesSearch && matchesFilter;
     });
 
+    const paginatedProspects = filteredProspects.slice(
+        (currentPage - 1) * prospectsPerPage,
+        currentPage * prospectsPerPage
+    );
+
     const styles = {
-        container: { padding: '2rem' },
-        header: { marginBottom: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
-        title: { fontSize: '1.8rem', fontWeight: '800', color: 'var(--primary)' },
-        statsGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem', marginBottom: '2rem' },
-        statCard: { background: 'white', padding: '1.5rem', borderRadius: '16px', border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)' },
-        statLabel: { fontSize: '0.9rem', color: 'var(--text-light)', marginBottom: '0.5rem' },
-        statValue: { fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--primary)' },
-        controls: { display: 'flex', gap: '1rem', marginBottom: '1.5rem', flexWrap: 'wrap' },
-        search: { flex: 1, minWidth: '300px', padding: '0.8rem 1.2rem', borderRadius: '12px', border: '1px solid var(--border)', outline: 'none' },
-        select: { padding: '0.8rem 1.2rem', borderRadius: '12px', border: '1px solid var(--border)', background: 'white' },
-        tableCard: { background: 'white', borderRadius: '20px', border: '1px solid var(--border)', overflow: 'hidden', boxShadow: 'var(--shadow-md)' },
+        container: { padding: isMobile ? '1rem' : '2rem', maxWidth: '1400px', margin: '0 auto' },
+        header: { marginBottom: '2rem' },
+        title: { fontSize: isMobile ? '1.5rem' : '2.2rem', fontWeight: '900', color: 'var(--primary)', marginBottom: '0.5rem' },
+        subtitle: { color: 'var(--text-light)', fontSize: isMobile ? '0.9rem' : '1.1rem' },
+
+        statsGrid: {
+            display: 'grid',
+            gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
+            gap: '1.25rem',
+            marginBottom: '2.5rem'
+        },
+        statCard: {
+            background: 'white',
+            padding: '1.5rem',
+            borderRadius: '24px',
+            border: '1px solid var(--border)',
+            boxShadow: 'var(--shadow-sm)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '1.25rem'
+        },
+        statIcon: {
+            width: '56px',
+            height: '56px',
+            borderRadius: '16px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '1.5rem'
+        },
+        statInfo: { display: 'flex', flexDirection: 'column' },
+        statLabel: { fontSize: '0.85rem', color: 'var(--text-light)', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' },
+        statValue: { fontSize: '1.75rem', fontWeight: '800', color: 'var(--primary)', lineHeight: '1.2' },
+
+        controls: {
+            display: 'flex',
+            gap: '1rem',
+            marginBottom: '2rem',
+            flexDirection: isMobile ? 'column' : 'row',
+            background: 'white',
+            padding: '1rem',
+            borderRadius: '20px',
+            border: '1px solid var(--border)'
+        },
+        searchWrapper: { position: 'relative', flex: 1 },
+        searchIcon: { position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' },
+        search: {
+            width: '100%',
+            padding: '0.8rem 1rem 0.8rem 2.8rem',
+            borderRadius: '12px',
+            border: '1px solid #e2e8f0',
+            outline: 'none',
+            fontSize: 'base',
+            background: '#f8fafc',
+            boxSizing: 'border-box'
+        },
+        select: {
+            padding: '0.8rem 1.2rem',
+            borderRadius: '12px',
+            border: '1px solid #e2e8f0',
+            background: '#f8fafc',
+            fontSize: 'base',
+            fontWeight: '600',
+            color: 'var(--primary)',
+            outline: 'none'
+        },
+
+        // Desktop Table
+        tableCard: { background: 'white', borderRadius: '24px', border: '1px solid var(--border)', overflow: 'hidden', boxShadow: 'var(--shadow-md)' },
         table: { width: '100%', borderCollapse: 'collapse', textAlign: 'left' },
-        th: { padding: '1.2rem 1.5rem', background: '#f8fafc', color: 'var(--text-light)', fontWeight: '600', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.5px', borderBottom: '1px solid var(--border)' },
+        th: { padding: '1.2rem 1.5rem', background: '#f8fafc', color: 'var(--text-light)', fontWeight: '700', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px', borderBottom: '1px solid var(--border)' },
         td: { padding: '1.2rem 1.5rem', borderBottom: '1px solid var(--border)', verticalAlign: 'middle' },
-        badge: { padding: '0.4rem 0.8rem', borderRadius: '50px', fontSize: '0.75rem', fontWeight: '700' },
-        scoreDot: { width: '12px', height: '12px', borderRadius: '50%', display: 'inline-block', marginRight: '8px' },
-        viewBtn: { padding: '0.6rem 1.2rem', borderRadius: '10px', border: '1px solid var(--primary)', background: 'transparent', color: 'var(--primary)', cursor: 'pointer', fontWeight: '600', transition: 'all 0.2s' },
-        modal: { position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '2rem' },
-        modalContent: { background: 'white', borderRadius: '24px', width: '100%', maxWidth: '800px', maxHeight: '90vh', overflowY: 'auto', padding: '2.5rem', boxShadow: 'var(--shadow-2xl)' },
-        modalHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' },
-        grid: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' },
-        label: { display: 'block', fontSize: '0.8rem', color: 'var(--text-light)', marginBottom: '0.3rem', textTransform: 'uppercase', letterSpacing: '0.5px' },
-        value: { display: 'block', fontSize: '1rem', color: 'var(--primary)', fontWeight: '600' },
-        sectionTitle: { fontSize: '1.1rem', fontWeight: '800', color: 'var(--primary)', marginBottom: '1.2rem', paddingBottom: '0.5rem', borderBottom: '2px solid var(--border)' }
+
+        // Mobile Cards
+        mobileList: { display: 'flex', flexDirection: 'column', gap: '1rem' },
+        prospectCard: {
+            background: 'white',
+            padding: '1.25rem',
+            borderRadius: '24px',
+            border: '1px solid var(--border)',
+            boxShadow: 'var(--shadow-sm)'
+        },
+
+        badge: { padding: '0.5rem 1rem', borderRadius: '12px', fontSize: '0.75rem', fontWeight: '800', display: 'inline-flex', alignItems: 'center', gap: '6px' },
+        scoreBadge: { padding: '4px 10px', borderRadius: '8px', fontSize: '0.7rem', fontWeight: 'bold', color: 'white' },
+
+        viewBtn: {
+            padding: '0.6rem 1.2rem',
+            borderRadius: '12px',
+            border: 'none',
+            background: '#f1f5f9',
+            color: 'var(--primary)',
+            cursor: 'pointer',
+            fontWeight: '700',
+            fontSize: '0.85rem',
+            transition: 'all 0.2s',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px'
+        },
+
+        // Page Detail Redesign
+        detailView: {
+            position: isMobile ? 'fixed' : 'relative',
+            top: isMobile ? '64px' : '0',
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'white',
+            zIndex: 100,
+            overflowY: 'auto',
+            padding: isMobile ? '1.5rem 1rem 5rem 1rem' : '0',
+            WebkitOverflowScrolling: 'touch'
+        },
+        detailHero: {
+            background: 'white',
+            borderRadius: isMobile ? '0' : '32px',
+            padding: isMobile ? '0' : '2.5rem 3rem',
+            boxShadow: isMobile ? 'none' : 'var(--shadow-md)',
+            border: isMobile ? 'none' : '1px solid var(--border)',
+            marginBottom: '2rem',
+            maxWidth: '1200px',
+            margin: '0 auto'
+        },
+        backBtn: {
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            padding: isMobile ? '0.6rem 1rem' : '0.75rem 1.25rem',
+            borderRadius: '12px',
+            border: 'none',
+            background: '#f1f5f9',
+            color: 'var(--primary)',
+            fontWeight: '800',
+            fontSize: '0.85rem',
+            cursor: 'pointer',
+            marginBottom: isMobile ? '1.5rem' : '2rem',
+            transition: 'all 0.2s'
+        },
+        detailSection: { marginBottom: '2.5rem' },
+        sectionHeader: { display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '1.5rem', paddingBottom: '0.75rem', borderBottom: '1px solid var(--border)' },
+        sectionTitle: { fontSize: '1.1rem', fontWeight: '900', color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '1px' },
+
+        dataGrid: {
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+            gap: isMobile ? '1.25rem' : '2rem'
+        },
+        dataItem: { display: 'flex', flexDirection: 'column', gap: '6px' },
+        dataLabel: { fontSize: '0.7rem', fontWeight: '800', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px' },
+        dataValue: { fontSize: isMobile ? '0.9rem' : '1rem', fontWeight: '700', color: 'var(--primary)', wordBreak: 'break-word' },
+
+        statusGrid: {
+            display: 'grid',
+            gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
+            gap: '1rem',
+            marginTop: '1.5rem',
+            padding: isMobile ? '0' : '1.5rem',
+            background: isMobile ? 'transparent' : '#f8fafc',
+            borderRadius: '20px',
+            border: isMobile ? 'none' : '1px solid var(--border)'
+        },
+        statusBtn: {
+            padding: '1rem',
+            borderRadius: '14px',
+            border: '2px solid transparent',
+            cursor: 'pointer',
+            fontWeight: '800',
+            fontSize: '0.85rem',
+            transition: 'all 0.2s',
+            textAlign: 'center'
+        },
+        paginationContainer: {
+            marginTop: '2rem',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '1.5rem',
+            padding: '1.5rem',
+            background: 'white',
+            borderRadius: '20px',
+            border: '1px solid var(--border)',
+            boxShadow: 'var(--shadow-sm)'
+        },
+        paginationBtn: {
+            width: '40px',
+            height: '40px',
+            borderRadius: '12px',
+            border: 'none',
+            background: 'var(--primary)',
+            color: 'white',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            fontSize: '0.9rem',
+            transition: 'all 0.2s'
+        },
+        paginationInfo: {
+            fontSize: '0.95rem',
+            fontWeight: '800',
+            color: 'var(--primary)',
+            letterSpacing: '0.5px'
+        }
     };
 
-    if (loading) return <div style={styles.container}>Chargement...</div>;
+    if (loading) return (
+        <div style={{ ...styles.container, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '60vh' }}>
+            <div className="loader"></div>
+            <p style={{ marginTop: '1rem', color: 'var(--text-light)', fontWeight: '600' }}>Chargement des dossiers...</p>
+        </div>
+    );
 
-    return (
-        <div style={styles.container}>
-            <div style={styles.header}>
-                <div>
-                    <h1 style={styles.title}>Gestion des Prospects</h1>
-                    <p style={{ color: 'var(--text-light)' }}>Suivi des demandes de crédit public</p>
+    // VUE DETAIL
+    if (selectedProspect) {
+        return (
+            <div style={styles.detailView}>
+                <div style={styles.detailHero}>
+                    <button style={styles.backBtn} onClick={() => setSelectedProspect(null)}>
+                        <i className="fas fa-arrow-left"></i> RETOUR
+                    </button>
+
+                    <div style={{ marginBottom: '2.5rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '0.5rem' }}>
+                            <h2 style={{ fontSize: isMobile ? '1.5rem' : '2.5rem', fontWeight: '900', color: 'var(--primary)' }}>
+                                Dossier #{selectedProspect.id?.substring(0, 5).toUpperCase()}
+                            </h2>
+                            <span style={{ ...styles.scoreBadge, background: getScoreColor(selectedProspect.score), padding: '6px 12px', fontSize: '0.85rem' }}>
+                                {selectedProspect.score}
+                            </span>
+                        </div>
+                        <p style={{ color: '#64748b', fontSize: isMobile ? '1rem' : '1.25rem', fontWeight: '500' }}>
+                            {selectedProspect.civilite} {selectedProspect.nom} {selectedProspect.prenom}
+                        </p>
+                    </div>
+
+                    {/* Section 1: Identité */}
+                    <div style={styles.detailSection}>
+                        <div style={styles.sectionHeader}>
+                            <i className="fas fa-user-circle" style={{ color: 'var(--secondary)', fontSize: '1.2rem' }}></i>
+                            <h3 style={styles.sectionTitle}>Identité & Contact</h3>
+                        </div>
+                        <div style={styles.dataGrid}>
+                            <div style={styles.dataItem}>
+                                <span style={styles.dataLabel}>Email</span>
+                                <span style={styles.dataValue}>{selectedProspect.email}</span>
+                            </div>
+                            <div style={styles.dataItem}>
+                                <span style={styles.dataLabel}>Téléphone</span>
+                                <span style={styles.dataValue}>{selectedProspect.telephone}</span>
+                            </div>
+                            <div style={styles.dataItem}>
+                                <span style={styles.dataLabel}>Né(e) le</span>
+                                <span style={styles.dataValue}>{selectedProspect.dateNaissance}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Section 2: Projet */}
+                    <div style={styles.detailSection}>
+                        <div style={styles.sectionHeader}>
+                            <i className="fas fa-file-invoice-dollar" style={{ color: 'var(--secondary)', fontSize: '1.2rem' }}></i>
+                            <h3 style={styles.sectionTitle}>Projet de Crédit</h3>
+                        </div>
+                        <div style={styles.dataGrid}>
+                            <div style={styles.dataItem}>
+                                <span style={styles.dataLabel}>Montant requis</span>
+                                <span style={{ ...styles.dataValue, color: 'var(--secondary)', fontSize: isMobile ? '1.2rem' : '1.4rem' }}>
+                                    {selectedProspect.montant?.toLocaleString()} {selectedProspect.devise || 'EUR'}
+                                </span>
+                            </div>
+                            <div style={styles.dataItem}>
+                                <span style={styles.dataLabel}>Durée</span>
+                                <span style={styles.dataValue}>{selectedProspect.duree} mois</span>
+                            </div>
+                            <div style={styles.dataItem}>
+                                <span style={styles.dataLabel}>Objet</span>
+                                <span style={styles.dataValue}>{selectedProspect.objet}</span>
+                            </div>
+                            <div style={styles.dataItem}>
+                                <span style={styles.dataLabel}>Type de crédit</span>
+                                <span style={styles.dataValue}>{selectedProspect.typeCredit}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Section 3: Situation */}
+                    <div style={styles.detailSection}>
+                        <div style={styles.sectionHeader}>
+                            <i className="fas fa-chart-line" style={{ color: 'var(--secondary)', fontSize: '1.2rem' }}></i>
+                            <h3 style={styles.sectionTitle}>Situation Financière</h3>
+                        </div>
+                        <div style={styles.dataGrid}>
+                            <div style={styles.dataItem}>
+                                <span style={styles.dataLabel}>Revenus mensuels</span>
+                                <span style={styles.dataValue}>{selectedProspect.revenusMensuels?.toLocaleString()} {selectedProspect.devise || 'EUR'}</span>
+                            </div>
+                            <div style={styles.dataItem}>
+                                <span style={styles.dataLabel}>Statut pro</span>
+                                <span style={styles.dataValue}>{selectedProspect.statutPro}</span>
+                            </div>
+                            <div style={styles.dataItem}>
+                                <span style={styles.dataLabel}>Incident bancaire</span>
+                                <span style={{ ...styles.dataValue, color: selectedProspect.incidentBancaire === 'oui' ? '#ef4444' : '#10b981' }}>
+                                    {selectedProspect.incidentBancaire?.toUpperCase()}
+                                </span>
+                            </div>
+                            <div style={styles.dataItem}>
+                                <span style={styles.dataLabel}>Banque principale</span>
+                                <span style={styles.dataValue}>{selectedProspect.banqueActuelle}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Section Action Status */}
+                    <div style={{ marginTop: '2rem' }}>
+                        <span style={styles.dataLabel}>Mettre à jour le statut du dossier</span>
+                        <div style={styles.statusGrid}>
+                            <button
+                                onClick={() => handleStatusChange(selectedProspect.id, 'new')}
+                                style={{
+                                    ...styles.statusBtn,
+                                    background: selectedProspect.status === 'new' ? '#eff6ff' : 'white',
+                                    color: selectedProspect.status === 'new' ? '#1d4ed8' : '#64748b',
+                                    borderColor: selectedProspect.status === 'new' ? '#1d4ed8' : '#e2e8f0',
+                                    marginBottom: isMobile ? '0.75rem' : '0'
+                                }}
+                            >
+                                NOUVEAU
+                            </button>
+                            <button
+                                onClick={() => handleStatusChange(selectedProspect.id, 'contacted')}
+                                style={{
+                                    ...styles.statusBtn,
+                                    background: selectedProspect.status === 'contacted' ? '#fff7ed' : 'white',
+                                    color: selectedProspect.status === 'contacted' ? '#f97316' : '#64748b',
+                                    borderColor: selectedProspect.status === 'contacted' ? '#f97316' : '#e2e8f0',
+                                    marginBottom: isMobile ? '0.75rem' : '0'
+                                }}
+                            >
+                                CONTACTÉ
+                            </button>
+                            <button
+                                onClick={() => handleStatusChange(selectedProspect.id, 'closed')}
+                                style={{
+                                    ...styles.statusBtn,
+                                    background: selectedProspect.status === 'closed' ? '#f1f5f9' : 'white',
+                                    color: selectedProspect.status === 'closed' ? '#475569' : '#64748b',
+                                    borderColor: selectedProspect.status === 'closed' ? '#475569' : '#e2e8f0'
+                                }}
+                            >
+                                CLÔTURÉ
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
+        );
+    }
+
+    // VUE LISTE (Header + Stats + Controls + List)
+    return (
+        <div style={styles.container}>
+            <header style={styles.header}>
+                <h1 style={styles.title}>Prospects & Leads</h1>
+                <p style={styles.subtitle}>Supervisez et gérez les nouvelles demandes de crédit.</p>
+            </header>
 
             <div style={styles.statsGrid}>
+                {/* Stat 1 */}
                 <div style={styles.statCard}>
-                    <div style={styles.statLabel}>Total Prospects</div>
-                    <div style={styles.statValue}>{prospects.length}</div>
+                    <div style={{ ...styles.statIcon, background: '#eff6ff', color: '#1d4ed8' }}>
+                        <i className="fas fa-users"></i>
+                    </div>
+                    <div style={styles.statInfo}>
+                        <span style={styles.statLabel}>Total Dossiers</span>
+                        <span style={styles.statValue}>{prospects.length}</span>
+                    </div>
                 </div>
+                {/* Stat 2 */}
                 <div style={styles.statCard}>
-                    <div style={styles.statLabel}>Éligibilité Haute</div>
-                    <div style={{ ...styles.statValue, color: '#10b981' }}>{prospects.filter(p => p.score === 'GREEN').length}</div>
+                    <div style={{ ...styles.statIcon, background: '#ecfdf5', color: '#10b981' }}>
+                        <i className="fas fa-check-circle"></i>
+                    </div>
+                    <div style={styles.statInfo}>
+                        <span style={styles.statLabel}>Éligibilité OK</span>
+                        <span style={{ ...styles.statValue, color: '#10b981' }}>{prospects.filter(p => p.score === 'GREEN').length}</span>
+                    </div>
                 </div>
+                {/* Stat 3 */}
                 <div style={styles.statCard}>
-                    <div style={styles.statLabel}>Nouveaux aujourd'hui</div>
-                    <div style={{ ...styles.statValue, color: 'var(--secondary)' }}>
-                        {prospects.filter(p => p.createdAt?.toDate().toDateString() === new Date().toDateString()).length}
+                    <div style={{ ...styles.statIcon, background: '#fff7ed', color: '#f97316' }}>
+                        <i className="fas fa-clock"></i>
+                    </div>
+                    <div style={styles.statInfo}>
+                        <span style={styles.statLabel}>Aujourd'hui</span>
+                        <span style={{ ...styles.statValue, color: '#f97316' }}>
+                            {prospects.filter(p => p.createdAt?.toDate().toDateString() === new Date().toDateString()).length}
+                        </span>
                     </div>
                 </div>
             </div>
 
             <div style={styles.controls}>
-                <input
-                    style={styles.search}
-                    placeholder="Rechercher par nom, email..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                />
+                <div style={styles.searchWrapper}>
+                    <i className="fas fa-search" style={styles.searchIcon}></i>
+                    <input
+                        style={styles.search}
+                        placeholder="Rechercher un prospect (nom, email)..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                </div>
                 <select
                     style={styles.select}
                     value={filterStatus}
                     onChange={(e) => setFilterStatus(e.target.value)}
                 >
                     <option value="all">Tous les statuts</option>
-                    <option value="new">Nouveau</option>
-                    <option value="contacted">Contacté</option>
-                    <option value="closed">Clôturé</option>
+                    <option value="new">🆕 Nouveaux</option>
+                    <option value="contacted">📞 Contactés</option>
+                    <option value="closed">✅ Clôturés</option>
                 </select>
             </div>
 
-            <div style={styles.tableCard}>
-                <table style={styles.table}>
-                    <thead>
-                        <tr>
-                            <th style={styles.th}>Prospect</th>
-                            <th style={styles.th}>Montant & Objet</th>
-                            <th style={styles.th}>Éligibilité</th>
-                            <th style={styles.th}>Date</th>
-                            <th style={styles.th}>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {filteredProspects.map(p => (
-                            <tr key={p.id}>
-                                <td style={styles.td}>
-                                    <div style={{ fontWeight: '700', color: 'var(--primary)' }}>{p.nom} {p.prenom}</div>
-                                    <div style={{ fontSize: '0.85rem', color: 'var(--text-light)' }}>{p.email}</div>
-                                    <div style={{ fontSize: '0.85rem', color: 'var(--text-light)' }}>{p.telephone}</div>
-                                </td>
-                                <td style={styles.td}>
-                                    <div style={{ fontWeight: '700', color: 'var(--secondary)' }}>{p.montant?.toLocaleString()} {p.devise || 'EUR'}</div>
-                                    <div style={{ fontSize: '0.85rem', color: 'var(--text-light)' }}>{p.objet}</div>
-                                </td>
-                                <td style={styles.td}>
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <span style={{ ...styles.scoreDot, backgroundColor: getScoreColor(p.score) }}></span>
-                                        <span style={{ fontWeight: '600', fontSize: '0.9rem' }}>{p.score}</span>
-                                    </div>
-                                </td>
-                                <td style={styles.td}>
-                                    <div style={{ fontSize: '0.9rem' }}>{p.createdAt?.toDate().toLocaleDateString('fr-FR')}</div>
-                                </td>
-                                <td style={styles.td}>
-                                    <button style={styles.viewBtn} onClick={() => setSelectedProspect(p)}>Détails</button>
-                                </td>
+            {!isMobile ? (
+                /* Desktop Table View */
+                <div style={styles.tableCard}>
+                    <table style={styles.table}>
+                        <thead>
+                            <tr>
+                                <th style={styles.th}>Client</th>
+                                <th style={styles.th}>Projet & Montant</th>
+                                <th style={styles.th}>Score</th>
+                                <th style={styles.th}>Statut</th>
+                                <th style={styles.th}>Date</th>
+                                <th style={styles.th}>Action</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-
-            {selectedProspect && (
-                <div style={styles.modal} onClick={() => setSelectedProspect(null)}>
-                    <div style={styles.modalContent} onClick={e => e.stopPropagation()}>
-                        <div style={styles.modalHeader}>
-                            <h2 style={{ fontSize: '1.5rem', fontWeight: '800', color: 'var(--primary)' }}>Détails du Prospect</h2>
-                            <button
-                                onClick={() => setSelectedProspect(null)}
-                                style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer', color: 'var(--text-light)' }}
-                            >
-                                <i className="fas fa-times"></i>
-                            </button>
-                        </div>
-
-                        <div style={{ marginBottom: '2.5rem' }}>
-                            <h3 style={styles.sectionTitle}>Identité & Contact</h3>
-                            <div style={styles.grid}>
-                                <div>
-                                    <span style={styles.label}>Nom Complet</span>
-                                    <span style={styles.value}>{selectedProspect.civilite} {selectedProspect.nom} {selectedProspect.prenom}</span>
+                        </thead>
+                        <tbody>
+                            {paginatedProspects.map(p => {
+                                const status = getStatusStyle(p.status);
+                                return (
+                                    <tr key={p.id}>
+                                        <td style={styles.td}>
+                                            <div style={{ fontWeight: '800', color: 'var(--primary)', marginBottom: '2px' }}>{p.nom} {p.prenom}</div>
+                                            <div style={{ fontSize: '0.8rem', color: 'var(--text-light)' }}>{p.email}</div>
+                                        </td>
+                                        <td style={styles.td}>
+                                            <div style={{ fontWeight: '800', color: 'var(--secondary)', fontSize: '1rem' }}>{p.montant?.toLocaleString()} {p.devise || 'EUR'}</div>
+                                            <div style={{ fontSize: '0.8rem', color: 'var(--text-light)', fontWeight: '600' }}>{p.objet}</div>
+                                        </td>
+                                        <td style={styles.td}>
+                                            <span style={{ ...styles.scoreBadge, background: getScoreColor(p.score) }}>
+                                                {p.score}
+                                            </span>
+                                        </td>
+                                        <td style={styles.td}>
+                                            <span style={{ ...styles.badge, background: status.bg, color: status.color }}>
+                                                <i className={`fas fa-${p.status === 'new' ? 'bolt' : p.status === 'contacted' ? 'phone' : 'check'}`}></i>
+                                                {status.label}
+                                            </span>
+                                        </td>
+                                        <td style={styles.td}>
+                                            <div style={{ fontSize: '0.85rem', fontWeight: '600', color: 'var(--text-light)' }}>
+                                                {p.createdAt?.toDate().toLocaleDateString('fr-FR')}
+                                            </div>
+                                        </td>
+                                        <td style={styles.td}>
+                                            <button style={styles.viewBtn} onClick={() => {
+                                                setSelectedProspect(p);
+                                                window.scrollTo({ top: 0, behavior: 'smooth' });
+                                            }}>
+                                                Détails <i className="fas fa-chevron-right"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
+                </div>
+            ) : (
+                /* Mobile Card View */
+                <div style={styles.mobileList}>
+                    {paginatedProspects.map(p => {
+                        const status = getStatusStyle(p.status);
+                        return (
+                            <div key={p.id} style={styles.prospectCard} onClick={() => {
+                                setSelectedProspect(p);
+                                window.scrollTo({ top: 0, behavior: 'smooth' });
+                            }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                                    <span style={{ ...styles.badge, background: status.bg, color: status.color }}>
+                                        {status.label}
+                                    </span>
+                                    <span style={{ ...styles.scoreBadge, background: getScoreColor(p.score) }}>
+                                        Score: {p.score}
+                                    </span>
                                 </div>
-                                <div>
-                                    <span style={styles.label}>Email</span>
-                                    <span style={styles.value}>{selectedProspect.email}</span>
+                                <div style={{ fontSize: '1.15rem', fontWeight: '800', color: 'var(--primary)', marginBottom: '4px' }}>
+                                    {p.nom} {p.prenom}
                                 </div>
-                                <div>
-                                    <span style={styles.label}>Téléphone</span>
-                                    <span style={styles.value}>{selectedProspect.telephone}</span>
+                                <div style={{ fontSize: '0.9rem', color: 'var(--text-light)', marginBottom: '1.25rem' }}>
+                                    {p.montant?.toLocaleString()} {p.devise || 'EUR'} • {p.objet}
                                 </div>
-                                <div>
-                                    <span style={styles.label}>Date de naissance</span>
-                                    <span style={styles.value}>{selectedProspect.dateNaissance}</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div style={{ marginBottom: '2.5rem' }}>
-                            <h3 style={styles.sectionTitle}>Demande de Crédit</h3>
-                            <div style={styles.grid}>
-                                <div>
-                                    <span style={styles.label}>Montant demandé</span>
-                                    <span style={{ ...styles.value, color: 'var(--secondary)', fontSize: '1.2rem' }}>{selectedProspect.montant?.toLocaleString()} {selectedProspect.devise || 'EUR'}</span>
-                                </div>
-                                <div>
-                                    <span style={styles.label}>Durée</span>
-                                    <span style={styles.value}>{selectedProspect.duree} mois</span>
-                                </div>
-                                <div>
-                                    <span style={styles.label}>Objet</span>
-                                    <span style={styles.value}>{selectedProspect.objet}</span>
-                                </div>
-                                <div>
-                                    <span style={styles.label}>Type de crédit</span>
-                                    <span style={styles.value}>{selectedProspect.typeCredit}</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div style={{ marginBottom: '2.5rem' }}>
-                            <h3 style={styles.sectionTitle}>Situation Financière</h3>
-                            <div style={styles.grid}>
-                                <div>
-                                    <span style={styles.label}>Revenus mensuels</span>
-                                    <span style={styles.value}>{selectedProspect.revenusMensuels?.toLocaleString()} {selectedProspect.devise || 'EUR'}</span>
-                                </div>
-                                <div>
-                                    <span style={styles.label}>Statut professionnel</span>
-                                    <span style={styles.value}>{selectedProspect.statutPro}</span>
-                                </div>
-                                <div>
-                                    <span style={styles.label}>Incident bancaire</span>
-                                    <span style={{ ...styles.value, color: selectedProspect.incidentBancaire === 'oui' ? 'red' : 'green' }}>{selectedProspect.incidentBancaire?.toUpperCase()}</span>
-                                </div>
-                                <div>
-                                    <span style={styles.label}>Banque actuelle</span>
-                                    <span style={styles.value}>{selectedProspect.banqueActuelle}</span>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '1rem', borderTop: '1px solid #f1f5f9' }}>
+                                    <span style={{ fontSize: '0.8rem', color: '#94a3b8', fontWeight: '600' }}>
+                                        {p.createdAt?.toDate().toLocaleDateString('fr-FR')}
+                                    </span>
+                                    <div style={{ color: 'var(--secondary)', fontWeight: '800', fontSize: '0.9rem' }}>
+                                        Gérer <i className="fas fa-arrow-right" style={{ marginLeft: '4px' }}></i>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        );
+                    })}
+                </div>
+            )}
 
-                        <div style={{ marginBottom: '2.5rem', padding: '1.5rem', background: '#f8fafc', borderRadius: '16px', border: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <div>
-                                <span style={styles.label}>Statut Dossier</span>
-                                <span style={{ ...styles.value, color: selectedProspect.status === 'new' ? 'var(--secondary)' : selectedProspect.status === 'contacted' ? 'var(--accent)' : 'var(--text-light)' }}>
-                                    {selectedProspect.status?.toUpperCase() || 'NOUVEAU'}
-                                </span>
-                            </div>
-                            <div style={{ display: 'flex', gap: '10px' }}>
-                                <button
-                                    onClick={() => handleStatusChange(selectedProspect.id, 'contacted')}
-                                    style={{ ...styles.viewBtn, fontSize: '0.8rem', background: selectedProspect.status === 'contacted' ? 'var(--accent)' : 'transparent', color: selectedProspect.status === 'contacted' ? 'white' : 'var(--accent)', borderColor: 'var(--accent)' }}
-                                >
-                                    Marquer comme Contacté
-                                </button>
-                                <button
-                                    onClick={() => handleStatusChange(selectedProspect.id, 'closed')}
-                                    style={{ ...styles.viewBtn, fontSize: '0.8rem', background: selectedProspect.status === 'closed' ? 'var(--text-light)' : 'transparent', color: selectedProspect.status === 'closed' ? 'white' : 'var(--text-light)', borderColor: 'var(--text-light)' }}
-                                >
-                                    Clôturer
-                                </button>
-                                <button
-                                    onClick={() => handleStatusChange(selectedProspect.id, 'new')}
-                                    style={{ ...styles.viewBtn, fontSize: '0.8rem', background: selectedProspect.status === 'new' || !selectedProspect.status ? 'var(--secondary)' : 'transparent', color: selectedProspect.status === 'new' || !selectedProspect.status ? 'white' : 'var(--secondary)', borderColor: 'var(--secondary)' }}
-                                >
-                                    Nouveau
-                                </button>
-                            </div>
-                        </div>
+            {filteredProspects.length === 0 && (
+                <div style={{ textAlign: 'center', padding: '5rem 0', color: 'var(--text-light)' }}>
+                    <i className="fas fa-search" style={{ fontSize: '3rem', marginBottom: '1rem', opacity: 0.2 }}></i>
+                    <p style={{ fontSize: '1.1rem', fontWeight: '600' }}>Aucun prospect ne correspond à votre recherche.</p>
+                </div>
+            )}
 
-                        <div style={{ textAlign: 'right' }}>
-                            <button
-                                style={{ ...styles.viewBtn, background: 'var(--primary)', color: 'white', border: 'none', padding: '1rem 2.5rem' }}
-                                onClick={() => setSelectedProspect(null)}
-                            >
-                                Fermer
-                            </button>
-                        </div>
+            {/* Pagination Controls */}
+            {filteredProspects.length > prospectsPerPage && (
+                <div style={styles.paginationContainer}>
+                    <button
+                        disabled={currentPage === 1}
+                        onClick={() => {
+                            setCurrentPage(prev => prev - 1);
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
+                        style={{ ...styles.paginationBtn, opacity: currentPage === 1 ? 0.3 : 1 }}
+                    >
+                        <i className="fas fa-chevron-left"></i>
+                    </button>
+
+                    <div style={styles.paginationInfo}>
+                        Page {currentPage} sur {Math.ceil(filteredProspects.length / prospectsPerPage)}
                     </div>
+
+                    <button
+                        disabled={currentPage >= Math.ceil(filteredProspects.length / prospectsPerPage)}
+                        onClick={() => {
+                            setCurrentPage(prev => prev + 1);
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
+                        style={{ ...styles.paginationBtn, opacity: currentPage >= Math.ceil(filteredProspects.length / prospectsPerPage) ? 0.3 : 1 }}
+                    >
+                        <i className="fas fa-chevron-right"></i>
+                    </button>
                 </div>
             )}
         </div>

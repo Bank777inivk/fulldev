@@ -1,11 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { supportService } from '../../services/supportService';
 
 const DashboardSidebar = ({ isOpen, toggleSidebar }) => {
-    const { logout, userData } = useAuth();
+    const { logout, userData, currentUser } = useAuth();
+    const [unreadSupport, setUnreadSupport] = useState(0);
     const navigate = useNavigate();
     const isMobile = window.innerWidth < 768;
+
+    useEffect(() => {
+        if (!currentUser) return;
+        const unsubscribe = supportService.subscribeToUnreadCount(currentUser.uid, (count) => {
+            setUnreadSupport(count);
+        });
+        return () => unsubscribe();
+    }, [currentUser]);
 
     const handleLogout = async () => {
         try {
@@ -26,7 +36,7 @@ const DashboardSidebar = ({ isOpen, toggleSidebar }) => {
         { name: 'Crédits', path: '/dashboard/credits', icon: 'fas fa-hand-holding-usd' },
         { name: 'Historique', path: '/dashboard/history', icon: 'fas fa-history' },
         { name: 'Documents / RIB', path: '/dashboard/documents', icon: 'fas fa-file-invoice' },
-        { name: 'Support', path: '/dashboard/support', icon: 'fas fa-headset' },
+        { name: 'Support', path: '/dashboard/support', icon: 'fas fa-headset', badge: unreadSupport },
         { name: 'Paramètres', path: '/dashboard/settings', icon: 'fas fa-cog' },
     ];
 
@@ -59,9 +69,30 @@ const DashboardSidebar = ({ isOpen, toggleSidebar }) => {
                         end={item.path === '/dashboard'}
                         className={({ isActive }) => isActive ? 'sidebar-link active' : 'sidebar-link'}
                         onClick={() => window.innerWidth < 768 && toggleSidebar()}
+                        style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'relative' }}
                     >
-                        <i className={item.icon}></i>
-                        <span>{item.name}</span>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                            <i className={item.icon}></i>
+                            <span>{item.name}</span>
+                        </div>
+                        {item.badge > 0 && (
+                            <span style={{
+                                background: '#e11d48',
+                                color: 'white',
+                                fontSize: '0.7rem',
+                                fontWeight: 'bold',
+                                padding: '2px 8px',
+                                borderRadius: '10px',
+                                minWidth: '18px',
+                                height: '18px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                            }}>
+                                {item.badge}
+                            </span>
+                        )}
                     </NavLink>
                 ))}
             </nav>

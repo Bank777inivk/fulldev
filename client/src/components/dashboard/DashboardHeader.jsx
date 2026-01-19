@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { notificationService } from '../../services/notificationService';
 import NotificationDropdown from './NotificationDropdown';
+import { useNavigate } from 'react-router-dom';
 
 const DashboardHeader = ({ toggleSidebar }) => {
     const { userData } = useAuth();
+    const navigate = useNavigate();
     const [notifications, setNotifications] = useState([]);
     const [showNotifications, setShowNotifications] = useState(false);
     const unreadCount = notifications.filter(n => !n.read).length;
@@ -63,13 +65,13 @@ const DashboardHeader = ({ toggleSidebar }) => {
                     )}
                 </div>
 
-                <div className="header-profile">
-                    <div className="profile-info sm-hide">
-                        <span className="profile-name">{userData?.firstName} {userData?.lastName}</span>
-                        <span className="profile-id">ID: {userData?.uid?.substring(0, 8)}</span>
-                    </div>
+                <div
+                    className="header-profile"
+                    onClick={() => navigate('/dashboard/settings')}
+                    title="Paramètres du compte"
+                >
                     <div className="profile-avatar">
-                        <i className="fas fa-user"></i>
+                        {userData?.firstName?.charAt(0) || <i className="fas fa-user"></i>}
                     </div>
                 </div>
             </div>

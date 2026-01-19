@@ -651,6 +651,12 @@ const Transfers = () => {
                                             </div>
                                             <p style={styles.balanceInfo}>Solde disponible : <strong style={{ color: (parseFloat(amount) > getWallet(fromAccount)?.balance) ? '#e74c3c' : '#27ae60' }}>{getWallet(fromAccount)?.balance.toFixed(2)} EUR</strong></p>
 
+                                            {parseFloat(amount) > getWallet(fromAccount)?.balance && (
+                                                <p style={{ color: '#e74c3c', fontWeight: 'bold', marginTop: '10px' }}>
+                                                    <i className="fas fa-exclamation-triangle"></i> Attention: Ce montant dépasse votre solde disponible. Le virement pourra être rejeté.
+                                                </p>
+                                            )}
+
                                             {parseFloat(amount) > 50000 && (
                                                 <p style={{ color: '#e74c3c', fontWeight: 'bold' }}><i className="fas fa-exclamation-circle"></i> Limite maximale autorisée : 50 000 € par virement</p>
                                             )}

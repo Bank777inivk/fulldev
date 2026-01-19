@@ -254,7 +254,7 @@ const UserDetails = () => {
     const totalPages = Math.ceil(transactions.length / transactionsPerPage);
     const kycColors = getKYCColor(effectiveLevel);
 
-    const MobileView = () => (
+    const renderMobileView = () => (
         <div style={{ padding: '0.75rem' }} className="animate-fade-in">
             <div style={{ background: 'white', borderRadius: '32px', padding: '1.5rem', border: '1px solid #f1f5f9', boxShadow: '0 4px 20px rgba(0,0,0,0.03)', marginBottom: '1.2rem', textAlign: 'center' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '1.5rem' }}>
@@ -305,6 +305,19 @@ const UserDetails = () => {
                     <RenderField label="Téléphone" name="phone" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
                     <RenderField label="Ville" name="city" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
                     <RenderField label="Pays" name="countryOfResidence" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                </div>
+            </div>
+
+            <div style={{ background: 'white', borderRadius: '28px', padding: '1.2rem', border: '1px solid #f1f5f9', marginBottom: '1.2rem' }}>
+                <h3 style={{ fontSize: '1rem', fontWeight: '800', color: '#003366', marginBottom: '1.2rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <i className="fas fa-user-tie" style={{ opacity: 0.3 }}></i> Conseiller Financier
+                </h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                    <RenderField label="Nom Advisor" name="advisorName" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                    <RenderField label="Rôle Advisor" name="advisorRole" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                    <RenderField label="Email Advisor" name="advisorEmail" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                    <RenderField label="Tél Advisor" name="advisorPhone" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                    <RenderField label="Photo (URL) Advisor" name="advisorPhoto" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
                 </div>
             </div>
 
@@ -390,7 +403,7 @@ const UserDetails = () => {
         </div>
     );
 
-    const DesktopView = () => (
+    const renderDesktopView = () => (
         <div style={styles.grid}>
             <div style={styles.leftColumn}>
                 <div style={styles.card}>
@@ -442,6 +455,17 @@ const UserDetails = () => {
                         <RenderField label="Code Postal" name="zipCode" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
                         <RenderField label="Ville" name="city" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
                         <RenderField label="Pays" name="countryOfResidence" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                    </div>
+
+                    <div style={styles.divider}></div>
+
+                    <div style={styles.section}>
+                        <h3 style={styles.sectionTitle}>Conseiller Financier Attitré</h3>
+                        <RenderField label="Nom du Conseiller" name="advisorName" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                        <RenderField label="Rôle / Titre" name="advisorRole" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                        <RenderField label="Email Direct" name="advisorEmail" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                        <RenderField label="Ligne Directe" name="advisorPhone" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
+                        <RenderField label="Photo Advisor (URL)" name="advisorPhoto" data={user} isEditing={isEditing} onChange={handleChange} editData={editFormData} />
                     </div>
 
                     <div style={styles.divider}></div>
@@ -709,7 +733,7 @@ const UserDetails = () => {
                 </div>
             </div>
 
-            {isMobile ? <MobileView /> : <DesktopView />}
+            {isMobile ? renderMobileView() : renderDesktopView()}
         </div>
     );
 };
