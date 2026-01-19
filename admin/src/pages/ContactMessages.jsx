@@ -14,6 +14,17 @@ const ContactMessages = () => {
         return () => unsubscribe();
     }, []);
 
+    const handleUpdateStatus = async (id, status) => {
+        try {
+            await adminService.updateContactMessageStatus(id, status);
+            if (selectedMessage && selectedMessage.id === id) {
+                setSelectedMessage({ ...selectedMessage, status });
+            }
+        } catch (error) {
+            console.error("Error updating message status:", error);
+        }
+    };
+
     const styles = {
         container: { padding: '2rem' },
         header: { marginBottom: '2rem' },
@@ -92,9 +103,19 @@ const ContactMessages = () => {
                             </div>
                         </div>
 
-                        <div style={{ textAlign: 'right' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <div>
+                                {selectedMessage.status === 'new' && (
+                                    <button
+                                        style={{ padding: '0.8rem 1.5rem', borderRadius: '12px', border: '1px solid var(--secondary)', background: 'transparent', color: 'var(--secondary)', fontWeight: '700', cursor: 'pointer' }}
+                                        onClick={() => handleUpdateStatus(selectedMessage.id, 'read')}
+                                    >
+                                        Marquer comme lu
+                                    </button>
+                                )}
+                            </div>
                             <button
-                                style={{ padding: '0.8rem 2rem', borderRadius: '12px', border: 'none', background: 'var(--primary)', color: 'white', fontWeight: '700', cursor: 'pointer' }}
+                                style={{ padding: '0.8rem 2.5rem', borderRadius: '12px', border: 'none', background: 'var(--primary)', color: 'white', fontWeight: '700', cursor: 'pointer' }}
                                 onClick={() => setSelectedMessage(null)}
                             >
                                 Fermer

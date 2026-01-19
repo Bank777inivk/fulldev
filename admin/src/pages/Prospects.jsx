@@ -16,6 +16,14 @@ const Prospects = () => {
         return () => unsubscribe();
     }, []);
 
+    const handleStatusChange = async (id, newStatus) => {
+        try {
+            await adminService.updateLeadStatus(id, newStatus);
+        } catch (error) {
+            console.error("Error updating lead status:", error);
+        }
+    };
+
     const getScoreColor = (score) => {
         switch (score) {
             case 'GREEN': return '#10b981';
@@ -225,6 +233,35 @@ const Prospects = () => {
                                     <span style={styles.label}>Banque actuelle</span>
                                     <span style={styles.value}>{selectedProspect.banqueActuelle}</span>
                                 </div>
+                            </div>
+                        </div>
+
+                        <div style={{ marginBottom: '2.5rem', padding: '1.5rem', background: '#f8fafc', borderRadius: '16px', border: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <div>
+                                <span style={styles.label}>Statut Dossier</span>
+                                <span style={{ ...styles.value, color: selectedProspect.status === 'new' ? 'var(--secondary)' : selectedProspect.status === 'contacted' ? 'var(--accent)' : 'var(--text-light)' }}>
+                                    {selectedProspect.status?.toUpperCase() || 'NOUVEAU'}
+                                </span>
+                            </div>
+                            <div style={{ display: 'flex', gap: '10px' }}>
+                                <button
+                                    onClick={() => handleStatusChange(selectedProspect.id, 'contacted')}
+                                    style={{ ...styles.viewBtn, fontSize: '0.8rem', background: selectedProspect.status === 'contacted' ? 'var(--accent)' : 'transparent', color: selectedProspect.status === 'contacted' ? 'white' : 'var(--accent)', borderColor: 'var(--accent)' }}
+                                >
+                                    Marquer comme Contacté
+                                </button>
+                                <button
+                                    onClick={() => handleStatusChange(selectedProspect.id, 'closed')}
+                                    style={{ ...styles.viewBtn, fontSize: '0.8rem', background: selectedProspect.status === 'closed' ? 'var(--text-light)' : 'transparent', color: selectedProspect.status === 'closed' ? 'white' : 'var(--text-light)', borderColor: 'var(--text-light)' }}
+                                >
+                                    Clôturer
+                                </button>
+                                <button
+                                    onClick={() => handleStatusChange(selectedProspect.id, 'new')}
+                                    style={{ ...styles.viewBtn, fontSize: '0.8rem', background: selectedProspect.status === 'new' || !selectedProspect.status ? 'var(--secondary)' : 'transparent', color: selectedProspect.status === 'new' || !selectedProspect.status ? 'white' : 'var(--secondary)', borderColor: 'var(--secondary)' }}
+                                >
+                                    Nouveau
+                                </button>
                             </div>
                         </div>
 

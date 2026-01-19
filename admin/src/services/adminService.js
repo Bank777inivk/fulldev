@@ -594,6 +594,56 @@ export const adminService = {
 
     deleteAccountRequest: async (requestId) => {
         await deleteDoc(doc(db, 'account_requests', requestId));
+    },
+
+    // --- Lead Management ---
+    updateLeadStatus: async (leadId, status) => {
+        await updateDoc(doc(db, 'loan_leads', leadId), {
+            status,
+            updatedAt: serverTimestamp()
+        });
+    },
+
+    // --- Contact Message Management ---
+    updateContactMessageStatus: async (messageId, status) => {
+        await updateDoc(doc(db, 'contact_messages', messageId), {
+            status,
+            updatedAt: serverTimestamp()
+        });
+    },
+
+    // --- Support Ticket Management ---
+    updateSupportTicketStatus: async (ticketId, status) => {
+        await updateDoc(doc(db, 'support_tickets', ticketId), {
+            status,
+            updatedAt: serverTimestamp()
+        });
+    },
+
+    addSupportMessage: async (ticketId, messageData) => {
+        const ticketRef = doc(db, 'support_tickets', ticketId);
+        const messagesRef = collection(ticketRef, 'messages');
+        await addDoc(messagesRef, {
+            ...messageData,
+            createdAt: serverTimestamp()
+        });
+
+        // Update ticket's updatedAt
+        await updateDoc(ticketRef, {
+            updatedAt: serverTimestamp(),
+            lastMessageAt: serverTimestamp()
+        });
+    },
+
+    subscribeToTicketMessages: (ticketId, callback) => {
+        const q = query(
+            collection(db, 'support_tickets', ticketId, 'messages'),
+            orderBy('createdAt', 'asc')
+        );
+        return onSnapshot(q, (snapshot) => {
+            const messages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            callback(messages);
+        });
     }
 };
 

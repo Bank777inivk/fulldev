@@ -38,11 +38,14 @@ const Dashboard = () => {
     useEffect(() => {
         const loadStats = async () => {
             try {
-                const [users, transactions, kycs, cards] = await Promise.all([
+                const [users, transactions, kycs, cards, leads, messages, tickets] = await Promise.all([
                     adminService.getAllUsers(),
                     adminService.getAllTransactions(),
                     adminService.getAllKYC(),
                     adminService.getAllCardRequests(),
+                    new Promise(resolve => adminService.subscribeToLeads(data => resolve(data))),
+                    new Promise(resolve => adminService.subscribeToContactMessages(data => resolve(data))),
+                    new Promise(resolve => adminService.subscribeToSupportTickets(data => resolve(data)))
                 ]);
 
                 setStats(prev => ({
@@ -52,6 +55,9 @@ const Dashboard = () => {
                     activeUsers: users.filter(u => u.accountStatus === 'active').length,
                     pendingKYC: kycs.filter(k => k.status === 'submitted').length,
                     pendingCards: cards.filter(c => c.status === 'pending').length,
+                    newLeads: leads.filter(l => l.status === 'new').length,
+                    newMessages: messages.filter(m => m.status === 'new').length,
+                    openTickets: tickets.filter(t => t.status === 'open').length,
                 }));
 
                 setRecentActivity(transactions.slice(0, 5));
@@ -86,11 +92,26 @@ const Dashboard = () => {
             setStats(prev => ({ ...prev, pendingCards: data.filter(c => c.status === 'pending').length }));
         });
 
+        const unsubLeads = adminService.subscribeToLeads(data => {
+            setStats(prev => ({ ...prev, newLeads: data.filter(l => l.status === 'new').length }));
+        });
+
+        const unsubMessages = adminService.subscribeToContactMessages(data => {
+            setStats(prev => ({ ...prev, newMessages: data.filter(m => m.status === 'new').length }));
+        });
+
+        const unsubTickets = adminService.subscribeToSupportTickets(data => {
+            setStats(prev => ({ ...prev, openTickets: data.filter(t => t.status === 'open').length }));
+        });
+
         return () => {
             unsubTransactions();
             unsubUsers();
             unsubKYC();
             unsubCards();
+            unsubLeads();
+            unsubMessages();
+            unsubTickets();
         };
     }, []);
 
@@ -114,22 +135,40 @@ const Dashboard = () => {
             trendUp: true
         },
         {
-            title: 'Revenus',
-            value: `€${(stats.totalRevenue / 1000).toFixed(1)}k`,
-            icon: 'fas fa-chart-line',
-            color: '#9b59b6',
-            bg: '#f4ecf7',
-            trend: '+18%',
-            trendUp: true
-        },
-        {
-            title: 'Alertes',
-            value: stats.pendingKYC + stats.pendingCards,
+            title: 'Alertes Système',
+            value: (stats.pendingKYC || 0) + (stats.pendingCards || 0),
             icon: 'fas fa-exclamation-triangle',
             color: '#e74c3c',
             bg: '#fdedec',
-            trend: '-2%',
+            trend: 'KYC/Cartes',
             trendUp: false
+        },
+        {
+            title: 'Nouveaux Prospects',
+            value: stats.newLeads || 0,
+            icon: 'fas fa-user-tie',
+            color: '#f39c12',
+            bg: '#fef5e7',
+            trend: 'Nouveaux',
+            trendUp: true
+        },
+        {
+            title: 'Nouveaux Messages',
+            value: stats.newMessages || 0,
+            icon: 'fas fa-comment-alt',
+            color: '#00ccff',
+            bg: '#e0f2fe',
+            trend: 'Contact',
+            trendUp: true
+        },
+        {
+            title: 'Tickets Ouverts',
+            value: stats.openTickets || 0,
+            icon: 'fas fa-headset',
+            color: '#9b59b6',
+            bg: '#f4ecf7',
+            trend: 'Support',
+            trendUp: true
         },
     ];
 
