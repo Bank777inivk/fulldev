@@ -11,32 +11,54 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Missing required fields' });
     }
 
-    const smtpPort = parseInt(process.env.SMTP_PORT || '465');
+    // SMTP Configuration diagnostics
+    const host = process.env.SMTP_HOST;
+    const user = process.env.SMTP_USER;
+    const pass = process.env.SMTP_PASS;
+    const portStr = process.env.SMTP_PORT;
+
+    if (!host || !user || !pass || !portStr) {
+        console.error('CRITICAL: Missing SMTP Environment Variables', {
+            hasHost: !!host,
+            hasUser: !!user,
+            hasPass: !!pass,
+            hasPort: !!portStr
+        });
+        return res.status(500).json({
+            error: 'Configuration Error',
+            details: 'One or more SMTP environment variables are missing on Vercel.'
+        });
+    }
+
+    const smtpPort = parseInt(portStr);
     const transporter = nodemailer.createTransport({
-        host: process.env.SMTP_HOST || 'smtp.hostinger.com',
+        host: host,
         port: smtpPort,
         secure: smtpPort === 465,
         auth: {
-            user: process.env.SMTP_USER,
-            pass: process.env.SMTP_PASS,
+            user: user,
+            pass: pass,
         },
-        timeout: 10000,
+        timeout: 15000, // Increase timeout slightly
     });
 
     try {
+        console.log(`[SMTP-AUTH] Attempting connection to ${host}:${smtpPort} as ${user}`);
         const info = await transporter.sendMail({
-            from: `"INVIK BANK" <${process.env.SMTP_USER}>`,
+            from: `"INVIK BANK" <${user}>`,
             to,
             subject,
             html,
         });
 
+        console.log('[SMTP-SUCCESS] Email sent:', info.messageId);
         return res.status(200).json({ success: true, messageId: info.messageId });
     } catch (error) {
-        console.error('Nodemailer error:', error);
+        console.error('[SMTP-ERROR]', error);
         return res.status(500).json({
             error: 'Failed to send email',
-            details: error.message
+            details: error.message,
+            code: error.code
         });
     }
 }
