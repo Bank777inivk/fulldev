@@ -249,6 +249,7 @@ const ManageAdmins = () => {
                                     <input
                                         type="text"
                                         required
+                                        style={styles.input}
                                         value={formData.firstName}
                                         onChange={e => setFormData({ ...formData, firstName: e.target.value })}
                                         placeholder="Jean"
@@ -259,6 +260,7 @@ const ManageAdmins = () => {
                                     <input
                                         type="text"
                                         required
+                                        style={styles.input}
                                         value={formData.lastName}
                                         onChange={e => setFormData({ ...formData, lastName: e.target.value })}
                                         placeholder="Dupont"
@@ -270,6 +272,7 @@ const ManageAdmins = () => {
                                 <input
                                     type="email"
                                     required
+                                    style={styles.input}
                                     value={formData.email}
                                     onChange={e => setFormData({ ...formData, email: e.target.value })}
                                     placeholder="admin@inviksa.com"
@@ -280,6 +283,7 @@ const ManageAdmins = () => {
                                 <input
                                     type="password"
                                     required
+                                    style={styles.input}
                                     value={formData.password}
                                     onChange={e => setFormData({ ...formData, password: e.target.value })}
                                     placeholder="••••••••"
@@ -451,11 +455,12 @@ const styles = {
         bottom: 0,
         background: 'rgba(0,0,30,0.4)',
         backdropFilter: 'blur(8px)',
-        zIndex: 2000,
+        zIndex: 99999,
         display: 'flex',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         justifyContent: 'center',
-        padding: '1rem'
+        padding: '2rem 1rem',
+        overflowY: 'auto'
     },
     modal: {
         background: 'white',
@@ -464,12 +469,19 @@ const styles = {
         borderRadius: '32px',
         padding: 'clamp(1.5rem, 5vw, 2.5rem)',
         boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-        position: 'relative'
+        position: 'relative',
+        marginTop: isMobile ? '40px' : '60px',
+        maxHeight: 'none',
+        overflowY: 'visible'
     },
     modalHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' },
     closeBtn: { background: '#f1f5f9', border: 'none', width: '36px', height: '36px', borderRadius: '50%', cursor: 'pointer', color: '#64748b', display: 'flex', alignItems: 'center', justifyContent: 'center' },
     form: { display: 'flex', flexDirection: 'column', gap: '1.5rem' },
-    row: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' },
+    row: {
+        display: 'grid',
+        gridTemplateColumns: window.innerWidth <= 1024 ? '1fr' : '1fr 1fr',
+        gap: '1rem'
+    },
     inputGroup: { display: 'flex', flexDirection: 'column', gap: '8px' },
     formHint: { color: '#94a3b8', fontSize: '0.75rem', marginTop: '4px' },
     checkboxGroup: { padding: '1.2rem', background: '#f8fafc', borderRadius: '20px', border: '1px solid #f1f5f9' },
@@ -480,6 +492,16 @@ const styles = {
     modalActions: { display: 'flex', gap: '1rem', marginTop: '1rem' },
     cancelBtn: { flex: 1, padding: '1rem', borderRadius: '16px', border: '1px solid #e2e8f0', background: 'white', fontWeight: '700', cursor: 'pointer', color: '#64748b' },
     submitBtn: { flex: 1, padding: '1rem', borderRadius: '16px', border: 'none', background: '#003366', color: 'white', fontWeight: '700', cursor: 'pointer', boxShadow: '0 4px 12px rgba(0, 51, 102, 0.15)' },
+    input: {
+        padding: '0.8rem 1rem',
+        borderRadius: '12px',
+        border: '1px solid #e2e8f0',
+        fontSize: '1rem',
+        outline: 'none',
+        transition: 'border-color 0.2s',
+        width: '100%',
+        boxSizing: 'border-box'
+    },
     errorContainer: { textAlign: 'center', padding: '5rem', color: '#64748b' }
 };
 
