@@ -346,8 +346,8 @@ export const transactionService = {
                 if (userSnapshot.exists()) {
                     const userData = userSnapshot.data();
 
-                    // Sender confirmation
-                    await emailService.sendTransferSentEmail(
+                    // Sender confirmation (SEPA Pending)
+                    await emailService.sendTransferInitiatedEmail(
                         userData.email,
                         `${userData.firstName} ${userData.lastName}`,
                         amount,
@@ -355,9 +355,9 @@ export const transactionService = {
                         docRef.id
                     );
 
-                    // Beneficiary notification (if email provided)
+                    // Beneficiary notification (SEPA Pending)
                     if (beneficiaryEmail) {
-                        await emailService.sendTransferReceivedEmail(
+                        await emailService.sendTransferPendingEmail(
                             beneficiaryEmail,
                             beneficiaryName,
                             amount,

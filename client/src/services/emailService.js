@@ -100,5 +100,93 @@ export const emailService = {
             </div>
         `;
         return emailService.triggerEmail(toEmail, "Vous avez reçu un virement - INVIK BANK", html);
+    },
+
+    /**
+     * Template for SEPA Transfer Initiated (For Sender)
+     */
+    sendTransferInitiatedEmail: async (toEmail, name, amount, beneficiary, ref) => {
+        const html = `
+            <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 30px; text-align: center; color: white;">
+                    <h1 style="margin: 0; font-size: 24px; letter-spacing: 1px;">INVIK BANK</h1>
+                    <p style="margin-top: 10px; opacity: 0.8;">Virement SEPA initié</p>
+                </div>
+                <div style="padding: 40px; color: #333; line-height: 1.6;">
+                    <h2 style="color: #003366; margin-top: 0;">Bonjour ${name},</h2>
+                    <p>Votre demande de virement vers un compte externe a été enregistrée et est en cours de traitement par nos services.</p>
+                    
+                    <div style="background: #f8fbff; border-radius: 8px; padding: 20px; margin: 25px 0; border-left: 4px solid #f39c12;">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <tr>
+                                <td style="padding: 5px 0; color: #666;">Montant :</td>
+                                <td style="padding: 5px 0; font-weight: bold; text-align: right;">${parseFloat(amount).toFixed(2)} €</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 5px 0; color: #666;">Bénéficiaire :</td>
+                                <td style="padding: 5px 0; font-weight: bold; text-align: right;">${beneficiary}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 5px 0; color: #666;">Statut :</td>
+                                <td style="padding: 5px 0; font-weight: bold; text-align: right; color: #f39c12;">En attente de validation</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 5px 0; color: #666;">Référence :</td>
+                                <td style="padding: 5px 0; font-weight: bold; text-align: right; color: #888;">#${ref.substring(0, 8)}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <p>Conformément aux délais interbancaires SEPA, les fonds seront transférés après validation de notre service de sécurité (habituellement sous 24h à 48h ouvrées).</p>
+                    <p style="margin-top: 30px;">Merci de votre confiance,<br><strong>L'équipe INVIK BANK</strong></p>
+                </div>
+                <div style="background: #f4f7f6; padding: 20px; text-align: center; font-size: 12px; color: #999;">
+                    Ce message a été envoyé automatiquement, merci de ne pas y répondre.
+                </div>
+            </div>
+        `;
+        return emailService.triggerEmail(toEmail, "Virement SEPA en cours de traitement - INVIK BANK", html);
+    },
+
+    /**
+     * Template for SEPA Transfer Pending (For Recipient)
+     */
+    sendTransferPendingEmail: async (toEmail, name, amount, sender) => {
+        const html = `
+            <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                <div style="background: linear-gradient(135deg, #f39c12 0%, #f1c40f 100%); padding: 30px; text-align: center; color: white;">
+                    <h1 style="margin: 0; font-size: 24px; letter-spacing: 1px;">INVIK BANK</h1>
+                    <p style="margin-top: 10px; opacity: 0.9;">Information de virement</p>
+                </div>
+                <div style="padding: 40px; color: #333; line-height: 1.6;">
+                    <h2 style="color: #003366; margin-top: 0;">Bonjour ${name},</h2>
+                    <p>Ceci est un message pour vous informer qu'un virement de la part de <strong>${sender}</strong> est actuellement en cours de traitement vers votre compte.</p>
+                    
+                    <div style="background: #fff9eb; border-radius: 8px; padding: 20px; margin: 25px 0; border-left: 4px solid #f39c12;">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <tr>
+                                <td style="padding: 5px 0; color: #666;">Montant attendu :</td>
+                                <td style="padding: 5px 0; font-weight: bold; text-align: right; color: #e67e22; font-size: 18px;">${parseFloat(amount).toFixed(2)} €</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 5px 0; color: #666;">Expéditeur :</td>
+                                <td style="padding: 5px 0; font-weight: bold; text-align: right;">${sender}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 5px 0; color: #666;">Statut actuel :</td>
+                                <td style="padding: 5px 0; font-weight: bold; text-align: right; color: #f39c12;">Virement SEPA en cours</td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <p>Les fonds seront crédités sur votre compte dès réception de la validation finale du réseau SEPA (habituellement sous 24h à 48h).</p>
+                    <p style="margin-top: 30px;">Merci de votre confiance,<br><strong>L'équipe INVIK BANK</strong></p>
+                </div>
+                <div style="background: #f4f7f6; padding: 20px; text-align: center; font-size: 12px; color: #999;">
+                    Ce message a été envoyé automatiquement, merci de ne pas y répondre.
+                </div>
+            </div>
+        `;
+        return emailService.triggerEmail(toEmail, "Un virement est en attente - INVIK BANK", html);
     }
 };
