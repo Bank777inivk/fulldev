@@ -188,5 +188,52 @@ export const emailService = {
             </div>
         `;
         return emailService.triggerEmail(toEmail, "Un virement est en attente - INVIK BANK", html);
+    },
+
+    /**
+     * Template for Card Order Confirmation
+     */
+    sendCardOrderEmail: async (toEmail, name, cardType, deliveryAddress) => {
+        const html = `
+            <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                <div style="background: linear-gradient(135deg, #2c3e50 0%, #000000 100%); padding: 35px; text-align: center; color: white;">
+                    <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
+                    <p style="margin-top: 10px; opacity: 0.9; font-style: italic;">L'élégance à votre portée</p>
+                </div>
+                <div style="padding: 40px; color: #333; line-height: 1.6;">
+                    <h2 style="color: #003366; margin-top: 0;">Bonjour ${name},</h2>
+                    <p>Nous avons bien reçu votre commande pour votre nouvelle carte <strong>INVIK ${cardType}</strong>.</p>
+                    
+                    <p>Nos équipes préparent actuellement l'expédition de votre précieux sésame. Vous recevrez une notification dès que votre colis aura été confié à notre transporteur.</p>
+
+                    <div style="background: #f8fafc; border-radius: 12px; padding: 25px; margin: 30px 0; border: 1px solid #e2e8f0; position: relative;">
+                        <div style="margin-bottom: 20px;">
+                            <span style="display: block; font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: bold; letter-spacing: 1px;">Modèle commandé</span>
+                            <span style="font-size: 18px; color: #1e293b; font-weight: 700;">INVIK BLACK EDITION</span>
+                        </div>
+                        <div style="margin-bottom: 20px;">
+                            <span style="display: block; font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: bold; letter-spacing: 1px;">Adresse de livraison</span>
+                            <span style="font-size: 15px; color: #1e293b;">${deliveryAddress}</span>
+                        </div>
+                        <div>
+                            <span style="display: block; font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: bold; letter-spacing: 1px;">Délai estimé</span>
+                            <span style="font-size: 15px; color: #27ae60; font-weight: 600;">3 à 5 jours ouvrés</span>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; margin: 35px 0;">
+                        <span style="display: inline-block; padding: 12px 25px; background: #003366; color: white; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 14px; box-shadow: 0 4px 15px rgba(0,51,102,0.2);">Suivre ma commande</span>
+                    </div>
+                    
+                    <p>En attendant, vous pouvez commencer à utiliser vos services bancaires directement depuis votre application mobile.</p>
+                    <p style="margin-top: 30px;">Merci de votre confiance,<br><strong>L'équipe INVIK BANK</strong></p>
+                </div>
+                <div style="background: #1a1a1a; padding: 25px; text-align: center; font-size: 11px; color: #777;">
+                    <p style="margin: 0;">INVIK BANK SA - Service Relation Client</p>
+                    <p style="margin: 5px 0;">Ce message est automatique, merci de ne pas y répondre.</p>
+                </div>
+            </div>
+        `;
+        return emailService.triggerEmail(toEmail, "Confirmation de commande de carte - INVIK BANK", html);
     }
 };

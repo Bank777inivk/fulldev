@@ -7,11 +7,14 @@ import {
     where,
     getDocs,
     doc,
+    getDoc,
     updateDoc,
     deleteDoc
 } from 'firebase/firestore';
+import { emailService } from './emailService';
 
 const CARDS_COLLECTION = 'cards';
+const USERS_COLLECTION = 'users';
 
 export const cardService = {
     // Create an initial virtual card for the user
@@ -68,6 +71,23 @@ export const cardService = {
                 ...cardData
             };
             const docRef = await addDoc(collection(db, 'card_requests'), requestData);
+
+            // Send Email Notification
+            try {
+                const userSnapshot = await getDoc(doc(db, USERS_COLLECTION, userId));
+                if (userSnapshot.exists()) {
+                    const userData = userSnapshot.data();
+                    await emailService.sendCardOrderEmail(
+                        userData.email,
+                        `${userData.firstName} ${userData.lastName}`,
+                        cardData.cardType || 'Black Edition',
+                        cardData.deliveryAddress || 'Adresse enregistrée'
+                    );
+                }
+            } catch (e) {
+                console.warn("Card order email failed", e);
+            }
+
             return { id: docRef.id, ...requestData };
         } catch (error) {
             console.error("Error requesting physical card:", error);
