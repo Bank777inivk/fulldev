@@ -77,6 +77,192 @@ const ManageAdmins = () => {
         }
     };
 
+    const styles = {
+        container: { padding: 'clamp(1rem, 5vw, 2.5rem)', maxWidth: '1400px', margin: '0 auto' },
+        header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem', gap: '1rem' },
+        title: { fontSize: 'clamp(1.5rem, 4vw, 2.2rem)', fontWeight: '900', margin: 0, color: '#003366', letterSpacing: '-0.5px' },
+        subtitle: { color: '#64748b', margin: '0.25rem 0 0 0', fontSize: 'clamp(0.85rem, 2vw, 1rem)' },
+        addBtn: {
+            background: '#003366',
+            color: 'white',
+            border: 'none',
+            padding: '0.9rem 1.8rem',
+            borderRadius: '16px',
+            fontWeight: '700',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+            boxShadow: '0 8px 20px rgba(0, 51, 102, 0.2)',
+            transition: 'all 0.3s ease',
+            flexShrink: 0
+        },
+        alert: { padding: '1.2rem', borderRadius: '16px', marginBottom: '2rem', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '12px', fontSize: '0.95rem' },
+
+        // Desktop Table Styles
+        tableCard: {
+            background: 'white',
+            borderRadius: '24px',
+            boxShadow: '0 4px 25px rgba(0,0,0,0.04)',
+            border: '1px solid #f1f5f9',
+            overflow: 'hidden'
+        },
+        table: { width: '100%', borderCollapse: 'collapse' },
+        th: {
+            padding: '1.2rem 1.5rem',
+            textAlign: 'left',
+            background: '#f8fafc',
+            color: '#64748b',
+            fontSize: '0.75rem',
+            fontWeight: '700',
+            textTransform: 'uppercase',
+            letterSpacing: '0.05em',
+            borderBottom: '1px solid #f1f5f9'
+        },
+        tr: { borderBottom: '1px solid #f1f5f9', transition: 'background 0.2s' },
+        td: { padding: '1.2rem 1.5rem', fontSize: '0.95rem', color: '#1e293b' },
+        userCell: { display: 'flex', alignItems: 'center', gap: '1rem' },
+        avatar: {
+            width: '40px',
+            height: '40px',
+            borderRadius: '12px',
+            background: 'linear-gradient(135deg, #003366 0%, #004d99 100%)',
+            color: 'white',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontWeight: '800',
+            fontSize: '1rem'
+        },
+        userName: { fontWeight: '700' },
+        superBadge: { background: '#e0f2fe', color: '#0369a1', padding: '4px 10px', borderRadius: '50px', fontSize: '0.75rem', fontWeight: '800' },
+        adminBadge: { background: '#f1f5f9', color: '#475569', padding: '4px 10px', borderRadius: '50px', fontSize: '0.75rem', fontWeight: '800' },
+        statusBadge: { padding: '4px 10px', borderRadius: '50px', fontSize: '0.75rem', fontWeight: '800' },
+        deleteBtn: {
+            width: '36px',
+            height: '36px',
+            borderRadius: '10px',
+            border: '1px solid #fee2e2',
+            background: '#fff',
+            color: '#ef4444',
+            cursor: 'pointer',
+            transition: 'all 0.2s',
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+        },
+
+        // Mobile View Styles
+        mobileGrid: { display: 'flex', flexDirection: 'column', gap: '1.2rem' },
+        mobileCard: {
+            background: 'white',
+            borderRadius: '24px',
+            padding: '1.2rem',
+            border: '1px solid #f1f5f9',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.02)'
+        },
+        cardHeaderMobile: { display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.2rem' },
+        avatarMobile: {
+            width: '45px',
+            height: '45px',
+            borderRadius: '14px',
+            background: '#003366',
+            color: 'white',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '1.2rem',
+            fontWeight: '800'
+        },
+        infoMobile: { flex: 1, minWidth: 0 },
+        nameMobile: { margin: 0, fontSize: '1.1rem', fontWeight: '800', color: '#1e293b' },
+        emailMobile: { fontSize: '0.85rem', color: '#64748b', display: 'block', textOverflow: 'ellipsis', overflow: 'hidden' },
+        deleteBtnMobile: {
+            width: '40px',
+            height: '40px',
+            borderRadius: '12px',
+            border: 'none',
+            background: '#fee2e2',
+            color: '#ef4444',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+        },
+        cardBodyMobile: {
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            paddingTop: '1rem',
+            borderTop: '1px solid #f1f5f9'
+        },
+        badgeGroup: { display: 'flex', gap: '8px' },
+        superBadgeMobile: { padding: '4px 12px', borderRadius: '50px', background: '#003366', color: 'white', fontSize: '0.65rem', fontWeight: '800' },
+        adminBadgeMobile: { padding: '4px 12px', borderRadius: '50px', background: '#f1f5f9', color: '#475569', fontSize: '0.65rem', fontWeight: '800' },
+        statusBadgeMobile: { padding: '4px 12px', borderRadius: '50px', fontSize: '0.65rem', fontWeight: '800' },
+        dateMobile: { fontSize: '0.75rem', color: '#94a3b8' },
+
+        // Global Styles
+        loading: { textAlign: 'center', padding: '5rem', color: '#64748b' },
+        emptyState: { textAlign: 'center', padding: '5rem', color: '#94a3b8' },
+        overlay: {
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0,0,30,0.4)',
+            backdropFilter: 'blur(8px)',
+            zIndex: 99999,
+            display: 'flex',
+            alignItems: 'flex-start',
+            justifyContent: 'center',
+            padding: '2rem 1rem',
+            overflowY: 'auto'
+        },
+        modal: {
+            background: 'white',
+            width: '100%',
+            maxWidth: '520px',
+            borderRadius: '32px',
+            padding: 'clamp(1.5rem, 5vw, 2.5rem)',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+            position: 'relative',
+            marginTop: isMobile ? '40px' : '60px',
+            maxHeight: 'none',
+            overflowY: 'visible'
+        },
+        modalHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' },
+        closeBtn: { background: '#f1f5f9', border: 'none', width: '36px', height: '36px', borderRadius: '50%', cursor: 'pointer', color: '#64748b', display: 'flex', alignItems: 'center', justifyContent: 'center' },
+        form: { display: 'flex', flexDirection: 'column', gap: '1.5rem' },
+        row: {
+            display: 'grid',
+            gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+            gap: '1rem'
+        },
+        inputGroup: { display: 'flex', flexDirection: 'column', gap: '8px' },
+        formHint: { color: '#94a3b8', fontSize: '0.75rem', marginTop: '4px' },
+        checkboxGroup: { padding: '1.2rem', background: '#f8fafc', borderRadius: '20px', border: '1px solid #f1f5f9' },
+        checkboxWrapper: { display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '4px' },
+        checkbox: { width: '18px', height: '18px', cursor: 'pointer' },
+        checkboxLabel: { fontWeight: '700', color: '#1e293b', fontSize: '0.95rem', cursor: 'pointer' },
+        checkboxHint: { margin: '0 0 0 30px', fontSize: '0.8rem', color: '#64748b' },
+        modalActions: { display: 'flex', gap: '1rem', marginTop: '1rem' },
+        cancelBtn: { flex: 1, padding: '1rem', borderRadius: '16px', border: '1px solid #e2e8f0', background: 'white', fontWeight: '700', cursor: 'pointer', color: '#64748b' },
+        submitBtn: { flex: 1, padding: '1rem', borderRadius: '16px', border: 'none', background: '#003366', color: 'white', fontWeight: '700', cursor: 'pointer', boxShadow: '0 4px 12px rgba(0, 51, 102, 0.15)' },
+        input: {
+            padding: '0.8rem 1rem',
+            borderRadius: '12px',
+            border: '1px solid #e2e8f0',
+            fontSize: '1rem',
+            outline: 'none',
+            transition: 'border-color 0.2s',
+            width: '100%',
+            boxSizing: 'border-box'
+        },
+        errorContainer: { textAlign: 'center', padding: '5rem', color: '#64748b' }
+    };
+
     if (!isSuperAdmin) {
         return (
             <div style={styles.errorContainer}>
@@ -317,192 +503,6 @@ const ManageAdmins = () => {
             )}
         </div>
     );
-};
-
-const styles = {
-    container: { padding: 'clamp(1rem, 5vw, 2.5rem)', maxWidth: '1400px', margin: '0 auto' },
-    header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem', gap: '1rem' },
-    title: { fontSize: 'clamp(1.5rem, 4vw, 2.2rem)', fontWeight: '900', margin: 0, color: '#003366', letterSpacing: '-0.5px' },
-    subtitle: { color: '#64748b', margin: '0.25rem 0 0 0', fontSize: 'clamp(0.85rem, 2vw, 1rem)' },
-    addBtn: {
-        background: '#003366',
-        color: 'white',
-        border: 'none',
-        padding: '0.9rem 1.8rem',
-        borderRadius: '16px',
-        fontWeight: '700',
-        cursor: 'pointer',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '12px',
-        boxShadow: '0 8px 20px rgba(0, 51, 102, 0.2)',
-        transition: 'all 0.3s ease',
-        flexShrink: 0
-    },
-    alert: { padding: '1.2rem', borderRadius: '16px', marginBottom: '2rem', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '12px', fontSize: '0.95rem' },
-
-    // Desktop Table Styles
-    tableCard: {
-        background: 'white',
-        borderRadius: '24px',
-        boxShadow: '0 4px 25px rgba(0,0,0,0.04)',
-        border: '1px solid #f1f5f9',
-        overflow: 'hidden'
-    },
-    table: { width: '100%', borderCollapse: 'collapse' },
-    th: {
-        padding: '1.2rem 1.5rem',
-        textAlign: 'left',
-        background: '#f8fafc',
-        color: '#64748b',
-        fontSize: '0.75rem',
-        fontWeight: '700',
-        textTransform: 'uppercase',
-        letterSpacing: '0.05em',
-        borderBottom: '1px solid #f1f5f9'
-    },
-    tr: { borderBottom: '1px solid #f1f5f9', transition: 'background 0.2s' },
-    td: { padding: '1.2rem 1.5rem', fontSize: '0.95rem', color: '#1e293b' },
-    userCell: { display: 'flex', alignItems: 'center', gap: '1rem' },
-    avatar: {
-        width: '40px',
-        height: '40px',
-        borderRadius: '12px',
-        background: 'linear-gradient(135deg, #003366 0%, #004d99 100%)',
-        color: 'white',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontWeight: '800',
-        fontSize: '1rem'
-    },
-    userName: { fontWeight: '700' },
-    superBadge: { background: '#e0f2fe', color: '#0369a1', padding: '4px 10px', borderRadius: '50px', fontSize: '0.75rem', fontWeight: '800' },
-    adminBadge: { background: '#f1f5f9', color: '#475569', padding: '4px 10px', borderRadius: '50px', fontSize: '0.75rem', fontWeight: '800' },
-    statusBadge: { padding: '4px 10px', borderRadius: '50px', fontSize: '0.75rem', fontWeight: '800' },
-    deleteBtn: {
-        width: '36px',
-        height: '36px',
-        borderRadius: '10px',
-        border: '1px solid #fee2e2',
-        background: '#fff',
-        color: '#ef4444',
-        cursor: 'pointer',
-        transition: 'all 0.2s',
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-
-    // Mobile View Styles
-    mobileGrid: { display: 'flex', flexDirection: 'column', gap: '1.2rem' },
-    mobileCard: {
-        background: 'white',
-        borderRadius: '24px',
-        padding: '1.2rem',
-        border: '1px solid #f1f5f9',
-        boxShadow: '0 4px 12px rgba(0,0,0,0.02)'
-    },
-    cardHeaderMobile: { display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.2rem' },
-    avatarMobile: {
-        width: '45px',
-        height: '45px',
-        borderRadius: '14px',
-        background: '#003366',
-        color: 'white',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontSize: '1.2rem',
-        fontWeight: '800'
-    },
-    infoMobile: { flex: 1, minWidth: 0 },
-    nameMobile: { margin: 0, fontSize: '1.1rem', fontWeight: '800', color: '#1e293b' },
-    emailMobile: { fontSize: '0.85rem', color: '#64748b', display: 'block', textOverflow: 'ellipsis', overflow: 'hidden' },
-    deleteBtnMobile: {
-        width: '40px',
-        height: '40px',
-        borderRadius: '12px',
-        border: 'none',
-        background: '#fee2e2',
-        color: '#ef4444',
-        cursor: 'pointer',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    cardBodyMobile: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingTop: '1rem',
-        borderTop: '1px solid #f1f5f9'
-    },
-    badgeGroup: { display: 'flex', gap: '8px' },
-    superBadgeMobile: { padding: '4px 12px', borderRadius: '50px', background: '#003366', color: 'white', fontSize: '0.65rem', fontWeight: '800' },
-    adminBadgeMobile: { padding: '4px 12px', borderRadius: '50px', background: '#f1f5f9', color: '#475569', fontSize: '0.65rem', fontWeight: '800' },
-    statusBadgeMobile: { padding: '4px 12px', borderRadius: '50px', fontSize: '0.65rem', fontWeight: '800' },
-    dateMobile: { fontSize: '0.75rem', color: '#94a3b8' },
-
-    // Global Styles
-    loading: { textAlign: 'center', padding: '5rem', color: '#64748b' },
-    emptyState: { textAlign: 'center', padding: '5rem', color: '#94a3b8' },
-    overlay: {
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        background: 'rgba(0,0,30,0.4)',
-        backdropFilter: 'blur(8px)',
-        zIndex: 99999,
-        display: 'flex',
-        alignItems: 'flex-start',
-        justifyContent: 'center',
-        padding: '2rem 1rem',
-        overflowY: 'auto'
-    },
-    modal: {
-        background: 'white',
-        width: '100%',
-        maxWidth: '520px',
-        borderRadius: '32px',
-        padding: 'clamp(1.5rem, 5vw, 2.5rem)',
-        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-        position: 'relative',
-        marginTop: isMobile ? '40px' : '60px',
-        maxHeight: 'none',
-        overflowY: 'visible'
-    },
-    modalHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' },
-    closeBtn: { background: '#f1f5f9', border: 'none', width: '36px', height: '36px', borderRadius: '50%', cursor: 'pointer', color: '#64748b', display: 'flex', alignItems: 'center', justifyContent: 'center' },
-    form: { display: 'flex', flexDirection: 'column', gap: '1.5rem' },
-    row: {
-        display: 'grid',
-        gridTemplateColumns: window.innerWidth <= 1024 ? '1fr' : '1fr 1fr',
-        gap: '1rem'
-    },
-    inputGroup: { display: 'flex', flexDirection: 'column', gap: '8px' },
-    formHint: { color: '#94a3b8', fontSize: '0.75rem', marginTop: '4px' },
-    checkboxGroup: { padding: '1.2rem', background: '#f8fafc', borderRadius: '20px', border: '1px solid #f1f5f9' },
-    checkboxWrapper: { display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '4px' },
-    checkbox: { width: '18px', height: '18px', cursor: 'pointer' },
-    checkboxLabel: { fontWeight: '700', color: '#1e293b', fontSize: '0.95rem', cursor: 'pointer' },
-    checkboxHint: { margin: '0 0 0 30px', fontSize: '0.8rem', color: '#64748b' },
-    modalActions: { display: 'flex', gap: '1rem', marginTop: '1rem' },
-    cancelBtn: { flex: 1, padding: '1rem', borderRadius: '16px', border: '1px solid #e2e8f0', background: 'white', fontWeight: '700', cursor: 'pointer', color: '#64748b' },
-    submitBtn: { flex: 1, padding: '1rem', borderRadius: '16px', border: 'none', background: '#003366', color: 'white', fontWeight: '700', cursor: 'pointer', boxShadow: '0 4px 12px rgba(0, 51, 102, 0.15)' },
-    input: {
-        padding: '0.8rem 1rem',
-        borderRadius: '12px',
-        border: '1px solid #e2e8f0',
-        fontSize: '1rem',
-        outline: 'none',
-        transition: 'border-color 0.2s',
-        width: '100%',
-        boxSizing: 'border-box'
-    },
-    errorContainer: { textAlign: 'center', padding: '5rem', color: '#64748b' }
 };
 
 export default ManageAdmins;
