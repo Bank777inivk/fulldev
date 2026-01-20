@@ -92,13 +92,13 @@ const LoanManagement = () => {
                                 </div>
                                 <div style={{ gridColumn: 'span 2' }}>
                                     <span style={styles.detailLabel}>TYPE DE PRÊT</span>
-                                    <div style={{ fontSize: '0.9rem', color: '#475569' }}>{loan.loanType || 'Prêt Personnel'}</div>
+                                    <div style={{ fontSize: '0.9rem', color: '#475569' }}>{loan.type || 'Prêt Personnel'}</div>
                                 </div>
                             </div>
 
                             <div style={{ marginBottom: '1rem' }}>
                                 <span style={styles.detailLabel}>PROJET</span>
-                                <p style={{ ...styles.projectDesc, fontSize: '0.8rem', marginTop: '4px' }}>{loan.purpose || 'Non spécifié'}</p>
+                                <p style={{ ...styles.projectDesc, fontSize: '0.8rem', marginTop: '4px' }}>{loan.description || 'Non spécifié'}</p>
                             </div>
 
                             {loan.documents && (
@@ -190,7 +190,7 @@ const LoanManagement = () => {
                                 </div>
                                 <div style={styles.detailRow}>
                                     <span style={styles.detailLabel}>TYPE</span>
-                                    <span style={styles.detailValue}>{loan.loanType || 'Prêt Personnel'}</span>
+                                    <span style={styles.detailValue}>{loan.type || 'Prêt Personnel'}</span>
                                 </div>
                                 <div style={styles.detailRow}>
                                     <span style={styles.detailLabel}>DURÉE</span>
@@ -198,7 +198,7 @@ const LoanManagement = () => {
                                 </div>
                                 <div style={styles.detailRow}>
                                     <span style={styles.detailLabel}>PROJET</span>
-                                    <p style={styles.projectDesc}>{loan.purpose || 'Non spécifié'}</p>
+                                    <p style={styles.projectDesc}>{loan.description || 'Non spécifié'}</p>
                                 </div>
                             </div>
                             {loan.documents && (
