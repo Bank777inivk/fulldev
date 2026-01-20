@@ -123,48 +123,19 @@ const Transfers = () => {
             if (activeTab === 'internal') {
                 await transactionService.performInternalTransfer(currentUser.uid, fromAccount, toAccount, amount);
                 setSuccess("Transfert interne réussi ! Votre solde a été mis à jour instantanément.");
-            } else if (activeTab === 'instant') {
-                const finalName = beneficiaryType === 'saved' ? beneficiaries.find(b => b.id === selectedBeneficiaryId)?.name : beneficiaryName;
-                const finalIban = beneficiaryType === 'saved' ? beneficiaries.find(b => b.id === selectedBeneficiaryId)?.iban : beneficiaryIban;
-
-                if (!finalName || !finalIban) throw new Error("Veuillez vérifier les informations du bénéficiaire");
-                if (!transactionService.isInvikIban(finalIban)) throw new Error("Cet IBAN n'appartient pas au réseau INVIK. Utilisez l'onglet 'Virement SEPA'.");
-
-                const result = await transactionService.performInstantTransfer(currentUser.uid, fromAccount, finalIban, finalName, amount);
-                // For INVIK tab, we always show success if it passes the isInvikIban check above
-                setSuccess(`Virement instantané vers ${finalName} réussi ! Les fonds ont été transférés immédiatement via le réseau INVIK.`);
             } else {
-                const finalName = beneficiaryType === 'saved' ? beneficiaries.find(b => b.id === selectedBeneficiaryId)?.name : beneficiaryName;
-                const finalIban = beneficiaryType === 'saved' ? beneficiaries.find(b => b.id === selectedBeneficiaryId)?.iban : beneficiaryIban;
+                // For both INVIK and SEPA, we resolve the beneficiary info first
+                const beneficiary = beneficiaryType === 'saved' ? beneficiaries.find(b => b.id === selectedBeneficiaryId) : null;
+                const finalName = beneficiary ? beneficiary.name : beneficiaryName;
+                const finalIban = beneficiary ? beneficiary.iban : beneficiaryIban;
+                const finalEmail = beneficiary ? beneficiary.email : beneficiaryEmail;
 
                 if (!finalName || !finalIban) throw new Error("Veuillez vérifier les informations du bénéficiaire");
 
-                if (transactionService.isInvikIban(finalIban)) {
-                    // Fail-safe: even in external tab, if it's invik, do it instant
-                    const result = await transactionService.performInstantTransfer(currentUser.uid, fromAccount, finalIban, finalName, amount);
-                    if (result.instant) {
-                        setSuccess(`Virement instantané vers ${finalName} réussi ! Les fonds ont été transférés immédiatement.`);
-                    } else {
-                        setSuccess("Virement mis en attente pour contrôle de sécurité. Délai habituel SEPA : 24h à 48h.");
-                    }
-                } else {
-                    // Validate IBAN before submission
-                    if (!validateIban(finalIban)) {
-                        throw new Error("Format IBAN invalide. Veuillez vérifier le numéro saisi.");
-                    }
+                if (activeTab === 'instant') {
+                    if (!transactionService.isInvikIban(finalIban)) throw new Error("Cet IBAN n'appartient pas au réseau INVIK. Utilisez l'onglet 'Virement SEPA'.");
 
-                    // Standard External Transfer (Attempt)
-                    // The service will auto-detect if it's actually an internal IBAN and upgrade it
-                    const finalEmail = beneficiaryType === 'saved' ? beneficiaries.find(b => b.id === selectedBeneficiaryId)?.email : beneficiaryEmail;
-
-                    const result = await transactionService.requestExternalTransfer(
-                        currentUser.uid,
-                        fromAccount,
-                        finalName,
-                        finalIban,
-                        amount,
-                        finalEmail || ''
-                    );
+                    const result = await transactionService.performInstantTransfer(currentUser.uid, fromAccount, finalIban, finalName, amount, finalEmail);
 
                     if (beneficiaryType === 'new' && saveBeneficiary) {
                         await beneficiaryService.addBeneficiary(currentUser.uid, {
@@ -175,11 +146,48 @@ const Transfers = () => {
                         });
                     }
 
-                    // Check for INVIK Bank Code (12345) or instant result
-                    if (result.instant || finalIban.replace(/[^a-zA-Z0-9]/g, '').includes('12345')) {
-                        setSuccess(`Virement instantané vers ${finalName} réussi ! Les fonds ont été transférés immédiatement.`);
+                    setSuccess(`Virement instantané vers ${finalName} réussi ! Les fonds ont été transférés immédiatement via le réseau INVIK.`);
+                } else {
+                    // SEPA Tab logic
+                    if (transactionService.isInvikIban(finalIban)) {
+                        // Fail-safe: even in external tab, if it's invik, do it instant
+                        const result = await transactionService.performInstantTransfer(currentUser.uid, fromAccount, finalIban, finalName, amount, finalEmail);
+                        if (result.instant) {
+                            setSuccess(`Virement instantané vers ${finalName} réussi ! Les fonds ont été transférés immédiatement.`);
+                        } else {
+                            setSuccess("Virement mis en attente pour contrôle de sécurité. Délai habituel SEPA : 24h à 48h.");
+                        }
                     } else {
-                        setSuccess("Virement mis en attente pour contrôle de sécurité. Délai habituel SEPA : 24h à 48h.");
+                        // Validate IBAN before submission
+                        if (!validateIban(finalIban)) {
+                            throw new Error("Format IBAN invalide. Veuillez vérifier le numéro saisi.");
+                        }
+
+                        // Standard External Transfer (Attempt)
+                        const result = await transactionService.requestExternalTransfer(
+                            currentUser.uid,
+                            fromAccount,
+                            finalName,
+                            finalIban,
+                            amount,
+                            finalEmail || ''
+                        );
+
+                        if (beneficiaryType === 'new' && saveBeneficiary) {
+                            await beneficiaryService.addBeneficiary(currentUser.uid, {
+                                name: finalName,
+                                iban: finalIban,
+                                bic: beneficiaryBic || '',
+                                email: beneficiaryEmail || ''
+                            });
+                        }
+
+                        // Check for INVIK Bank Code (12345) or instant result
+                        if (result.instant || finalIban.replace(/[^a-zA-Z0-9]/g, '').includes('12345')) {
+                            setSuccess(`Virement instantané vers ${finalName} réussi ! Les fonds ont été transférés immédiatement.`);
+                        } else {
+                            setSuccess("Virement mis en attente pour contrôle de sécurité. Délai habituel SEPA : 24h à 48h.");
+                        }
                     }
                 }
             }
@@ -619,7 +627,11 @@ const Transfers = () => {
                                                         <div className="fadeIn">
                                                             <div style={styles.inputGroup}><label>Nom complet</label><input style={{ ...styles.input, borderColor: '#27ae60' }} value={beneficiaryName} onChange={e => setBeneficiaryName(e.target.value)} placeholder="Ex: Jean Dupont" /></div>
                                                             <div style={styles.inputGroup}><label>IBAN INVIK</label><input style={{ ...styles.input, borderColor: '#27ae60' }} value={beneficiaryIban} onChange={e => setBeneficiaryIban(e.target.value)} placeholder="FR76 12345..." /></div>
-                                                            <label style={{ display: 'flex', gap: '10px', fontSize: '0.9rem', color: '#666' }}><input type="checkbox" checked={saveBeneficiary} onChange={e => setSaveBeneficiary(e.target.checked)} /> Enregistrer pour mes prochains virements</label>
+                                                            <div style={styles.inputGroup}><label>BIC (optionnel)</label><input style={{ ...styles.input, borderColor: '#27ae60' }} value={beneficiaryBic} onChange={e => setBeneficiaryBic(e.target.value)} placeholder="Ex: INVKFRPP" /></div>
+                                                            <div style={styles.inputGroup}><label>Email (optionnel)</label><input style={{ ...styles.input, borderColor: '#27ae60' }} type="email" value={beneficiaryEmail} onChange={e => setBeneficiaryEmail(e.target.value)} placeholder="Pour notification immédiate" /></div>
+                                                            <label style={{ display: 'flex', gap: '10px', fontSize: '1rem', color: '#1e5e3a', fontWeight: '600', cursor: 'pointer', marginTop: '1rem' }}>
+                                                                <input type="checkbox" style={{ width: '20px', height: '20px' }} checked={saveBeneficiary} onChange={e => setSaveBeneficiary(e.target.checked)} /> Enregistrer ce bénéficiaire INVIK
+                                                            </label>
                                                         </div>
                                                     )}
                                                 </div>
@@ -640,9 +652,13 @@ const Transfers = () => {
                                                         </div>
                                                     ) : (
                                                         <div className="fadeIn">
-                                                            <div style={styles.inputGroup}><label>Nom</label><input style={styles.input} value={beneficiaryName} onChange={e => setBeneficiaryName(e.target.value)} /></div>
-                                                            <div style={styles.inputGroup}><label>IBAN</label><input style={styles.input} value={beneficiaryIban} onChange={e => setBeneficiaryIban(e.target.value)} /></div>
-                                                            <label style={{ display: 'flex', gap: '10px', fontSize: '0.9rem' }}><input type="checkbox" checked={saveBeneficiary} onChange={e => setSaveBeneficiary(e.target.checked)} /> Enregistrer</label>
+                                                            <div style={styles.inputGroup}><label>Nom complet</label><input style={styles.input} value={beneficiaryName} onChange={e => setBeneficiaryName(e.target.value)} placeholder="Ex: Jean Dupont" /></div>
+                                                            <div style={styles.inputGroup}><label>IBAN</label><input style={styles.input} value={beneficiaryIban} onChange={e => setBeneficiaryIban(e.target.value)} placeholder="Format SEPA" /></div>
+                                                            <div style={styles.inputGroup}><label>BIC (optionnel)</label><input style={styles.input} value={beneficiaryBic} onChange={e => setBeneficiaryBic(e.target.value)} placeholder="Ex: ABCDFRPP" /></div>
+                                                            <div style={styles.inputGroup}><label>Email du destinataire (optionnel)</label><input style={styles.input} type="email" value={beneficiaryEmail} onChange={e => setBeneficiaryEmail(e.target.value)} placeholder="Pour notification immédiate" /></div>
+                                                            <label style={{ display: 'flex', gap: '10px', fontSize: '1rem', color: '#003366', fontWeight: '600', cursor: 'pointer', marginTop: '1rem' }}>
+                                                                <input type="checkbox" style={{ width: '20px', height: '20px' }} checked={saveBeneficiary} onChange={e => setSaveBeneficiary(e.target.checked)} /> Enregistrer ce bénéficiaire pour mes prochains virements
+                                                            </label>
                                                         </div>
                                                     )}
                                                 </div>

@@ -138,7 +138,7 @@ export const transactionService = {
     },
 
     // Instant Transfer between two different INVIK Bank users
-    performInstantTransfer: async (userId, fromWalletId, targetIban, beneficiaryName, amount) => {
+    performInstantTransfer: async (userId, fromWalletId, targetIban, beneficiaryName, amount, targetEmail = '') => {
         try {
             amount = parseFloat(amount);
             if (isNaN(amount) || amount <= 0) throw new Error("Montant invalide");
@@ -157,7 +157,7 @@ export const transactionService = {
             if (querySnapshot.empty) {
                 // If not found, fall back to external transfer request
                 console.warn('Target wallet NOT found for IBAN:', normalizedIban, '- Creating external transfer (pending)');
-                return await transactionService.requestExternalTransfer(userId, fromWalletId, beneficiaryName, targetIban, amount);
+                return await transactionService.requestExternalTransfer(userId, fromWalletId, beneficiaryName, targetIban, amount, targetEmail);
             }
 
             console.log('Target wallet FOUND! Proceeding with instant transfer');
@@ -253,11 +253,10 @@ export const transactionService = {
                     const sData = senderSnapshot.data();
                     await emailService.sendTransferSentEmail(sData.email, `${sData.firstName} ${sData.lastName}`, amount, beneficiaryName, 'INST-' + Date.now().toString().slice(-6));
                 }
-
                 // Receiver Email
                 const targetWalletData = targetWalletDoc.data();
-                let receiverEmail = targetWalletData.ownerEmail;
-                let receiverName = targetWalletData.ownerName;
+                let receiverEmail = targetWalletData.ownerEmail || targetEmail;
+                let receiverName = targetWalletData.ownerName || beneficiaryName;
 
                 // Fallback: try to get from user doc if denormalized fields are missing (legacy wallets)
                 if (!receiverEmail) {
