@@ -229,11 +229,24 @@ const KycVerification = () => {
             const keys = Object.keys(files).filter(k => files[k]);
             const step = 90 / keys.length;
 
-            for (let i = 0; i < keys.length; i++) {
-                const key = keys[i];
-                urls[key] = await uploadToCloudinary(files[key]);
-                setProgress(Math.round(5 + (i + 1) * step));
-            }
+
+
+            // Improved parallel upload with progress tracking
+            let completed = 0;
+            const parallelUploads = keys.map(key =>
+                uploadToCloudinary(files[key]).then(url => {
+                    completed++;
+                    setProgress(Math.round(5 + (completed / keys.length) * 90));
+                    return { key, url };
+                })
+            );
+
+            const results = await Promise.all(parallelUploads);
+
+            // Map results back to urls object
+            results.forEach(({ key, url }) => {
+                urls[key] = url;
+            });
 
             await kycService.submitKycDocuments(currentUser.uid, {
                 ...urls,

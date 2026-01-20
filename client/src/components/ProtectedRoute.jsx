@@ -1,11 +1,35 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../firebase/config';
 
 const ProtectedRoute = ({ children }) => {
     const { currentUser, loading } = useAuth();
+    const [isAdmin, setIsAdmin] = useState(false);
+    const [checkingRole, setCheckingRole] = useState(true);
 
-    if (loading) {
+    useEffect(() => {
+        const checkUserRole = async () => {
+            if (currentUser) {
+                try {
+                    const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+                    if (userDoc.exists() && userDoc.data().role === 'admin') {
+                        setIsAdmin(true);
+                    }
+                } catch (error) {
+                    console.error("Error checking user role:", error);
+                }
+            }
+            setCheckingRole(false);
+        };
+
+        if (!loading) {
+            checkUserRole();
+        }
+    }, [currentUser, loading]);
+
+    if (loading || checkingRole) {
         return (
             <div style={{
                 display: 'flex',
@@ -23,8 +47,8 @@ const ProtectedRoute = ({ children }) => {
         return <Navigate to="/login" />;
     }
 
-    // Check if email is verified
-    if (!currentUser.emailVerified) {
+    // Skip email verification check for admin users
+    if (!isAdmin && !currentUser.emailVerified) {
         return <Navigate to="/email-verification-pending" />;
     }
 

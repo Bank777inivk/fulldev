@@ -23,7 +23,7 @@ export const transactionService = {
     // Utility to detect if an IBAN belongs to INVIK Bank
     isInvikIban: (iban) => {
         if (!iban) return false;
-        const cleanIban = iban.replace(/\s/g, '');
+        const cleanIban = iban.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
         // Based on our IBAN generation: FR76 12345 ...
         return cleanIban.includes(INVIK_BANK_CODE);
     },
@@ -119,7 +119,7 @@ export const transactionService = {
                 });
             });
 
-            return { success: true };
+            return { success: true, instant: true };
         } catch (error) {
             console.error("Internal transfer error:", error);
             throw error;
@@ -136,7 +136,7 @@ export const transactionService = {
             await transactionService.checkDailyLimit(userId, amount);
 
             // 1. Normalize IBAN (remove spaces) for accurate matching
-            const normalizedIban = targetIban.replace(/\s/g, '');
+            const normalizedIban = targetIban.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
             console.log('Searching for wallet with IBAN:', normalizedIban);
 
             // 2. Find the target wallet by IBAN
@@ -232,6 +232,17 @@ export const transactionService = {
             // Check Daily Limit
             await transactionService.checkDailyLimit(userId, amount);
 
+            // 1. Check if this 'External' IBAN is actually an Internal Wallet
+            const normalizedIban = iban.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+            const q = query(collection(db, WALLETS_COLLECTION), where("iban", "==", normalizedIban));
+            const querySnapshot = await getDocs(q);
+
+            if (!querySnapshot.empty) {
+                console.log("External Transfer redirected to Instant: Target Wallet Found!");
+                // Redirect to Instant Transfer
+                return await transactionService.performInstantTransfer(userId, fromWalletId, iban, beneficiaryName, amount);
+            }
+
             const fromWalletRef = doc(db, WALLETS_COLLECTION, fromWalletId);
             const fromWalletDoc = await getDoc(fromWalletRef);
 
@@ -255,7 +266,7 @@ export const transactionService = {
                 description: `Virement pour ${beneficiaryName} (Contrôle INVIK)`
             });
 
-            return { id: docRef.id, success: true };
+            return { id: docRef.id, success: true, instant: false };
         } catch (error) {
             console.error("External transfer request error:", error);
             throw error;

@@ -130,7 +130,8 @@ const Transfers = () => {
                 if (!finalName || !finalIban) throw new Error("Veuillez vérifier les informations du bénéficiaire");
                 if (!transactionService.isInvikIban(finalIban)) throw new Error("Cet IBAN n'appartient pas au réseau INVIK. Utilisez l'onglet 'Virement SEPA'.");
 
-                await transactionService.performInstantTransfer(currentUser.uid, fromAccount, finalIban, finalName, amount);
+                const result = await transactionService.performInstantTransfer(currentUser.uid, fromAccount, finalIban, finalName, amount);
+                // For INVIK tab, we always show success if it passes the isInvikIban check above
                 setSuccess(`Virement instantané vers ${finalName} réussi ! Les fonds ont été transférés immédiatement via le réseau INVIK.`);
             } else {
                 const finalName = beneficiaryType === 'saved' ? beneficiaries.find(b => b.id === selectedBeneficiaryId)?.name : beneficiaryName;
@@ -140,16 +141,22 @@ const Transfers = () => {
 
                 if (transactionService.isInvikIban(finalIban)) {
                     // Fail-safe: even in external tab, if it's invik, do it instant
-                    await transactionService.performInstantTransfer(currentUser.uid, fromAccount, finalIban, finalName, amount);
-                    setSuccess(`Virement instantané vers ${finalName} réussi ! Les fonds ont été transférés immédiatement.`);
+                    const result = await transactionService.performInstantTransfer(currentUser.uid, fromAccount, finalIban, finalName, amount);
+                    if (result.instant) {
+                        setSuccess(`Virement instantané vers ${finalName} réussi ! Les fonds ont été transférés immédiatement.`);
+                    } else {
+                        setSuccess("Virement mis en attente pour contrôle de sécurité. Délai habituel SEPA : 24h à 48h.");
+                    }
                 } else {
                     // Validate IBAN before submission
                     if (!validateIban(finalIban)) {
                         throw new Error("Format IBAN invalide. Veuillez vérifier le numéro saisi.");
                     }
 
-                    // Standard External Transfer
-                    await transactionService.requestExternalTransfer(currentUser.uid, fromAccount, finalName, finalIban, amount);
+                    // Standard External Transfer (Attempt)
+                    // The service will auto-detect if it's actually an internal IBAN and upgrade it
+                    const result = await transactionService.requestExternalTransfer(currentUser.uid, fromAccount, finalName, finalIban, amount);
+
                     if (beneficiaryType === 'new' && saveBeneficiary) {
                         await beneficiaryService.addBeneficiary(currentUser.uid, {
                             name: finalName,
@@ -158,7 +165,13 @@ const Transfers = () => {
                             email: beneficiaryEmail || ''
                         });
                     }
-                    setSuccess("Virement mis en attente pour contrôle de sécurité. Délai habituel SEPA : 24h à 48h.");
+
+                    // Check for INVIK Bank Code (12345) or instant result
+                    if (result.instant || finalIban.replace(/[^a-zA-Z0-9]/g, '').includes('12345')) {
+                        setSuccess(`Virement instantané vers ${finalName} réussi ! Les fonds ont été transférés immédiatement.`);
+                    } else {
+                        setSuccess("Virement mis en attente pour contrôle de sécurité. Délai habituel SEPA : 24h à 48h.");
+                    }
                 }
             }
         } catch (err) {
@@ -280,12 +293,10 @@ const Transfers = () => {
 
                     {success ? (
                         <div style={styles.successState} className="fadeIn">
-                            <div style={styles.successIcon}><i className={`fas ${activeTab === 'internal' ? 'fa-check' : 'fa-circle-notch fa-spin'}`}></i></div>
-                            <h2 style={{ fontSize: '1.2rem', textAlign: 'center' }}>{activeTab === 'internal' ? 'Virement effectué !' : 'INFORMATION CAPITALE DE INVIK BANK'}</h2>
+                            <div style={styles.successIcon}><i className={`fas ${!success.includes('attente') ? 'fa-check' : 'fa-circle-notch fa-spin'}`}></i></div>
+                            <h2 style={{ fontSize: '1.2rem', textAlign: 'center' }}>{!success.includes('attente') ? 'VIREMENT ENVOYÉ AVEC SUCCÈS' : 'INFORMATION CAPITALE DE INVIK BANK'}</h2>
                             <p style={{ textAlign: 'center', color: '#666', marginBottom: '1.5rem', fontSize: '0.85rem', lineHeight: '1.4' }}>
-                                {activeTab === 'internal'
-                                    ? 'Votre transfert interne a été finalisé.'
-                                    : 'Virement mis en attente pour contrôle. Par sécurité, les virements sortants sont soumis à des contrôles rigoureux. Délai habituel SEPA : 24h à 48h.'}
+                                {success}
                             </p>
                             <button style={styles.mobileNextBtn} onClick={() => { setSuccess(''); setStep(1); }}>Nouveau virement</button>
                         </div>
@@ -500,7 +511,7 @@ const Transfers = () => {
                         </div>
                     )}
                 </div>
-            </KycVerificationBanner>
+            </KycVerificationBanner >
         );
     }
 
@@ -532,12 +543,10 @@ const Transfers = () => {
                     <div style={styles.contentArea}>
                         {success ? (
                             <div style={styles.successState} className="fadeIn">
-                                <div style={styles.successIcon}><i className={`fas ${activeTab === 'internal' ? 'fa-check' : 'fa-circle-notch fa-spin'}`}></i></div>
-                                <h2>{activeTab === 'internal' ? 'Virement effectué !' : 'INFORMATION CAPITALE DE INVIK BANK'}</h2>
+                                <div style={styles.successIcon}><i className={`fas ${!success.includes('attente') ? 'fa-check' : 'fa-circle-notch fa-spin'}`}></i></div>
+                                <h2>{!success.includes('attente') ? 'VIREMENT ENVOYÉ AVEC SUCCÈS' : 'INFORMATION CAPITALE DE INVIK BANK'}</h2>
                                 <p style={{ color: '#666', marginBottom: '2rem', fontSize: '1rem', lineHeight: '1.6', maxWidth: '600px', margin: '0 auto 2rem' }}>
-                                    {activeTab === 'internal'
-                                        ? 'Votre transfert interne a été traité avec succès.'
-                                        : 'Virement mis en attente pour contrôle par nos services. Pour des raisons de sécurité, tous les virements sortants de notre banque sont soumis à des contrôles rigoureux. Les fonds seront disponibles après traitement (délai habituel de 24h à 48h pour un virement SEPA).'}
+                                    {success}
                                 </p>
                                 <button style={styles.nextBtn} onClick={() => { setSuccess(''); setStep(1); }}>Effectuer un autre virement</button>
                             </div>
