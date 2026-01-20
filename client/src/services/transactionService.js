@@ -265,8 +265,8 @@ export const transactionService = {
                 // Sender Email
                 const senderSnapshot = await getDoc(doc(db, USERS_COLLECTION, userId));
                 if (senderSnapshot.exists()) {
-                    const sData = senderSnapshot.snapshot?.data() || senderSnapshot.data();
-                    emailService.sendTransferSentEmail(sData.email, `${sData.firstName} ${sData.lastName}`, amount, beneficiaryName, 'INST-' + Date.now().toString().slice(-6));
+                    const sData = senderSnapshot.data();
+                    await emailService.sendTransferSentEmail(sData.email, `${sData.firstName} ${sData.lastName}`, amount, beneficiaryName, 'INST-' + Date.now().toString().slice(-6));
                 }
 
                 // Receiver Email
@@ -274,7 +274,7 @@ export const transactionService = {
                 const receiverSnapshot = await getDoc(doc(db, USERS_COLLECTION, targetUserId));
                 if (receiverSnapshot.exists()) {
                     const rData = receiverSnapshot.data();
-                    emailService.sendTransferReceivedEmail(rData.email, `${rData.firstName} ${rData.lastName}`, amount, senderDisplayName);
+                    await emailService.sendTransferReceivedEmail(rData.email, `${rData.firstName} ${rData.lastName}`, amount, senderDisplayName);
                 }
             } catch (e) { console.warn("Instant Transfer Emails failed", e); }
 

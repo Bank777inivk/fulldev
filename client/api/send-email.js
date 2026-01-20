@@ -12,21 +12,20 @@ export default async function handler(req, res) {
     }
 
     // SMTP Configuration from Vercel environment variables
+    const smtpPort = parseInt(process.env.SMTP_PORT || '465');
     const transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST || 'smtp.hostinger.com',
-        port: parseInt(process.env.SMTP_PORT || '465'),
-        secure: process.env.SMTP_PORT === '465', // true for 465, false for other ports
+        port: smtpPort,
+        secure: smtpPort === 465, // Force true for 465
         auth: {
             user: process.env.SMTP_USER,
             pass: process.env.SMTP_PASS,
         },
-        tls: {
-            // Do not fail on invalid certificates (useful for some SMTP servers)
-            rejectUnauthorized: false
-        }
+        timeout: 10000, // 10 seconds timeout
     });
 
     try {
+        console.log(`Attempting to send email to ${to} via ${process.env.SMTP_HOST}:${smtpPort}`);
         const info = await transporter.sendMail({
             from: `"INVIK BANK" <${process.env.SMTP_USER}>`,
             to,
@@ -34,10 +33,19 @@ export default async function handler(req, res) {
             html,
         });
 
-        console.log('Message sent: %s', info.messageId);
+        console.log('Email sent successfully:', info.messageId);
         return res.status(200).json({ success: true, messageId: info.messageId });
     } catch (error) {
-        console.error('Nodemailer error:', error);
-        return res.status(500).json({ error: 'Failed to send email', details: error.message });
+        console.error('Nodemailer error details:', {
+            message: error.message,
+            code: error.code,
+            command: error.command,
+            response: error.response
+        });
+        return res.status(500).json({
+            error: 'Failed to send email',
+            details: error.message,
+            code: error.code
+        });
     }
 }
