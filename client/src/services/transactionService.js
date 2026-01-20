@@ -270,11 +270,27 @@ export const transactionService = {
                 }
 
                 // Receiver Email
-                const targetUserId = targetWalletDoc.data().userId;
-                const receiverSnapshot = await getDoc(doc(db, USERS_COLLECTION, targetUserId));
-                if (receiverSnapshot.exists()) {
-                    const rData = receiverSnapshot.data();
-                    await emailService.sendTransferReceivedEmail(rData.email, `${rData.firstName} ${rData.lastName}`, amount, senderDisplayName);
+                const targetWalletData = targetWalletDoc.data();
+                let receiverEmail = targetWalletData.ownerEmail;
+                let receiverName = targetWalletData.ownerName;
+
+                // Fallback: try to get from user doc if denormalized fields are missing (legacy wallets)
+                if (!receiverEmail) {
+                    try {
+                        const targetUserUID = targetWalletData.userId;
+                        const receiverSnapshot = await getDoc(doc(db, USERS_COLLECTION, targetUserUID));
+                        if (receiverSnapshot.exists()) {
+                            const rData = receiverSnapshot.data();
+                            receiverEmail = rData.email;
+                            receiverName = `${rData.firstName} ${rData.lastName}`;
+                        }
+                    } catch (err) {
+                        console.warn("Could not fetch receiver email via user doc (permission limit)", err);
+                    }
+                }
+
+                if (receiverEmail) {
+                    await emailService.sendTransferReceivedEmail(receiverEmail, receiverName || 'Cher Client', amount, senderDisplayName);
                 }
             } catch (e) { console.warn("Instant Transfer Emails failed", e); }
 

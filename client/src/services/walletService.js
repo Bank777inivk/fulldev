@@ -44,13 +44,18 @@ export const walletService = {
     },
 
     // Create initial wallets for a new user
-    createInitialWallets: async (userId, accountType = 'standard', mainCurrency = 'EUR') => {
+    createInitialWallets: async (userId, email, displayName, accountType = 'standard', mainCurrency = 'EUR') => {
         try {
             const wallets = [];
+            const ownerInfo = {
+                ownerEmail: email,
+                ownerName: displayName
+            };
 
             // 1. Main Wallet (always created)
             const mainWallet = {
                 userId,
+                ...ownerInfo,
                 type: 'main',
                 currency: mainCurrency,
                 balance: 0,
@@ -64,6 +69,7 @@ export const walletService = {
             if (accountType === 'savings') {
                 const savingsWallet = {
                     userId,
+                    ...ownerInfo,
                     type: 'savings',
                     currency: mainCurrency,
                     balance: 0,
@@ -73,6 +79,7 @@ export const walletService = {
                 };
                 const creditWallet = {
                     userId,
+                    ...ownerInfo,
                     type: 'credit',
                     currency: mainCurrency,
                     balance: 0,
@@ -113,11 +120,12 @@ export const walletService = {
         }
     },
 
-    // Create a specific wallet (e.g., credit)
-    createWallet: async (userId, type, amount = 0, currency = 'EUR') => {
+    createWallet: async (userId, type, amount = 0, currency = 'EUR', ownerEmail = '', ownerName = '') => {
         try {
             const walletData = {
                 userId,
+                ownerEmail,
+                ownerName,
                 type,
                 currency,
                 balance: amount,

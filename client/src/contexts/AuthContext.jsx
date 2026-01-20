@@ -9,7 +9,7 @@ import {
     sendPasswordResetEmail
 } from 'firebase/auth';
 import { auth, db } from '../firebase/config';
-import { doc, getDoc, setDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc, serverTimestamp, query, collection, where, getDocs, writeBatch } from 'firebase/firestore';
 import { walletService } from '../services/walletService';
 import { cardService } from '../services/cardService';
 import { ribService } from '../services/ribService';
@@ -57,6 +57,8 @@ export const AuthProvider = ({ children }) => {
         // Create initial wallets/accounts
         const wallets = await walletService.createInitialWallets(
             user.uid,
+            user.email,
+            profileData.displayName || (userType === 'personal' ? `${profileData.firstName} ${profileData.lastName}` : profileData.companyName),
             profileData.accountType || 'standard',
             profileData.mainCurrency || 'EUR'
         );
@@ -87,7 +89,34 @@ export const AuthProvider = ({ children }) => {
                 // Fetch additional user data from Firestore
                 const userDoc = await getDoc(doc(db, "users", user.uid));
                 if (userDoc.exists()) {
-                    setUserData(userDoc.data());
+                    const data = userDoc.data();
+                    setUserData(data);
+
+                    // Auto-repair wallets if needed (add owner info for notifications)
+                    try {
+                        const q = query(collection(db, "wallets"), where("userId", "==", user.uid));
+                        const walletSnap = await getDocs(q);
+                        const batch = writeBatch(db);
+                        let needsUpdate = false;
+
+                        walletSnap.forEach(wDoc => {
+                            const wData = wDoc.data();
+                            if (!wData.ownerEmail) {
+                                batch.update(wDoc.ref, {
+                                    ownerEmail: user.email,
+                                    ownerName: data.displayName || `${data.firstName} ${data.lastName}`
+                                });
+                                needsUpdate = true;
+                            }
+                        });
+
+                        if (needsUpdate) {
+                            await batch.commit();
+                            console.log("Wallets repaired with owner info");
+                        }
+                    } catch (err) {
+                        console.warn("Failed to auto-repair wallets", err);
+                    }
                 }
             } else {
                 setUserData(null);
