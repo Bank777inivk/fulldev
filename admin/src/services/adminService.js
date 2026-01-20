@@ -829,6 +829,10 @@ export const adminService = {
             isSuperAdmin: isSuper,
             updatedAt: serverTimestamp()
         });
+    },
+
+    deleteAdminAccount: async (adminId) => {
+        await deleteDoc(doc(db, 'users', adminId));
     }
 };
 

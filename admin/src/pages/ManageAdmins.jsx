@@ -3,7 +3,7 @@ import { adminService } from '../services/adminService';
 import { useAdminAuth } from '../contexts/AdminAuthContext';
 
 const ManageAdmins = () => {
-    const { isSuperAdmin } = useAdminAuth();
+    const { isSuperAdmin, currentUser } = useAdminAuth();
     const [admins, setAdmins] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
@@ -49,6 +49,24 @@ const ManageAdmins = () => {
         } catch (error) {
             console.error("Error creating admin:", error);
             setStatus({ type: 'error', message: `Erreur: ${error.message}` });
+        }
+    };
+
+    const handleDeleteAdmin = async (adminId, adminName) => {
+        if (adminId === currentUser?.uid) {
+            alert("Vous ne pouvez pas supprimer votre propre compte.");
+            return;
+        }
+
+        if (window.confirm(`Êtes-vous sûr de vouloir supprimer le compte administrateur de ${adminName} ? Cette action bloquera ses accès.`)) {
+            try {
+                await adminService.deleteAdminAccount(adminId);
+                setStatus({ type: 'success', message: 'Compte administrateur supprimé.' });
+                fetchAdmins();
+            } catch (error) {
+                console.error("Error deleting admin:", error);
+                setStatus({ type: 'error', message: `Erreur lors de la suppression: ${error.message}` });
+            }
         }
     };
 
@@ -101,6 +119,13 @@ const ManageAdmins = () => {
                                 {admin.isSuperAdmin && (
                                     <span style={styles.superBadge}>SUPER ADMIN</span>
                                 )}
+                                <button
+                                    onClick={() => handleDeleteAdmin(admin.id, `${admin.firstName} ${admin.lastName}`)}
+                                    style={styles.deleteBtn}
+                                    title="Supprimer l'administrateur"
+                                >
+                                    <i className="fas fa-trash"></i>
+                                </button>
                             </div>
                             <div style={styles.cardFooter}>
                                 <span style={styles.status}>Status: <strong style={{ color: '#2ecc71' }}>{admin.accountStatus || 'Actif'}</strong></span>
@@ -282,6 +307,19 @@ const styles = {
     modalActions: { display: 'flex', gap: '1rem', marginTop: '1rem' },
     cancelBtn: { flex: 1, padding: '0.8rem', borderRadius: '12px', border: '1px solid #e2e8f0', background: 'white', fontWeight: '600', cursor: 'pointer' },
     submitBtn: { flex: 1, padding: '0.8rem', borderRadius: '12px', border: 'none', background: '#003366', color: 'white', fontWeight: '600', cursor: 'pointer' },
+    deleteBtn: {
+        background: 'none',
+        border: 'none',
+        color: '#ef4444',
+        cursor: 'pointer',
+        padding: '0.5rem',
+        borderRadius: '8px',
+        transition: 'all 0.2s',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginLeft: 'auto'
+    },
     errorContainer: { textAlign: 'center', padding: '5rem', color: '#64748b' },
     loading: { textAlign: 'center', padding: '3rem', color: '#64748b' }
 };
