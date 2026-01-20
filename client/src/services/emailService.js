@@ -235,5 +235,59 @@ export const emailService = {
             </div>
         `;
         return emailService.triggerEmail(toEmail, "Confirmation de commande de carte - INVIK BANK", html);
+    },
+
+    /**
+     * Template for Loan Request Confirmation
+     */
+    sendLoanRequestEmail: async (toEmail, name, loanDetails) => {
+        const html = `
+            <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 35px; text-align: center; color: white;">
+                    <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
+                    <p style="margin-top: 10px; opacity: 0.9;">Votre projet, notre priorité</p>
+                </div>
+                <div style="padding: 40px; color: #333; line-height: 1.6;">
+                    <h2 style="color: #003366; margin-top: 0;">Bonjour ${name},</h2>
+                    <p>Nous vous confirmons la bonne réception de votre demande de financement pour votre projet : <strong>${loanDetails.type}</strong>.</p>
+                    
+                    <p>Un conseiller spécialisé de l'équipe INVIK BANK va étudier votre dossier. Vous recevrez une réponse de principe sous 24 à 48 heures ouvrées.</p>
+
+                    <div style="background: #f8fbff; border-radius: 12px; padding: 25px; margin: 30px 0; border-left: 4px solid #003366; boxShadow: 0 4px 6px rgba(0,0,0,0.02);">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <tr>
+                                <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Montant demandé :</td>
+                                <td style="padding: 8px 0; font-weight: 700; text-align: right; color: #1e293b; font-size: 16px;">${parseFloat(loanDetails.amount).toLocaleString('fr-FR')} €</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Durée :</td>
+                                <td style="padding: 8px 0; font-weight: 600; text-align: right; color: #1e293b;">${loanDetails.duration} mois</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Mensualité estimée :</td>
+                                <td style="padding: 8px 0; font-weight: 600; text-align: right; color: #1e293b;">${parseFloat(loanDetails.monthlyPayment).toLocaleString('fr-FR')} €/mois</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Statut actuel :</td>
+                                <td style="padding: 8px 0; font-weight: 700; text-align: right; color: #e67e22;">Étude en cours</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <p>Vous pouvez suivre l'avancement de votre dossier à tout moment depuis votre espace client, rubrique <strong>Crédits</strong>.</p>
+                    
+                    <div style="text-align: center; margin: 35px 0;">
+                        <span style="display: inline-block; padding: 12px 30px; background: #003366; color: white; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 15px;">Accéder à mon espace</span>
+                    </div>
+
+                    <p>Merci de votre confiance,<br><strong>L'équipe Crédit INVIK BANK</strong></p>
+                </div>
+                <div style="background: #f4f7f6; padding: 25px; text-align: center; font-size: 11px; color: #999; border-top: 1px solid #eee;">
+                    <p style="margin: 0;">Un crédit vous engage et doit être remboursé. Vérifiez vos capacités de remboursement avant de vous engager.</p>
+                    <p style="margin: 10px 0 0;">Ce message est automatique, merci de ne pas y répondre.</p>
+                </div>
+            </div>
+        `;
+        return emailService.triggerEmail(toEmail, "Confirmation de votre demande de crédit - INVIK BANK", html);
     }
 };

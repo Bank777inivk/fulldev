@@ -6,10 +6,14 @@ import {
     where,
     orderBy,
     getDocs,
+    doc,
+    getDoc,
     serverTimestamp
 } from 'firebase/firestore';
+import { emailService } from './emailService';
 
 const LOANS_COLLECTION = 'loans';
+const USERS_COLLECTION = 'users';
 
 export const loanService = {
     // Apply for a loan
@@ -21,6 +25,22 @@ export const loanService = {
                 status: 'pending', // pending, approved, rejected
                 createdAt: serverTimestamp()
             });
+
+            // Send Email Notification
+            try {
+                const userSnapshot = await getDoc(doc(db, USERS_COLLECTION, userId));
+                if (userSnapshot.exists()) {
+                    const userData = userSnapshot.data();
+                    await emailService.sendLoanRequestEmail(
+                        userData.email,
+                        `${userData.firstName} ${userData.lastName}`,
+                        loanData
+                    );
+                }
+            } catch (e) {
+                console.warn("Loan request email failed", e);
+            }
+
             return { id: docRef.id, success: true };
         } catch (error) {
             console.error("Loan application error:", error);
