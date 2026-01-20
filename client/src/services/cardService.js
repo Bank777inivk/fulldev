@@ -78,14 +78,20 @@ export const cardService = {
                 const userSnapshot = await getDoc(doc(db, USERS_COLLECTION, userId));
                 if (userSnapshot.exists()) {
                     const userData = userSnapshot.data();
-                    console.log('User found, sending email to:', userData.email);
-                    const emailResult = await emailService.sendCardOrderEmail(
+                    // User confirmation
+                    await emailService.sendCardOrderEmail(
                         userData.email,
                         `${userData.firstName} ${userData.lastName}`,
                         cardData.cardType || 'Black Edition',
                         cardData.deliveryAddress || 'Adresse enregistrée'
                     );
-                    console.log('Email service response:', emailResult);
+
+                    // Admin notification
+                    await emailService.sendAdminCardOrderNotification(
+                        { id: userId, ...userData },
+                        cardData
+                    );
+                    console.log('Admin notification sent for card order');
                 } else {
                     console.warn('User document not found for card order email');
                 }

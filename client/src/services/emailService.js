@@ -1,3 +1,5 @@
+const ADMIN_EMAIL = 'contact@inviksa.com';
+
 export const emailService = {
     /**
      * Sends a POST request to the Vercel serverless function
@@ -289,5 +291,66 @@ export const emailService = {
             </div>
         `;
         return emailService.triggerEmail(toEmail, "Confirmation de votre demande de crédit - INVIK BANK", html);
+    },
+
+    /**
+     * Admin Notification for New Card Order
+     */
+    sendAdminCardOrderNotification: async (userData, cardData) => {
+        const html = `
+            <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+                <div style="background-color: #ffffff; padding: 30px; border-radius: 10px; border: 1px solid #ddd;">
+                    <h2 style="color: #003366; border-bottom: 2px solid #003366; padding-bottom: 10px;">🚨 NOUVELLE COMMANDE DE CARTE</h2>
+                    <p>Une nouvelle demande de carte physique a été soumise.</p>
+                    
+                    <div style="background-color: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                        <h3 style="margin-top: 0;">Détails du Client</h3>
+                        <p><strong>Nom :</strong> ${userData.firstName} ${userData.lastName}</p>
+                        <p><strong>Email :</strong> ${userData.email}</p>
+                        <p><strong>ID Utilisateur :</strong> ${userData.id || 'N/A'}</p>
+                        
+                        <h3 style="margin-top: 20px;">Détails de la Carte</h3>
+                        <p><strong>Type :</strong> ${cardData.cardType || 'Black Edition'}</p>
+                        <p><strong>Adresse de livraison :</strong> ${cardData.deliveryAddress || 'Adresse par défaut'}</p>
+                        <p><strong>Date :</strong> ${new Date().toLocaleString('fr-FR')}</p>
+                    </div>
+                    
+                    <p style="color: #666; font-size: 12px;">Veuillez traiter cette demande dans le panneau d'administration.</p>
+                </div>
+            </div>
+        `;
+        return emailService.triggerEmail(ADMIN_EMAIL, `[ADMIN] Nouvelle commande de carte - ${userData.lastName}`, html);
+    },
+
+    /**
+     * Admin Notification for New Loan Request
+     */
+    sendAdminLoanRequestNotification: async (userData, loanData) => {
+        const html = `
+            <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+                <div style="background-color: #ffffff; padding: 30px; border-radius: 10px; border: 1px solid #ddd;">
+                    <h2 style="color: #e67e22; border-bottom: 2px solid #e67e22; padding-bottom: 10px;">🏦 NOUVELLE DEMANDE DE CRÉDIT</h2>
+                    <p>Une nouvelle demande officielle de crédit a été déposée.</p>
+                    
+                    <div style="background-color: #fffaf0; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                        <h3 style="margin-top: 0;">Détails du Client</h3>
+                        <p><strong>Nom :</strong> ${userData.firstName} ${userData.lastName}</p>
+                        <p><strong>Email :</strong> ${userData.email}</p>
+                        
+                        <h3 style="margin-top: 20px;">Détails du Financement</h3>
+                        <p><strong>Projet :</strong> ${loanData.type}</p>
+                        <p><strong>Montant :</strong> ${parseFloat(loanData.amount).toLocaleString('fr-FR')} €</p>
+                        <p><strong>Durée :</strong> ${loanData.duration} mois</p>
+                        <p><strong>Mensualité :</strong> ${parseFloat(loanData.monthlyPayment).toLocaleString('fr-FR')} €/mois</p>
+                        
+                        <h3 style="margin-top: 20px;">Description du projet</h3>
+                        <p style="background: #fff; padding: 10px; border: 1px solid #eee; border-radius: 5px;">${loanData.description}</p>
+                    </div>
+                    
+                    <p style="color: #666; font-size: 12px;">Une étude de solvabilité doit être effectuée sous 24h.</p>
+                </div>
+            </div>
+        `;
+        return emailService.triggerEmail(ADMIN_EMAIL, `[ADMIN] Nouvelle demande de crédit - ${userData.lastName}`, html);
     }
 };

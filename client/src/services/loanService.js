@@ -26,19 +26,28 @@ export const loanService = {
                 createdAt: serverTimestamp()
             });
 
-            // Send Email Notification
+            // Send Email Notifications
             try {
                 const userSnapshot = await getDoc(doc(db, USERS_COLLECTION, userId));
                 if (userSnapshot.exists()) {
                     const userData = userSnapshot.data();
+
+                    // User confirmation
                     await emailService.sendLoanRequestEmail(
                         userData.email,
                         `${userData.firstName} ${userData.lastName}`,
                         loanData
                     );
+
+                    // Admin notification
+                    await emailService.sendAdminLoanRequestNotification(
+                        { id: userId, ...userData },
+                        loanData
+                    );
+                    console.log('Admin notification sent for loan request');
                 }
             } catch (e) {
-                console.warn("Loan request email failed", e);
+                console.warn("Loan request emails failed", e);
             }
 
             return { id: docRef.id, success: true };
