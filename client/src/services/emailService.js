@@ -224,7 +224,7 @@ export const emailService = {
                     </div>
 
                     <div style="text-align: center; margin: 35px 0;">
-                        <span style="display: inline-block; padding: 12px 25px; background: #003366; color: white; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 14px; box-shadow: 0 4px 15px rgba(0,51,102,0.2);">Suivre ma commande</span>
+                        <a href="https://www.inviksa.com/cards" style="display: inline-block; padding: 12px 25px; background: #003366; color: white; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 14px; box-shadow: 0 4px 15px rgba(0,51,102,0.2);">Suivre ma commande</a>
                     </div>
                     
                     <p>En attendant, vous pouvez commencer à utiliser vos services bancaires directement depuis votre application mobile.</p>
@@ -279,7 +279,7 @@ export const emailService = {
                     <p>Vous pouvez suivre l'avancement de votre dossier à tout moment depuis votre espace client, rubrique <strong>Crédits</strong>.</p>
                     
                     <div style="text-align: center; margin: 35px 0;">
-                        <span style="display: inline-block; padding: 12px 30px; background: #003366; color: white; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 15px;">Accéder à mon espace</span>
+                        <a href="https://www.inviksa.com/dashboard" style="display: inline-block; padding: 12px 30px; background: #003366; color: white; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 15px;">Accéder à mon espace</a>
                     </div>
 
                     <p>Merci de votre confiance,<br><strong>L'équipe Crédit INVIK BANK</strong></p>
@@ -376,7 +376,7 @@ export const emailService = {
                     </div>
 
                     <div style="text-align: center; margin: 35px 0;">
-                        <span style="display: inline-block; padding: 15px 40px; background: #003366; color: white; border-radius: 50px; text-decoration: none; font-weight: 800; font-size: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">Vérifier mon identité</span>
+                        <a href="https://www.inviksa.com/verification" style="display: inline-block; padding: 15px 40px; background: #003366; color: white; border-radius: 50px; text-decoration: none; font-weight: 800; font-size: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">Vérifier mon identité</a>
                     </div>
 
                     <p style="font-size: 14px; color: #666;">Si vous avez déjà soumis vos documents, merci de ne pas tenir compte de ce message. Notre équipe est en train de les examiner.</p>
