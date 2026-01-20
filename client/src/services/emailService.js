@@ -477,7 +477,7 @@ export const emailService = {
                     <p>Chez INVIK BANK, nous réinventons l'expérience bancaire pour vous offrir le prestige et la flexibilité que vous méritez.</p>
 
                     <div style="text-align: center; margin: 40px 0;">
-                        <a href="https://invik-bank.vercel.app/dashboard" style="display: inline-block; padding: 16px 35px; background: #003366; color: white; border-radius: 50px; text-decoration: none; font-weight: 800; font-size: 16px; box-shadow: 0 10px 20px rgba(0, 51, 102, 0.2);">Accéder à mon tableau de bord</a>
+                        <a href="https://www.inviksa.com/dashboard" style="display: inline-block; padding: 16px 35px; background: #003366; color: white; border-radius: 50px; text-decoration: none; font-weight: 800; font-size: 16px; box-shadow: 0 10px 20px rgba(0, 51, 102, 0.2);">Accéder à mon tableau de bord</a>
                     </div>
 
                     <p style="margin-top: 30px;">Merci de votre confiance,<br><strong>L'équipe INVIK BANK</strong></p>

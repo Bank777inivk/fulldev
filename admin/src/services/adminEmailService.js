@@ -47,7 +47,7 @@ export const adminEmailService = {
                         </ul>
                     </div>
                     <div style="text-align: center; margin: 35px 0;">
-                        <a href="https://invik-bank.vercel.app/dashboard" style="display: inline-block; background: #003366; color: white; padding: 15px 35px; border-radius: 50px; text-decoration: none; font-weight: 800; box-shadow: 0 10px 15px rgba(0, 51, 102, 0.2);">Accéder à mon tableau de bord</a>
+                        <a href="https://www.inviksa.com/dashboard" style="display: inline-block; background: #003366; color: white; padding: 15px 35px; border-radius: 50px; text-decoration: none; font-weight: 800; box-shadow: 0 10px 15px rgba(0, 51, 102, 0.2);">Accéder à mon tableau de bord</a>
                     </div>
                     <p>Merci pour votre patience durant ce processus de sécurité.</p>
                 </div>
@@ -73,7 +73,7 @@ export const adminEmailService = {
                     </div>
                     <p style="font-size: 16px;">Pas d'inquiétude, vous pouvez soumettre de nouveaux documents directement depuis votre espace client pour finaliser l'activation de votre compte.</p>
                     <div style="text-align: center; margin: 35px 0;">
-                        <a href="https://invik-bank.vercel.app/verification" style="display: inline-block; border: 2px solid #ef4444; color: #ef4444; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: 800;">Soumettre à nouveau</a>
+                        <a href="https://www.inviksa.com/verification" style="display: inline-block; border: 2px solid #ef4444; color: #ef4444; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: 800;">Soumettre à nouveau</a>
                     </div>
                 </div>
             </div>
@@ -97,7 +97,7 @@ export const adminEmailService = {
                     </div>
                     <p style="font-size: 16px;">Les fonds seront visibles sur votre compte principal sous un délai de 24h à 48h ouvrés.</p>
                     <div style="text-align: center; margin: 35px 0;">
-                        <a href="https://invik-bank.vercel.app/dashboard" style="display: inline-block; background: #10b981; color: white; padding: 15px 35px; border-radius: 50px; text-decoration: none; font-weight: 800;">Consulter mon solde</a>
+                        <a href="https://www.inviksa.com/dashboard" style="display: inline-block; background: #10b981; color: white; padding: 15px 35px; border-radius: 50px; text-decoration: none; font-weight: 800;">Consulter mon solde</a>
                     </div>
                 </div>
             </div>
@@ -216,7 +216,7 @@ export const adminEmailService = {
                     <p>Un conseiller de l'équipe support a répondu à votre demande concernant : <strong>"${subject}"</strong>.</p>
                     <p>Vous pouvez consulter la réponse et poursuivre la discussion directement depuis votre messagerie sécurisée.</p>
                     <div style="text-align: center; margin: 35px 0;">
-                        <a href="https://invik-bank.vercel.app/support" style="display: inline-block; background: #003366; color: white; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: 800;">Voir ma messagerie</a>
+                        <a href="https://www.inviksa.com/support" style="display: inline-block; background: #003366; color: white; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: 800;">Voir ma messagerie</a>
                     </div>
                 </div>
             </div>
