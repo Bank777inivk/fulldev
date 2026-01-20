@@ -34,6 +34,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import DashboardLayout from './components/dashboard/DashboardLayout';
 import EmailVerificationPending from './pages/EmailVerificationPending';
 import EmailVerificationSuccess from './pages/EmailVerificationSuccess';
+import AuthActionHandler from './pages/AuthActionHandler';
 import './index.css';
 
 const ResponsiveCreditRequest = () => {
@@ -83,6 +84,7 @@ function AppRoutes() {
       <Route path="/mentions-legales" element={<PublicLayout><MentionsLegales /></PublicLayout>} />
       <Route path="/email-verification-pending" element={<EmailVerificationPending />} />
       <Route path="/email-verification-success" element={<EmailVerificationSuccess />} />
+      <Route path="/auth/action" element={<AuthActionHandler />} />
 
       {/* Dashboard Private Routes */}
       <Route
