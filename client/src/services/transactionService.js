@@ -12,6 +12,7 @@ import {
     getDocs
 } from 'firebase/firestore';
 import { notificationService } from './notificationService';
+import { emailService } from './emailService';
 
 const WALLETS_COLLECTION = 'wallets';
 const TRANSACTIONS_COLLECTION = 'transactions';
@@ -129,6 +130,21 @@ export const transactionService = {
                 { transactionType: 'transfer_internal', amount, fromWalletId, toWalletId }
             );
 
+            // Send Email to User
+            try {
+                const userSnapshot = await getDoc(doc(db, USERS_COLLECTION, userId));
+                if (userSnapshot.exists()) {
+                    const userData = userSnapshot.data();
+                    await emailService.sendTransferSentEmail(
+                        userData.email,
+                        `${userData.firstName} ${userData.lastName}`,
+                        amount,
+                        toData.type === 'savings' ? 'Mon Épargne' : 'Mon Compte Principal',
+                        'INT-' + Date.now().toString().slice(-6)
+                    );
+                }
+            } catch (e) { console.warn("Internal Transfer Email failed", e); }
+
             return { success: true, instant: true };
         } catch (error) {
             console.error("Internal transfer error:", error);
@@ -244,6 +260,24 @@ export const transactionService = {
                 { transactionType: 'receive_instant', amount, senderName: senderDisplayName }
             );
 
+            // Send Emails (Background)
+            try {
+                // Sender Email
+                const senderSnapshot = await getDoc(doc(db, USERS_COLLECTION, userId));
+                if (senderSnapshot.exists()) {
+                    const sData = senderSnapshot.snapshot?.data() || senderSnapshot.data();
+                    emailService.sendTransferSentEmail(sData.email, `${sData.firstName} ${sData.lastName}`, amount, beneficiaryName, 'INST-' + Date.now().toString().slice(-6));
+                }
+
+                // Receiver Email
+                const targetUserId = targetWalletDoc.data().userId;
+                const receiverSnapshot = await getDoc(doc(db, USERS_COLLECTION, targetUserId));
+                if (receiverSnapshot.exists()) {
+                    const rData = receiverSnapshot.data();
+                    emailService.sendTransferReceivedEmail(rData.email, `${rData.firstName} ${rData.lastName}`, amount, senderDisplayName);
+                }
+            } catch (e) { console.warn("Instant Transfer Emails failed", e); }
+
             return { success: true, instant: true };
         } catch (error) {
             console.error("Instant transfer error:", error);
@@ -302,6 +336,21 @@ export const transactionService = {
                 'info',
                 { transactionType: 'transfer_external', amount, beneficiaryName, beneficiaryIban: iban }
             );
+
+            // Send Email to User (SEPA Pending)
+            try {
+                const userSnapshot = await getDoc(doc(db, USERS_COLLECTION, userId));
+                if (userSnapshot.exists()) {
+                    const userData = userSnapshot.data();
+                    await emailService.sendTransferSentEmail(
+                        userData.email,
+                        `${userData.firstName} ${userData.lastName}`,
+                        amount,
+                        beneficiaryName + " (SEPA)",
+                        docRef.id
+                    );
+                }
+            } catch (e) { console.warn("SEPA Transfer Email failed", e); }
 
             return { id: docRef.id, success: true, instant: false };
         } catch (error) {
