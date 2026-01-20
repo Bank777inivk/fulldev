@@ -15,6 +15,8 @@ const AuthActionHandler = () => {
     const [message, setMessage] = useState('Traitement de votre demande en cours...');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const mode = searchParams.get('mode');
     const oobCode = searchParams.get('oobCode');
@@ -136,22 +138,40 @@ const AuthActionHandler = () => {
                         <h2 style={styles.title}>Nouveau mot de passe</h2>
                         <p style={styles.text}>Veuillez saisir votre nouveau mot de passe.</p>
                         <form onSubmit={onPasswordSubmit} style={styles.form}>
-                            <input
-                                type="password"
-                                placeholder="Nouveau mot de passe"
-                                style={styles.input}
-                                value={newPassword}
-                                onChange={(e) => setNewPassword(e.target.value)}
-                                required
-                            />
-                            <input
-                                type="password"
-                                placeholder="Confirmer le mot de passe"
-                                style={styles.input}
-                                value={confirmPassword}
-                                onChange={(e) => setConfirmPassword(e.target.value)}
-                                required
-                            />
+                            <div style={{ position: 'relative' }}>
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    placeholder="Nouveau mot de passe"
+                                    style={styles.input}
+                                    value={newPassword}
+                                    onChange={(e) => setNewPassword(e.target.value)}
+                                    required
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    style={styles.eyeIcon}
+                                >
+                                    <i className={`fas ${showPassword ? 'fa-eye' : 'fa-eye-slash'}`}></i>
+                                </button>
+                            </div>
+                            <div style={{ position: 'relative' }}>
+                                <input
+                                    type={showConfirmPassword ? "text" : "password"}
+                                    placeholder="Confirmer le mot de passe"
+                                    style={styles.input}
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                    required
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                    style={styles.eyeIcon}
+                                >
+                                    <i className={`fas ${showConfirmPassword ? 'fa-eye' : 'fa-eye-slash'}`}></i>
+                                </button>
+                            </div>
                             <button type="submit" style={styles.button}>
                                 Valider le changement
                             </button>
@@ -263,10 +283,27 @@ const styles = {
     },
     input: {
         padding: '12px 15px',
+        paddingRight: '45px',
         borderRadius: '10px',
         border: '1px solid #cbd5e0',
         fontSize: '1rem',
-        outline: 'none'
+        outline: 'none',
+        width: '100%',
+        boxSizing: 'border-box'
+    },
+    eyeIcon: {
+        position: 'absolute',
+        right: '15px',
+        top: '50%',
+        transform: 'translateY(-50%)',
+        background: 'none',
+        border: 'none',
+        color: '#94a3b8',
+        cursor: 'pointer',
+        fontSize: '1rem',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 };
 

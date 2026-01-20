@@ -10,6 +10,7 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const [isForgotMode, setIsForgotMode] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
@@ -19,12 +20,16 @@ const Login = () => {
             setError("Veuillez saisir votre adresse email pour réinitialiser le mot de passe.");
             return;
         }
+        setLoading(true);
         try {
             await resetPassword(email);
             setError('');
             showToast("Lien de réinitialisation envoyé ! Vérifiez votre boîte mail.", 'info');
+            setIsForgotMode(false); // Optionally return to login mode
         } catch (err) {
             setError("Impossible d'envoyer l'email de réinitialisation.");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -68,7 +73,7 @@ const Login = () => {
                             </div>
                         )}
 
-                        <form onSubmit={handleSubmit}>
+                        <form onSubmit={isForgotMode ? handleForgotPassword : handleSubmit}>
                             <div style={styles.formGroup}>
                                 <label style={styles.label}>Identifiant Client (Email)</label>
                                 <input
@@ -80,43 +85,48 @@ const Login = () => {
                                     required
                                 />
                             </div>
-                            <div style={styles.formGroup}>
-                                <label style={styles.label}>Mot de passe</label>
-                                <div style={{ position: 'relative' }}>
-                                    <input
-                                        type={showPassword ? "text" : "password"}
-                                        placeholder="••••••••"
-                                        style={{ ...styles.input, paddingRight: '3.5rem' }}
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        required
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowPassword(!showPassword)}
-                                        style={{
-                                            position: 'absolute',
-                                            right: '1rem',
-                                            top: '50%',
-                                            transform: 'translateY(-50%)',
-                                            background: 'none',
-                                            border: 'none',
-                                            color: '#94a3b8',
-                                            cursor: 'pointer',
-                                            fontSize: '1rem',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            zIndex: 2
-                                        }}
-                                    >
-                                        <i className={`fas ${showPassword ? 'fa-eye' : 'fa-eye-slash'}`}></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div style={styles.forgot}>
-                                <a href="#" onClick={handleForgotPassword} style={styles.link}>Mot de passe oublié ?</a>
-                            </div>
+
+                            {!isForgotMode && (
+                                <>
+                                    <div style={styles.formGroup}>
+                                        <label style={styles.label}>Mot de passe</label>
+                                        <div style={{ position: 'relative' }}>
+                                            <input
+                                                type={showPassword ? "text" : "password"}
+                                                placeholder="••••••••"
+                                                style={{ ...styles.input, paddingRight: '3.5rem' }}
+                                                value={password}
+                                                onChange={(e) => setPassword(e.target.value)}
+                                                required
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowPassword(!showPassword)}
+                                                style={{
+                                                    position: 'absolute',
+                                                    right: '1rem',
+                                                    top: '50%',
+                                                    transform: 'translateY(-50%)',
+                                                    background: 'none',
+                                                    border: 'none',
+                                                    color: '#94a3b8',
+                                                    cursor: 'pointer',
+                                                    fontSize: '1rem',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    zIndex: 2
+                                                }}
+                                            >
+                                                <i className={`fas ${showPassword ? 'fa-eye' : 'fa-eye-slash'}`}></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div style={styles.forgot}>
+                                        <a href="#" onClick={(e) => { e.preventDefault(); setIsForgotMode(true); }} style={styles.link}>Mot de passe oublié ?</a>
+                                    </div>
+                                </>
+                            )}
 
                             <button
                                 type="submit"
@@ -127,20 +137,30 @@ const Login = () => {
                                 }}
                                 disabled={loading}
                             >
-                                {loading ? "Connexion..." : "Se connecter"}
+                                {loading ? "Traitement..." : (isForgotMode ? "Envoyer le lien" : "Se connecter")}
                             </button>
+
+                            {isForgotMode && (
+                                <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+                                    <a href="#" onClick={(e) => { e.preventDefault(); setIsForgotMode(false); }} style={styles.link}>Retour à la connexion</a>
+                                </div>
+                            )}
                         </form>
 
-                        <div style={styles.divider}>
-                            <span>Pas encore client ?</span>
-                        </div>
+                        {!isForgotMode && (
+                            <>
+                                <div style={styles.divider}>
+                                    <span>Pas encore client ?</span>
+                                </div>
 
-                        <button
-                            onClick={() => navigate('/register')}
-                            style={styles.registerButton}
-                        >
-                            Ouvrir un compte
-                        </button>
+                                <button
+                                    onClick={() => navigate('/register')}
+                                    style={styles.registerButton}
+                                >
+                                    Ouvrir un compte
+                                </button>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>
