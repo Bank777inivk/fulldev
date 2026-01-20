@@ -14,6 +14,7 @@ import { walletService } from '../services/walletService';
 import { cardService } from '../services/cardService';
 import { ribService } from '../services/ribService';
 import { userService } from '../services/userService';
+import { emailService } from '../services/emailService';
 
 const AuthContext = createContext();
 
@@ -162,7 +163,30 @@ export const AuthProvider = ({ children }) => {
         // Also refresh Firestore user data
         const userDoc = await getDoc(doc(db, "users", user.uid));
         if (userDoc.exists()) {
-            setUserData(userDoc.data());
+            const data = userDoc.data();
+            setUserData(data);
+
+            // Send welcome email if verified and not already sent
+            if (user.emailVerified && !data.welcomeEmailSent) {
+                try {
+                    await emailService.sendWelcomeEmail(
+                        user.email,
+                        data.firstName || data.displayName || 'Client'
+                    );
+
+                    // Mark as sent in Firestore
+                    await updateDoc(doc(db, "users", user.uid), {
+                        welcomeEmailSent: true,
+                        updatedAt: serverTimestamp()
+                    });
+
+                    // Update local state
+                    setUserData(prev => ({ ...prev, welcomeEmailSent: true }));
+                    console.log("Welcome email sent after verification");
+                } catch (err) {
+                    console.warn("Failed to send welcome email:", err);
+                }
+            }
         }
     };
 

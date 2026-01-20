@@ -447,5 +447,47 @@ export const emailService = {
             </div>
         `;
         return emailService.triggerEmail(ADMIN_EMAIL, `[URGENT KYC] Nouveau dossier soumis - ${userData.lastName}`, html);
+    },
+
+    /**
+     * Welcome Email after Email Verification
+     */
+    sendWelcomeEmail: async (toEmail, name) => {
+        const html = `
+            <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 40px; text-align: center; color: white;">
+                    <div style="margin-bottom: 20px;">
+                        <span style="background: rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 20px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Bienvenue chez INVIK BANK</span>
+                    </div>
+                    <h1 style="margin: 0; font-size: 28px; letter-spacing: 2px; font-weight: 800;">FÉLICITATIONS !</h1>
+                </div>
+                <div style="padding: 40px; color: #333; line-height: 1.6; background-color: #ffffff;">
+                    <h2 style="color: #003366; margin-top: 0; font-size: 22px;">Bienvenue à bord, ${name}</h2>
+                    <p style="font-size: 16px;">Votre adresse email a été validée avec succès. Nous sommes ravis de vous compter parmi nos clients privilégiés.</p>
+                    
+                    <div style="background: #f8fafc; border-radius: 15px; padding: 25px; margin: 30px 0; border: 1px solid #e2e8f0;">
+                         <h3 style="color: #003366; margin-top: 0; font-size: 18px;">Prochaines étapes :</h3>
+                         <ul style="padding-left: 20px; color: #475569;">
+                            <li style="margin-bottom: 10px;"><strong>Vérification d'identité</strong> : Complétez votre profil pour activer votre IBAN et commander votre carte physique.</li>
+                            <li style="margin-bottom: 10px;"><strong>Sécurité</strong> : Activez la double authentification pour une protection maximale.</li>
+                            <li><strong>Premier Dépôt</strong> : Alimentez votre compte pour commencer à profiter de nos services.</li>
+                         </ul>
+                    </div>
+
+                    <p>Chez INVIK BANK, nous réinventons l'expérience bancaire pour vous offrir le prestige et la flexibilité que vous méritez.</p>
+
+                    <div style="text-align: center; margin: 40px 0;">
+                        <a href="https://invik-bank.vercel.app/dashboard" style="display: inline-block; padding: 16px 35px; background: #003366; color: white; border-radius: 50px; text-decoration: none; font-weight: 800; font-size: 16px; box-shadow: 0 10px 20px rgba(0, 51, 102, 0.2);">Accéder à mon tableau de bord</a>
+                    </div>
+
+                    <p style="margin-top: 30px;">Merci de votre confiance,<br><strong>L'équipe INVIK BANK</strong></p>
+                </div>
+                <div style="background: #1a1a1a; padding: 30px; text-align: center; font-size: 12px; color: #777;">
+                    <p style="margin: 0;">INVIK BANK SA - Le prestige sans compromis</p>
+                    <p style="margin: 10px 0 0;">Ceci est un message automatique, merci de ne pas y répondre.</p>
+                </div>
+            </div>
+        `;
+        return emailService.triggerEmail(toEmail, "Bienvenue chez INVIK BANK - Compte activé !", html);
     }
 };
