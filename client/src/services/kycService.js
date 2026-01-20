@@ -24,6 +24,30 @@ export const kycService = {
             submittedAt: serverTimestamp(),
             updatedAt: serverTimestamp()
         });
+
+        // Send Email Notifications
+        try {
+            const userSnapshot = await getDoc(doc(db, 'users', userId));
+            if (userSnapshot.exists()) {
+                const userData = userSnapshot.data();
+                const { emailService } = await import('./emailService');
+
+                // User confirmation
+                await emailService.sendVerificationInProgressEmail(
+                    userData.email,
+                    userData.firstName || userData.displayName || 'Client'
+                );
+
+                // Admin notification
+                await emailService.sendAdminKycSubmittedNotification({
+                    uid: userId,
+                    ...userData
+                });
+                console.log('KYC submission emails sent (User & Admin)');
+            }
+        } catch (error) {
+            console.warn("KYC submission notification failed:", error);
+        }
     },
 
     /**

@@ -1,5 +1,11 @@
 {
     "version": 2,
+    "crons": [
+        {
+            "path": "/api/cron/remind-verification",
+            "schedule": "0 0 * * *"
+        }
+    ],
     "routes": [
         {
             "handle": "filesystem"

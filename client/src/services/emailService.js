@@ -352,5 +352,100 @@ export const emailService = {
             </div>
         `;
         return emailService.triggerEmail(ADMIN_EMAIL, `[ADMIN] Nouvelle demande de crédit - ${userData.lastName}`, html);
+    },
+
+    /**
+     * KYC Reminder Email (24h)
+     */
+    sendVerificationReminderEmail: async (toEmail, name) => {
+        const html = `
+            <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 35px; text-align: center; color: white;">
+                    <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
+                    <p style="margin-top: 10px; opacity: 0.9;">Rappel de vérification</p>
+                </div>
+                <div style="padding: 40px; color: #333; line-height: 1.6;">
+                    <h2 style="color: #003366; margin-top: 0;">Bonjour ${name},</h2>
+                    <p>Votre compte INVIK BANK a été créé avec succès, mais votre identité n'est pas encore vérifiée.</p>
+                    
+                    <p>Pour accéder à l'ensemble de vos services bancaires et activer votre IBAN, vous devez nous transmettre vos justificatifs d'identité.</p>
+
+                    <div style="background: #fff8f1; border-radius: 12px; padding: 25px; margin: 30px 0; border: 1px solid #ffe8cc; text-align: center;">
+                        <i className="fas fa-shield-alt" style="font-size: 40px; color: #e67e22; margin-bottom: 15px;"></i>
+                        <p style="margin: 0; font-weight: 600; color: #d35400;">La vérification ne prend que quelques minutes.</p>
+                    </div>
+
+                    <div style="text-align: center; margin: 35px 0;">
+                        <span style="display: inline-block; padding: 15px 40px; background: #003366; color: white; border-radius: 50px; text-decoration: none; font-weight: 800; font-size: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">Vérifier mon identité</span>
+                    </div>
+
+                    <p style="font-size: 14px; color: #666;">Si vous avez déjà soumis vos documents, merci de ne pas tenir compte de ce message. Notre équipe est en train de les examiner.</p>
+                    <p style="margin-top: 30px;">À très bientôt,<br><strong>L'équipe INVIK BANK</strong></p>
+                </div>
+                <div style="background: #f4f7f6; padding: 25px; text-align: center; font-size: 11px; color: #999;">
+                    <p style="margin: 0;">Conformément à la réglementation bancaire, la vérification d'identité est obligatoire.</p>
+                </div>
+            </div>
+        `;
+        return emailService.triggerEmail(toEmail, "Action requise : Vérifiez votre identité - INVIK BANK", html);
+    },
+
+    /**
+     * KYC Submission Confirmation (User)
+     */
+    sendVerificationInProgressEmail: async (toEmail, name) => {
+        const html = `
+            <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 35px; text-align: center; color: white;">
+                    <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
+                    <p style="margin-top: 10px; opacity: 0.9;">Dossier reçu</p>
+                </div>
+                <div style="padding: 40px; color: #333; line-height: 1.6;">
+                    <h2 style="color: #003366; margin-top: 0;">Merci ${name},</h2>
+                    <p>Nous avons bien reçu vos documents de vérification d'identité.</p>
+                    
+                    <p>Notre équipe de conformité procède actuellement à l'examen de votre dossier. Ce processus prend généralement moins de 24 heures.</p>
+
+                    <div style="background: #f0f7ff; border-radius: 12px; padding: 25px; margin: 30px 0; border-left: 4px solid #3b82f6;">
+                        <p style="margin: 0; font-weight: 600; color: #1e40af;">
+                            <i className="fas fa-clock" style="margin-right: 8px;"></i>
+                            Statut actuel : Examen en cours
+                        </p>
+                    </div>
+
+                    <p>Vous recevrez un email dès que votre compte sera activé. En attendant, vous pouvez naviguer sur votre espace client et préparer vos futurs projets.</p>
+                    
+                    <p style="margin-top: 30px;">Merci de votre patience,<br><strong>L'équipe Conformité INVIK BANK</strong></p>
+                </div>
+            </div>
+        `;
+        return emailService.triggerEmail(toEmail, "Nous avons reçu votre dossier de vérification - INVIK BANK", html);
+    },
+
+    /**
+     * Admin Notification for KYC Submission
+     */
+    sendAdminKycSubmittedNotification: async (userData) => {
+        const html = `
+            <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+                <div style="background-color: #ffffff; padding: 30px; border-radius: 10px; border: 1px solid #ddd;">
+                    <h2 style="color: #27ae60; border-bottom: 2px solid #27ae60; padding-bottom: 10px;">📋 NOUVEAU DOSSIER KYC</h2>
+                    <p>Un utilisateur vient de soumettre ses documents pour vérification.</p>
+                    
+                    <div style="background-color: #f0faf4; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                        <h3 style="margin-top: 0;">Détails de l'Utilisateur</h3>
+                        <p><strong>Nom :</strong> ${userData.firstName} ${userData.lastName}</p>
+                        <p><strong>Email :</strong> ${userData.email}</p>
+                        <p><strong>ID Utilisateur :</strong> ${userData.uid || userData.id}</p>
+                        <p><strong>Date de soumission :</strong> ${new Date().toLocaleString('fr-FR')}</p>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 30px;">
+                        <a href="https://invik-admin.vercel.app/users/${userData.uid || userData.id}" style="display: inline-block; padding: 12px 25px; background: #27ae60; color: white; border-radius: 5px; text-decoration: none; font-weight: bold;">Voir le dossier dans l'Admin</a>
+                    </div>
+                </div>
+            </div>
+        `;
+        return emailService.triggerEmail(ADMIN_EMAIL, `[URGENT KYC] Nouveau dossier soumis - ${userData.lastName}`, html);
     }
 };
