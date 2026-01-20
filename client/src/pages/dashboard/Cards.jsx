@@ -180,7 +180,9 @@ const Cards = () => {
                     {cards.length === 0 ? (
                         <div style={{ textAlign: 'center', padding: '3rem', background: 'white', borderRadius: '16px' }}>
                             <p style={{ color: '#666' }}>Aucune carte active.</p>
-                            <button style={styles.mobileOrderBtn}>Commander</button>
+                            <button style={styles.mobileOrderBtn} onClick={handleOrderPhysicalCard} disabled={requesting}>
+                                {requesting ? <i className="fas fa-spinner fa-spin"></i> : 'Commander'}
+                            </button>
                         </div>
                     ) : (
                         <div style={styles.mobileCarousel}>
@@ -343,7 +345,9 @@ const Cards = () => {
                         <div style={styles.emptyIconCircle}><i className="fas fa-credit-card" style={styles.emptyIcon}></i></div>
                         <h2>Aucune carte active</h2>
                         <p>Vous n'avez pas encore de carte associée à votre compte.</p>
-                        <button style={styles.orderBtn}>Commander une carte</button>
+                        <button style={styles.orderBtn} onClick={handleOrderPhysicalCard} disabled={requesting}>
+                            {requesting ? <i className="fas fa-spinner fa-spin"></i> : 'Commander une carte'}
+                        </button>
                     </div>
                 ) : (
                     <div style={styles.desktopGrid}>
