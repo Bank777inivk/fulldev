@@ -4,16 +4,11 @@ import { adminService } from '../services/adminService';
 import { useAdminAuth } from '../contexts/AdminAuthContext';
 
 const AdminLayout = () => {
-    const { currentUser, logout } = useAdminAuth();
+    const { currentUser, logout, isSuperAdmin } = useAdminAuth();
     const location = useLocation();
     const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 1024);
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const [notifications] = useState([
-        { id: 1, text: 'Nouvelle demande KYC', time: '5m' },
-        { id: 2, text: 'Transaction suspecte détectée', time: '1h' }
-    ]);
-    const [showNotifications, setShowNotifications] = useState(false);
 
     const [pendingKYC, setPendingKYC] = useState(0);
     const [pendingCards, setPendingCards] = useState(0);
@@ -80,6 +75,7 @@ const AdminLayout = () => {
         { path: '/prospects', icon: 'fas fa-user-tie', label: 'Prospects (Leads)', badge: newLeads || null },
         { path: '/support', icon: 'fas fa-headset', label: 'Tickets Support', badge: openTickets || null },
         { path: '/messages', icon: 'fas fa-comment-alt', label: 'Messages Contact', badge: newMessages || null },
+        ...(isSuperAdmin ? [{ path: '/manage-admins', icon: 'fas fa-user-shield', label: 'Gestion Admins' }] : []),
     ];
 
     const handleLogout = async () => {
@@ -138,12 +134,12 @@ const AdminLayout = () => {
             justifyContent: 'center',
         },
         sidebarHeader: {
-            padding: isMobile ? '0.5rem 1rem' : '1rem 1.25rem',
+            padding: isMobile ? '0.5rem 1rem' : '0.5rem 1.25rem',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             borderBottom: '1px solid rgba(255,255,255,0.05)',
-            height: isMobile ? '50px' : '70px',
+            height: isMobile ? '50px' : '60px',
         },
         logo: {
             display: 'flex',
@@ -152,15 +148,15 @@ const AdminLayout = () => {
             width: '100%',
         },
         logoIcon: {
-            width: isMobile ? '32px' : '40px',
-            height: isMobile ? '32px' : '40px',
-            minWidth: isMobile ? '32px' : '40px',
+            width: isMobile ? '30px' : '34px',
+            height: isMobile ? '30px' : '34px',
+            minWidth: isMobile ? '30px' : '34px',
             borderRadius: '10px',
             background: 'var(--gradient-secondary)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontSize: isMobile ? '1rem' : '1.2rem',
+            fontSize: isMobile ? '0.9rem' : '1rem',
             boxShadow: '0 4px 15px rgba(0, 204, 255, 0.3)',
         },
         logoText: {
@@ -187,24 +183,24 @@ const AdminLayout = () => {
         navItem: {
             display: 'flex',
             alignItems: 'center',
-            padding: isMobile ? '0.4rem 1rem' : '0.6rem 1.25rem',
+            padding: isMobile ? '0.3rem 0.75rem' : '0.4rem 1rem',
             textDecoration: 'none',
             borderRadius: '0 50px 50px 0',
-            margin: '1px 0',
+            margin: '0px 0',
             transition: 'var(--transition-fast)',
             gap: '0.75rem',
-            height: isMobile ? '38px' : '46px',
+            height: isMobile ? '34px' : '38px',
             position: 'relative',
             overflow: 'hidden',
         },
         navIcon: {
-            fontSize: isMobile ? '1rem' : '1.1rem',
+            fontSize: isMobile ? '0.9rem' : '1rem',
             width: '24px',
             textAlign: 'center',
             transition: 'color 0.2s',
         },
         navLabel: {
-            fontSize: isMobile ? '0.85rem' : '0.95rem',
+            fontSize: isMobile ? '0.8rem' : '0.9rem',
             fontWeight: '500',
             whiteSpace: 'nowrap',
             transition: 'opacity 0.3s',
@@ -220,7 +216,7 @@ const AdminLayout = () => {
             boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
         },
         sidebarFooter: {
-            padding: '0.75rem 1rem',
+            padding: '0.5rem 1rem',
             borderTop: '1px solid rgba(255,255,255,0.05)',
             display: 'flex',
             alignItems: 'center',
@@ -231,14 +227,14 @@ const AdminLayout = () => {
             display: 'flex',
             alignItems: 'center',
             gap: '12px',
-            padding: isMobile ? '0.5rem 0.75rem' : '0.75rem',
+            padding: isMobile ? '0.4rem 0.6rem' : '0.6rem',
             background: 'rgba(231, 76, 60, 0.1)',
             border: '1px solid rgba(231, 76, 60, 0.2)',
             color: '#ff6b6b',
             borderRadius: '12px',
             cursor: 'pointer',
             fontWeight: '600',
-            fontSize: isMobile ? '0.8rem' : '0.9rem',
+            fontSize: isMobile ? '0.75rem' : '0.85rem',
             transition: 'all 0.2s',
             width: '100%',
             overflow: 'hidden',
@@ -573,38 +569,6 @@ const AdminLayout = () => {
                     </div>
 
                     <div style={styles.headerRight}>
-                        {/* Notifications */}
-                        <div style={styles.notificationWrapper}>
-                            <button
-                                style={styles.iconBtn}
-                                onClick={() => setShowNotifications(!showNotifications)}
-                            >
-                                <i className="fas fa-bell"></i>
-                                <span style={styles.notificationBadge}>2</span>
-                            </button>
-
-                            {showNotifications && (
-                                <div style={styles.notificationDropdown} className="animate-fade-in">
-                                    <div style={styles.notificationHeader}>
-                                        <h3>Notifications</h3>
-                                        <span style={styles.notificationCount}>2 nouvelles</span>
-                                    </div>
-                                    <div style={styles.notificationList}>
-                                        {notifications.map(notif => (
-                                            <div key={notif.id} style={styles.notificationItem}>
-                                                <div style={styles.notificationDot}></div>
-                                                <div style={styles.notificationContent}>
-                                                    <p>{notif.text}</p>
-                                                    <span>{notif.time}</span>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                    <button style={styles.viewAllBtn}>Voir tout</button>
-                                </div>
-                            )}
-                        </div>
-
                         {/* Admin Profile */}
                         <div style={styles.profileWrapper}>
                             <div style={styles.avatar}>
@@ -612,8 +576,8 @@ const AdminLayout = () => {
                             </div>
                             {!isMobile && (
                                 <div style={styles.adminInfo}>
-                                    <span style={styles.adminName}>Administrateur</span>
-                                    <span style={styles.adminRole}>Super Admin</span>
+                                    <span style={styles.adminName}>{currentUser?.firstName || 'Administrateur'}</span>
+                                    <span style={styles.adminRole}>{isSuperAdmin ? 'Super Admin' : 'Administrateur'}</span>
                                 </div>
                             )}
                         </div>

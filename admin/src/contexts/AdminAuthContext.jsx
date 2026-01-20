@@ -16,6 +16,7 @@ export const useAdminAuth = () => {
 export const AdminAuthProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null);
     const [isAdmin, setIsAdmin] = useState(false);
+    const [isSuperAdmin, setIsSuperAdmin] = useState(false);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -25,22 +26,27 @@ export const AdminAuthProvider = ({ children }) => {
                 try {
                     const userDoc = await getDoc(doc(db, 'users', user.uid));
                     if (userDoc.exists() && userDoc.data().role === 'admin') {
-                        setCurrentUser(user);
+                        const userData = userDoc.data();
+                        setCurrentUser({ ...user, ...userData });
                         setIsAdmin(true);
+                        setIsSuperAdmin(userData.isSuperAdmin || false);
                     } else {
                         // Not an admin, sign out
                         await signOut(auth);
                         setCurrentUser(null);
                         setIsAdmin(false);
+                        setIsSuperAdmin(false);
                     }
                 } catch (error) {
                     console.error('Error checking admin status:', error);
                     setCurrentUser(null);
                     setIsAdmin(false);
+                    setIsSuperAdmin(false);
                 }
             } else {
                 setCurrentUser(null);
                 setIsAdmin(false);
+                setIsSuperAdmin(false);
             }
             setLoading(false);
         });
@@ -69,6 +75,7 @@ export const AdminAuthProvider = ({ children }) => {
     const value = {
         currentUser,
         isAdmin,
+        isSuperAdmin,
         login,
         logout,
         loading

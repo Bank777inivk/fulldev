@@ -1,3 +1,5 @@
+import { initializeApp, getApp, getApps } from "firebase/app";
+import { getAuth, createUserWithEmailAndPassword, signOut as firebaseSignOut } from "firebase/auth";
 import { db } from '../firebase/config';
 import { adminEmailService } from './adminEmailService';
 import {
@@ -760,6 +762,72 @@ export const adminService = {
         return onSnapshot(q, (snapshot) => {
             const messages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             callback(messages);
+        });
+    },
+
+    // --- Admin Management Features (Super Admin only) ---
+    getAllAdmins: async () => {
+        const q = query(collection(db, 'users'), where('role', '==', 'admin'));
+        const snapshot = await getDocs(q);
+        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    },
+
+    createAdminAccount: async (email, password, adminData) => {
+        // Initialize or get the secondary app to prevent current user logout
+        let secondaryApp;
+        const appName = "AdminCreator";
+
+        if (getApps().find(app => app.name === appName)) {
+            secondaryApp = getApp(appName);
+        } else {
+            // Re-use config from window or import.meta.env
+            const secondaryConfig = {
+                apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+                authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+                projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+                storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+                messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+                appId: import.meta.env.VITE_FIREBASE_APP_ID
+            };
+            secondaryApp = initializeApp(secondaryConfig, appName);
+        }
+
+        const secondaryAuth = getAuth(secondaryApp);
+
+        try {
+            // 1. Create the Auth account
+            const userCredential = await createUserWithEmailAndPassword(secondaryAuth, email, password);
+            const user = userCredential.user;
+
+            // 2. Create the Firestore record
+            await runTransaction(db, async (transaction) => {
+                const userRef = doc(db, 'users', user.uid);
+                transaction.set(userRef, {
+                    email,
+                    firstName: adminData.firstName || 'Admin',
+                    lastName: adminData.lastName || '',
+                    role: 'admin',
+                    isSuperAdmin: adminData.isSuperAdmin || false,
+                    accountStatus: 'active',
+                    createdAt: serverTimestamp(),
+                    updatedAt: serverTimestamp()
+                });
+            });
+
+            // 3. Immediately sign out the secondary instance to be clean
+            await firebaseSignOut(secondaryAuth);
+
+            return { success: true, uid: user.uid };
+        } catch (error) {
+            console.error("Error creating secondary admin account:", error);
+            throw error;
+        }
+    },
+
+    toggleSuperAdminStatus: async (adminId, isSuper) => {
+        await updateDoc(doc(db, 'users', adminId), {
+            isSuperAdmin: isSuper,
+            updatedAt: serverTimestamp()
         });
     }
 };
