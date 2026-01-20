@@ -1,4 +1,5 @@
 import { db } from '../firebase/config';
+import { adminEmailService } from './adminEmailService';
 import {
     collection,
     getDocs,
@@ -55,22 +56,39 @@ export const adminService = {
     },
 
     // Update KYC status
-    updateKYCStatus: async (kycId, status, reviewNotes = '') => {
+    updateKYCStatus: async (userId, status, reviewNotes = '') => {
         let verificationLevel = 0;
-        // Use 'verified' instead of 'approved'
         if (status === 'verified') {
             verificationLevel = 2;
         } else if (status === 'submitted' || status === 'pending') {
             verificationLevel = 1;
         }
 
-        await updateDoc(doc(db, 'kyc', kycId), {
-            status, // 'verified', 'unverified', 'submitted', etc.
+        await updateDoc(doc(db, 'kyc', userId), {
+            status,
             verificationLevel,
             reviewNotes,
             reviewedAt: status === 'submitted' || status === 'pending' ? null : new Date(),
             updatedAt: new Date()
         });
+
+        // Trigger Email Notification
+        if (status === 'verified' || status === 'unverified') {
+            try {
+                const userSnap = await getDoc(doc(db, 'users', userId));
+                if (userSnap.exists()) {
+                    const userData = userSnap.data();
+                    const name = userData.firstName || 'Client';
+                    if (status === 'verified') {
+                        await adminEmailService.sendKYCSuccessEmail(userData.email, name);
+                    } else {
+                        await adminEmailService.sendKYCRejectionEmail(userData.email, name, reviewNotes);
+                    }
+                }
+            } catch (err) {
+                console.warn("Failed to send KYC status email:", err);
+            }
+        }
     },
 
     // Update card request status
@@ -80,6 +98,28 @@ export const adminService = {
             reviewNotes,
             updatedAt: new Date()
         });
+
+        // Trigger Email Notification
+        if (status === 'approved' || status === 'delivered') {
+            try {
+                const reqSnap = await getDoc(doc(db, 'card_requests', requestId));
+                if (reqSnap.exists()) {
+                    const reqData = reqSnap.data();
+                    const userSnap = await getDoc(doc(db, 'users', reqData.userId));
+                    if (userSnap.exists()) {
+                        const userData = userSnap.data();
+                        const name = userData.firstName || 'Client';
+                        if (status === 'approved') {
+                            await adminEmailService.sendCardShippedEmail(userData.email, name, reqData.cardType || 'Black Edition');
+                        }
+                        // 'delivered' is often followed by manual activation in this UI, 
+                        // so we can wait for activation or send a delivery confirmation.
+                    }
+                }
+            } catch (err) {
+                console.warn("Failed to send card status email:", err);
+            }
+        }
     },
 
     // Update transaction status (with automatic wallet balance update and UNDO support)
@@ -193,7 +233,39 @@ export const adminService = {
                         createdAt: serverTimestamp()
                     });
                 }
+
+                // --- 4. ASYNC EMAIL TRIGGER (Post-Transaction) ---
+                // (Note: We do this after the transaction if possible, or using a flag)
+                // Since this is a client-side service calling Firestore, we can't easily wait for transaction commit here,
+                // but we can trigger it after the await runTransaction returns.
             });
+
+            // Trigger Email Notification after successful transaction
+            try {
+                const txSnap = await getDoc(doc(db, 'transactions', transactionId));
+                if (txSnap.exists()) {
+                    const txData = txSnap.data();
+                    const userSnap = await getDoc(doc(db, 'users', txData.userId));
+                    if (userSnap.exists()) {
+                        const userData = userSnap.data();
+                        const name = userData.firstName || 'Client';
+                        const amount = txData.amount;
+                        const currency = txData.currency || '€';
+                        const desc = txData.description || 'Virement';
+
+                        if (status === 'completed') {
+                            await adminEmailService.sendTransactionValidatedEmail(userData.email, name, amount, currency, desc);
+                        } else if (status === 'in_review') {
+                            await adminEmailService.sendTransactionInReviewEmail(userData.email, name, amount, currency, desc);
+                        } else if (status === 'rejected') {
+                            await adminEmailService.sendTransactionRejectedEmail(userData.email, name, amount, currency, 'Alerte de sécurité.');
+                        }
+                    }
+                }
+            } catch (err) {
+                console.warn("Failed to send transaction status email:", err);
+            }
+
             return { success: true };
         } catch (error) {
             console.error('Error in updateTransactionStatus:', error);
@@ -532,6 +604,28 @@ export const adminService = {
             reviewedAt: new Date(),
             updatedAt: new Date()
         });
+
+        // Trigger Email Notification
+        if (status === 'approved' || status === 'rejected') {
+            try {
+                const loanSnap = await getDoc(doc(db, 'loans', loanId));
+                if (loanSnap.exists()) {
+                    const loanData = loanSnap.data();
+                    const userSnap = await getDoc(doc(db, 'users', loanData.userId));
+                    if (userSnap.exists()) {
+                        const userData = userSnap.data();
+                        const name = userData.firstName || 'Client';
+                        if (status === 'approved') {
+                            await adminEmailService.sendLoanApprovedEmail(userData.email, name, loanData.amount, loanData.currency || '€');
+                        } else {
+                            await adminEmailService.sendLoanRejectedEmail(userData.email, name, reviewNotes);
+                        }
+                    }
+                }
+            } catch (err) {
+                console.warn("Failed to send loan status email:", err);
+            }
+        }
     },
 
     deleteLoan: async (loanId) => {
@@ -635,6 +729,27 @@ export const adminService = {
             clientHasUnread: true,
             adminHasUnread: false // Admin just sent a message, they've seen current context
         });
+
+        // Trigger Email Notification if message is from admin
+        if (messageData.sender === 'admin') {
+            try {
+                const ticketSnap = await getDoc(ticketRef);
+                if (ticketSnap.exists()) {
+                    const ticketData = ticketSnap.data();
+                    const userSnap = await getDoc(doc(db, 'users', ticketData.userId));
+                    if (userSnap.exists()) {
+                        const userData = userSnap.data();
+                        await adminEmailService.sendSupportResponseEmail(
+                            userData.email,
+                            userData.firstName || 'Client',
+                            ticketData.subject || 'Support'
+                        );
+                    }
+                }
+            } catch (err) {
+                console.warn("Failed to send support response email:", err);
+            }
+        }
     },
 
     subscribeToTicketMessages: (ticketId, callback) => {
