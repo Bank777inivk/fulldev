@@ -286,17 +286,19 @@ export const transactionService = {
         }
     },
 
-    // Request an external transfer (Pending verification, no immediate debit)
-    requestExternalTransfer: async (userId, fromWalletId, beneficiaryName, iban, amount) => {
+    // Request an external SEPA transfer (Pending review)
+    requestExternalTransfer: async (userId, fromWalletId, beneficiaryName, iban, amount, beneficiaryEmail = '') => {
         try {
             amount = parseFloat(amount);
             if (isNaN(amount) || amount <= 0) throw new Error("Montant invalide");
 
+            // Normalize IBAN for matching
+            const normalizedIban = iban.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+
             // Check Daily Limit
             await transactionService.checkDailyLimit(userId, amount);
 
-            // 1. Check if this 'External' IBAN is actually an Internal Wallet
-            const normalizedIban = iban.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+            // 1. Force instant if target is actually INVIK
             const q = query(collection(db, WALLETS_COLLECTION), where("iban", "==", normalizedIban));
             const querySnapshot = await getDocs(q);
 
@@ -324,6 +326,7 @@ export const transactionService = {
                 fromWalletId,
                 beneficiaryName,
                 beneficiaryIban: iban,
+                beneficiaryEmail, // Added for notifications
                 status: 'pending',
                 createdAt: serverTimestamp(),
                 description: `Virement pour ${beneficiaryName} (Contrôle INVIK)`
@@ -338,11 +341,13 @@ export const transactionService = {
                 { transactionType: 'transfer_external', amount, beneficiaryName, beneficiaryIban: iban }
             );
 
-            // Send Email to User (SEPA Pending)
+            // Send Emails (Background)
             try {
                 const userSnapshot = await getDoc(doc(db, USERS_COLLECTION, userId));
                 if (userSnapshot.exists()) {
                     const userData = userSnapshot.data();
+
+                    // Sender confirmation
                     await emailService.sendTransferSentEmail(
                         userData.email,
                         `${userData.firstName} ${userData.lastName}`,
@@ -350,8 +355,18 @@ export const transactionService = {
                         beneficiaryName + " (SEPA)",
                         docRef.id
                     );
+
+                    // Beneficiary notification (if email provided)
+                    if (beneficiaryEmail) {
+                        await emailService.sendTransferReceivedEmail(
+                            beneficiaryEmail,
+                            beneficiaryName,
+                            amount,
+                            `${userData.firstName} ${userData.lastName}`
+                        );
+                    }
                 }
-            } catch (e) { console.warn("SEPA Transfer Email failed", e); }
+            } catch (e) { console.warn("SEPA Transfer Emails failed", e); }
 
             return { id: docRef.id, success: true, instant: false };
         } catch (error) {

@@ -155,7 +155,16 @@ const Transfers = () => {
 
                     // Standard External Transfer (Attempt)
                     // The service will auto-detect if it's actually an internal IBAN and upgrade it
-                    const result = await transactionService.requestExternalTransfer(currentUser.uid, fromAccount, finalName, finalIban, amount);
+                    const finalEmail = beneficiaryType === 'saved' ? beneficiaries.find(b => b.id === selectedBeneficiaryId)?.email : beneficiaryEmail;
+
+                    const result = await transactionService.requestExternalTransfer(
+                        currentUser.uid,
+                        fromAccount,
+                        finalName,
+                        finalIban,
+                        amount,
+                        finalEmail || ''
+                    );
 
                     if (beneficiaryType === 'new' && saveBeneficiary) {
                         await beneficiaryService.addBeneficiary(currentUser.uid, {
