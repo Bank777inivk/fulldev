@@ -4,7 +4,8 @@ import { auth } from '../firebase/config';
 import {
     applyActionCode,
     verifyPasswordResetCode,
-    confirmPasswordReset
+    confirmPasswordReset,
+    signOut
 } from 'firebase/auth';
 
 const AuthActionHandler = () => {
@@ -44,9 +45,10 @@ const AuthActionHandler = () => {
     const handleVerifyEmail = async (code) => {
         try {
             await applyActionCode(auth, code);
+            // Sign out the user immediately after verification as requested
+            await signOut(auth);
             setStatus('success');
             setMessage('Votre adresse email a été vérifiée avec succès !');
-            setTimeout(() => navigate('/dashboard'), 3000);
         } catch (error) {
             console.error('Verify email error:', error);
             setStatus('error');
@@ -70,7 +72,6 @@ const AuthActionHandler = () => {
             // Logique de récupération d'email si nécessaire
             setStatus('success');
             setMessage('Votre email a été restauré.');
-            setTimeout(() => navigate('/login'), 3000);
         } catch (error) {
             setStatus('error');
             setMessage('Erreur lors de la récupération.');
@@ -87,7 +88,6 @@ const AuthActionHandler = () => {
             await confirmPasswordReset(auth, oobCode, newPassword);
             setStatus('success');
             setMessage('Votre mot de passe a été modifié avec succès.');
-            setTimeout(() => navigate('/login'), 3000);
         } catch (error) {
             alert('Erreur: ' + error.message);
         }
@@ -112,7 +112,9 @@ const AuthActionHandler = () => {
                         <div style={styles.successIcon}>✓</div>
                         <h2 style={styles.title}>Félicitations !</h2>
                         <p style={styles.text}>{message}</p>
-                        <p style={styles.subtext}>Redirection automatique...</p>
+                        <button style={styles.button} onClick={() => navigate('/login')}>
+                            Veuillez vous connecter pour avoir accès à votre espace client
+                        </button>
                     </div>
                 )}
 
