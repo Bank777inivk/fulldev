@@ -115,7 +115,7 @@ const Login = () => {
                                 </div>
                             </div>
                             <div style={styles.forgot}>
-                                <a href="#" style={styles.link}>Mot de passe oublié ?</a>
+                                <a href="#" onClick={handleForgotPassword} style={styles.link}>Mot de passe oublié ?</a>
                             </div>
 
                             <button

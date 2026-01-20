@@ -86,6 +86,8 @@ const AuthActionHandler = () => {
         }
         try {
             await confirmPasswordReset(auth, oobCode, newPassword);
+            // Sign out the session after password reset to ensure a clean login
+            await signOut(auth);
             setStatus('success');
             setMessage('Votre mot de passe a été modifié avec succès.');
         } catch (error) {
