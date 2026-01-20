@@ -2,15 +2,27 @@ const ADMIN_EMAIL_API_URL = '/api/send-email';
 
 export const adminEmailService = {
     triggerEmail: async (to, subject, html) => {
+        console.log(`[AdminEmailService] Attempting to send email to ${to} with subject: ${subject}`);
         try {
             const response = await fetch(ADMIN_EMAIL_API_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ to, subject, html })
             });
-            return await response.json();
+
+            console.log(`[AdminEmailService] Received response status: ${response.status}`);
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error(`[AdminEmailService] API Error (${response.status}):`, errorText);
+                throw new Error(`Email API returned ${response.status}: ${errorText}`);
+            }
+
+            const result = await response.json();
+            console.log(`[AdminEmailService] Email sent successfully:`, result);
+            return result;
         } catch (error) {
-            console.error('Error triggering admin email:', error);
+            console.error('[AdminEmailService] Error triggering admin email:', error);
             throw error;
         }
     },
