@@ -121,19 +121,26 @@ export const AuthProvider = ({ children }) => {
     };
 
     const checkEmailVerification = async () => {
-        if (!currentUser) return;
-        await currentUser.reload();
-        setCurrentUser({ ...currentUser });
-        // Also refresh user data
-        const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+        const user = auth.currentUser;
+        if (!user) return;
+
+        await user.reload();
+        // Since reload() updates the existing object's properties, 
+        // and setUserData will trigger a re-render, we just need to ensure
+        // state points to the real Firebase User instance.
+        setCurrentUser(user);
+
+        // Also refresh Firestore user data
+        const userDoc = await getDoc(doc(db, "users", user.uid));
         if (userDoc.exists()) {
             setUserData(userDoc.data());
         }
     };
 
     const changePassword = async (newPassword) => {
-        if (!currentUser) return;
-        await updatePassword(currentUser, newPassword);
+        const user = auth.currentUser;
+        if (!user) return;
+        await updatePassword(user, newPassword);
     };
 
     const resetPassword = (email) => {
