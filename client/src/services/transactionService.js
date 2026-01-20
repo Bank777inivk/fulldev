@@ -125,25 +125,10 @@ export const transactionService = {
             await notificationService.addNotification(
                 userId,
                 '💸 Transfert interne effectué',
-                `Vous avez transféré ${amount.toFixed(2)}€ vers votre ${toData.type === 'savings' ? 'compte épargne' : 'compte principal'}.`,
+                `Votre transfert de ${amount.toFixed(2)}€ a été traité avec succès entre vos comptes.`,
                 'success',
                 { transactionType: 'transfer_internal', amount, fromWalletId, toWalletId }
             );
-
-            // Send Email to User
-            try {
-                const userSnapshot = await getDoc(doc(db, USERS_COLLECTION, userId));
-                if (userSnapshot.exists()) {
-                    const userData = userSnapshot.data();
-                    await emailService.sendTransferSentEmail(
-                        userData.email,
-                        `${userData.firstName} ${userData.lastName}`,
-                        amount,
-                        toData.type === 'savings' ? 'Mon Épargne' : 'Mon Compte Principal',
-                        'INT-' + Date.now().toString().slice(-6)
-                    );
-                }
-            } catch (e) { console.warn("Internal Transfer Email failed", e); }
 
             return { success: true, instant: true };
         } catch (error) {
