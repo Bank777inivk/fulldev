@@ -11,6 +11,7 @@ import {
     orderBy,
     getDocs
 } from 'firebase/firestore';
+import { notificationService } from './notificationService';
 
 const WALLETS_COLLECTION = 'wallets';
 const TRANSACTIONS_COLLECTION = 'transactions';
@@ -119,6 +120,15 @@ export const transactionService = {
                 });
             });
 
+            // Send notification to user
+            await notificationService.addNotification(
+                userId,
+                '💸 Transfert interne effectué',
+                `Vous avez transféré ${amount.toFixed(2)}€ vers votre ${toData.type === 'savings' ? 'compte épargne' : 'compte principal'}.`,
+                'success',
+                { transactionType: 'transfer_internal', amount, fromWalletId, toWalletId }
+            );
+
             return { success: true, instant: true };
         } catch (error) {
             console.error("Internal transfer error:", error);
@@ -216,6 +226,24 @@ export const transactionService = {
                 });
             });
 
+            // Send notification to sender
+            await notificationService.addNotification(
+                userId,
+                '✅ Virement instantané envoyé',
+                `Vous avez envoyé ${amount.toFixed(2)}€ à ${beneficiaryName} via le réseau INVIK.`,
+                'success',
+                { transactionType: 'transfer_instant', amount, beneficiaryName, beneficiaryIban: targetIban }
+            );
+
+            // Send notification to receiver
+            await notificationService.addNotification(
+                targetWalletDoc.data().userId,
+                '💰 Virement instantané reçu',
+                `Vous avez reçu ${amount.toFixed(2)}€ de ${senderDisplayName}.`,
+                'success',
+                { transactionType: 'receive_instant', amount, senderName: senderDisplayName }
+            );
+
             return { success: true, instant: true };
         } catch (error) {
             console.error("Instant transfer error:", error);
@@ -265,6 +293,15 @@ export const transactionService = {
                 createdAt: serverTimestamp(),
                 description: `Virement pour ${beneficiaryName} (Contrôle INVIK)`
             });
+
+            // Send notification to user
+            await notificationService.addNotification(
+                userId,
+                '⏳ Virement SEPA en attente',
+                `Votre virement de ${amount.toFixed(2)}€ vers ${beneficiaryName} est en cours de traitement. Délai habituel : 24h-48h.`,
+                'info',
+                { transactionType: 'transfer_external', amount, beneficiaryName, beneficiaryIban: iban }
+            );
 
             return { id: docRef.id, success: true, instant: false };
         } catch (error) {
