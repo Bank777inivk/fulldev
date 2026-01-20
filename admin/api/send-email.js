@@ -11,11 +11,11 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Missing required fields' });
     }
 
-    // SMTP Configuration diagnostics
-    const host = process.env.SMTP_HOST;
-    const user = process.env.SMTP_USER;
-    const pass = process.env.SMTP_PASS;
-    const portStr = process.env.SMTP_PORT;
+    // SMTP Configuration diagnostics with TRIMMING
+    const host = process.env.SMTP_HOST?.trim();
+    const user = process.env.SMTP_USER?.trim();
+    const pass = process.env.SMTP_PASS?.trim();
+    const portStr = process.env.SMTP_PORT?.trim();
 
     if (!host || !user || !pass || !portStr) {
         console.error('CRITICAL: Missing SMTP Environment Variables', {
@@ -26,7 +26,7 @@ export default async function handler(req, res) {
         });
         return res.status(500).json({
             error: 'Configuration Error',
-            details: 'One or more SMTP environment variables are missing on Vercel.'
+            details: 'One or more SMTP environment variables are missing on Vercel or empty.'
         });
     }
 
@@ -39,11 +39,14 @@ export default async function handler(req, res) {
             user: user,
             pass: pass,
         },
-        timeout: 15000, // Increase timeout slightly
+        timeout: 20000,
     });
 
     try {
-        console.log(`[SMTP-AUTH] Attempting connection to ${host}:${smtpPort} as ${user}`);
+        console.log(`[SMTP-VERIFY] Checking connection to ${host}:${smtpPort} as ${user}...`);
+        await transporter.verify();
+        console.log(`[SMTP-VERIFY] Success for ${user}`);
+
         const info = await transporter.sendMail({
             from: `"INVIK BANK" <${user}>`,
             to,
