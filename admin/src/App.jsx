@@ -18,6 +18,7 @@ import Prospects from './pages/Prospects';
 import ContactMessages from './pages/ContactMessages';
 import SupportTickets from './pages/SupportTickets';
 import ManageAdmins from './pages/ManageAdmins';
+import AdminProfile from './pages/AdminProfile';
 import './App.css';
 
 function App() {
@@ -44,6 +45,7 @@ function App() {
             <Route path="messages" element={<ContactMessages />} />
             <Route path="support" element={<SupportTickets />} />
             <Route path="manage-admins" element={<ManageAdmins />} />
+            <Route path="profile" element={<AdminProfile />} />
             <Route path="transactions/user/:userId" element={<ManageTransactions />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />

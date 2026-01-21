@@ -1,5 +1,5 @@
 import { initializeApp, getApp, getApps } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword, signOut as firebaseSignOut } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signOut as firebaseSignOut, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
 import { db } from '../firebase/config';
 import { adminEmailService } from './adminEmailService';
 import {
@@ -19,10 +19,17 @@ import {
 } from 'firebase/firestore';
 
 export const adminService = {
-    // Get all users
-    getAllUsers: async () => {
+    // Get all users (with optional filtering for non-super admins)
+    getAllUsers: async (currentUserIsSuperAdmin = false) => {
         const snapshot = await getDocs(collection(db, 'users'));
-        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        let users = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+        // Filter out admin accounts if current user is not super admin
+        if (!currentUserIsSuperAdmin) {
+            users = users.filter(user => user.role !== 'admin');
+        }
+
+        return users;
     },
 
     // Get single user
@@ -833,6 +840,40 @@ export const adminService = {
 
     deleteAdminAccount: async (adminId) => {
         await deleteDoc(doc(db, 'users', adminId));
+    },
+
+    // Change admin password (requires current password for security)
+    changeAdminPassword: async (currentPassword, newPassword) => {
+        try {
+            const auth = getAuth();
+            const user = auth.currentUser;
+
+            if (!user || !user.email) {
+                throw new Error('Aucun utilisateur connecté');
+            }
+
+            // Reauthenticate user with current password
+            const credential = EmailAuthProvider.credential(user.email, currentPassword);
+            await reauthenticateWithCredential(user, credential);
+
+            // Update password
+            await updatePassword(user, newPassword);
+
+            return { success: true, message: 'Mot de passe modifié avec succès' };
+        } catch (error) {
+            console.error('Error changing password:', error);
+
+            // Provide user-friendly error messages
+            if (error.code === 'auth/wrong-password') {
+                throw new Error('Mot de passe actuel incorrect');
+            } else if (error.code === 'auth/weak-password') {
+                throw new Error('Le nouveau mot de passe est trop faible (minimum 6 caractères)');
+            } else if (error.code === 'auth/requires-recent-login') {
+                throw new Error('Veuillez vous reconnecter avant de changer votre mot de passe');
+            } else {
+                throw new Error('Erreur lors du changement de mot de passe: ' + error.message);
+            }
+        }
     }
 };
 

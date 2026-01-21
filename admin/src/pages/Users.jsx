@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { adminService } from '../services/adminService';
+import { useAdminAuth } from '../contexts/AdminAuthContext';
 
 const styles = {
     header: {
@@ -276,6 +277,7 @@ const styles = {
 
 const Users = () => {
     const navigate = useNavigate();
+    const { isSuperAdmin } = useAdminAuth();
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
@@ -295,7 +297,7 @@ const Users = () => {
     useEffect(() => {
         const loadUsers = async () => {
             try {
-                const data = await adminService.getAllUsers();
+                const data = await adminService.getAllUsers(isSuperAdmin);
                 setUsers(data);
             } catch (error) {
                 console.error('Error loading users:', error);
@@ -307,11 +309,15 @@ const Users = () => {
         loadUsers();
 
         const unsubscribe = adminService.subscribeToUsers((data) => {
-            setUsers(data);
+            // Apply the same filtering logic for real-time updates
+            const filteredData = isSuperAdmin
+                ? data
+                : data.filter(user => user.role !== 'admin');
+            setUsers(filteredData);
         });
 
         return () => unsubscribe();
-    }, []);
+    }, [isSuperAdmin]);
 
     const handleSearch = (e) => {
         setSearchTerm(e.target.value);

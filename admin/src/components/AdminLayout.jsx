@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation, Outlet } from 'react-router-dom';
+import { Link, useLocation, Outlet, useNavigate } from 'react-router-dom';
 import { adminService } from '../services/adminService';
 import { useAdminAuth } from '../contexts/AdminAuthContext';
 
 const AdminLayout = () => {
     const { currentUser, logout, isSuperAdmin } = useAdminAuth();
     const location = useLocation();
+    const navigate = useNavigate();
     const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 1024);
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -76,6 +77,7 @@ const AdminLayout = () => {
         { path: '/support', icon: 'fas fa-headset', label: 'Tickets Support', badge: openTickets || null },
         { path: '/messages', icon: 'fas fa-comment-alt', label: 'Messages Contact', badge: newMessages || null },
         ...(isSuperAdmin ? [{ path: '/manage-admins', icon: 'fas fa-user-shield', label: 'Gestion Admins' }] : []),
+        { path: '/profile', icon: 'fas fa-user-circle', label: 'Mon Profil' },
     ];
 
     const handleLogout = async () => {
@@ -570,7 +572,11 @@ const AdminLayout = () => {
 
                     <div style={styles.headerRight}>
                         {/* Admin Profile */}
-                        <div style={styles.profileWrapper}>
+                        <div
+                            style={styles.profileWrapper}
+                            onClick={() => navigate('/profile')}
+                            title="Mon Profil"
+                        >
                             <div style={styles.avatar}>
                                 {currentUser?.email?.charAt(0).toUpperCase()}
                             </div>
