@@ -135,6 +135,18 @@ const AdminProfile = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState({ type: '', text: '' });
+    const [showPassword, setShowPassword] = useState({
+        current: false,
+        new: false,
+        confirm: false
+    });
+
+    const togglePasswordVisibility = (field) => {
+        setShowPassword(prev => ({
+            ...prev,
+            [field]: !prev[field]
+        }));
+    };
 
     const handlePasswordChange = async (e) => {
         e.preventDefault();
@@ -177,6 +189,45 @@ const AdminProfile = () => {
             setLoading(false);
         }
     };
+
+    const renderPasswordInput = (label, value, onChange, field, placeholder) => (
+        <div style={styles.formGroup}>
+            <label style={styles.label}>
+                <i className="fas fa-lock" style={{ marginRight: '0.5rem', color: '#64748b' }}></i>
+                {label}
+            </label>
+            <div style={{ position: 'relative' }}>
+                <input
+                    type={showPassword[field] ? "text" : "password"}
+                    value={value}
+                    onChange={onChange}
+                    style={{ ...styles.input, paddingRight: '40px' }}
+                    placeholder={placeholder}
+                    disabled={loading}
+                />
+                <i
+                    className={`fas fa-eye${showPassword[field] ? '-slash' : ''}`}
+                    style={{
+                        position: 'absolute',
+                        right: '12px',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        color: '#94a3b8',
+                        cursor: 'pointer',
+                        fontSize: '1rem',
+                        padding: '4px'
+                    }}
+                    onClick={() => togglePasswordVisibility(field)}
+                    title={showPassword[field] ? "Masquer" : "Afficher"}
+                />
+            </div>
+            {field === 'new' && (
+                <p style={styles.helpText}>
+                    <i className="fas fa-info-circle"></i> Minimum 8 caractères
+                </p>
+            )}
+        </div>
+    );
 
     return (
         <div style={styles.container} className="animate-fade-in">
@@ -237,53 +288,29 @@ const AdminProfile = () => {
                 )}
 
                 <form onSubmit={handlePasswordChange}>
-                    <div style={styles.formGroup}>
-                        <label style={styles.label}>
-                            <i className="fas fa-key" style={{ marginRight: '0.5rem', color: '#64748b' }}></i>
-                            Mot de passe actuel
-                        </label>
-                        <input
-                            type="password"
-                            value={currentPassword}
-                            onChange={(e) => setCurrentPassword(e.target.value)}
-                            style={styles.input}
-                            placeholder="Entrez votre mot de passe actuel"
-                            disabled={loading}
-                        />
-                    </div>
+                    {renderPasswordInput(
+                        "Mot de passe actuel",
+                        currentPassword,
+                        (e) => setCurrentPassword(e.target.value),
+                        "current",
+                        "Entrez votre mot de passe actuel"
+                    )}
 
-                    <div style={styles.formGroup}>
-                        <label style={styles.label}>
-                            <i className="fas fa-lock" style={{ marginRight: '0.5rem', color: '#64748b' }}></i>
-                            Nouveau mot de passe
-                        </label>
-                        <input
-                            type="password"
-                            value={newPassword}
-                            onChange={(e) => setNewPassword(e.target.value)}
-                            style={styles.input}
-                            placeholder="Entrez votre nouveau mot de passe"
-                            disabled={loading}
-                        />
-                        <p style={styles.helpText}>
-                            <i className="fas fa-info-circle"></i> Minimum 8 caractères
-                        </p>
-                    </div>
+                    {renderPasswordInput(
+                        "Nouveau mot de passe",
+                        newPassword,
+                        (e) => setNewPassword(e.target.value),
+                        "new",
+                        "Entrez votre nouveau mot de passe"
+                    )}
 
-                    <div style={styles.formGroup}>
-                        <label style={styles.label}>
-                            <i className="fas fa-lock" style={{ marginRight: '0.5rem', color: '#64748b' }}></i>
-                            Confirmer le nouveau mot de passe
-                        </label>
-                        <input
-                            type="password"
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                            style={styles.input}
-                            placeholder="Confirmez votre nouveau mot de passe"
-                            disabled={loading}
-                        />
-                    </div>
+                    {renderPasswordInput(
+                        "Confirmer le nouveau mot de passe",
+                        confirmPassword,
+                        (e) => setConfirmPassword(e.target.value),
+                        "confirm",
+                        "Confirmez votre nouveau mot de passe"
+                    )}
 
                     <button
                         type="submit"

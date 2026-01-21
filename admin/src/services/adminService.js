@@ -290,6 +290,45 @@ export const adminService = {
         });
     },
 
+    // Delete user completely (Firestore + Auth)
+    deleteUserFull: async (userId) => {
+        try {
+            // 1. Delete from Firestore first
+            await deleteDoc(doc(db, 'users', userId));
+
+            // 2. Propose deeper cleanup here if needed (wallets, cards...)
+            // For now, we keep related data for audit trails or handle them via triggers
+
+            // 3. Delete from Firebase Authentication via Serverless API
+            // Note: This works only if the API is deployed and configured with Service Account
+            try {
+                const response = await fetch('/api/delete-user', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ uid: userId })
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    console.warn('Auth deletion warning:', error);
+                    // Throw special error but don't fail the whole operation since Firestore is done
+                    throw new Error(error.details || 'Auth deletion failed');
+                }
+            } catch (apiError) {
+                console.warn('Failed to call delete-user API:', apiError);
+                return {
+                    success: true,
+                    warning: 'User data deleted, but Auth account might still exist. Please verify in Firebase Console.'
+                };
+            }
+
+            return { success: true };
+        } catch (error) {
+            console.error('Error in deleteUserFull:', error);
+            throw error;
+        }
+    },
+
     // --- Active Cards Manipulation ---
     updateActiveCardStatus: async (cardId, status) => {
         await updateDoc(doc(db, 'cards', cardId), {

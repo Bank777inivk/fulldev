@@ -330,6 +330,36 @@ const Users = () => {
 
 
 
+    const handleBlockUser = async (e, user) => {
+        e.stopPropagation(); // Prevent row click
+        const newStatus = user.accountStatus === 'active' ? 'blocked' : 'active';
+        const action = newStatus === 'active' ? 'débloquer' : 'bloquer';
+
+        if (window.confirm(`Voulez-vous vraiment ${action} ${user.firstName} ${user.lastName} ?`)) {
+            try {
+                await adminService.updateUserStatus(user.id, newStatus);
+            } catch (error) {
+                console.error("Error updating status:", error);
+                alert("Erreur lors de la mise à jour du statut");
+            }
+        }
+    };
+
+    const handleDeleteUser = async (e, user) => {
+        e.stopPropagation(); // Prevent row click
+        if (window.confirm(`ATTENTION: Vous êtes sur le point de supprimer DÉFINITIVEMENT ${user.firstName} ${user.lastName}.\n\nCette action supprimera toutes ses données.\n\nL'utilisateur pourra réutiliser son email pour s'inscrire à nouveau une fois le compte Auth supprimé.\n\nConfirmer ?`)) {
+            try {
+                const result = await adminService.deleteUserFull(user.id);
+                if (result.warning) {
+                    alert(result.warning);
+                }
+            } catch (error) {
+                console.error("Error deleting user:", error);
+                alert(`Erreur: ${error.message}`);
+            }
+        }
+    };
+
     // Filtering
     const filteredUsers = users.filter(user => {
         // Handle missing fields gracefully
@@ -434,9 +464,46 @@ const Users = () => {
                                     <span style={{ ...styles.infoLabelMobile, fontSize: '0.6rem' }}>SOLDE</span>
                                     <span style={{ ...styles.infoValueMobile, fontSize: '1.2rem', color: '#003366' }}>€{user.balance?.toFixed(2) || '0.00'}</span>
                                 </div>
-                                <div style={{ ...styles.actionBtn, background: 'white', boxShadow: '0 2px 6px rgba(0,0,0,0.05)' }}>
-                                    <i className="fas fa-chevron-right"></i>
-                                </div>
+                            </div>
+
+                            <div style={{ display: 'flex', justifyContent: 'space-between', gap: '0.5rem', marginTop: '1rem', borderTop: '1px solid #f1f5f9', paddingTop: '1rem' }}>
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); handleUserClick(user); }}
+                                    style={{ ...styles.actionBtn, width: 'auto', flex: 1, padding: '0.5rem', background: '#f8fafc', color: '#475569', borderRadius: '12px', fontSize: '0.9rem' }}
+                                >
+                                    <i className="fas fa-eye" style={{ marginRight: '0.5rem' }}></i> Détails
+                                </button>
+                                <button
+                                    onClick={(e) => handleBlockUser(e, user)}
+                                    style={{
+                                        ...styles.actionBtn,
+                                        width: 'auto',
+                                        flex: 1,
+                                        padding: '0.5rem',
+                                        color: user.accountStatus === 'active' ? '#ca8a04' : '#166534',
+                                        background: user.accountStatus === 'active' ? '#fef9c3' : '#dcfce7',
+                                        border: '1px solid ' + (user.accountStatus === 'active' ? '#fde047' : '#86efac'),
+                                        borderRadius: '12px',
+                                        fontSize: '0.9rem'
+                                    }}
+                                >
+                                    <i className={`fas fa-${user.accountStatus === 'active' ? 'ban' : 'check'}`} style={{ marginRight: '0.5rem' }}></i>
+                                    {user.accountStatus === 'active' ? 'Bloquer' : 'Débloquer'}
+                                </button>
+                                <button
+                                    onClick={(e) => handleDeleteUser(e, user)}
+                                    style={{
+                                        ...styles.actionBtn,
+                                        width: 'auto',
+                                        padding: '0.5rem 1rem',
+                                        color: '#ef4444',
+                                        background: '#fee2e2',
+                                        border: '1px solid #fecaca',
+                                        borderRadius: '12px'
+                                    }}
+                                >
+                                    <i className="fas fa-trash-alt"></i>
+                                </button>
                             </div>
 
                             <div style={{ marginTop: '1rem', textAlign: 'center' }}>
@@ -500,7 +567,7 @@ const Users = () => {
                             <th style={{ ...styles.th, width: '100px', textAlign: 'center' }}>Statut</th>
                             <th style={{ ...styles.th, width: '120px', textAlign: 'right' }}>Solde</th>
                             <th style={{ ...styles.th, width: '120px' }}>Inscription</th>
-                            <th style={{ ...styles.th, width: '80px', textAlign: 'center' }}>Actions</th>
+                            <th style={{ ...styles.th, width: '140px', textAlign: 'center' }}>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -536,13 +603,39 @@ const Users = () => {
                                         {user.createdAt?.toDate().toLocaleDateString('fr-FR')}
                                     </td>
                                     <td style={{ ...styles.td, textAlign: 'center' }}>
-                                        <button
-                                            onClick={() => handleUserClick(user)}
-                                            style={styles.actionBtn}
-                                            title="Voir détails"
-                                        >
-                                            <i className="fas fa-eye"></i>
-                                        </button>
+                                        <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
+                                            <button
+                                                onClick={() => handleUserClick(user)}
+                                                style={styles.actionBtn}
+                                                title="Voir détails"
+                                            >
+                                                <i className="fas fa-eye"></i>
+                                            </button>
+                                            <button
+                                                onClick={(e) => handleBlockUser(e, user)}
+                                                style={{
+                                                    ...styles.actionBtn,
+                                                    color: user.accountStatus === 'active' ? '#ca8a04' : '#166534',
+                                                    background: user.accountStatus === 'active' ? '#fef9c3' : '#dcfce7',
+                                                    border: '1px solid ' + (user.accountStatus === 'active' ? '#fde047' : '#86efac')
+                                                }}
+                                                title={user.accountStatus === 'active' ? 'Bloquer' : 'Débloquer'}
+                                            >
+                                                <i className={`fas fa-${user.accountStatus === 'active' ? 'ban' : 'check'}`}></i>
+                                            </button>
+                                            <button
+                                                onClick={(e) => handleDeleteUser(e, user)}
+                                                style={{
+                                                    ...styles.actionBtn,
+                                                    color: '#ef4444',
+                                                    background: '#fee2e2',
+                                                    border: '1px solid #fecaca'
+                                                }}
+                                                title="Supprimer définitivement"
+                                            >
+                                                <i className="fas fa-trash-alt"></i>
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             ))
