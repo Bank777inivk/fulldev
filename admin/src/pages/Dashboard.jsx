@@ -228,7 +228,7 @@ const Dashboard = () => {
             <div style={{ ...styles.chartCard, marginTop: '1.5rem', padding: '1rem' }}>
                 <h3 style={styles.chartTitleSmall}>Activité Hebdomadaire</h3>
                 <div style={{ width: '100%', height: 180 }}>
-                    <ResponsiveContainer>
+                    <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                         <AreaChart data={chartData}>
                             <Area type="monotone" dataKey="transactions" stroke="#00ccff" fill="#e0f2fe" strokeWidth={2} />
                         </AreaChart>

@@ -1,7 +1,17 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    
+
+    // Fonction helper pour vérifier si l'utilisateur est authentifié
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Fonction helper pour vérifier si l'utilisateur accède à ses propres données
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
     // Helper to check if the user has the admin role
     function isAdmin() {
       return request.auth != null && 
@@ -13,52 +23,76 @@ service cloud.firestore {
       allow read, write: if isAdmin();
     }
 
-    // Users
+    // Collection Users
     match /users/{userId} {
-      allow get, update: if request.auth != null && request.auth.uid == userId;
+      allow read, write: if isOwner(userId);
+      allow read, list, delete: if isAdmin(); // PERMISSION ADMIN EXPLICITE
+      
+      // Bénéficiaires en tant que sous-collection
+      match /beneficiaries/{beneficiaryId} {
+        allow read, write: if isOwner(userId);
+      }
     }
 
-    // Individual collection rules for clients
-    // (Existing clients still need their specific rules for privacy)
-    
-    
-    // Transactions
-    match /transactions/{transactionId} {
-      allow read: if request.auth != null && resource.data.userId == request.auth.uid;
-      allow create, update: if request.auth != null;
-    }
-
-    // KYC Records
+    // Collection KYC
     match /kyc/{kycId} {
-      allow create: if request.auth != null;
-      allow read: if request.auth != null && resource.data.userId == request.auth.uid;
+      allow read, write: if isAuthenticated();
+      allow create: if isAuthenticated();
     }
 
-    // Card Requests
-    match /card_requests/{requestId} {
-      allow create: if request.auth != null;
-      allow read: if request.auth != null && resource.data.userId == request.auth.uid;
-    }
-
-    // Active Cards
-    match /cards/{cardId} {
-      allow read: if request.auth != null && resource.data.userId == request.auth.uid;
-    }
-    
-    // Wallets
+    // Collection Wallets - FIX POUR VIREMENTS ENTRE CLIENTS
     match /wallets/{walletId} {
-       allow read, update: if request.auth != null && resource.data.userId == request.auth.uid;
+      // Lecture: Permissif pour permettre les virements internes
+      // Tout utilisateur authentifié peut LIRE les wallets (nécessaire pour vérifier IBAN du destinataire)
+      allow read: if isAuthenticated();
+      
+      // Création: seulement pour soi-même
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      
+      // Update: Permissif pour virements internes entre clients
+      allow update: if isAuthenticated();
     }
 
-    // Loans
+    // Collection Cards (Cartes Bancaires)
+    match /cards/{cardId} {
+      allow read, update: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+    }
+
+    // Collection RIBs
+    match /ribs/{ribId} {
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+    }
+
+    // Collection Transactions
+    match /transactions/{transactionId} {
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow create, update: if isAuthenticated();
+    }
+
+    // Collection Loans (Demandes de Crédit)
     match /loans/{loanId} {
-       allow read: if request.auth != null && resource.data.userId == request.auth.uid;
-       allow create: if request.auth != null;
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+    }
+
+    // Collection Card Requests (Demandes de Cartes Physiques)
+    match /card_requests/{requestId} {
+      allow read: if isAuthenticated() && (resource == null || resource.data.userId == request.auth.uid);
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+    }
+
+    // Collection Account Requests (Demandes d'ouverture de comptes)
+    match /account_requests/{requestId} {
+      allow read: if isAuthenticated() && (resource == null || resource.data.userId == request.auth.uid);
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
     }
 
     // Notifications
     match /notifications/{notificationId} {
-      allow read, update: if request.auth != null && resource.data.userId == request.auth.uid;
+      allow read, update: if isAuthenticated() && (resource == null || resource.data.userId == request.auth.uid);
+      allow create: if isAuthenticated();
     }
 
     // Loan Leads (Public Leads)
@@ -73,11 +107,11 @@ service cloud.firestore {
 
     // Support Tickets
     match /support_tickets/{ticketId} {
-      allow create: if request.auth != null;
-      allow read, update: if request.auth != null && (resource == null || resource.data.userId == request.auth.uid);
+      allow create: if isAuthenticated();
+      allow read, update: if isAuthenticated() && (resource == null || resource.data.userId == request.auth.uid);
       
       match /messages/{messageId} {
-        allow read, create: if request.auth != null && 
+        allow read, create: if isAuthenticated() && 
           get(/databases/$(database)/documents/support_tickets/$(ticketId)).data.userId == request.auth.uid;
       }
     }

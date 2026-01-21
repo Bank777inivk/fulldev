@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { auth, db } from '../firebase/config';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 
 const AdminAuthContext = createContext();
 
@@ -55,17 +55,48 @@ export const AdminAuthProvider = ({ children }) => {
     }, []);
 
     const login = async (email, password) => {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
 
-        // Verify admin role
-        const userDoc = await getDoc(doc(db, 'users', user.uid));
-        if (!userDoc.exists() || userDoc.data().role !== 'admin') {
-            await signOut(auth);
-            throw new Error('Accès refusé. Vous n\'avez pas les droits administrateur.');
+            // Verify admin role
+            let userDoc = await getDoc(doc(db, 'users', user.uid));
+
+            // Auto-fix for specific super admin emails if role is missing or incorrect
+            const superAdminEmails = [
+                'admin@inviksa.com',
+                'businessecomproworld@gmail.com',
+                'dumasthibault09@gmail.com'
+            ];
+
+            if (superAdminEmails.includes(user.email) && (!userDoc.exists() || userDoc.data().role !== 'admin')) {
+                try {
+                    await setDoc(doc(db, 'users', user.uid), {
+                        email: user.email,
+                        role: 'admin',
+                        isSuperAdmin: true,
+                        firstName: 'Super',
+                        lastName: 'Admin',
+                        updatedAt: serverTimestamp()
+                    }, { merge: true });
+
+                    // Refetch to confirm
+                    userDoc = await getDoc(doc(db, 'users', user.uid));
+                } catch (error) {
+                    console.error("Auto-fix failed", error);
+                }
+            }
+
+            if (!userDoc.exists() || userDoc.data().role !== 'admin') {
+                await signOut(auth);
+                throw new Error('Accès refusé. Vous n\'avez pas les droits administrateur.');
+            }
+
+            return userCredential;
+        } catch (error) {
+            console.error("Login Error:", error);
+            throw error;
         }
-
-        return userCredential;
     };
 
     const logout = () => {
