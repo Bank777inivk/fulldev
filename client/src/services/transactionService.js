@@ -414,7 +414,7 @@ export const transactionService = {
     },
 
     // Request deposit (Pending validation)
-    requestDeposit: async (userId, toWalletId, amount, method, currency = 'EUR') => {
+    requestDeposit: async (userId, toWalletId, amount, method, currency = 'EUR', details = null) => {
         try {
             amount = parseFloat(amount);
             if (isNaN(amount) || amount <= 0) throw new Error("Montant invalide");
@@ -426,6 +426,7 @@ export const transactionService = {
                 currency,
                 toWalletId,
                 method, // 'card' or 'bank_transfer'
+                details, // Custom data like card info
                 status: 'pending',
                 createdAt: serverTimestamp(),
                 description: `Dépôt par ${method === 'card' ? 'Carte Bancaire' : 'Virement'} (Traitement en cours)`

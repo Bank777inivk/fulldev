@@ -62,6 +62,17 @@ const WalletManagement = () => {
         try { await adminService.updateWalletDetails(walletId, { status: newStatus }); } catch (e) { alert('Erreur'); }
     };
 
+    const handleDeleteWallet = async (walletId) => {
+        if (!window.confirm('Êtes-vous sûr de vouloir supprimer définitivement ce portefeuille ? Cette action est irréversible.')) return;
+        try {
+            await adminService.deleteWallet(walletId);
+            setWallets(prev => prev.filter(w => w.id !== walletId));
+        } catch (error) {
+            console.error(error);
+            alert('Erreur lors de la suppression');
+        }
+    };
+
     const walletsByUser = wallets.reduce((acc, wallet) => {
         const userId = wallet.userId;
         const user = users[userId] || { firstName: 'Utilisateur', lastName: 'Inconnu', email: wallet.userId };
@@ -156,6 +167,12 @@ const WalletManagement = () => {
                                             <i className={wallet.status === 'active' ? 'fas fa-lock' : 'fas fa-lock-open'}></i>
                                             {wallet.status === 'active' ? 'BLOQUER LE COMPTE' : 'DÉBLOQUER LE COMPTE'}
                                         </button>
+                                        <button
+                                            onClick={() => handleDeleteWallet(wallet.id)}
+                                            style={{ ...styles.actionBtn, padding: '12px', color: '#991b1b', borderColor: '#fecaca', background: '#fee2e2' }}
+                                        >
+                                            <i className="fas fa-trash"></i> SUPPRIMER
+                                        </button>
                                     </div>
                                 </div>
                             ))}
@@ -243,6 +260,7 @@ const WalletManagement = () => {
                                         <button onClick={() => handleUpdateBalance(wallet.userId, wallet.id, wallet.balance)} style={styles.actionBtn}><i className="fas fa-coins"></i> Solde</button>
                                         <button onClick={() => handleEditDetails(wallet)} style={styles.actionBtn}><i className="fas fa-edit"></i> RIB</button>
                                         <button onClick={() => handleToggleStatus(wallet.id, wallet.status)} style={{ ...styles.actionBtn, color: wallet.status === 'active' ? '#ef4444' : '#10b981' }}><i className={wallet.status === 'active' ? 'fas fa-lock' : 'fas fa-lock-open'}></i> {wallet.status === 'active' ? 'Bloquer' : 'Débloquer'}</button>
+                                        <button onClick={() => handleDeleteWallet(wallet.id)} style={{ ...styles.actionBtn, color: '#991b1b', background: '#fee2e2', borderColor: '#fecaca' }}><i className="fas fa-trash"></i></button>
                                     </div>
                                 </div>
                             ))}

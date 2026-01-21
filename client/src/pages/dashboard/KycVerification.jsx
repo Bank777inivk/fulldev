@@ -115,7 +115,6 @@ const KycVerification = () => {
 
     const [docTypes, setDocTypes] = useState({
         id1: '',
-        id2: '',
         address: '',
         income: ''
     });
@@ -123,8 +122,6 @@ const KycVerification = () => {
     const [files, setFiles] = useState({
         id1Front: null,
         id1Back: null,
-        id2Front: null,
-        id2Back: null,
         selfie: null,
         selfieWithId: null,
         addressProof: null,
@@ -135,8 +132,6 @@ const KycVerification = () => {
     const [previews, setPreviews] = useState({
         id1Front: null,
         id1Back: null,
-        id2Front: null,
-        id2Back: null,
         selfie: null,
         selfieWithId: null,
         addressProof: null,
@@ -207,12 +202,12 @@ const KycVerification = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!docTypes.id1 || !docTypes.id2 || docTypes.id1 === docTypes.id2) {
-            showToast("Veuillez sélectionner deux types de documents d'identité différents.", "warning");
+        if (!docTypes.id1) {
+            showToast("Veuillez sélectionner un type de document d'identité.", "warning");
             return;
         }
 
-        const requiredFiles = ['id1Front', 'id2Front', 'selfie', 'selfieWithId', 'addressProof', 'incomeProof'];
+        const requiredFiles = ['id1Front', 'selfie', 'selfieWithId', 'addressProof', 'incomeProof'];
         const missingFiles = requiredFiles.filter(key => !files[key]);
         const missingTypes = ['address', 'income'].filter(key => !docTypes[key]);
 
@@ -294,7 +289,7 @@ const KycVerification = () => {
             <header style={styles.header}>
                 <h1 style={styles.title}>Vérification d'identité (KYC)</h1>
                 <p style={styles.subtitle}>
-                    Pour sécuriser votre compte, veuillez nous transmettre deux justificatifs d'identité différents
+                    Pour sécuriser votre compte, veuillez nous transmettre un justificatif d'identité
                     et les documents complémentaires requis.
                 </p>
                 {kycStatus?.status === 'unverified' && (
@@ -309,13 +304,13 @@ const KycVerification = () => {
 
             <form onSubmit={handleSubmit} style={styles.form}>
                 <Section
-                    title="1. Premier justificatif d’identité"
+                    title="1. Justificatif d’identité"
                     icon="fas fa-id-card"
                     subtitle="Choisissez un premier document valide (CNI, Passeport, etc.)"
                 >
                     <TypeSelector
                         id="id1"
-                        label="Type du premier document"
+                        label="Type de document"
                         options={idOptions}
                         value={docTypes.id1}
                         onChange={handleTypeChange}
@@ -349,49 +344,10 @@ const KycVerification = () => {
                     )}
                 </Section>
 
-                <Section
-                    title="2. Second justificatif d’identité"
-                    icon="fas fa-passport"
-                    subtitle="Un document différent du premier est requis."
-                >
-                    <TypeSelector
-                        id="id2"
-                        label="Type du second document"
-                        options={idOptions}
-                        value={docTypes.id2}
-                        onChange={handleTypeChange}
-                        disabled={uploading}
-                    />
-                    {docTypes.id2 && (
-                        <div style={styles.grid}>
-                            <UploadBox
-                                id="id2Front"
-                                label="Recto / Page principale"
-                                icon="fas fa-id-card"
-                                description="Charger le recto"
-                                preview={previews.id2Front}
-                                uploading={uploading}
-                                onFileChange={handleFileChange}
-                                guideImage="/kyc  (2).jpeg"
-                                onViewGuide={setSelectedGuide}
-                            />
-                            {docTypes.id2 !== 'passport' && (
-                                <UploadBox
-                                    id="id2Back"
-                                    label="Verso (si applicable)"
-                                    icon="fas fa-id-card"
-                                    description="Charger le verso"
-                                    preview={previews.id2Back}
-                                    uploading={uploading}
-                                    onFileChange={handleFileChange}
-                                />
-                            )}
-                        </div>
-                    )}
-                </Section>
+
 
                 <Section
-                    title="3. Vérification biométrique"
+                    title="2. Vérification biométrique"
                     icon="fas fa-user-shield"
                     subtitle="Photos récentes pour confirmer votre identité."
                 >
@@ -422,7 +378,7 @@ const KycVerification = () => {
                 </Section>
 
                 <Section
-                    title="4. Justificatif de domicile"
+                    title="3. Justificatif de domicile"
                     icon="fas fa-home"
                     subtitle="Document officiel datant de moins de 3 mois."
                 >
@@ -448,7 +404,7 @@ const KycVerification = () => {
                 </Section>
 
                 <Section
-                    title="5. Justificatifs de revenus"
+                    title="4. Justificatifs de revenus"
                     icon="fas fa-briefcase"
                     subtitle="Selon votre situation (Salarié, Retraité, etc.)."
                 >
@@ -474,7 +430,7 @@ const KycVerification = () => {
                 </Section>
 
                 <Section
-                    title="6. Justificatif bancaire"
+                    title="5. Justificatif bancaire"
                     icon="fas fa-university"
                     subtitle="Relevé d'Identité Bancaire (RIB / IBAN)."
                     required={false}

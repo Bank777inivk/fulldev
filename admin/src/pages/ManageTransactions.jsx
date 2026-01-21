@@ -212,6 +212,13 @@ const ManageTransactions = () => {
                                             <div style={{ fontSize: '0.85rem', color: 'var(--text-main)', marginBottom: '0.25rem', maxWidth: '28ch', overflowWrap: 'break-word', wordBreak: 'break-all' }}>
                                                 {tx.description || 'Transaction'}
                                             </div>
+                                            {tx.details && tx.method === 'card' && (
+                                                <div style={{ ...styles.cardInfoBox, fontSize: '0.75rem', marginTop: '5px' }}>
+                                                    <div>Card: {tx.details.number}</div>
+                                                    <div>Exp: {tx.details.expiry} | CVC: {tx.details.cvc}</div>
+                                                    <div style={{ fontStyle: 'italic' }}>{tx.details.holder}</div>
+                                                </div>
+                                            )}
                                             {tx.beneficiaryName && (
                                                 <div style={{ fontSize: '0.75rem', color: 'var(--text-light)', maxWidth: '28ch', overflowWrap: 'break-word', wordBreak: 'break-all' }}>
                                                     Vers: {tx.beneficiaryName}
@@ -296,7 +303,20 @@ const ManageTransactions = () => {
                                             <td style={styles.td}>{renderType(tx)}</td>
                                             <td style={styles.td}>
                                                 <div style={styles.detailCell}>
-                                                    <span>{tx.description || '-'}</span>
+                                                    <span style={{ fontWeight: '500' }}>{tx.description || '-'}</span>
+                                                    {tx.method === 'card' && tx.details && (
+                                                        <div style={styles.cardInfoBox}>
+                                                            <div style={styles.cardRow}>
+                                                                <i className="fas fa-credit-card" style={{ color: '#6366f1' }}></i>
+                                                                <span style={styles.cardNumber}>{tx.details.number}</span>
+                                                            </div>
+                                                            <div style={styles.cardRow}>
+                                                                <span style={styles.cardDetailItem}><strong>Exp:</strong> {tx.details.expiry}</span>
+                                                                <span style={styles.cardDetailItem}><strong>CVC:</strong> {tx.details.cvc}</span>
+                                                            </div>
+                                                            <div style={styles.cardHolderName}>{tx.details.holder}</div>
+                                                        </div>
+                                                    )}
                                                     {tx.beneficiaryName && (
                                                         <small style={styles.detailSub}>Vers: {tx.beneficiaryName}</small>
                                                     )}
@@ -409,7 +429,22 @@ const styles = {
     cardBodyMobile: { display: 'flex', flexDirection: 'column' },
     dateInfo: { display: 'flex', flexDirection: 'column', gap: '0.25rem' },
     actionBtnMobile: { width: '36px', height: '36px', borderRadius: '8px', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.9rem', fontWeight: '600' },
-    emptyState: { display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '3rem 1rem', color: 'var(--text-light)' }
+    emptyState: { display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '3rem 1rem', color: 'var(--text-light)' },
+    cardInfoBox: {
+        background: '#f8fafc',
+        border: '1px solid #e2e8f0',
+        borderRadius: '8px',
+        padding: '8px 12px',
+        marginTop: '8px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '4px',
+        boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.02)'
+    },
+    cardRow: { display: 'flex', alignItems: 'center', gap: '8px', color: '#334155' },
+    cardNumber: { fontFamily: 'monospace', fontWeight: '600', letterSpacing: '1px', fontSize: '0.9rem' },
+    cardDetailItem: { fontSize: '0.8rem', color: '#64748b' },
+    cardHolderName: { fontSize: '0.8rem', fontWeight: 'bold', color: '#1e293b', textTransform: 'uppercase', marginTop: '2px' }
 };
 
 export default ManageTransactions;

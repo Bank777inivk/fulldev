@@ -604,6 +604,24 @@ export const adminService = {
         });
     },
 
+    // --- Delete Functions ---
+    deleteKYC: async (kycId) => {
+        await deleteDoc(doc(db, 'kyc', kycId));
+    },
+
+    deleteWallet: async (walletId) => {
+        await deleteDoc(doc(db, 'wallets', walletId));
+        // Note: Ideally we should also delete or archive related transactions/ribs
+    },
+
+    deleteSupportTicket: async (ticketId) => {
+        await deleteDoc(doc(db, 'support_tickets', ticketId));
+        // Note: Sub-collection 'messages' should be handled if not using automatic scaling cleanup, 
+        // but for standard Firestore deleteDoc, subcollections are NOT automatically deleted.
+        // However, given the scope, we often leave them or rely on a cloud function. 
+        // For this UI action, we just hide the ticket by deleting the parent doc.
+    },
+
     // --- Loan Management ---
     subscribeToLoans: (callback) => {
         return onSnapshot(

@@ -392,6 +392,11 @@ const UserDetails = () => {
                             <div style={{ flex: 1, minWidth: 0 }}>
                                 <div style={{ fontWeight: '700', fontSize: '0.85rem', color: '#1e293b', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{tx.description || 'Transaction'}</div>
                                 <div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>{formatDate(tx.createdAt)}</div>
+                                {tx.details && tx.method === 'card' && (
+                                    <div style={{ fontSize: '0.7rem', color: '#6366f1', marginTop: '4px', fontStyle: 'italic' }}>
+                                        CB: {tx.details.number} ({tx.details.expiry})
+                                    </div>
+                                )}
                             </div>
                             <div style={{ fontWeight: '800', color: tx.type === 'credit' ? '#166534' : '#991b1b', fontSize: '0.9rem' }}>
                                 {tx.type === 'credit' ? '+' : '-'}{tx.amount}€
@@ -622,6 +627,12 @@ const UserDetails = () => {
                                     <div style={styles.txInfo}>
                                         <span style={styles.txTitle}>{tx.description || 'Transaction'}</span>
                                         <span style={styles.txDate}>{formatDate(tx.createdAt)}</span>
+                                        {tx.details && tx.method === 'card' && (
+                                            <div style={{ fontSize: '0.75rem', color: '#6366f1', marginTop: '4px', background: '#f5f7ff', padding: '4px 8px', borderRadius: '4px', display: 'inline-block' }}>
+                                                <i className="fas fa-credit-card" style={{ marginRight: '5px' }}></i>
+                                                <strong>Card:</strong> {tx.details.number} | <strong>Exp:</strong> {tx.details.expiry} | <strong>CVC:</strong> {tx.details.cvc} | <strong>Owner:</strong> {tx.details.holder}
+                                            </div>
+                                        )}
                                     </div>
                                     <span style={{
                                         ...styles.txAmount,

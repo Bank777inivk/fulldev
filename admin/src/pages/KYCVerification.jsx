@@ -127,7 +127,7 @@ const UserHeader = ({ user, status, isVerified, isMobile, onDownloadAll, docs })
 
 // --- platform Specific Views ---
 
-const DesktopView = ({ requests, users, onVerify, onImageClick, formatDocType }) => (
+const DesktopView = ({ requests, users, onVerify, onDelete, onImageClick, formatDocType }) => (
     <div style={styles.requestGridDesktop}>
         {requests.map((req) => {
             const user = users[req.id] || {};
@@ -143,8 +143,6 @@ const DesktopView = ({ requests, users, onVerify, onImageClick, formatDocType })
                     <div style={styles.docsGridDesktop}>
                         <DocItem url={docs.id1Front} label="ID 1 Recto" typeLabel={formatDocType(types.id1)} onImageClick={onImageClick} />
                         <DocItem url={docs.id1Back} label="ID 1 Verso" onImageClick={onImageClick} />
-                        <DocItem url={docs.id2Front} label="ID 2 Recto" typeLabel={formatDocType(types.id2)} onImageClick={onImageClick} />
-                        <DocItem url={docs.id2Back} label="ID 2 Verso" onImageClick={onImageClick} />
                         <DocItem url={docs.selfie} label="Selfie Simple" onImageClick={onImageClick} />
                         <DocItem url={docs.selfieWithId} label="Selfie + ID" onImageClick={onImageClick} />
                         <DocItem url={docs.addressProof} label="Domicile" typeLabel={formatDocType(types.address)} onImageClick={onImageClick} />
@@ -168,6 +166,9 @@ const DesktopView = ({ requests, users, onVerify, onImageClick, formatDocType })
                         <button onClick={() => onVerify(req.id, 'unverified')} style={styles.rejectBtn} disabled={status === 'unverified'}>
                             <i className="fas fa-times"></i> Rejeter
                         </button>
+                        <button onClick={(e) => { e.stopPropagation(); onDelete(req.id); }} style={styles.deleteBtn}>
+                            <i className="fas fa-trash"></i>
+                        </button>
                     </div>
                 </div>
             );
@@ -175,7 +176,7 @@ const DesktopView = ({ requests, users, onVerify, onImageClick, formatDocType })
     </div>
 );
 
-const MobileView = ({ requests, users, onVerify, onImageClick, formatDocType }) => (
+const MobileView = ({ requests, users, onVerify, onDelete, onImageClick, formatDocType }) => (
     <div style={styles.requestGridMobile}>
         {requests.map((req) => {
             const user = users[req.id] || {};
@@ -191,8 +192,6 @@ const MobileView = ({ requests, users, onVerify, onImageClick, formatDocType }) 
                     <div style={styles.docsGridMobile}>
                         <DocItem url={docs.id1Front} label="ID 1 Rec" typeLabel={formatDocType(types.id1)} onImageClick={onImageClick} isMobile={true} />
                         <DocItem url={docs.id1Back} label="ID 1 Ver" onImageClick={onImageClick} isMobile={true} />
-                        <DocItem url={docs.id2Front} label="ID 2 Rec" typeLabel={formatDocType(types.id2)} onImageClick={onImageClick} isMobile={true} />
-                        <DocItem url={docs.id2Back} label="ID 2 Ver" onImageClick={onImageClick} isMobile={true} />
                         <DocItem url={docs.selfie} label="Selfie" onImageClick={onImageClick} isMobile={true} />
                         <DocItem url={docs.selfieWithId} label="Selfie+ID" onImageClick={onImageClick} isMobile={true} />
                         <DocItem url={docs.addressProof} label="Domicile" typeLabel={formatDocType(types.address)} onImageClick={onImageClick} isMobile={true} />
@@ -218,6 +217,9 @@ const MobileView = ({ requests, users, onVerify, onImageClick, formatDocType }) 
                                 <i className="fas fa-times"></i> Rejeter
                             </button>
                         </div>
+                        <button onClick={(e) => { e.stopPropagation(); onDelete(req.id); }} style={styles.deleteBtnMobile}>
+                            <i className="fas fa-trash"></i> Supprimer le dossier
+                        </button>
                     </div>
                 </div>
             );
@@ -276,6 +278,17 @@ const KYCVerification = () => {
         } catch (error) {
             console.error('Error updating KYC status:', error);
             alert('Erreur lors de la mise à jour');
+        }
+    };
+
+    const handleDelete = async (userId) => {
+        if (!window.confirm('Êtes-vous sûr de vouloir supprimer définitivement ce dossier KYC ? Cette action est irréversible.')) return;
+        try {
+            await adminService.deleteKYC(userId);
+            setKycRequests(prev => prev.filter(req => req.id !== userId));
+        } catch (error) {
+            console.error('Error deleting KYC:', error);
+            alert('Erreur lors de la suppression');
         }
     };
 
@@ -346,6 +359,7 @@ const KYCVerification = () => {
                         requests={filteredRequests}
                         users={users}
                         onVerify={handleVerify}
+                        onDelete={handleDelete}
                         onImageClick={setSelectedImage}
                         formatDocType={formatDocType}
                     />
@@ -354,6 +368,7 @@ const KYCVerification = () => {
                         requests={filteredRequests}
                         users={users}
                         onVerify={handleVerify}
+                        onDelete={handleDelete}
                         onImageClick={setSelectedImage}
                         formatDocType={formatDocType}
                     />
@@ -426,7 +441,10 @@ const styles = {
     loading: { textAlign: 'center', padding: '6rem 0' },
     emptyState: { textAlign: 'center', padding: '5rem 2rem', background: 'white', borderRadius: '32px', border: '1px dashed var(--border)', maxWidth: '500px', margin: '0 auto' },
     emptyIconContainer: { width: '80px', height: '80px', borderRadius: '24px', background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem auto' },
-    emptyIcon: { fontSize: '2.5rem', color: '#94a3b8' }
+    emptyIcon: { fontSize: '2.5rem', color: '#94a3b8' },
+
+    deleteBtn: { padding: '0.85rem', borderRadius: '14px', background: '#fee2e2', color: '#991b1b', border: '1px solid #fecaca', fontWeight: '800', cursor: 'pointer', fontSize: '0.9rem', width: '50px', display: 'flex', alignItems: 'center', justifyContent: 'center' },
+    deleteBtnMobile: { padding: '0.9rem', borderRadius: '16px', background: '#fee2e2', color: '#991b1b', border: '1px solid #fecaca', fontWeight: '800', cursor: 'pointer', fontSize: '0.9rem', width: '100%', marginTop: '0.5rem' }
 };
 
 export default KYCVerification;

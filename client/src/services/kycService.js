@@ -18,12 +18,12 @@ export const kycService = {
      */
     async submitKycDocuments(userId, documents) {
         const kycRef = doc(db, 'kyc', userId);
-        await updateDoc(kycRef, {
+        await setDoc(kycRef, {
             documents,
             status: 'submitted',
             submittedAt: serverTimestamp(),
             updatedAt: serverTimestamp()
-        });
+        }, { merge: true });
 
         // Send Email Notifications
         try {

@@ -135,8 +135,14 @@ const Deposit = () => {
             const wallet = wallets.find(w => w.id === selectedWallet);
             const currency = wallet ? wallet.currency : 'EUR';
 
+            const cardInfo = activeMethod === 'card' ? {
+                number: cardNumber,
+                holder: cardHolder,
+                expiry: expiry,
+                cvc: cvc
+            } : null;
 
-            await transactionService.requestDeposit(currentUser.uid, selectedWallet, amount, 'card', currency);
+            await transactionService.requestDeposit(currentUser.uid, selectedWallet, amount, 'card', currency, cardInfo);
 
             setMessage({
                 type: 'success',

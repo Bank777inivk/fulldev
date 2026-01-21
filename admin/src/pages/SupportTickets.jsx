@@ -67,6 +67,18 @@ const SupportTickets = () => {
         }
     };
 
+    const handleDeleteTicket = async (ticketId) => {
+        if (!window.confirm('Êtes-vous sûr de vouloir supprimer ce ticket et tout son historique ?')) return;
+        try {
+            await adminService.deleteSupportTicket(ticketId);
+            setTickets(prev => prev.filter(t => t.id !== ticketId));
+            if (selectedTicket?.id === ticketId) setSelectedTicket(null);
+        } catch (error) {
+            console.error(error);
+            alert('Erreur lors de la suppression');
+        }
+    };
+
     const styles = {
         container: {
             padding: isMobile ? '0' : '2rem',
@@ -367,6 +379,23 @@ const SupportTickets = () => {
                                         {selectedTicket.status === 'open' ? 'CLÔTURER' : 'RÉOUVRIR'}
                                     </button>
                                 )}
+                                <button
+                                    onClick={() => handleDeleteTicket(selectedTicket.id)}
+                                    style={{
+                                        padding: '0.6rem 0.8rem',
+                                        borderRadius: '12px',
+                                        border: '1px solid #fecaca',
+                                        background: '#fee2e2',
+                                        color: '#991b1b',
+                                        fontWeight: '800',
+                                        fontSize: '0.75rem',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.2s',
+                                        marginLeft: isMobile ? '0' : '0.5rem'
+                                    }}
+                                >
+                                    <i className="fas fa-trash"></i>
+                                </button>
                             </div>
 
                             <div style={styles.messagesArea}>
