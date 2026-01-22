@@ -259,15 +259,15 @@ export const emailService = {
                         <table style="width: 100%; border-collapse: collapse;">
                             <tr>
                                 <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Montant demandé :</td>
-                                <td style="padding: 8px 0; font-weight: 700; text-align: right; color: #1e293b; font-size: 16px;">${parseFloat(loanDetails.amount).toLocaleString('fr-FR')} €</td>
+                                <td style="padding: 8px 0; font-weight: 700; text-align: right; color: #1e293b; font-size: 16px;">${parseFloat(loanDetails.montant || loanDetails.amount).toLocaleString('fr-FR')} €</td>
                             </tr>
                             <tr>
                                 <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Durée :</td>
-                                <td style="padding: 8px 0; font-weight: 600; text-align: right; color: #1e293b;">${loanDetails.duration} mois</td>
+                                <td style="padding: 8px 0; font-weight: 600; text-align: right; color: #1e293b;">${loanDetails.duree || loanDetails.duration} mois</td>
                             </tr>
                             <tr>
                                 <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Mensualité estimée :</td>
-                                <td style="padding: 8px 0; font-weight: 600; text-align: right; color: #1e293b;">${parseFloat(loanDetails.monthlyPayment).toLocaleString('fr-FR')} €/mois</td>
+                                <td style="padding: 8px 0; font-weight: 600; text-align: right; color: #1e293b;">${parseFloat(loanDetails.mensualite || loanDetails.monthlyPayment).toLocaleString('fr-FR')} €/mois</td>
                             </tr>
                             <tr>
                                 <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Statut actuel :</td>
@@ -339,9 +339,10 @@ export const emailService = {
                         
                         <h3 style="margin-top: 20px;">Détails du Financement</h3>
                         <p><strong>Projet :</strong> ${loanData.type}</p>
-                        <p><strong>Montant :</strong> ${parseFloat(loanData.amount).toLocaleString('fr-FR')} €</p>
-                        <p><strong>Durée :</strong> ${loanData.duration} mois</p>
-                        <p><strong>Mensualité :</strong> ${parseFloat(loanData.monthlyPayment).toLocaleString('fr-FR')} €/mois</p>
+                        <p><strong>Montant :</strong> ${parseFloat(loanData.montant || loanData.amount).toLocaleString('fr-FR')} €</p>
+                        <p><strong>Durée :</strong> ${loanData.duree || loanData.duration} mois</p>
+                        <p><strong>Mensualité :</strong> ${parseFloat(loanData.mensualite || loanData.monthlyPayment).toLocaleString('fr-FR')} €/mois</p>
+                        ${(loanData.taux || loanData.interestRate) ? `<p><strong>Taux (TAEG) :</strong> ${loanData.taux || loanData.interestRate}%</p>` : ''}
                         
                         <h3 style="margin-top: 20px;">Description du projet</h3>
                         <p style="background: #fff; padding: 10px; border: 1px solid #eee; border-radius: 5px;">${loanData.description}</p>

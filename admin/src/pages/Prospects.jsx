@@ -356,19 +356,25 @@ const Prospects = () => {
                         </div>
 
                         {/* Simulator specific details */}
-                        {(selectedProspect.taux || selectedProspect.mensualite) && (
+                        {(selectedProspect.taux || selectedProspect.interestRate || selectedProspect.mensualite || selectedProspect.monthlyPayment) && (
                             <div style={{ ...styles.dataGrid, marginTop: '1.5rem', background: '#f8fafc', padding: '1.5rem', borderRadius: '16px', border: '1px dashed #e2e8f0' }}>
                                 <div style={styles.dataItem}>
                                     <span style={styles.dataLabel}>Taux TAEG</span>
-                                    <span style={{ ...styles.dataValue, color: '#6366f1' }}>{selectedProspect.taux}%</span>
+                                    <span style={{ ...styles.dataValue, color: '#6366f1' }}>
+                                        {selectedProspect.taux || selectedProspect.interestRate}%
+                                    </span>
                                 </div>
                                 <div style={styles.dataItem}>
                                     <span style={styles.dataLabel}>Mensualité simulée</span>
-                                    <span style={{ ...styles.dataValue, color: '#6366f1' }}>{parseFloat(selectedProspect.mensualite || 0).toFixed(2)} €</span>
+                                    <span style={{ ...styles.dataValue, color: '#6366f1' }}>
+                                        {parseFloat(selectedProspect.mensualite || selectedProspect.monthlyPayment || 0).toFixed(2)} €
+                                    </span>
                                 </div>
                                 <div style={styles.dataItem}>
                                     <span style={styles.dataLabel}>Coût total crédit</span>
-                                    <span style={{ ...styles.dataValue, color: '#6366f1' }}>{parseFloat(selectedProspect.coutTotal || 0).toFixed(2)} €</span>
+                                    <span style={{ ...styles.dataValue, color: '#6366f1' }}>
+                                        {parseFloat(selectedProspect.coutTotal || selectedProspect.totalCost || 0).toFixed(2)} €
+                                    </span>
                                 </div>
                             </div>
                         )}

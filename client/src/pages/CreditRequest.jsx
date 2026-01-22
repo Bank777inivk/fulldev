@@ -84,7 +84,34 @@ const CreditRequest = () => {
     });
 
     const [score, setScore] = useState(null);
+    const [interestRate, setInterestRate] = useState(3.0);
+    const [monthlyPayment, setMonthlyPayment] = useState(0);
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    // Dynamic Interest Rate logic (matching Simulator & Dashboard)
+    useEffect(() => {
+        let rate = 3.5;
+        const amt = Number(formData.montant);
+        if (amt > 100000) rate = 1.5;
+        else if (amt > 50000) rate = 2.0;
+        else if (amt > 20000) rate = 2.5;
+        else if (amt > 5000) rate = 3.0;
+
+        setInterestRate(rate);
+    }, [formData.montant]);
+
+    // Monthly Payment Calculation
+    useEffect(() => {
+        const amt = Number(formData.montant);
+        const dur = Number(formData.duree);
+        const r = (interestRate / 100) / 12;
+        if (r === 0) {
+            setMonthlyPayment((amt / dur).toFixed(2));
+        } else {
+            const monthly = (amt * r * Math.pow(1 + r, dur)) / (Math.pow(1 + r, dur) - 1);
+            setMonthlyPayment(monthly.toFixed(2));
+        }
+    }, [formData.montant, formData.duree, interestRate]);
 
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -167,6 +194,9 @@ const CreditRequest = () => {
             // Persistence to Firestore
             await loanService.createLead({
                 ...formData,
+                taux: interestRate,
+                mensualite: monthlyPayment,
+                coutTotal: (monthlyPayment * formData.duree).toFixed(2),
                 score: finalScore
             });
 
@@ -219,6 +249,25 @@ const CreditRequest = () => {
                             />
                             {errors.objet && <span style={styles.errorText}>{errors.objet}</span>}
                         </div>
+
+                        {/* Simulation Result Box */}
+                        <div style={{
+                            background: '#f8fbff',
+                            padding: '1.5rem',
+                            borderRadius: '16px',
+                            border: '1px solid #e3f2fd',
+                            marginBottom: '2rem'
+                        }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                                <span style={{ color: '#666', fontSize: '0.9rem' }}>Taux d'intérêt (TAEG)</span>
+                                <strong style={{ color: '#003366' }}>{interestRate}%</strong>
+                            </div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <span style={{ color: '#666', fontSize: '0.9rem' }}>Mensualité estimée</span>
+                                <strong style={{ color: '#003366', fontSize: '1.4rem' }}>{monthlyPayment} €</strong>
+                            </div>
+                        </div>
+
                         <button onClick={nextStep} style={styles.submitButton}>Suivant</button>
                     </div>
                 );

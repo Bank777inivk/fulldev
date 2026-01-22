@@ -22,15 +22,15 @@ const ConfirmationModal = ({ isOpen, onClose, onConfirm, details, submitting }) 
                     </div>
                     <div style={styles.modalRow}>
                         <span>Montant :</span>
-                        <strong>{details.amount.toLocaleString()} €</strong>
+                        <strong>{details.montant.toLocaleString()} €</strong>
                     </div>
                     <div style={styles.modalRow}>
                         <span>Durée :</span>
-                        <strong>{details.duration} mois</strong>
+                        <strong>{details.duree} mois</strong>
                     </div>
                     <div style={styles.modalRow}>
                         <span>Mensualité :</span>
-                        <strong>{details.monthlyPayment} €</strong>
+                        <strong>{details.mensualite} €</strong>
                     </div>
                     <div style={{ ...styles.modalRow, flexDirection: 'column', alignItems: 'flex-start', gap: '5px' }}>
                         <span>Description :</span>
@@ -159,10 +159,10 @@ const Credits = () => {
         setSubmitting(true);
         try {
             await loanService.applyForLoan(currentUser.uid, {
-                amount,
-                duration,
-                monthlyPayment: calculateMonthly(),
-                interestRate,
+                montant: amount,
+                duree: duration,
+                mensualite: calculateMonthly(),
+                taux: interestRate,
                 type: projectType === 'Autre' ? otherType : projectType,
                 description: projectDescription
             });
@@ -401,9 +401,9 @@ const Credits = () => {
                         onConfirm={handleConfirmApply}
                         details={{
                             type: projectType === 'Autre' ? otherType : projectType,
-                            amount,
-                            duration,
-                            monthlyPayment: calculateMonthly(),
+                            montant: amount,
+                            duree: duration,
+                            mensualite: calculateMonthly(),
                             description: projectDescription
                         }}
                         submitting={submitting}
@@ -470,9 +470,9 @@ const Credits = () => {
                     onConfirm={handleConfirmApply}
                     details={{
                         type: projectType === 'Autre' ? otherType : projectType,
-                        amount,
-                        duration,
-                        monthlyPayment: calculateMonthly(),
+                        montant: amount,
+                        duree: duration,
+                        mensualite: calculateMonthly(),
                         description: projectDescription
                     }}
                     submitting={submitting}
