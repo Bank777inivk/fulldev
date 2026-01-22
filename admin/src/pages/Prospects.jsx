@@ -380,31 +380,116 @@ const Prospects = () => {
                         )}
                     </div>
 
-                    {/* Section 3: Situation */}
+                    {/* NEW: Domiciliation Section */}
+                    {(selectedProspect.adresseRue || selectedProspect.adresseVille) && (
+                        <div style={{ ...styles.dataGrid, marginTop: '0', background: '#f0f9ff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #bae6fd', marginBottom: '2rem' }}>
+                            <div style={{ gridColumn: '1 / -1', marginBottom: '10px' }}>
+                                <h4 style={{ margin: 0, color: '#0369a1', fontSize: '0.9rem', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <i className="fas fa-home"></i> Domiciliation & Vie Privée
+                                </h4>
+                            </div>
+                            <div style={styles.dataItem}>
+                                <span style={styles.dataLabel}>Adresse</span>
+                                <span style={styles.dataValue}>{selectedProspect.adresseRue}, {selectedProspect.adresseCodePostal} {selectedProspect.adresseVille} (${selectedProspect.adressePays})</span>
+                            </div>
+                            <div style={styles.dataItem}>
+                                <span style={styles.dataLabel}>Situation Matrimoniale</span>
+                                <span style={styles.dataValue}>{selectedProspect.situationMatrimoniale} ({selectedProspect.nbEnfants || 0} enfants)</span>
+                            </div>
+                            <div style={styles.dataItem}>
+                                <span style={styles.dataLabel}>Type de Logement</span>
+                                <span style={styles.dataValue}>{selectedProspect.typeLogement} (Depuis {selectedProspect.ancienneteAdresse || 0} mois)</span>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Section 3: Situation Professionnelle */}
                     <div style={styles.detailSection}>
                         <div style={styles.sectionHeader}>
-                            <i className="fas fa-chart-line" style={{ color: 'var(--secondary)', fontSize: '1.2rem' }}></i>
-                            <h3 style={styles.sectionTitle}>Situation Financière</h3>
+                            <i className="fas fa-briefcase" style={{ color: 'var(--secondary)', fontSize: '1.2rem' }}></i>
+                            <h3 style={styles.sectionTitle}>Situation Professionnelle</h3>
                         </div>
                         <div style={styles.dataGrid}>
                             <div style={styles.dataItem}>
+                                <span style={styles.dataLabel}>Contrat / Statut</span>
+                                <span style={styles.dataValue}>{selectedProspect.statutPro?.toUpperCase()} ({selectedProspect.typeContrat || 'N/A'})</span>
+                            </div>
+                            <div style={styles.dataItem}>
+                                <span style={styles.dataLabel}>Employeur / Secteur</span>
+                                <span style={styles.dataValue}>{selectedProspect.nomEmployeur || 'N/A'} ({selectedProspect.secteurActivite || 'N/A'})</span>
+                            </div>
+                            <div style={styles.dataItem}>
+                                <span style={styles.dataLabel}>Poste / Ancienneté</span>
+                                <span style={styles.dataValue}>{selectedProspect.posteOccupe || 'N/A'} ({selectedProspect.anciennetePro || 0} mois)</span>
+                            </div>
+                            <div style={styles.dataItem}>
                                 <span style={styles.dataLabel}>Revenus mensuels</span>
-                                <span style={styles.dataValue}>{selectedProspect.revenusMensuels?.toLocaleString()} {selectedProspect.devise || 'EUR'}</span>
-                            </div>
-                            <div style={styles.dataItem}>
-                                <span style={styles.dataLabel}>Statut pro</span>
-                                <span style={styles.dataValue}>{selectedProspect.statutPro}</span>
-                            </div>
-                            <div style={styles.dataItem}>
-                                <span style={styles.dataLabel}>Incident bancaire</span>
-                                <span style={{ ...styles.dataValue, color: selectedProspect.incidentBancaire === 'oui' ? '#ef4444' : '#10b981' }}>
-                                    {selectedProspect.incidentBancaire?.toUpperCase()}
+                                <span style={{ ...styles.dataValue, color: '#10b981', fontWeight: '800' }}>
+                                    {(selectedProspect.revenusMensuels || 0).toLocaleString()} {selectedProspect.devise || 'EUR'}
                                 </span>
                             </div>
                             <div style={styles.dataItem}>
-                                <span style={styles.dataLabel}>Banque principale</span>
-                                <span style={styles.dataValue}>{selectedProspect.banqueActuelle}</span>
+                                <span style={styles.dataLabel}>Autres revenus</span>
+                                <span style={styles.dataValue}>{(selectedProspect.autresRevenus || 0).toLocaleString()} {selectedProspect.devise || 'EUR'}</span>
                             </div>
+                        </div>
+                    </div>
+
+                    {/* Section 4: Situation Financière Detailed */}
+                    <div style={styles.detailSection}>
+                        <div style={styles.sectionHeader}>
+                            <i className="fas fa-chart-line" style={{ color: 'var(--secondary)', fontSize: '1.2rem' }}></i>
+                            <h3 style={styles.sectionTitle}>Charges & Situation Financière</h3>
+                        </div>
+                        <div style={styles.dataGrid}>
+                            <div style={styles.dataItem}>
+                                <span style={styles.dataLabel}>Charges mensuelles</span>
+                                <span style={{ ...styles.dataValue, color: '#ef4444' }}>{(selectedProspect.chargesMensuelles || 0).toLocaleString()} {selectedProspect.devise || 'EUR'}</span>
+                            </div>
+                            <div style={styles.dataItem}>
+                                <span style={styles.dataLabel}>Dont Loyer</span>
+                                <span style={styles.dataValue}>{(selectedProspect.loyer || 0).toLocaleString()} {selectedProspect.devise || 'EUR'}</span>
+                            </div>
+                            <div style={styles.dataItem}>
+                                <span style={styles.dataLabel}>Crédits en cours</span>
+                                <span style={styles.dataValue}>{(selectedProspect.autresCredits || 0).toLocaleString()} {selectedProspect.devise || 'EUR'}</span>
+                            </div>
+                            <div style={styles.dataItem}>
+                                <span style={styles.dataLabel}>Incident Bancaire</span>
+                                <span style={{ ...styles.dataValue, color: selectedProspect.incidentBancaire === 'oui' ? '#ef4444' : '#10b981', fontWeight: 'bold' }}>
+                                    {selectedProspect.incidentBancaire?.toUpperCase() || 'NON'}
+                                </span>
+                            </div>
+                            {selectedProspect.incidentDetail && (
+                                <div style={{ gridColumn: '1 / -1' }}>
+                                    <span style={styles.dataLabel}>Détails incident</span>
+                                    <p style={{ ...styles.dataValue, fontSize: '0.85rem', fontStyle: 'italic', margin: '4px 0 0 0' }}>{selectedProspect.incidentDetail}</p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Section 5: Informations Bancaires */}
+                    <div style={styles.detailSection}>
+                        <div style={styles.sectionHeader}>
+                            <i className="fas fa-university" style={{ color: 'var(--secondary)', fontSize: '1.2rem' }}></i>
+                            <h3 style={styles.sectionTitle}>Informations Bancaires</h3>
+                        </div>
+                        <div style={styles.dataGrid}>
+                            <div style={styles.dataItem}>
+                                <span style={styles.dataLabel}>Banque Actuelle</span>
+                                <span style={styles.dataValue}>{selectedProspect.banqueActuelle} {selectedProspect.autreBanqueNom ? `(${selectedProspect.autreBanqueNom})` : ''}</span>
+                            </div>
+                            <div style={styles.dataItem}>
+                                <span style={styles.dataLabel}>Ancienneté Compte</span>
+                                <span style={styles.dataValue}>{selectedProspect.ancienneteCompte || 0} mois</span>
+                            </div>
+                            {selectedProspect.iban && (
+                                <div style={{ gridColumn: '1 / -1', background: '#f8fafc', padding: '12px', borderRadius: '12px', marginTop: '8px', border: '1px solid #e2e8f0' }}>
+                                    <span style={styles.dataLabel}>IBAN</span>
+                                    <div style={{ ...styles.dataValue, fontFamily: 'monospace', fontSize: '1rem', letterSpacing: '1px', marginTop: '4px' }}>{selectedProspect.iban}</div>
+                                </div>
+                            )}
                         </div>
                     </div>
 

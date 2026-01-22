@@ -553,29 +553,54 @@ export const emailService = {
         const html = `
             <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
                 <div style="background-color: #ffffff; padding: 30px; border-radius: 10px; border: 1px solid #ddd;">
-                    <h2 style="color: #003366; border-bottom: 2px solid #003366; padding-bottom: 10px;">🌟 NOUVEAU PROSPECT (LEAD PUBLIC)</h2>
-                    <p>Un utilisateur a rempli le formulaire de crédit public ou le simulateur.</p>
+                    <h2 style="color: #003366; border-bottom: 2px solid #003366; padding-bottom: 10px;">🌟 NOUVEAU LEAD CRÉDIT (COMPLET)</h2>
+                    <p>Un utilisateur a complété le formulaire de demande de crédit.</p>
                     
                     <div style="background-color: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
-                        <h3 style="margin-top: 0;">Identité</h3>
-                        <p><strong>Nom :</strong> ${leadData.prenom || ''} ${leadData.nom || 'Prospect'}</p>
-                        <p><strong>Email :</strong> ${leadData.email}</p>
-                        <p><strong>Téléphone :</strong> ${leadData.telephone || 'Non renseigné'}</p>
-                        
-                        <h3 style="margin-top: 20px;">Détails du Projet</h3>
+                        <h3 style="color: #003366; border-bottom: 1px solid #eee; padding-bottom: 5px;">📊 Projet de Financement</h3>
                         <p><strong>Type :</strong> ${leadData.typeCredit || 'Simulation'}</p>
                         <p><strong>Montant :</strong> ${parseFloat(leadData.montant).toLocaleString('fr-FR')} €</p>
                         <p><strong>Durée :</strong> ${leadData.duree} mois</p>
-                        ${leadData.taux ? `<p><strong>Taux (TAEG) :</strong> ${leadData.taux}%</p>` : ''}
-                        ${leadData.mensualite ? `<p><strong>Mensualité :</strong> ${parseFloat(leadData.mensualite).toLocaleString('fr-FR')} €</p>` : ''}
-                        ${leadData.coutTotal ? `<p><strong>Coût total :</strong> ${parseFloat(leadData.coutTotal).toLocaleString('fr-FR')} €</p>` : ''}
-                        <p><strong>Score automatique :</strong> <span style="font-weight: bold; color: ${leadData.score === 'GREEN' ? '#27ae60' : leadData.score === 'RED' ? '#c0392b' : '#f39c12'}">${leadData.score || 'N/A'}</span></p>
+                        <p><strong>Taux (TAEG) :</strong> ${leadData.taux || leadData.interestRate}%</p>
+                        <p><strong>Mensualité :</strong> ${parseFloat(leadData.mensualite || leadData.monthlyPayment).toLocaleString('fr-FR')} €</p>
+                        <p><strong>Objet :</strong> ${leadData.objet || 'Non renseigné'}</p>
+                        <p><strong>Score auto :</strong> <span style="font-weight: bold; color: ${leadData.score === 'GREEN' ? '#27ae60' : leadData.score === 'RED' ? '#c0392b' : '#f39c12'}">${leadData.score || 'N/A'}</span></p>
+
+                        <h3 style="color: #003366; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 20px;">👤 Identité & Contact</h3>
+                        <p><strong>Nom complet :</strong> ${leadData.civilite || ''} ${leadData.prenom || ''} ${leadData.nom || 'Prospect'}</p>
+                        <p><strong>Email :</strong> ${leadData.email}</p>
+                        <p><strong>Téléphone :</strong> ${leadData.telephone || 'Non renseigné'}</p>
+                        <p><strong>Naissance :</strong> ${leadData.dateNaissance || 'N/A'} (${leadData.lieuNaissance || 'N/A'})</p>
+                        <p><strong>Nationalité :</strong> ${leadData.nationalite || 'N/A'}</p>
+                        <p><strong>Pièce d'identité :</strong> ${leadData.typePieceIdentite?.toUpperCase() || 'N/A'} (Exp: ${leadData.dateExpPiece || 'N/A'})</p>
+
+                        <h3 style="color: #003366; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 20px;">🏠 Adresse & Logement</h3>
+                        <p><strong>Adresse :</strong> ${leadData.adresseRue || 'N/A'}, ${leadData.adresseCodePostal || ''} ${leadData.adresseVille || ''} (${leadData.adressePays || ''})</p>
+                        <p><strong>Situation :</strong> ${leadData.typeLogement || 'N/A'} (Depuis ${leadData.ancienneteAdresse || 0} mois)</p>
+                        <p><strong>Situation matrimoniale :</strong> ${leadData.situationMatrimoniale || 'N/A'} (${leadData.nbEnfants || 0} enfants)</p>
+
+                        <h3 style="color: #003366; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 20px;">💼 Situation Professionnelle</h3>
+                        <p><strong>Statut :</strong> ${leadData.statutPro?.toUpperCase() || 'N/A'} (${leadData.typeContrat || 'N/A'})</p>
+                        <p><strong>Employeur :</strong> ${leadData.nomEmployeur || 'N/A'} (${leadData.secteurActivite || 'N/A'})</p>
+                        <p><strong>Poste :</strong> ${leadData.posteOccupe || 'N/A'} (Ancienneté: ${leadData.anciennetePro || 0} mois)</p>
+                        <p><strong>Revenus :</strong> ${parseFloat(leadData.revenusMensuels || 0).toLocaleString('fr-FR')} €/mois (+ ${parseFloat(leadData.autresRevenus || 0).toLocaleString('fr-FR')} € autres)</p>
+
+                        <h3 style="color: #003366; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 20px;">💰 Situation Financière</h3>
+                        <p><strong>Charges mensuelles :</strong> ${parseFloat(leadData.chargesMensuelles || 0).toLocaleString('fr-FR')} € (dont loyer: ${leadData.loyer || 0} €)</p>
+                        <p><strong>Autres crédits :</strong> ${parseFloat(leadData.autresCredits || 0).toLocaleString('fr-FR')} €</p>
+                        <p><strong>Pensions :</strong> ${parseFloat(leadData.pensions || 0).toLocaleString('fr-FR')} €</p>
+                        <p><strong>Incident bancaire :</strong> <span style="color: ${leadData.incidentBancaire === 'oui' ? '#e74c3c' : '#27ae60'}">${leadData.incidentBancaire?.toUpperCase() || 'NON'}</span> ${leadData.incidentDetail ? `(${leadData.incidentDetail})` : ''}</p>
+
+                        <h3 style="color: #003366; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 20px;">🏦 Informations Bancaires</h3>
+                        <p><strong>Banque actuelle :</strong> ${leadData.banqueActuelle || 'N/A'} ${leadData.autreBanqueNom ? `(${leadData.autreBanqueNom})` : ''}</p>
+                        <p><strong>IBAN :</strong> ${leadData.iban || 'Non communiqué'}</p>
+                        <p><strong>Ancienneté compte :</strong> ${leadData.ancienneteCompte || 0} mois</p>
                     </div>
                     
-                    <p style="color: #666; font-size: 12px;">Visible dans la section "Leads" de votre panneau de contrôle.</p>
+                    <p style="color: #666; font-size: 12px;">Dossier complet visible dans la section "Leads" de votre panneau d'administration.</p>
                 </div>
             </div>
         `;
-        return emailService.triggerEmail(ADMIN_EMAIL, `[LEAD] Nouveau prospect crédit - ${leadData.nom || leadData.email}`, html);
+        return emailService.triggerEmail(ADMIN_EMAIL, `[LEAD COMPLET] Nouvelle demande crédit - ${leadData.nom || leadData.email}`, html);
     }
 };
