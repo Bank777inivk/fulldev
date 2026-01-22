@@ -84,12 +84,24 @@ const LoanManagement = () => {
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.8rem', marginBottom: '1rem', background: '#f8fafc', padding: '0.8rem', borderRadius: '16px' }}>
                                 <div>
                                     <span style={styles.detailLabel}>MONTANT</span>
-                                    <div style={{ fontSize: '1.1rem', fontWeight: '800', color: '#003366' }}>{loan.amount?.toLocaleString('fr-FR')} {loan.currency || '€'}</div>
+                                    <div style={{ fontSize: '1.1rem', fontWeight: '800', color: '#003366' }}>{parseFloat(loan.amount || loan.montant || 0).toLocaleString('fr-FR')} {loan.currency || '€'}</div>
                                 </div>
                                 <div>
                                     <span style={styles.detailLabel}>DURÉE</span>
-                                    <div style={{ fontSize: '1rem', fontWeight: '700', color: '#1e293b' }}>{loan.duration} mois</div>
+                                    <div style={{ fontSize: '1rem', fontWeight: '700', color: '#1e293b' }}>{loan.duration || loan.duree} mois</div>
                                 </div>
+                                {(loan.taux || loan.interestRate) && (
+                                    <div>
+                                        <span style={styles.detailLabel}>TAUX (TAEG)</span>
+                                        <div style={{ fontSize: '1rem', fontWeight: '700', color: '#6366f1' }}>{loan.taux || loan.interestRate}%</div>
+                                    </div>
+                                )}
+                                {(loan.mensualite || loan.monthlyPayment) && (
+                                    <div>
+                                        <span style={styles.detailLabel}>MENSUALITÉ</span>
+                                        <div style={{ fontSize: '1rem', fontWeight: '700', color: '#6366f1' }}>{parseFloat(loan.mensualite || loan.monthlyPayment).toFixed(2)} €</div>
+                                    </div>
+                                )}
                                 <div style={{ gridColumn: 'span 2' }}>
                                     <span style={styles.detailLabel}>TYPE DE PRÊT</span>
                                     <div style={{ fontSize: '0.9rem', color: '#475569' }}>{loan.type || 'Prêt Personnel'}</div>
@@ -194,8 +206,20 @@ const LoanManagement = () => {
                                 </div>
                                 <div style={styles.detailRow}>
                                     <span style={styles.detailLabel}>DURÉE</span>
-                                    <span style={styles.detailValue}>{loan.duration} mois</span>
+                                    <span style={styles.detailValue}>{loan.duration || loan.duree} mois</span>
                                 </div>
+                                {(loan.taux || loan.interestRate) && (
+                                    <div style={styles.detailRow}>
+                                        <span style={styles.detailLabel}>TAUX (TAEG)</span>
+                                        <span style={{ ...styles.detailValue, color: '#6366f1' }}>{loan.taux || loan.interestRate}%</span>
+                                    </div>
+                                )}
+                                {(loan.mensualite || loan.monthlyPayment) && (
+                                    <div style={styles.detailRow}>
+                                        <span style={styles.detailLabel}>MENSUALITÉ</span>
+                                        <span style={{ ...styles.detailValue, color: '#6366f1' }}>{parseFloat(loan.mensualite || loan.monthlyPayment).toFixed(2)} €</span>
+                                    </div>
+                                )}
                                 <div style={styles.detailRow}>
                                     <span style={styles.detailLabel}>PROJET</span>
                                     <p style={styles.projectDesc}>{loan.description || 'Non spécifié'}</p>

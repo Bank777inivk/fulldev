@@ -250,6 +250,19 @@ const CreditRequest = () => {
                             {errors.objet && <span style={styles.errorText}>{errors.objet}</span>}
                         </div>
 
+                        <div style={styles.inputGroup}>
+                            <label style={styles.label}>Taux d'intérêt souhaité (TAEG) : {interestRate}%</label>
+                            <input
+                                type="range"
+                                min="1.0"
+                                max="15.0"
+                                step="0.1"
+                                value={interestRate}
+                                onChange={(e) => setInterestRate(Number(e.target.value))}
+                                style={{ width: '100%', cursor: 'pointer', height: '6px', appearance: 'none', background: '#e2e8f0', borderRadius: '3px', outline: 'none' }}
+                            />
+                        </div>
+
                         {/* Simulation Result Box */}
                         <div style={{
                             background: '#f8fbff',
