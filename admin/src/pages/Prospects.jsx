@@ -314,16 +314,71 @@ const Prospects = () => {
                         </div>
                         <div style={styles.dataGrid}>
                             <div style={styles.dataItem}>
+                                <span style={styles.dataLabel}>Civilité</span>
+                                <span style={styles.dataValue}>{selectedProspect.civilite || 'N/A'}</span>
+                            </div>
+                            <div style={styles.dataItem}>
                                 <span style={styles.dataLabel}>Email</span>
                                 <span style={styles.dataValue}>{selectedProspect.email}</span>
                             </div>
                             <div style={styles.dataItem}>
                                 <span style={styles.dataLabel}>Téléphone</span>
-                                <span style={styles.dataValue}>{selectedProspect.telephone}</span>
+                                <span style={styles.dataValue}>{selectedProspect.telephone || 'N/A'}</span>
                             </div>
                             <div style={styles.dataItem}>
-                                <span style={styles.dataLabel}>Né(e) le</span>
-                                <span style={styles.dataValue}>{selectedProspect.dateNaissance}</span>
+                                <span style={styles.dataLabel}>Date de naissance</span>
+                                <span style={styles.dataValue}>{selectedProspect.dateNaissance || 'N/A'}</span>
+                            </div>
+                            <div style={styles.dataItem}>
+                                <span style={styles.dataLabel}>Lieu de naissance</span>
+                                <span style={styles.dataValue}>{selectedProspect.lieuNaissance || 'N/A'}</span>
+                            </div>
+                            <div style={styles.dataItem}>
+                                <span style={styles.dataLabel}>Nationalité</span>
+                                <span style={styles.dataValue}>{selectedProspect.nationalite || 'N/A'}</span>
+                            </div>
+                            <div style={styles.dataItem}>
+                                <span style={styles.dataLabel}>Pièce d'identité</span>
+                                <span style={styles.dataValue}>
+                                    {selectedProspect.typePieceIdentite?.toUpperCase() || 'N/A'}
+                                    {selectedProspect.dateExpPiece ? ` (Exp: ${selectedProspect.dateExpPiece})` : ''}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Section: Domiciliation & Situation Familiale */}
+                    <div style={styles.detailSection}>
+                        <div style={styles.sectionHeader}>
+                            <i className="fas fa-home" style={{ color: 'var(--secondary)', fontSize: '1.2rem' }}></i>
+                            <h3 style={styles.sectionTitle}>Domiciliation & Famille</h3>
+                        </div>
+                        <div style={styles.dataGrid}>
+                            <div style={{ ...styles.dataItem, gridColumn: 'span 2' }}>
+                                <span style={styles.dataLabel}>Adresse complète</span>
+                                <span style={styles.dataValue}>
+                                    {selectedProspect.adresseRue ? (
+                                        `${selectedProspect.adresseRue}, ${selectedProspect.adresseCodePostal || ''} ${selectedProspect.adresseVille || ''} (${selectedProspect.adressePays || ''})`
+                                    ) : (
+                                        selectedProspect.adresseVille || 'Non renseignée'
+                                    )}
+                                </span>
+                            </div>
+                            <div style={styles.dataItem}>
+                                <span style={styles.dataLabel}>Situation Matrimoniale</span>
+                                <span style={styles.dataValue}>{selectedProspect.situationMatrimoniale || 'Non renseignée'}</span>
+                            </div>
+                            <div style={styles.dataItem}>
+                                <span style={styles.dataLabel}>Enfants à charge</span>
+                                <span style={styles.dataValue}>{selectedProspect.nbEnfants || 0}</span>
+                            </div>
+                            <div style={styles.dataItem}>
+                                <span style={styles.dataLabel}>Type de logement</span>
+                                <span style={styles.dataValue}>{selectedProspect.typeLogement || 'N/A'}</span>
+                            </div>
+                            <div style={styles.dataItem}>
+                                <span style={styles.dataLabel}>Depuis (mois)</span>
+                                <span style={styles.dataValue}>{selectedProspect.ancienneteAdresse || 0}</span>
                             </div>
                         </div>
                     </div>
@@ -380,28 +435,6 @@ const Prospects = () => {
                         )}
                     </div>
 
-                    {/* NEW: Domiciliation Section */}
-                    {(selectedProspect.adresseRue || selectedProspect.adresseVille) && (
-                        <div style={{ ...styles.dataGrid, marginTop: '0', background: '#f0f9ff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #bae6fd', marginBottom: '2rem' }}>
-                            <div style={{ gridColumn: '1 / -1', marginBottom: '10px' }}>
-                                <h4 style={{ margin: 0, color: '#0369a1', fontSize: '0.9rem', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                    <i className="fas fa-home"></i> Domiciliation & Vie Privée
-                                </h4>
-                            </div>
-                            <div style={styles.dataItem}>
-                                <span style={styles.dataLabel}>Adresse</span>
-                                <span style={styles.dataValue}>{selectedProspect.adresseRue}, {selectedProspect.adresseCodePostal} {selectedProspect.adresseVille} (${selectedProspect.adressePays})</span>
-                            </div>
-                            <div style={styles.dataItem}>
-                                <span style={styles.dataLabel}>Situation Matrimoniale</span>
-                                <span style={styles.dataValue}>{selectedProspect.situationMatrimoniale} ({selectedProspect.nbEnfants || 0} enfants)</span>
-                            </div>
-                            <div style={styles.dataItem}>
-                                <span style={styles.dataLabel}>Type de Logement</span>
-                                <span style={styles.dataValue}>{selectedProspect.typeLogement} (Depuis {selectedProspect.ancienneteAdresse || 0} mois)</span>
-                            </div>
-                        </div>
-                    )}
 
                     {/* Section 3: Situation Professionnelle */}
                     <div style={styles.detailSection}>
