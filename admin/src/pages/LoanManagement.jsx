@@ -224,6 +224,21 @@ const LoanManagement = () => {
                                     <span style={styles.detailLabel}>PROJET</span>
                                     <p style={styles.projectDesc}>{loan.description || 'Non spécifié'}</p>
                                 </div>
+
+                                {/* Borrower details from Profile */}
+                                <div style={{ marginTop: '1.5rem', padding: '1rem', background: '#f8fafc', borderRadius: '12px', border: '1px solid #eef2f6' }}>
+                                    <h5 style={{ margin: '0 0 10px', fontSize: '0.8rem', color: '#64748b', textTransform: 'uppercase' }}>Profil Emprunteur</h5>
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                                        <div style={styles.detailRow}>
+                                            <span style={styles.detailLabel}>SITUATION</span>
+                                            <span style={styles.detailValue}>{user.situationMatrimoniale || 'N/A'}</span>
+                                        </div>
+                                        <div style={styles.detailRow}>
+                                            <span style={styles.detailLabel}>ADRESSE</span>
+                                            <span style={styles.detailValue}>{user.address || user.city || 'N/A'}</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             {loan.documents && (
                                 <div style={styles.docsSection}>
