@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNotifications } from '../contexts/NotificationContext';
+import { loanService } from '../services/loanService';
 
 const Simulator = () => {
     const { showToast } = useNotifications();
@@ -28,10 +29,28 @@ const Simulator = () => {
         setTotalCost(payment * duration);
     }, [amount, duration, interestRate]);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        showToast(`Simulation envoyée à ${email} (Simulation)`, 'success');
-        // Here we would send data to backend
+
+        try {
+            const leadData = {
+                email,
+                montant: amount,
+                duree: duration,
+                mensualite: monthlyPayment,
+                coutTotal: totalCost,
+                taux: interestRate,
+                typeCredit: 'Simulation Simulateur',
+                nom: 'Prospect Simulateur',
+                score: amount > 50000 ? 'GREEN' : 'YELLOW'
+            };
+
+            await loanService.createLead(leadData);
+            showToast(`Votre simulation a été envoyée avec succès à ${email}.`, 'success');
+        } catch (error) {
+            console.error("Simulator lead error:", error);
+            showToast("Erreur lors de l'envoi de la simulation.", "error");
+        }
     };
 
     return (

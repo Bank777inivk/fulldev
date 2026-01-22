@@ -489,5 +489,92 @@ export const emailService = {
             </div>
         `;
         return emailService.triggerEmail(toEmail, "Bienvenue chez INVIK BANK - Compte activé !", html);
+    },
+
+    /**
+     * Template for Public Loan Lead Confirmation (Prospect)
+     */
+    sendPublicLeadConfirmationEmail: async (toEmail, name, leadData) => {
+        const html = `
+            <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 35px; text-align: center; color: white;">
+                    <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
+                    <p style="margin-top: 10px; opacity: 0.9;">Votre demande de financement</p>
+                </div>
+                <div style="padding: 40px; color: #333; line-height: 1.6;">
+                    <h2 style="color: #003366; margin-top: 0;">Bonjour ${name},</h2>
+                    <p>Nous avons bien reçu votre demande de simulation de crédit. Un conseiller INVIK BANK va étudier vos informations pour vous proposer une solution adaptée.</p>
+                    
+                    <div style="background: #f8fbff; border-radius: 12px; padding: 25px; margin: 30px 0; border-left: 4px solid #003366;">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <tr>
+                                <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Montant estimé :</td>
+                                <td style="padding: 8px 0; font-weight: 700; text-align: right; color: #1e293b;">${parseFloat(leadData.montant).toLocaleString('fr-FR')} €</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Durée :</td>
+                                <td style="padding: 8px 0; font-weight: 600; text-align: right; color: #1e293b;">${leadData.duree} mois</td>
+                            </tr>
+                            ${leadData.mensualite ? `
+                            <tr>
+                                <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Mensualité :</td>
+                                <td style="padding: 8px 0; font-weight: 600; text-align: right; color: #1e293b;">${parseFloat(leadData.mensualite).toLocaleString('fr-FR')} €/mois</td>
+                            </tr>
+                            ` : ''}
+                            <tr>
+                                <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Type de projet :</td>
+                                <td style="padding: 8px 0; font-weight: 600; text-align: right; color: #1e293b;">${leadData.typeCredit || 'Simulation'}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Statut :</td>
+                                <td style="padding: 8px 0; font-weight: 700; text-align: right; color: #e67e22;">Dossier en attente</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <p>Pour accélérer le traitement de votre dossier, nous vous invitons à créer votre espace client sécurisé si ce n'est pas déjà fait.</p>
+                    
+                    <div style="text-align: center; margin: 35px 0;">
+                        <a href="https://www.inviksa.com/register" style="display: inline-block; padding: 12px 30px; background: #003366; color: white; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 15px;">Finaliser ma demande</a>
+                    </div>
+
+                    <p>Merci de votre confiance,<br><strong>L'équipe Crédit INVIK BANK</strong></p>
+                </div>
+            </div>
+        `;
+        return emailService.triggerEmail(toEmail, "Confirmation de votre demande de simulation - INVIK BANK", html);
+    },
+
+    /**
+     * Admin Notification for New Public Lead
+     */
+    sendAdminPublicLeadNotification: async (leadData) => {
+        const html = `
+            <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+                <div style="background-color: #ffffff; padding: 30px; border-radius: 10px; border: 1px solid #ddd;">
+                    <h2 style="color: #003366; border-bottom: 2px solid #003366; padding-bottom: 10px;">🌟 NOUVEAU PROSPECT (LEAD PUBLIC)</h2>
+                    <p>Un utilisateur a rempli le formulaire de crédit public ou le simulateur.</p>
+                    
+                    <div style="background-color: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                        <h3 style="margin-top: 0;">Identité</h3>
+                        <p><strong>Nom :</strong> ${leadData.prenom || ''} ${leadData.nom || 'Prospect'}</p>
+                        <p><strong>Email :</strong> ${leadData.email}</p>
+                        <p><strong>Téléphone :</strong> ${leadData.telephone || 'Non renseigné'}</p>
+                        
+                        <h3 style="margin-top: 20px;">Détails du Projet</h3>
+                        <p><strong>Type :</strong> ${leadData.typeCredit || 'Simulation'}</p>
+                        <p><strong>Montant :</strong> ${parseFloat(leadData.montant).toLocaleString('fr-FR')} €</p>
+                        <p><strong>Durée :</strong> ${leadData.duree} mois</p>
+                        ${leadData.taux ? `<p><strong>Taux (TAEG) :</strong> ${leadData.taux}%</p>` : ''}
+                        ${leadData.mensualite ? `<p><strong>Mensualité :</strong> ${parseFloat(leadData.mensualite).toLocaleString('fr-FR')} €</p>` : ''}
+                        ${leadData.coutTotal ? `<p><strong>Coût total :</strong> ${parseFloat(leadData.coutTotal).toLocaleString('fr-FR')} €</p>` : ''}
+                        <p><strong>Score automatique :</strong> <span style="font-weight: bold; color: ${leadData.score === 'GREEN' ? '#27ae60' : leadData.score === 'RED' ? '#c0392b' : '#f39c12'}">${leadData.score || 'N/A'}</span></p>
+                    </div>
+                    
+                    <p style="color: #666; font-size: 12px;">Visible dans la section "Leads" de votre panneau de contrôle.</p>
+                </div>
+            </div>
+        `;
+        return emailService.triggerEmail(ADMIN_EMAIL, `[LEAD] Nouveau prospect crédit - ${leadData.nom || leadData.email}`, html);
     }
 };

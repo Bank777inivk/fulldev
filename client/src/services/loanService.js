@@ -84,6 +84,23 @@ export const loanService = {
                 status: 'new',
                 createdAt: serverTimestamp()
             });
+
+            // Send Email Notifications
+            try {
+                // Prospect confirmation
+                await emailService.sendPublicLeadConfirmationEmail(
+                    leadData.email,
+                    leadData.prenom || 'Client',
+                    leadData
+                );
+
+                // Admin notification
+                await emailService.sendAdminPublicLeadNotification(leadData);
+                console.log('Lead notification emails sent');
+            } catch (e) {
+                console.warn("Lead notification emails failed", e);
+            }
+
             return { id: docRef.id, success: true };
         } catch (error) {
             console.error("Create lead error:", error);

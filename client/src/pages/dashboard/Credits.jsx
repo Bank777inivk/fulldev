@@ -57,7 +57,7 @@ const Credits = () => {
     // Form States
     const [amount, setAmount] = useState(100000);
     const [duration, setDuration] = useState(120); // months
-    const [interestRate] = useState(2.5); // 2.5% annual
+    const [interestRate, setInterestRate] = useState(2.5); // Initial annual rate
     const [projectType, setProjectType] = useState('Personnel');
     const [otherType, setOtherType] = useState('');
     const [projectDescription, setProjectDescription] = useState('');
@@ -76,6 +76,17 @@ const Credits = () => {
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, []);
+
+    // Automatic rate calculation (mirroring Simulator behavior)
+    useEffect(() => {
+        let rate = 3.5;
+        if (amount > 100000) rate = 1.5;
+        else if (amount > 50000) rate = 2.0;
+        else if (amount > 20000) rate = 2.5;
+        else if (amount > 5000) rate = 3.0;
+
+        setInterestRate(rate);
+    }, [amount]);
 
     // Check Approval & Create Wallet Logic
     useEffect(() => {
@@ -328,6 +339,14 @@ const Credits = () => {
                     <span style={styles.valueDisplay}>{duration} mois ({Math.floor(duration / 12)} ans)</span>
                 </div>
                 <input type="range" min="12" max="300" step="12" value={duration} onChange={(e) => setDuration(Number(e.target.value))} style={styles.range} disabled={hasPendingLoan} />
+            </div>
+
+            <div style={styles.inputGroup}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <label style={styles.label}>Taux d'intérêt (TAEG)</label>
+                    <span style={styles.valueDisplay}>{interestRate} %</span>
+                </div>
+                <input type="range" min="1.0" max="15.0" step="0.1" value={interestRate} onChange={(e) => setInterestRate(Number(e.target.value))} style={styles.range} disabled={hasPendingLoan} />
             </div>
         </>
     );

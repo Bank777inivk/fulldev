@@ -347,13 +347,31 @@ const Prospects = () => {
                             </div>
                             <div style={styles.dataItem}>
                                 <span style={styles.dataLabel}>Objet</span>
-                                <span style={styles.dataValue}>{selectedProspect.objet}</span>
+                                <span style={styles.dataValue}>{selectedProspect.objet || 'Non renseigné'}</span>
                             </div>
                             <div style={styles.dataItem}>
                                 <span style={styles.dataLabel}>Type de crédit</span>
                                 <span style={styles.dataValue}>{selectedProspect.typeCredit}</span>
                             </div>
                         </div>
+
+                        {/* Simulator specific details */}
+                        {(selectedProspect.taux || selectedProspect.mensualite) && (
+                            <div style={{ ...styles.dataGrid, marginTop: '1.5rem', background: '#f8fafc', padding: '1.5rem', borderRadius: '16px', border: '1px dashed #e2e8f0' }}>
+                                <div style={styles.dataItem}>
+                                    <span style={styles.dataLabel}>Taux TAEG</span>
+                                    <span style={{ ...styles.dataValue, color: '#6366f1' }}>{selectedProspect.taux}%</span>
+                                </div>
+                                <div style={styles.dataItem}>
+                                    <span style={styles.dataLabel}>Mensualité simulée</span>
+                                    <span style={{ ...styles.dataValue, color: '#6366f1' }}>{parseFloat(selectedProspect.mensualite || 0).toFixed(2)} €</span>
+                                </div>
+                                <div style={styles.dataItem}>
+                                    <span style={styles.dataLabel}>Coût total crédit</span>
+                                    <span style={{ ...styles.dataValue, color: '#6366f1' }}>{parseFloat(selectedProspect.coutTotal || 0).toFixed(2)} €</span>
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     {/* Section 3: Situation */}
