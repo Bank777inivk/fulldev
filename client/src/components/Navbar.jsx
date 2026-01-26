@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
+import LanguageSelector from './LanguageSelector';
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const { currentUser, logout } = useAuth();
     const navigate = useNavigate();
+
+    const { t, i18n } = useTranslation();
+    const currentLang = i18n.language;
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
@@ -19,24 +24,27 @@ const Navbar = () => {
         try {
             await logout();
             closeMenu();
-            navigate('/login');
+            navigate(`/${currentLang}/login`);
         } catch (error) {
             console.error("Erreur déconnexion:", error);
         }
     };
 
+    // Helper to create localized paths
+    const getPath = (path) => `/${currentLang}${path}`;
+
     return (
         <nav style={styles.nav} className="navbar-fixed">
             <div className="container" style={styles.container}>
                 <div style={styles.logo}>
-                    <Link to="/" style={styles.logoLink} onClick={closeMenu}>
+                    <Link to={getPath('/')} style={styles.logoLink} onClick={closeMenu}>
                         <img src="/logo.png" alt="INVIK SA" className="nav-logo" />
                     </Link>
                 </div>
 
                 {/* Mobile Actions (Login Icon + Hamburger) */}
                 <div className="nav-mobile-actions">
-                    <Link to="/login" className="nav-mobile-user" onClick={closeMenu}>
+                    <Link to={getPath('/login')} className="nav-mobile-user" onClick={closeMenu}>
                         <i className="fas fa-user-circle"></i>
                     </Link>
                     <div className="nav-toggle" style={styles.toggle} onClick={toggleMenu}>
@@ -45,20 +53,25 @@ const Navbar = () => {
                 </div>
 
                 <div className={`nav-menu ${isMenuOpen ? 'active' : ''}`} style={styles.links}>
-                    <NavLink to="/" onClick={closeMenu} className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>ACCUEIL</NavLink>
-                    <NavLink to="/about" onClick={closeMenu} className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>À PROPOS</NavLink>
-                    <NavLink to="/services" onClick={closeMenu} className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>NOS SERVICES</NavLink>
-                    <NavLink to="/cards" onClick={closeMenu} className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>NOS CARTES</NavLink>
-                    <NavLink to="/faq" onClick={closeMenu} className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>FAQ'S</NavLink>
-                    <NavLink to="/contact" onClick={closeMenu} className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>CONTACT</NavLink>
+                    <NavLink to={getPath('/')} end onClick={closeMenu} className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>{t('navbar.home')}</NavLink>
+                    <NavLink to={getPath('/about')} onClick={closeMenu} className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>{t('navbar.about')}</NavLink>
+                    <NavLink to={getPath('/services')} onClick={closeMenu} className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>{t('navbar.services')}</NavLink>
+                    <NavLink to={getPath('/cards')} onClick={closeMenu} className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>{t('navbar.cards')}</NavLink>
+                    <NavLink to={getPath('/faq')} onClick={closeMenu} className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>{t('navbar.faq')}</NavLink>
+                    <NavLink to={getPath('/contact')} onClick={closeMenu} className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>{t('navbar.contact')}</NavLink>
+
+                    {/* Language Selector */}
+                    <div className="desktop-only">
+                        <LanguageSelector />
+                    </div>
 
                     {currentUser ? (
                         <>
-                            <NavLink to="/dashboard" onClick={closeMenu} className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>DASHBOARD</NavLink>
+                            <NavLink to={getPath('/dashboard')} onClick={closeMenu} className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>{t('navbar.dashboard')}</NavLink>
                             <button onClick={handleLogout} className="nav-button logout-btn" style={{ ...styles.button, backgroundColor: '#e74c3c' }}>DÉCONNEXION</button>
                         </>
                     ) : (
-                        <Link to="/login" onClick={closeMenu} className="nav-button" style={styles.button}>CONNEXION / INSCRIPTION</Link>
+                        <Link to={getPath('/login')} onClick={closeMenu} className="nav-button" style={styles.button}>{t('navbar.login')} / {t('navbar.register')}</Link>
                     )}
                 </div>
             </div>

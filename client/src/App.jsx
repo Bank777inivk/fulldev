@@ -1,5 +1,6 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate, Outlet, useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
@@ -61,53 +62,83 @@ const PublicLayout = ({ children }) => {
   );
 };
 
+
+
+// Helper to sync URL lang with i18n
+const LanguageWrapper = () => {
+  const { lang } = useParams();
+  const { i18n } = useTranslation();
+  const validLangs = ['fr', 'en', 'es', 'it', 'pt', 'de'];
+
+  useEffect(() => {
+    if (validLangs.includes(lang)) {
+      if (i18n.language !== lang) {
+        i18n.changeLanguage(lang);
+      }
+    }
+  }, [lang, i18n]);
+
+  if (!validLangs.includes(lang)) {
+    return <Navigate to="/fr" replace />;
+  }
+
+  return <Outlet />;
+};
+
 function AppRoutes() {
   const location = useLocation();
-  const isDashboard = location.pathname.startsWith('/dashboard');
+  // const isDashboard = location.pathname.startsWith('/dashboard'); // Logic might need update if dashboard is inside :lang
 
   return (
     <Routes>
-      {/* Public Routes */}
-      <Route path="/" element={<PublicLayout><Home /></PublicLayout>} />
-      <Route path="/about" element={<PublicLayout><About /></PublicLayout>} />
-      <Route path="/services" element={<PublicLayout><Services /></PublicLayout>} />
-      <Route path="/cards" element={<PublicLayout><Cards /></PublicLayout>} />
-      <Route path="/faq" element={<PublicLayout><FAQ /></PublicLayout>} />
-      <Route path="/simulator" element={<PublicLayout><Simulator /></PublicLayout>} />
-      <Route path="/contact" element={<PublicLayout><Contact /></PublicLayout>} />
-      <Route path="/login" element={<PublicLayout><Login /></PublicLayout>} />
-      <Route path="/register" element={<PublicLayout><Register /></PublicLayout>} />
-      <Route path="/credit-request" element={<PublicLayout><ResponsiveCreditRequest /></PublicLayout>} />
-      <Route path="/reviews" element={<PublicLayout><Reviews /></PublicLayout>} />
-      <Route path="/confidentialite" element={<PublicLayout><PrivacyPolicy /></PublicLayout>} />
-      <Route path="/cgu" element={<PublicLayout><CGU /></PublicLayout>} />
-      <Route path="/mentions-legales" element={<PublicLayout><MentionsLegales /></PublicLayout>} />
-      <Route path="/email-verification-pending" element={<EmailVerificationPending />} />
-      <Route path="/email-verification-success" element={<EmailVerificationSuccess />} />
-      <Route path="/auth/action" element={<AuthActionHandler />} />
+      {/* Root redirect */}
+      <Route path="/" element={<Navigate to="/fr" replace />} />
 
-      {/* Dashboard Private Routes */}
-      <Route
-        path="/dashboard"
-        element={
-          <ProtectedRoute>
-            <DashboardLayout />
-          </ProtectedRoute>
-        }
-      >
-        <Route index element={<Dashboard />} />
-        {/* Dashboard sub-pages */}
-        <Route path="accounts" element={<Accounts />} />
-        <Route path="transfers" element={<Transfers />} />
-        <Route path="deposit" element={<Deposit />} />
-        <Route path="cards" element={<CardsDashboard />} />
-        <Route path="credits" element={<Credits />} />
-        <Route path="history" element={<History />} />
-        <Route path="beneficiaries" element={<Beneficiaries />} />
-        <Route path="documents" element={<DocumentsDashboard />} />
-        <Route path="support" element={<Support />} />
-        <Route path="settings" element={<Settings />} />
-        <Route path="kyc" element={<KycVerification />} />
+      {/* Language Routes */}
+      <Route path="/:lang" element={<LanguageWrapper />}>
+        {/* Public Routes */}
+        <Route index element={<PublicLayout><Home /></PublicLayout>} />
+        <Route path="about" element={<PublicLayout><About /></PublicLayout>} />
+        <Route path="services" element={<PublicLayout><Services /></PublicLayout>} />
+        <Route path="cards" element={<PublicLayout><Cards /></PublicLayout>} />
+        <Route path="faq" element={<PublicLayout><FAQ /></PublicLayout>} />
+        <Route path="simulator" element={<PublicLayout><Simulator /></PublicLayout>} />
+        <Route path="contact" element={<PublicLayout><Contact /></PublicLayout>} />
+        <Route path="login" element={<PublicLayout><Login /></PublicLayout>} />
+        <Route path="register" element={<PublicLayout><Register /></PublicLayout>} />
+        <Route path="credit-request" element={<PublicLayout><ResponsiveCreditRequest /></PublicLayout>} />
+        <Route path="reviews" element={<PublicLayout><Reviews /></PublicLayout>} />
+        <Route path="confidentialite" element={<PublicLayout><PrivacyPolicy /></PublicLayout>} />
+        <Route path="cgu" element={<PublicLayout><CGU /></PublicLayout>} />
+        <Route path="mentions-legales" element={<PublicLayout><MentionsLegales /></PublicLayout>} />
+
+        {/* Auth specific pages might need to be outside or handled carefully, keeping them inside for consistent lang */}
+        <Route path="email-verification-pending" element={<EmailVerificationPending />} />
+        <Route path="email-verification-success" element={<EmailVerificationSuccess />} />
+        <Route path="auth/action" element={<AuthActionHandler />} />
+
+        {/* Dashboard Private Routes - Now under /:lang/dashboard */}
+        <Route
+          path="dashboard"
+          element={
+            <ProtectedRoute>
+              <DashboardLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<Dashboard />} />
+          <Route path="accounts" element={<Accounts />} />
+          <Route path="transfers" element={<Transfers />} />
+          <Route path="deposit" element={<Deposit />} />
+          <Route path="cards" element={<CardsDashboard />} />
+          <Route path="credits" element={<Credits />} />
+          <Route path="history" element={<History />} />
+          <Route path="beneficiaries" element={<Beneficiaries />} />
+          <Route path="documents" element={<DocumentsDashboard />} />
+          <Route path="support" element={<Support />} />
+          <Route path="settings" element={<Settings />} />
+          <Route path="kyc" element={<KycVerification />} />
+        </Route>
       </Route>
     </Routes>
   );

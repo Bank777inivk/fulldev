@@ -1052,8 +1052,8 @@ Guide d'installation
 16.2 Documentation
 
 Cahier des charges (ce document)
-Documentation utilisateur
-Documentation admin
+[Guide Utilisateur Complet (Client & Admin)](file:///c:/Users/tesla/Videos/Nouvelle%20aventure/BanK/GUIDE_UTILISATEUR.md)
+[Guide de Configuration Technique](file:///c:/Users/tesla/Videos/Nouvelle%20aventure/BanK/GUIDE_UTILISATEUR.md#3-utilisation-technique-dev)
 Guide de déploiement
 Documentation API (Firestore)
 
@@ -1157,7 +1157,7 @@ Email admin : admin@projet-banque.com
 Ressources
 
 Repository GitHub : [URL]
-Documentation : [URL]
+Documentation : [GUIDE_UTILISATEUR.md](file:///c:/Users/tesla/Videos/Nouvelle%20aventure/BanK/GUIDE_UTILISATEUR.md)
 Démo en ligne : [URL]
 
 

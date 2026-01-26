@@ -1,0 +1,739 @@
+{
+    "navbar": {
+        "home": "Home",
+        "services": "Our Services",
+        "cards": "Cards",
+        "faq": "FAQ",
+        "simulator": "Simulator",
+        "contact": "Contact",
+        "about": "About Us",
+        "login": "Login",
+        "register": "Open an Account",
+        "dashboard": "Dashboard"
+    },
+    "home": {
+        "slides": {
+            "0": {
+                "title": "Access your accounts in one click",
+                "subtitle": "Log in and manage your finances with ease. With INVIK SA, track your transactions, check your balances, and access comprehensive online banking services from a secure client area."
+            },
+            "1": {
+                "title": "A new financial start with INVIK SA",
+                "subtitle": "Join the INVIK SA community and benefit from an innovative, secure online bank designed to simplify your banking operations. Enjoy personalized services tailored to your situation and goals."
+            },
+            "2": {
+                "title": "Manage your finances with confidence",
+                "subtitle": "With INVIK SA, discover a secure, fast, and reliable online bank to simplify your transactions. Join us and enjoy a bespoke service designed to support your daily financial needs."
+            }
+        },
+        "hero": {
+            "cta_primary": "Open an Account",
+            "cta_secondary": "Our Services"
+        },
+        "simulator": {
+            "title": "Credit Simulator",
+            "subtitle": "Calculate your monthly payments in real-time ⚡",
+            "amount": "Desired Amount",
+            "duration": "Duration",
+            "months": "months",
+            "years": "years",
+            "rate": "Selected Interest Rate",
+            "rate_type": "Rate Type",
+            "fixed": "Fixed",
+            "monthly_payment": "Monthly Payment",
+            "submit": "Request this credit",
+            "disclaimer": "Free estimation • Immediate response"
+        },
+        "features": {
+            "security": {
+                "title": "Secure International Transactions",
+                "text": "Perform transactions anywhere in the world securely with our recognized protection protocols."
+            },
+            "support": {
+                "title": "24/7 Support by a Dedicated Team",
+                "text": "Our team is available day and night to assist you on all your preferred contact channels."
+            },
+            "fees": {
+                "title": "Among the Most Competitive Fees",
+                "text": "Save with INVIK SA thanks to transparent and affordable pricing for all your banking services."
+            },
+            "speed": {
+                "title": "Ultra-Fast Loan Processing",
+                "text": "Enjoy a simplified journey and an immediate decision in principle for all your financing requests."
+            }
+        },
+        "about": {
+            "label": "ABOUT US",
+            "title": "INVIK SA, your trusted online banking partner",
+            "p1": "INVIK SA is an innovative online bank dedicated to offering secure, fast, and simple financial services. Combining cutting-edge technology and banking expertise, we are committed to making managing your finances more accessible and secure, whether you are in France or abroad.",
+            "p2": "Our goal is to simplify the banking experience for our clients, with competitive fees, 24/7 customer support, and personalized solutions tailored to your needs.",
+            "p3": "At INVIK SA, we believe in a financial future where technology simplifies every step of your banking experience. By staying at the forefront of innovation, we are determined to offer services ever more adapted to the expectations of a modern and connected clientele. Trust INVIK SA to evolve with you, today and tomorrow.",
+            "highlight": "Join INVIK SA and discover a new way to manage your finances with peace of mind.",
+            "cta": "Learn More",
+            "badge_review": "5-Star Bank",
+            "badge_exp": "Years of Expertise"
+        },
+        "services": {
+            "title": "Our Services",
+            "subtitle": "Banking solutions designed to simplify your daily life",
+            "items": {
+                "current_account": {
+                    "title": "Current Account",
+                    "features": [
+                        "Simple online management",
+                        "Real-time balances",
+                        "Full tracking"
+                    ]
+                },
+                "savings": {
+                    "title": "Savings",
+                    "features": [
+                        "Flexible options",
+                        "Competitive rates",
+                        "24/7 Access"
+                    ]
+                },
+                "loans": {
+                    "title": "Personal Loans",
+                    "features": [
+                        "Simplified application",
+                        "Competitive rates",
+                        "No hidden fees"
+                    ]
+                },
+                "transfers": {
+                    "title": "Transfers",
+                    "features": [
+                        "Reduced fees",
+                        "Instant conversion",
+                        "Full traceability"
+                    ]
+                },
+                "cards": {
+                    "title": "Bank Cards",
+                    "features": [
+                        "Debit / Credit",
+                        "Contactless",
+                        "Mobile payments"
+                    ]
+                },
+                "investments": {
+                    "title": "Investments",
+                    "features": [
+                        "Wealth management",
+                        "Online trading",
+                        "Life insurance"
+                    ]
+                },
+                "mortgage": {
+                    "title": "Mortgage",
+                    "features": [
+                        "Fixed rates",
+                        "Support",
+                        "Credit repurchase"
+                    ]
+                },
+                "pro": {
+                    "title": "Business Banking",
+                    "features": [
+                        "Business account",
+                        "POS / Terminals",
+                        "Business loans"
+                    ]
+                },
+                "insurance": {
+                    "title": "Insurance",
+                    "features": [
+                        "Auto & Home",
+                        "Providence",
+                        "Family protection"
+                    ]
+                }
+            }
+        },
+        "testimonials": {
+            "label": "TESTIMONIALS",
+            "title": "What our clients say",
+            "items": [
+                {
+                    "name": "Lucien Martin",
+                    "role": "Entrepreneur",
+                    "text": "As an entrepreneur, INVIK SA helps me manage my finances simply and efficiently. The customer service is available, which reassures me."
+                },
+                {
+                    "name": "Stephen Lefevre",
+                    "role": "Freelance",
+                    "text": "I am impressed by the flexibility and accessibility of INVIK SA services. I can manage my accounts at any time."
+                },
+                {
+                    "name": "Lucas Dupont",
+                    "role": "Manager",
+                    "text": "INVIK SA simplified my life. I appreciate the security and speed of online banking services. I highly recommend."
+                },
+                {
+                    "name": "Marie Dubois",
+                    "role": "Consultant",
+                    "text": "The INVIK SA platform is intuitive and modern. I was able to open my account in minutes and fees are very competitive."
+                },
+                {
+                    "name": "Thomas Bernard",
+                    "role": "Developer",
+                    "text": "As a digital nomad, I needed a flexible bank. INVIK SA perfectly meets my expectations everywhere in the world."
+                },
+                {
+                    "name": "Sophie Laurent",
+                    "role": "Architect",
+                    "text": "INVIK SA's customer support is exceptional. Whenever I had a question, I received a quick and clear answer."
+                },
+                {
+                    "name": "Pierre Moreau",
+                    "role": "Merchant",
+                    "text": "International transfers are fast and fees are transparent. INVIK SA allowed me to grow my business internationally."
+                },
+                {
+                    "name": "Isabelle Petit",
+                    "role": "Doctor",
+                    "text": "Security is my priority and INVIK SA uses the best protection technologies. I feel confident for all my transactions."
+                },
+                {
+                    "name": "Alexandre Roux",
+                    "role": "Student",
+                    "text": "As a student, I appreciate the reduced fees and ease of use of the mobile app. INVIK SA is perfect."
+                },
+                {
+                    "name": "Céline Garnier",
+                    "role": "Photographer",
+                    "text": "Multi-currency management is a real plus for my international activity. INVIK SA truly simplifies my financial operations."
+                },
+                {
+                    "name": "Julien Faure",
+                    "role": "Engineer",
+                    "text": "I tested several online banks, but INVIK SA stands out for its responsiveness and innovative services."
+                },
+                {
+                    "name": "Nathalie Simon",
+                    "role": "Lawyer",
+                    "text": "Fee transparency and customer service quality make INVIK SA my number one choice. A modern and efficient bank."
+                },
+                {
+                    "name": "Olivier Blanc",
+                    "role": "Business Owner",
+                    "text": "INVIK SA supports me in the development of my company with adapted solutions and personalized service."
+                }
+            ]
+        }
+    },
+    "footer": {
+        "description": "INVIK SA is a digital online bank under Luxembourg law, based at 38 PARC D'ACTIVITES CAPELLEN L-8308 CAP, Capellen Luxembourg. Contact: +33 06 46 72 32 86 — Email: contact@inviksa.com",
+        "legal": {
+            "title": "Legal Information",
+            "privacy": "Privacy Policy",
+            "cgu": "Terms of Use",
+            "mentions": "Legal Notice",
+            "reviews": "Client Reviews"
+        },
+        "navigation": {
+            "title": "Navigation",
+            "home": "HOME",
+            "about": "ABOUT US",
+            "services": "OUR SERVICES",
+            "cards": "OUR CARDS",
+            "faq": "FAQ"
+        },
+        "support": {
+            "title": "Support",
+            "contact": "CONTACT",
+            "credit_request": "REQUEST A CREDIT"
+        },
+        "copyright": "INVIK SA. All rights reserved."
+    },
+    "about_page": {
+        "hero": {
+            "title": "About INVIK SA",
+            "subtitle": "Banking excellence serving your ambitions."
+        },
+        "history": {
+            "title": "Our History",
+            "p1": "Founded in 2009 in Luxembourg, INVIK SA was born from a bold vision to redefine the banking experience for the digital age. Our founders, experts in finance and technology, identified a crucial need: offering modern banking services without compromising security or human relationships.",
+            "p2": "Since our beginnings, we have experienced remarkable growth, going from a few hundred clients to over 500,000 active users across Europe. This expansion testifies to our constant commitment to innovation and customer service excellence.",
+            "p3": "Today, INVIK SA is recognized as one of the most reliable and innovative online banks in Europe, with an established presence in Luxembourg, France, Belgium, and Germany."
+        },
+        "services": {
+            "title": "Our Services",
+            "subtitle": "Comprehensive banking solutions adapted to your needs",
+            "items": {
+                "accounts": {
+                    "title": "Accounts & Cards",
+                    "text": "Current accounts, savings, international bank cards with fraud protection"
+                },
+                "transfers": {
+                    "title": "International Transfers",
+                    "text": "Fast and secure transfers to over 150 countries with competitive fees"
+                },
+                "business": {
+                    "title": "Business Solutions",
+                    "text": "Business accounts, treasury management, financing and dedicated services for SMEs"
+                },
+                "invest": {
+                    "title": "Investments",
+                    "text": "Access to diversified investment products with personalized guidance"
+                },
+                "loans": {
+                    "title": "Credits & Loans",
+                    "text": "Personal, real estate, and business loans with competitive rates"
+                },
+                "insurance": {
+                    "title": "Insurance",
+                    "text": "Complete protection: travel, health, life, and property with trusted partners"
+                }
+            }
+        },
+        "vision": {
+            "title": "Our Vision 2025-2035",
+            "subtitle": "An ambitious roadmap to become the benchmark digital bank in Europe",
+            "phases": {
+                "p1": {
+                    "year": "2025-2027",
+                    "title": "Phase 1: Consolidation & Expansion",
+                    "items": [
+                        "✓ Reach 1 million active clients in Europe",
+                        "✓ Launch in 5 new countries (Spain, Italy, Netherlands, Austria, Portugal)",
+                        "✓ Development of next-gen mobile app with integrated AI",
+                        "✓ Partnerships with 50 European fintechs to enrich our ecosystem",
+                        "✓ ISO 27001 certification for data security",
+                        "✓ Launch of INVIK Business Pro for SMEs"
+                    ]
+                },
+                "p2": {
+                    "year": "2028-2030",
+                    "title": "Phase 2: Innovation & Leadership",
+                    "items": [
+                        "✓ 3 million clients across 15 European countries",
+                        "✓ Launch of INVIK Invest: automated investment platform",
+                        "✓ Introduction of blockchain-based banking services",
+                        "✓ Full carbon neutrality of all our operations",
+                        "✓ Creation of a €100M investment fund for green startups",
+                        "✓ Opening of 10 innovation hubs in European capitals",
+                        "✓ Launch of INVIK Academy program for financial literacy"
+                    ]
+                },
+                "p3": {
+                    "year": "2031-2033",
+                    "title": "Phase 3: Digital Transformation",
+                    "items": [
+                        "✓ 5 million clients with presence in 20+ countries",
+                        "✓ Personalized AI financial assistant for each client",
+                        "✓ Full integration of cryptocurrencies and digital assets",
+                        "✓ Launch of INVIK Metaverse Banking Experience",
+                        "✓ Partnerships with 500+ companies for B2B solutions",
+                        "✓ Financial inclusion program reaching 100,000 unbanked people",
+                        "✓ Development of cross-border instant payment solutions"
+                    ]
+                }
+            }
+        },
+        "goals": {
+            "title": "Key Goals 2035",
+            "items": {
+                "clients": {
+                    "number": "10M+",
+                    "label": "Active Clients",
+                    "desc": "Across Europe and beyond"
+                },
+                "assets": {
+                    "number": "€50Bn",
+                    "label": "Assets Under Management",
+                    "desc": "35% annual growth"
+                },
+                "countries": {
+                    "number": "25+",
+                    "label": "Presence Countries",
+                    "desc": "Full European coverage"
+                },
+                "carbon": {
+                    "number": "100%",
+                    "label": "Carbon Neutral",
+                    "desc": "Positive environmental impact"
+                }
+            }
+        },
+        "partners": {
+            "title": "Partners & Shareholders",
+            "subtitle": "Strategic partnerships serving your success",
+            "shareholders": {
+                "title": "Main Shareholders",
+                "lfg": "European leader in financial investment",
+                "etv": "Specialist in innovative fintechs",
+                "cpi": "Leading investment fund"
+            },
+            "ecosystem": {
+                "title": "Ecosystem & Partners"
+            },
+            "clients": {
+                "title": "Key Accounts & Corporate Clients",
+                "subtitle": "Over 15,000 companies trust us",
+                "stats": {
+                    "pme": "SME Partners",
+                    "large": "Large Enterprises",
+                    "startups": "Startups & VSEs",
+                    "volume": "Transaction Volume/Year"
+                }
+            },
+            "cta": {
+                "title": "Your company wishes to become a partner?",
+                "text": "Join our network of strategic partners and benefit from tailored banking solutions",
+                "button": "Contact our Corporate team"
+            }
+        },
+        "values": {
+            "title": "Our Values",
+            "items": {
+                "security": {
+                    "title": "Absolute Security",
+                    "text": "Maximum protection of your data and assets with the most advanced encryption technologies"
+                },
+                "innovation": {
+                    "title": "Continuous Innovation",
+                    "text": "Constant improvement of our services to anticipate your needs and offer you the best"
+                },
+                "transparency": {
+                    "title": "Total Transparency",
+                    "text": "No hidden fees, clear communication, and a relationship of trust based on honesty"
+                },
+                "responsibility": {
+                    "title": "Responsibility",
+                    "text": "Commitment to sustainable development and positive social impact in all our actions"
+                }
+            }
+        }
+    },
+    "services_page": {
+        "hero": {
+            "title": "Our Services",
+            "subtitle": "Banking solutions designed to simplify your daily life"
+        },
+        "services_list": [
+            {
+                "id": 5,
+                "title": "Credits & Loans",
+                "description": "Realize your projects with our flexible financing solutions. Personal loan, mortgage, or business financing, benefit from competitive rates and a quick response.",
+                "features": [
+                    "Personal loan from €1,000 to €75,000",
+                    "Mortgage up to €500,000",
+                    "Rates from 2.0% APR",
+                    "Instant online simulation",
+                    "Decision in principle in 48h",
+                    "No early repayment penalty"
+                ],
+                "useCases": [
+                    {
+                        "title": "Thomas, Car Purchase",
+                        "case": "Thomas obtained a €15,000 personal loan over 5 years at 2.9% APR to buy an electric car. His monthly payment of €268 is €40 cheaper than his traditional bank's offer. He received the money in his account in 3 business days."
+                    },
+                    {
+                        "title": "Dubois Family, Home Purchase",
+                        "case": "The Dubois family financed their €280,000 home with an INVIK SA mortgage at 1.85% over 25 years. Thanks to the competitive rate, they save €18,000 in interest over the total loan term compared to their first bank offer."
+                    }
+                ]
+            },
+            {
+                "id": 4,
+                "title": "Investments & Savings",
+                "description": "Grow your money with our diversified investment solutions. From interest-bearing savings accounts to automated investment portfolios, we support you in building your wealth.",
+                "features": [
+                    "Savings account earning up to 3% pe year",
+                    "Automated investment portfolios",
+                    "Access to ETFs and index funds",
+                    "Socially Responsible Investment (SRI)",
+                    "Personalized advice based on your profile",
+                    "Among the lowest management fees on the market"
+                ],
+                "useCases": [
+                    {
+                        "title": "Julie, 32, Corporate Executive",
+                        "case": "Julie opened an INVIK SA savings account with a 2.8% rate and invests €300/month in a diversified ETF portfolio (60% stocks, 40% bonds). After 3 years, her savings of €10,800 generated €1,450 in gains, representing an average annual return of 4.5%."
+                    },
+                    {
+                        "title": "Pierre & Anne, Retired Couple",
+                        "case": "This couple transferred their €150,000 savings to INVIK SA. They opted for a conservative portfolio (20% stocks, 80% bonds) which earns them an average of 3.2% per year, or €4,800 in annual income, while preserving their capital."
+                    }
+                ]
+            },
+            {
+                "id": 1,
+                "title": "Current Accounts & Cards",
+                "description": "Manage your money daily with our flexible current accounts and international bank cards. Enjoy simplified management and maximum security for all your transactions.",
+                "features": [
+                    "Current account in EUR with European IBAN",
+                    "Mastercard or Visa debit card",
+                    "Unlimited free SEPA transfers",
+                    "Free withdrawals throughout Europe",
+                    "Intuitive mobile app",
+                    "Real-time notifications"
+                ],
+                "useCases": [
+                    {
+                        "title": "Sophie, Freelance Designer",
+                        "case": "Sophie uses her INVIK SA account to receive payments from her international clients. Thanks to free SEPA transfers, she saves over €200 per year in banking fees. The mobile app allows her to track her income in real-time and categorize her professional expenses."
+                    },
+                    {
+                        "title": "Marc, Erasmus Student",
+                        "case": "While on university exchange in Spain, Marc uses his INVIK SA card to withdraw cash fee-free throughout Europe. He receives his monthly allowance instantly and can pay for his online purchases without extra cost."
+                    }
+                ]
+            },
+            {
+                "id": 2,
+                "title": "International Transfers",
+                "description": "Send and receive money anywhere in the world in a few clicks. Our international transfers are fast, secure, and competitively priced, with total transparency on fees and exchange rates.",
+                "features": [
+                    "Transfers to over 150 countries",
+                    "Real-time exchange rates",
+                    "Reduced and transparent fees",
+                    "Processing time: 1-3 business days",
+                    "Real-time tracking of your transfers",
+                    "Multi-currency support (USD, GBP, CHF, etc.)"
+                ],
+                "useCases": [
+                    {
+                        "title": "Ahmed, Import-Export Entrepreneur",
+                        "case": "Ahmed imports products from Asia and exports to Africa. With INVIK SA, he makes international transfers in USD and CNY at rates 40% better than his traditional bank. He saved over €5,000 in exchange fees last year."
+                    },
+                    {
+                        "title": "Maria, Expat in Luxembourg",
+                        "case": "Maria sends €500 every month to her family in Portugal. Thanks to INVIK SA's free SEPA transfers, the money arrives in 24h without any fees, unlike her former bank which charged €15 per transfer."
+                    }
+                ]
+            },
+            {
+                "id": 6,
+                "title": "Insurance & Protection",
+                "description": "Protect what matters most with our comprehensive insurance solutions. In partnership with leading European insurers, we offer optimal protection at negotiated rates.",
+                "features": [
+                    "International travel insurance",
+                    "Supplementary health insurance",
+                    "Life insurance and providence",
+                    "Payment means protection",
+                    "Home and auto insurance",
+                    "24/7 Legal assistance"
+                ],
+                "useCases": [
+                    {
+                        "title": "Emma, Digital Nomad",
+                        "case": "Emma travels 8 months a year for work. Her INVIK SA travel insurance (€45/month) covers all her trips in 180 countries, including repatriation, medical expenses up to €500,000, and luggage insurance. She was reimbursed €2,800 following a hospitalization in Thailand."
+                    },
+                    {
+                        "title": "Martin Family, Complete Protection",
+                        "case": "The Martins subscribed to an INVIK SA family pack (€120/month) including home insurance, 2 cars, supplementary health, and providence. They save 35% compared to their old separate insurances and manage everything from a single app."
+                    }
+                ]
+            },
+            {
+                "id": 3,
+                "title": "Business Solutions",
+                "description": "Professional banking solutions tailored to the needs of SMEs, startups, and freelancers. Manage your cash flow, invoices, and payments with tools dedicated to professionals.",
+                "features": [
+                    "Multi-user business account",
+                    "Unlimited corporate bank cards",
+                    "Advanced cash flow management",
+                    "Integrated invoicing and accounting",
+                    "API for ERP/CRM integration",
+                    "Dedicated advisor for companies"
+                ],
+                "useCases": [
+                    {
+                        "title": "TechStart SaaS, 15-employee Startup",
+                        "case": "TechStart uses INVIK Business Pro to manage its cash flow. Each department has its own virtual card with a custom limit. The CEO tracking expenses in real-time via the dashboard and automatically exports data to their accounting software. Time saved: 10h/month."
+                    },
+                    {
+                        "title": "Dupont & Sons, Retail",
+                        "case": "This family SME centralized all its accounts at INVIK SA. They use the API to synchronize their sales with their bank account, automating bank reconciliation. Their dedicated advisor helped them optimize their cash flow and obtain a €50,000 credit line."
+                    }
+                ]
+            }
+        ],
+        "features_title": "Key Features",
+        "use_cases_title": "Case Studies",
+        "cta": {
+            "title": "Ready to join INVIK SA?",
+            "text": "Open your account in under 10 minutes and enjoy all our services",
+            "button": "Open a Free Account"
+        },
+        "buttons": {
+            "open_account": "Open an Account",
+            "simulate": "Simulate Loan"
+        }
+    },
+    "cards_page": {
+        "hero": {
+            "title": "OUR CARDS",
+            "breadcrumb": "HOME / OUR CARDS"
+        },
+        "intro": {
+            "subtitle": "OUR CREDIT CARDS",
+            "title": "Cards adapted to your lifestyle, for secure payments and exclusive benefits"
+        },
+        "cards": {
+            "silver": {
+                "title": "Visa Silver Card",
+                "desc": "The INVIK SA Visa Silver offers secure payments with controlled transaction fees. Ideal for daily expenses."
+            },
+            "gold": {
+                "title": "Mastercard Gold Card",
+                "desc": "Enjoy exclusive benefits with the Mastercard Gold, suitable for travelers and frequent users. High limits and included insurance."
+            },
+            "platinum": {
+                "title": "Visa Platinum Card",
+                "desc": "The INVIK SA Visa Platinum offers a premium experience with premium services, reinforced insurance and assistance guarantees."
+            }
+        },
+        "virtual": {
+            "title": "The INVIK Virtual Card",
+            "desc": "Secure your online purchases with our ephemeral or permanent virtual cards. Generate them instantly from your app.",
+            "features": [
+                "✨ Instant and unlimited creation",
+                "🔒 Ideal for subscriptions and web purchases",
+                "📱 Apple Pay & Google Pay compatible"
+            ],
+            "button": "GET A CARD"
+        },
+        "cta_button": "OPEN AN ACCOUNT"
+    },
+    "faq_page": {
+        "hero": {
+            "title": "FAQ'S",
+            "breadcrumb": "HOME / FAQ'S"
+        },
+        "items": [
+            {
+                "question": "How can I open an account with INVIK SA?",
+                "answer": "To open an account, go to our registration page, complete the form with your personal information, then follow the steps to verify your identity and validate your file."
+            },
+            {
+                "question": "How can I make an international transfer?",
+                "answer": "International transfers are made from your client area by choosing the \"International Transfer\" option. Enter your beneficiary's details, the amount and currency, then validate the operation after verifying the information."
+            },
+            {
+                "question": "What documents are required for account opening?",
+                "answer": "You will generally need a valid ID (passport, ID card) and proof of address less than three months old. Additional documents may be requested depending on your situation."
+            },
+            {
+                "question": "Is my information secure at INVIK SA?",
+                "answer": "Yes. INVIK SA uses advanced encryption technologies and security protocols to protect your personal and financial data, as well as your online operations."
+            },
+            {
+                "question": "How can I order an INVIK SA bank card?",
+                "answer": "Once your account is open, you can request a bank card directly from your online client area, in the \"My Cards\" section, then follow the instructions for ordering and activation."
+            },
+            {
+                "question": "What are the payment and withdrawal limits of my INVIK SA cards?",
+                "answer": "Each INVIK SA card has default payment and withdrawal limits (per day and/or month). These limits may vary depending on your profile, card type, and history. You can view and adjust your limits, up to authorized amounts, directly from your client area or our app."
+            },
+            {
+                "question": "Does INVIK SA offer loan solutions?",
+                "answer": "Yes, INVIK SA offers several types of loans, including personal loans and financing solutions adapted to your projects, subject to conditions and acceptance. Consult our \"Our Services\" page for more details."
+            },
+            {
+                "question": "What are the withdrawal fees at ATMs?",
+                "answer": "Withdrawals may be free up to a certain amount or number of operations per month, then charged according to the current fee schedule. Fees may differ between withdrawals made in the Eurozone and internationally. Consult the \"Rates\" section of your client area."
+            },
+            {
+                "question": "What fees are associated with INVIK SA accounts?",
+                "answer": "Our fees are designed to be transparent and competitive. You can consult all rates (account maintenance, cards, operations, etc.) on our dedicated fee schedule page."
+            },
+            {
+                "question": "How to contact INVIK SA customer service?",
+                "answer": "Our customer service is available to assist you. You can contact us by phone, email, or via the contact form or online chat, according to the channels indicated on our \"Contact\" page."
+            },
+            {
+                "question": "Can I manage my INVIK SA account from a mobile?",
+                "answer": "Yes, our platform is optimized for use on mobile, tablet, and computer. You can view your balances, track your operations, and manage your services wherever you are."
+            },
+            {
+                "question": "What to do if my INVIK SA card is lost or stolen?",
+                "answer": "In case of loss or theft, immediately block your card from your client area, if available, and/or contact our customer service immediately to oppose the card and request a replacement."
+            },
+            {
+                "question": "Which countries are eligible for a credit at INVIK bank?",
+                "answer": "INVIK bank offers credits to residents of all European countries (Eurozone, EU, Switzerland, UK, etc.) and Americas (USA, Canada, Mexico, Brazil, Argentina, etc.). To be eligible, you must have a valid passport, prove identity, and justify regular income."
+            }
+        ],
+        "cta": {
+            "title": "Can't find your answer?",
+            "text": "Our advisors are here to help you or guide you in opening your account.",
+            "buttons": {
+                "open_account": "OPEN AN ACCOUNT",
+                "contact": "CONTACT US"
+            }
+        }
+    },
+    "contact_page": {
+        "hero": {
+            "title": "CONTACT",
+            "breadcrumb": "HOME / CONTACT"
+        },
+        "form": {
+            "subtitle": "CONTACT US",
+            "title": "Send us a message",
+            "desc": "For a faster and more accurate response, please fill out the form below with as much information as possible about your request.",
+            "fields": {
+                "name": "Your full name",
+                "email": "Your email",
+                "phone": "Phone (with code)",
+                "status": {
+                    "placeholder": "You are...",
+                    "options": {
+                        "individual": "An Individual",
+                        "professional": "A Professional",
+                        "company": "A Company"
+                    }
+                },
+                "subject": {
+                    "placeholder": "Request type",
+                    "options": {
+                        "opening": "Account opening",
+                        "credit": "Credit / financing",
+                        "card": "Bank card (request / issue)",
+                        "transfer": "Transfert / paiement",
+                        "access": "Access / client area login",
+                        "data": "Personal data / security",
+                        "claim": "Claim / dispute",
+                        "partnership": "Partnership / collaboration",
+                        "other": "Other request"
+                    }
+                },
+                "client_number": "Client number (if you have one)",
+                "message_subject": "Subject of your request",
+                "contact_mode": {
+                    "placeholder": "Preferred contact mode",
+                    "options": {
+                        "email": "Email",
+                        "phone": "Phone"
+                    }
+                },
+                "message": "Your message (specify operation type, amount if any, relevant dates, and any useful info for processing your request)",
+                "consent": "I agree that my data be used by INVIK SA for processing my request, in accordance with the privacy policy.",
+                "submit": "Send message",
+                "submitting": "Sending..."
+            },
+            "success": "Message sent! We will reply within 24h.",
+            "error": "An error occurred while sending your message. Please try again."
+        },
+        "info": {
+            "title": "We are here to help you",
+            "address": {
+                "title": "Address",
+                "lines": [
+                    "38 Parc d'Activités Capellen",
+                    "L-8308 Capellen, Luxembourg"
+                ]
+            },
+            "contact": {
+                "title": "Phone & Email",
+                "lines": [
+                    "+33 6 46 72 32 86"
+                ]
+            }
+        }
+    }
+}

@@ -1,31 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-
-const slides = [
-    {
-        image: '/banner-6.jpg',
-        title: "Accédez à vos comptes en un clic",
-        subtitle: "Connectez-vous et gérez vos finances en toute simplicité. Avec INVIK SA, suivez vos transactions, consultez vos soldes et accédez à des services bancaires complets en ligne, depuis un espace client sécurisé."
-    },
-    {
-        image: '/banner-7.jpg',
-        title: "Un nouveau départ financier avec INVIK SA",
-        subtitle: "Rejoignez la communauté INVIK SA et bénéficiez d'une banque en ligne innovante, sécurisée et conçue pour simplifier vos opérations bancaires. Profitez de services personnalisés, pensés pour s’adapter à votre situation et à vos objectifs."
-    },
-    {
-        image: '/banner-8.jpg',
-        title: "Gérez vos finances en toute confiance",
-        subtitle: "Avec INVIK SA, découvrez une banque en ligne sécurisée, rapide et fiable pour simplifier vos transactions. Rejoignez-nous et profitez d'un service sur mesure, conçu pour accompagner vos besoins financiers au quotidien."
-    },
-    {
-        image: '/banner-9.jpg',
-        title: "Accédez à vos comptes en un clic",
-        subtitle: "Connectez-vous et gérez vos finances en toute simplicité. Avec INVIK SA, suivez vos transactions, consultez vos soldes et accédez à des services bancaires complets en ligne, depuis un espace client sécurisé."
-    }
-];
+import { useTranslation } from 'react-i18next';
 
 const Home = () => {
+    const { t, i18n } = useTranslation();
+    const currentLang = i18n.language;
     const [currentSlide, setCurrentSlide] = useState(0);
+
+    const getPath = (path) => `/${currentLang}${path}`;
+
+    const slides = [
+        {
+            image: '/banner-6.jpg',
+            title: t('home.slides.0.title'),
+            subtitle: t('home.slides.0.subtitle')
+        },
+        {
+            image: '/banner-7.jpg',
+            title: t('home.slides.1.title'),
+            subtitle: t('home.slides.1.subtitle')
+        },
+        {
+            image: '/banner-8.jpg',
+            title: t('home.slides.2.title'),
+            subtitle: t('home.slides.2.subtitle')
+        },
+        {
+            image: '/banner-9.jpg',
+            title: t('home.slides.0.title'), // Reusing slide 0 text for banner 9 as in original
+            subtitle: t('home.slides.0.subtitle')
+        }
+    ];
 
     // --- Simulator State & Logic ---
     const [amount, setAmount] = useState(150000);
@@ -45,67 +50,77 @@ const Home = () => {
 
     const services = [
         {
-            title: "Compte courant",
+            title: t('home.services.items.current_account.title'),
             icon: "💳",
-            features: ["Gestion simple en ligne", "Soldes en temps réel", "Suivi complet"]
+            features: t('home.services.items.current_account.features', { returnObjects: true })
         },
         {
-            title: "Épargne",
+            title: t('home.services.items.savings.title'),
             icon: "🏦",
-            features: ["Options flexibles", "Taux compétitifs", "Accessibilité 24/7"]
+            features: t('home.services.items.savings.features', { returnObjects: true })
         },
         {
-            title: "Prêts personnels",
+            title: t('home.services.items.loans.title'),
             icon: "💸",
-            features: ["Étude simplifiée", "Taux compétitifs", "Zéro frais cachés"]
+            features: t('home.services.items.loans.features', { returnObjects: true })
         },
         {
-            title: "Transferts",
+            title: t('home.services.items.transfers.title'),
             icon: "🌍",
-            features: ["Frais réduits", "Conversion instantanée", "Traçabilité totale"]
+            features: t('home.services.items.transfers.features', { returnObjects: true })
         },
         {
-            title: "Cartes bancaires",
+            title: t('home.services.items.cards.title'),
             icon: "💎",
-            features: ["Débit / Crédit", "Sans contact", "Paiements mobiles"]
+            features: t('home.services.items.cards.features', { returnObjects: true })
         },
         {
-            title: "Investissements",
+            title: t('home.services.items.investments.title'),
             icon: "📈",
-            features: ["Gestion de fortune", "Bourse en ligne", "Assurance vie"]
+            features: t('home.services.items.investments.features', { returnObjects: true })
         },
         {
-            title: "Crédit Immobilier",
+            title: t('home.services.items.mortgage.title'),
             icon: "🏠",
-            features: ["Taux fixes", "Accompagnement", "Rachat de crédit"]
+            features: t('home.services.items.mortgage.features', { returnObjects: true })
         },
         {
-            title: "Banque Pro",
+            title: t('home.services.items.pro.title'),
             icon: "💼",
-            features: ["Compte entreprise", "TPE / Terminaux", "Prêts pro"]
+            features: t('home.services.items.pro.features', { returnObjects: true })
         },
         {
-            title: "Assurances",
+            title: t('home.services.items.insurance.title'),
             icon: "🛡️",
-            features: ["Auto & Habitation", "Prévoyance", "Protection famille"]
+            features: t('home.services.items.insurance.features', { returnObjects: true })
         }
     ];
 
-    const testimonials = [
-        { name: "Lucien Martin", role: "Entrepreneur", image: "/testimonial-1.png", text: "En tant qu'entrepreneur, INVIK SA m'aide à gérer mes finances simplement et efficacement. Le service client est disponible, ce qui me rassure." },
-        { name: "Stephen Lefevre", role: "Freelance", image: "/avatar-male.png", text: "Je suis impressionnée par la flexibilité et l'accessibilité des services INVIK SA. Je peux gérer mes comptes à tout moment." },
-        { name: "Lucas Dupont", role: "Manager", image: "/testimonial-3.png", text: "INVIK SA m'a simplifié la vie. J'apprécie la sécurité et la rapidité des services bancaires en ligne. Je recommande vivement." },
-        { name: "Marie Dubois", role: "Consultante", image: "/avatar-female.png", text: "La plateforme INVIK SA est intuitive et moderne. J'ai pu ouvrir mon compte en quelques minutes et les frais sont très compétitifs." },
-        { name: "Thomas Bernard", role: "Développeur", image: "/testimonial-5.png", text: "En tant que digital nomad, j'avais besoin d'une banque flexible. INVIK SA répond parfaitement à mes attentes partout dans le monde." },
-        { name: "Sophie Laurent", role: "Architecte", image: "/testimonial-6.jpg", text: "Le support client d'INVIK SA est exceptionnel. Chaque fois que j'ai eu une question, j'ai reçu une réponse rapide et claire." },
-        { name: "Pierre Moreau", role: "Commerçant", image: "/testimonial-7.jpg", text: "Les virements internationaux sont rapides et les frais sont transparents. INVIK SA m'a permis de développer mon activité à l'international." },
-        { name: "Isabelle Petit", role: "Médecin", image: "/testimonial-8.jpg", text: "La sécurité est ma priorité et INVIK SA utilise les meilleures technologies de protection. Je me sens en confiance pour toutes mes transactions." },
-        { name: "Alexandre Roux", role: "Étudiant", image: "/testimonial-9.jpg", text: "En tant qu'étudiant, j'apprécie les frais réduits et la facilité d'utilisation de l'application mobile. INVIK SA est parfait." },
-        { name: "Céline Garnier", role: "Photographe", image: "/testimonial-10.jpg", text: "La gestion multi-devises est un vrai plus pour mon activité internationale. INVIK SA simplifie vraiment mes opérations financières." },
-        { name: "Julien Faure", role: "Ingénieur", image: "/avatar-male.png", text: "J'ai testé plusieurs banques en ligne, mais INVIK SA se démarque par sa réactivité et ses services innovants." },
-        { name: "Nathalie Simon", role: "Avocate", image: "/avatar-female.png", text: "La transparence des frais et la qualité du service client font d'INVIK SA mon choix numéro un. Une banque moderne et efficace." },
-        { name: "Olivier Blanc", role: "Chef d'entreprise", image: "/avatar-male.png", text: "INVIK SA m'accompagne dans le développement de mon entreprise avec des solutions adaptées et un service personnalisé." }
+    // Note: Testimonials are kept static for now as they are specific people, but could be translated if needed.
+    // Testimonials images mapping (order must match translation file)
+    const testimonialImages = [
+        "/testimonial-1.png",
+        "/avatar-male.png",
+        "/testimonial-3.png",
+        "/avatar-female.png",
+        "/testimonial-5.png",
+        "/testimonial-6.jpg",
+        "/testimonial-7.jpg",
+        "/testimonial-8.jpg",
+        "/testimonial-9.jpg",
+        "/testimonial-10.jpg",
+        "/avatar-male.png",
+        "/avatar-female.png",
+        "/avatar-male.png"
     ];
+
+    const testimonialData = t('home.testimonials.items', { returnObjects: true });
+
+    // Merge translations with images
+    const testimonials = Array.isArray(testimonialData) ? testimonialData.map((item, index) => ({
+        ...item,
+        image: testimonialImages[index] || "/avatar-male.png"
+    })) : [];
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -117,7 +132,7 @@ const Home = () => {
             });
         }, 6000);
         return () => clearInterval(timer);
-    }, []);
+    }, [slides.length]);
 
     return (
         <div style={styles.page}>
@@ -141,19 +156,19 @@ const Home = () => {
                             <h1 style={styles.heroTitle} className="hero-title mobile-hero-title">{slides[currentSlide].title}</h1>
                             <p style={styles.heroSubtitle} className="hero-subtitle mobile-hero-subtitle">{slides[currentSlide].subtitle}</p>
                             <div style={styles.heroButtons} className="hero-buttons">
-                                <Link to="/register" style={styles.primaryButton}>Ouvrir un compte</Link>
-                                <Link to="/services" style={styles.secondaryButton}>Nos Services</Link>
+                                <Link to={getPath('/register')} style={styles.primaryButton}>{t('home.hero.cta_primary')}</Link>
+                                <Link to={getPath('/services')} style={styles.secondaryButton}>{t('home.hero.cta_secondary')}</Link>
                             </div>
                         </div>
 
                         <div style={styles.heroRight} className="hero-right fadeInUp">
                             <div style={styles.simulatorBox} className="simulator-card">
-                                <h3 style={styles.simTitle}>Simulateur de Crédit</h3>
-                                <p style={styles.simSubtitle}>Calculez vos mensualités en temps réel ⚡</p>
+                                <h3 style={styles.simTitle}>{t('home.simulator.title')}</h3>
+                                <p style={styles.simSubtitle}>{t('home.simulator.subtitle')}</p>
 
                                 <div style={styles.simGroup}>
                                     <label style={styles.simLabel}>
-                                        Montant souhaité : <span style={styles.simValue}>{amount.toLocaleString()} €</span>
+                                        {t('home.simulator.amount')} : <span style={styles.simValue}>{amount.toLocaleString()} €</span>
                                     </label>
                                     <input
                                         type="range" min="5000" max="900000" step="5000"
@@ -164,7 +179,7 @@ const Home = () => {
 
                                 <div style={styles.simGroup}>
                                     <label style={styles.simLabel}>
-                                        Durée : <span style={styles.simValue}>{duration} mois ({Math.floor(duration / 12)} ans)</span>
+                                        {t('home.simulator.duration')} : <span style={styles.simValue}>{duration} {t('home.simulator.months')} ({Math.floor(duration / 12)} {t('home.simulator.years')})</span>
                                     </label>
                                     <input
                                         type="range" min="12" max="360" step="12"
@@ -175,7 +190,7 @@ const Home = () => {
 
                                 <div style={styles.simGroup}>
                                     <label style={styles.simLabel}>
-                                        Taux d'intérêt choisi : <span style={styles.simValue}>{interestRate}%</span>
+                                        {t('home.simulator.rate')} : <span style={styles.simValue}>{interestRate}%</span>
                                     </label>
                                     <select
                                         value={interestRate}
@@ -188,23 +203,23 @@ const Home = () => {
 
                                 <div style={styles.simResults}>
                                     <div style={styles.simResultItem}>
-                                        <span style={styles.simResLabel}>Type de Taux</span>
-                                        <span style={styles.simResVal}>Fixe</span>
+                                        <span style={styles.simResLabel}>{t('home.simulator.rate_type')}</span>
+                                        <span style={styles.simResVal}>{t('home.simulator.fixed')}</span>
                                     </div>
                                     <div style={styles.simResultItem}>
-                                        <span style={styles.simResLabel}>Mensualité fixe</span>
+                                        <span style={styles.simResLabel}>{t('home.simulator.monthly_payment')}</span>
                                         <span style={styles.simResValHighlight}>{monthlyPayment.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
                                     </div>
                                 </div>
 
                                 <Link
-                                    to="/credit-request"
+                                    to={getPath('/credit-request')}
                                     state={{ amount, duration, interestRate }}
                                     style={styles.simBtn}
                                 >
-                                    Demander ce crédit
+                                    {t('home.simulator.submit')}
                                 </Link>
-                                <p style={styles.simDisclaimer}>Estimation gratuite • Réponse immmédiate</p>
+                                <p style={styles.simDisclaimer}>{t('home.simulator.disclaimer')}</p>
                             </div>
                         </div>
                     </div>
@@ -229,11 +244,11 @@ const Home = () => {
                     <h1 className="mobile-hero-h1">{slides[currentSlide].title}</h1>
                     <p className="mobile-hero-p">{slides[currentSlide].subtitle}</p>
                     <div className="mobile-hero-actions">
-                        <Link to="/register" className="mobile-hero-btn mobile-hero-btn-primary">
-                            Ouvrir un compte
+                        <Link to={getPath('/register')} className="mobile-hero-btn mobile-hero-btn-primary">
+                            {t('home.hero.cta_primary')}
                         </Link>
-                        <Link to="/services" className="mobile-hero-btn mobile-hero-btn-secondary">
-                            Nos Services
+                        <Link to={getPath('/services')} className="mobile-hero-btn mobile-hero-btn-secondary">
+                            {t('home.hero.cta_secondary')}
                         </Link>
                     </div>
                 </div>
@@ -243,12 +258,12 @@ const Home = () => {
             <section className="mobile-calculator-section">
                 <div className="container">
                     <div style={styles.simulatorBox} className="simulator-card mobile-simulator">
-                        <h3 style={styles.simTitle}>Simulateur de Crédit</h3>
-                        <p style={styles.simSubtitle}>Calculez vos mensualités en temps réel ⚡</p>
+                        <h3 style={styles.simTitle}>{t('home.simulator.title')}</h3>
+                        <p style={styles.simSubtitle}>{t('home.simulator.subtitle')}</p>
 
                         <div style={styles.simGroup}>
                             <label style={styles.simLabel}>
-                                Montant souhaité : <span style={styles.simValue}>{amount.toLocaleString()} €</span>
+                                {t('home.simulator.amount')} : <span style={styles.simValue}>{amount.toLocaleString()} €</span>
                             </label>
                             <input
                                 type="range" min="5000" max="900000" step="5000"
@@ -259,7 +274,7 @@ const Home = () => {
 
                         <div style={styles.simGroup}>
                             <label style={styles.simLabel}>
-                                Durée : <span style={styles.simValue}>{duration} mois ({Math.floor(duration / 12)} ans)</span>
+                                {t('home.simulator.duration')} : <span style={styles.simValue}>{duration} {t('home.simulator.months')} ({Math.floor(duration / 12)} {t('home.simulator.years')})</span>
                             </label>
                             <input
                                 type="range" min="12" max="360" step="12"
@@ -270,7 +285,7 @@ const Home = () => {
 
                         <div style={styles.simGroup}>
                             <label style={styles.simLabel}>
-                                Taux d'intérêt choisi : <span style={styles.simValue}>{interestRate}%</span>
+                                {t('home.simulator.rate')} : <span style={styles.simValue}>{interestRate}%</span>
                             </label>
                             <select
                                 value={interestRate}
@@ -283,23 +298,23 @@ const Home = () => {
 
                         <div style={styles.simResults}>
                             <div style={styles.simResultItem}>
-                                <span style={styles.simResLabel}>Type de Taux</span>
-                                <span style={styles.simResVal}>Fixe</span>
+                                <span style={styles.simResLabel}>{t('home.simulator.rate_type')}</span>
+                                <span style={styles.simResVal}>{t('home.simulator.fixed')}</span>
                             </div>
                             <div style={styles.simResultItem}>
-                                <span style={styles.simResLabel}>Mensualité fixe</span>
+                                <span style={styles.simResLabel}>{t('home.simulator.monthly_payment')}</span>
                                 <span style={styles.simResValHighlight}>{monthlyPayment.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
                             </div>
                         </div>
 
                         <Link
-                            to="/credit-request"
+                            to={getPath('/credit-request')}
                             state={{ amount, duration, interestRate }}
                             style={styles.simBtn}
                         >
-                            Demander ce crédit
+                            {t('home.simulator.submit')}
                         </Link>
-                        <p style={styles.simDisclaimer}>Estimation gratuite • Réponse immmédiate</p>
+                        <p style={styles.simDisclaimer}>{t('home.simulator.disclaimer')}</p>
                     </div>
                 </div>
             </section>
@@ -310,23 +325,23 @@ const Home = () => {
                     <div style={styles.infoGrid} className="info-grid">
                         <div className="info-card">
                             <div className="icon-circle">🛡️</div>
-                            <h3 style={styles.infoTitle}>Transactions internationales sécurisées</h3>
-                            <p style={styles.infoText}>Effectuez des transactions partout dans le monde en toute sécurité avec nos protocoles de protection reconnus.</p>
+                            <h3 style={styles.infoTitle}>{t('home.features.security.title')}</h3>
+                            <p style={styles.infoText}>{t('home.features.security.text')}</p>
                         </div>
                         <div className="info-card">
                             <div className="icon-circle">📞</div>
-                            <h3 style={styles.infoTitle}>Assistance 24/7 par une équipe dédiée</h3>
-                            <p style={styles.infoText}>Notre équipe est disponible jour et nuit pour vous accompagner sur tous vos canaux de contact préférés.</p>
+                            <h3 style={styles.infoTitle}>{t('home.features.support.title')}</h3>
+                            <p style={styles.infoText}>{t('home.features.support.text')}</p>
                         </div>
                         <div className="info-card">
                             <div className="icon-circle">💸</div>
-                            <h3 style={styles.infoTitle}>Frais parmi les plus compétitifs</h3>
-                            <p style={styles.infoText}>Économisez avec INVIK SA grâce à une tarification transparente et abordable pour tous vos services bancaires.</p>
+                            <h3 style={styles.infoTitle}>{t('home.features.fees.title')}</h3>
+                            <p style={styles.infoText}>{t('home.features.fees.text')}</p>
                         </div>
                         <div className="info-card">
                             <div className="icon-circle">⏱️</div>
-                            <h3 style={styles.infoTitle}>Étude ultra-rapide des prêts</h3>
-                            <p style={styles.infoText}>Profitez d'un parcours simplifié et d'une réponse de principe immédiate pour toutes vos demandes de financement.</p>
+                            <h3 style={styles.infoTitle}>{t('home.features.speed.title')}</h3>
+                            <p style={styles.infoText}>{t('home.features.speed.text')}</p>
                         </div>
                     </div>
                 </div>
@@ -338,27 +353,27 @@ const Home = () => {
                     <div style={styles.aboutImageWrapper} className="about-image-wrapper">
                         <div className="dot-pattern"></div>
                         <img src="/about-meeting.jpg" alt="About" style={styles.aboutImage} className="about-image" />
-                        <div style={styles.reviewBadge} className="review-badge">★★★★★<br />Banque 5 étoiles</div>
+                        <div style={styles.reviewBadge} className="review-badge">★★★★★<br />{t('home.about.badge_review')}</div>
                         <div style={styles.experienceBadge} className="experience-badge">
                             <span style={styles.experienceNumber}>15</span>
-                            <span style={styles.experienceText}>Années d'expertise</span>
+                            <span style={styles.experienceText}>{t('home.about.badge_exp')}</span>
                         </div>
                     </div>
                     <div style={styles.aboutContent} className="about-content">
-                        <div style={styles.aboutLabel}>À PROPOS</div>
-                        <h2 style={styles.aboutTitle}>INVIK SA, votre partenaire bancaire en ligne de confiance</h2>
+                        <div style={styles.aboutLabel}>{t('home.about.label')}</div>
+                        <h2 style={styles.aboutTitle}>{t('home.about.title')}</h2>
                         <p style={styles.aboutText}>
-                            INVIK SA est une banque en ligne innovante, dédiée à offrir des services financiers sécurisés, rapides et simples. En combinant technologie de pointe et expertise bancaire, nous nous engageons à rendre la gestion de vos finances plus accessible et plus sûre, que vous soyez en France ou à l’international.
+                            {t('home.about.p1')}
                         </p>
                         <p style={styles.aboutText}>
-                            Notre objectif est de simplifier l'expérience bancaire pour nos clients, avec des frais compétitifs, un support client disponible 24/7, et des solutions personnalisées, selon vos besoins.
+                            {t('home.about.p2')}
                         </p>
                         <p style={styles.aboutText}>
-                            Chez INVIK SA, nous croyons en un avenir financier où la technologie simplifie chaque étape de votre expérience bancaire. En restant à l'avant-garde des innovations, nous sommes déterminés à proposer des services toujours plus adaptés aux attentes d'une clientèle moderne et connectée. Faites confiance à INVIK SA pour évoluer avec vous, aujourd'hui et demain.
+                            {t('home.about.p3')}
                             <br /><br />
-                            <strong>Rejoignez INVIK SA et découvrez une nouvelle manière de gérer vos finances en toute sérénité.</strong>
+                            <strong>{t('home.about.highlight')}</strong>
                         </p>
-                        <Link to="/about" style={styles.primaryButton}>En savoir plus</Link>
+                        <Link to={getPath('/about')} style={styles.primaryButton}>{t('home.about.cta')}</Link>
                     </div>
                 </div>
             </section>
@@ -370,25 +385,19 @@ const Home = () => {
                         <img src="/mobile-about-person.png" alt="Professional Banking" className="mobile-about-image" />
                     </div>
                     <div className="mobile-about-header">
-                        <span className="mobile-about-label">À PROPOS</span>
-                        <h2 className="mobile-about-title">INVIK SA, votre partenaire bancaire en ligne de confiance</h2>
+                        <span className="mobile-about-label">{t('home.about.label')}</span>
+                        <h2 className="mobile-about-title">{t('home.about.title')}</h2>
                     </div>
                     <div className="mobile-about-body">
-                        <p>
-                            INVIK SA est une banque en ligne innovante, dédiée à offrir des services financiers sécurisés, rapides et simples. En combinant technologie de pointe et expertise bancaire, nous nous engageons à rendre la gestion de vos finances plus accessible et plus sûre, que vous soyez en France ou à l’international.
-                        </p>
-                        <p>
-                            Notre objectif est de simplifier l'expérience bancaire pour nos clients, avec des frais compétitifs, un support client disponible 24/7, et des solutions personnalisées, selon vos besoins.
-                        </p>
-                        <p>
-                            Chez INVIK SA, nous croyons en un avenir financier où la technologie simplifie chaque étape de votre expérience bancaire. En restant à l'avant-garde des innovations, nous sommes déterminés à proposer des services toujours plus adaptés aux attentes d'une clientèle moderne et connectée. Faites confiance à INVIK SA pour évoluer avec vous, aujourd'hui et demain.
-                        </p>
+                        <p>{t('home.about.p1')}</p>
+                        <p>{t('home.about.p2')}</p>
+                        <p>{t('home.about.p3')}</p>
                         <p className="mobile-about-highlight">
-                            <strong>Rejoignez INVIK SA et découvrez une nouvelle manière de gérer vos finances en toute sérénité.</strong>
+                            <strong>{t('home.about.highlight')}</strong>
                         </p>
                     </div>
                     <div className="mobile-about-actions">
-                        <Link to="/about" style={styles.primaryButton}>En savoir plus</Link>
+                        <Link to={getPath('/about')} style={styles.primaryButton}>{t('home.about.cta')}</Link>
                     </div>
                 </div>
             </section>
@@ -397,8 +406,8 @@ const Home = () => {
             <section style={styles.servicesSection} className="services-section">
                 <div className="container">
                     <div style={styles.servicesHeader}>
-                        <h2 style={styles.sectionTitle}>Nos services</h2>
-                        <p style={styles.sectionSubtitle}>Des solutions bancaires conçues pour simplifier votre quotidien</p>
+                        <h2 style={styles.sectionTitle}>{t('home.services.title')}</h2>
+                        <p style={styles.sectionSubtitle}>{t('home.services.subtitle')}</p>
                     </div>
                     <div style={styles.servicesGrid} className="servicesGrid">
                         {services.map((s, i) => (
@@ -422,16 +431,17 @@ const Home = () => {
             <section style={styles.testimonialsSection}>
                 <div className="container">
                     <div style={styles.testimonialsHeader}>
-                        <div style={styles.testimonialsLabel}>TÉMOIGNAGES</div>
-                        <h2 style={styles.testimonialsTitle}>Ce que nos clients disent</h2>
+                        <div style={styles.testimonialsLabel}>{t('home.testimonials.label')}</div>
+                        <h2 style={styles.testimonialsTitle}>{t('home.testimonials.title')}</h2>
                     </div>
                 </div>
+
 
                 <div style={styles.testiSliderContainer}>
                     <div style={styles.testiTrack}>
                         {/* Double the list for infinite scroll effect */}
                         {[...testimonials, ...testimonials].map((t, i) => (
-                            <Link key={i} to="/reviews" style={{ ...styles.testimonialCardSlider, textDecoration: 'none', color: 'inherit', display: 'block' }}>
+                            <Link key={i} to={getPath('/reviews')} style={{ ...styles.testimonialCardSlider, textDecoration: 'none', color: 'inherit', display: 'block' }}>
                                 <div style={styles.tAvatar}>
                                     <img src={t.image} alt={t.name} style={styles.tImg} />
                                 </div>

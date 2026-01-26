@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 import { contactService } from '../services/contactService';
 import { useNotifications } from '../contexts/NotificationContext';
+import { useTranslation } from 'react-i18next';
 
 const Contact = () => {
     const { showToast } = useNotifications();
+    const { t, i18n } = useTranslation();
+    const currentLang = i18n.language;
+    // const getPath = (path) => `/${currentLang}${path}`; // Not used for navigation here but good practice if needed
+
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -27,7 +32,7 @@ const Contact = () => {
         setIsSubmitting(true);
         try {
             await contactService.submitContactForm(formData);
-            showToast('Message envoyé ! Nous vous répondrons sous 24h.', 'success');
+            showToast(t('contact_page.form.success'), 'success');
             setFormData({
                 name: '',
                 email: '',
@@ -41,7 +46,7 @@ const Contact = () => {
             });
         } catch (error) {
             console.error("Error submitting contact form:", error);
-            showToast("Une erreur est survenue lors de l'envoi de votre message. Veuillez réessayer.", "error");
+            showToast(t('contact_page.form.error'), "error");
         } finally {
             setIsSubmitting(false);
         }
@@ -53,8 +58,8 @@ const Contact = () => {
             <section style={styles.hero} className="contact-hero">
                 <div style={styles.heroOverlay}>
                     <div className="container contact-animate">
-                        <h1 style={styles.heroTitle}>CONTACT</h1>
-                        <p style={styles.breadcrumb}>ACCUEIL / CONTACT</p>
+                        <h1 style={styles.heroTitle}>{t('contact_page.hero.title')}</h1>
+                        <p style={styles.breadcrumb}>{t('contact_page.hero.breadcrumb')}</p>
                     </div>
                 </div>
             </section>
@@ -62,10 +67,10 @@ const Contact = () => {
             {/* Form Section */}
             <section className="container contact-animate contact-form-section" style={styles.formSection}>
                 <div style={styles.formHeader}>
-                    <h4 style={styles.blueSubtitle}>CONTACTEZ-NOUS</h4>
-                    <h2 style={styles.sectionTitle}>Envoyez-nous un message</h2>
+                    <h4 style={styles.blueSubtitle}>{t('contact_page.form.subtitle')}</h4>
+                    <h2 style={styles.sectionTitle}>{t('contact_page.form.title')}</h2>
                     <p style={styles.sectionDesc}>
-                        Pour une réponse plus rapide et précise, merci de remplir le formulaire ci-dessous avec le maximum d'informations sur votre demande.
+                        {t('contact_page.form.desc')}
                     </p>
                 </div>
 
@@ -76,7 +81,7 @@ const Contact = () => {
                             <input
                                 type="text"
                                 name="name"
-                                placeholder="Votre nom complet"
+                                placeholder={t('contact_page.form.fields.name')}
                                 value={formData.name}
                                 onChange={handleChange}
                                 required
@@ -88,7 +93,7 @@ const Contact = () => {
                             <input
                                 type="email"
                                 name="email"
-                                placeholder="Votre email"
+                                placeholder={t('contact_page.form.fields.email')}
                                 value={formData.email}
                                 onChange={handleChange}
                                 required
@@ -102,7 +107,7 @@ const Contact = () => {
                             <input
                                 type="tel"
                                 name="phone"
-                                placeholder="Téléphone (avec indicatif)"
+                                placeholder={t('contact_page.form.fields.phone')}
                                 value={formData.phone}
                                 onChange={handleChange}
                                 style={styles.input}
@@ -117,10 +122,10 @@ const Contact = () => {
                                 style={styles.select}
                                 className="contact-input contact-select"
                             >
-                                <option value="">Vous êtes...</option>
-                                <option value="particulier">Un Particulier</option>
-                                <option value="professionnel">Un Professionnel</option>
-                                <option value="entreprise">Une Entreprise</option>
+                                <option value="">{t('contact_page.form.fields.status.placeholder')}</option>
+                                <option value="particulier">{t('contact_page.form.fields.status.options.individual')}</option>
+                                <option value="professionnel">{t('contact_page.form.fields.status.options.professional')}</option>
+                                <option value="entreprise">{t('contact_page.form.fields.status.options.company')}</option>
                             </select>
                         </div>
 
@@ -133,23 +138,23 @@ const Contact = () => {
                                 style={styles.select}
                                 className="contact-input contact-select"
                             >
-                                <option value="">Type de demande</option>
-                                <option value="ouverture">Ouverture de compte</option>
-                                <option value="credit">Crédit / financement</option>
-                                <option value="carte">Carte bancaire (demande / problème)</option>
-                                <option value="transfert">Transfert / paiement</option>
-                                <option value="acces">Accès / connexion à l'espace client</option>
-                                <option value="donnees">Données personnelles / sécurité</option>
-                                <option value="reclamation">Réclamation / litige</option>
-                                <option value="partenariat">Partenariat / collaboration</option>
-                                <option value="autre">Autre demande</option>
+                                <option value="">{t('contact_page.form.fields.subject.placeholder')}</option>
+                                <option value="ouverture">{t('contact_page.form.fields.subject.options.opening')}</option>
+                                <option value="credit">{t('contact_page.form.fields.subject.options.credit')}</option>
+                                <option value="carte">{t('contact_page.form.fields.subject.options.card')}</option>
+                                <option value="transfert">{t('contact_page.form.fields.subject.options.transfer')}</option>
+                                <option value="acces">{t('contact_page.form.fields.subject.options.access')}</option>
+                                <option value="donnees">{t('contact_page.form.fields.subject.options.data')}</option>
+                                <option value="reclamation">{t('contact_page.form.fields.subject.options.claim')}</option>
+                                <option value="partenariat">{t('contact_page.form.fields.subject.options.partnership')}</option>
+                                <option value="autre">{t('contact_page.form.fields.subject.options.other')}</option>
                             </select>
                         </div>
                         <div style={styles.formGroup}>
                             <input
                                 type="text"
                                 name="clientNumber"
-                                placeholder="Numéro de client (si vous en avez un)"
+                                placeholder={t('contact_page.form.fields.client_number')}
                                 value={formData.clientNumber}
                                 onChange={handleChange}
                                 style={styles.input}
@@ -162,7 +167,7 @@ const Contact = () => {
                             <input
                                 type="text"
                                 name="messageSubject"
-                                placeholder="Sujet de votre demande"
+                                placeholder={t('contact_page.form.fields.message_subject')}
                                 style={styles.input}
                                 className="contact-input"
                             />
@@ -175,9 +180,9 @@ const Contact = () => {
                                 style={styles.select}
                                 className="contact-input contact-select"
                             >
-                                <option value="">Mode de contact préféré</option>
-                                <option value="email">Email</option>
-                                <option value="phone">Téléphone</option>
+                                <option value="">{t('contact_page.form.fields.contact_mode.placeholder')}</option>
+                                <option value="email">{t('contact_page.form.fields.contact_mode.options.email')}</option>
+                                <option value="phone">{t('contact_page.form.fields.contact_mode.options.phone')}</option>
                             </select>
                         </div>
                     </div>
@@ -186,7 +191,7 @@ const Contact = () => {
                     <div style={styles.formGroupFull} className="contact-form-full">
                         <textarea
                             name="message"
-                            placeholder="Votre message (précisez le type d'opération, le montant éventuel, les dates concernées, et toute information utile pour le traitement de votre demande)"
+                            placeholder={t('contact_page.form.fields.message')}
                             value={formData.message}
                             onChange={handleChange}
                             required
@@ -208,14 +213,14 @@ const Contact = () => {
                             style={styles.checkbox}
                         />
                         <label htmlFor="consent" style={styles.checkboxLabel}>
-                            J'accepte que mes données soient utilisées par INVIK SA pour le traitement de ma demande, conformément à la politique de confidentialité.
+                            {t('contact_page.form.fields.consent')}
                         </label>
                     </div>
 
                     {/* Submit Button */}
                     <div style={styles.submitContainer}>
                         <button type="submit" style={styles.submitButton} className="submit-btn-hover contact-submit-btn" disabled={isSubmitting}>
-                            {isSubmitting ? 'Envoi en cours...' : 'Envoyer le message'}
+                            {isSubmitting ? t('contact_page.form.fields.submitting') : t('contact_page.form.fields.submit')}
                         </button>
                     </div>
                 </form>
@@ -224,7 +229,7 @@ const Contact = () => {
             {/* Info Section */}
             <section style={styles.infoSection} className="contact-info-section">
                 <div className="container contact-animate">
-                    <h2 style={styles.infoTitle}>Nous sommes là pour vous aider</h2>
+                    <h2 style={styles.infoTitle}>{t('contact_page.info.title')}</h2>
 
                     <div style={styles.infoGrid} className="contact-info-grid">
                         {/* Address Card */}
@@ -235,10 +240,10 @@ const Contact = () => {
                                     <circle cx="12" cy="10" r="3"></circle>
                                 </svg>
                             </div>
-                            <h3 style={styles.cardTitle}>Adresse</h3>
+                            <h3 style={styles.cardTitle}>{t('contact_page.info.address.title')}</h3>
                             <p style={styles.cardText}>
-                                38 Parc d'Activités Capellen<br />
-                                L-8308 Capellen, Luxembourg
+                                {t('contact_page.info.address.lines.0')}<br />
+                                {t('contact_page.info.address.lines.1')}
                             </p>
                         </div>
 
@@ -250,9 +255,9 @@ const Contact = () => {
                                     <polyline points="22,6 12,13 2,6"></polyline>
                                 </svg>
                             </div>
-                            <h3 style={styles.cardTitle}>Téléphone & Email</h3>
+                            <h3 style={styles.cardTitle}>{t('contact_page.info.contact.title')}</h3>
                             <p style={styles.cardText}>
-                                +33 6 46 72 32 86<br />
+                                {t('contact_page.info.contact.lines.0')}<br />
                                 <a href="mailto:contact@inviksa.com" style={{ color: '#666', textDecoration: 'none' }}>contact@inviksa.com</a>
                             </p>
                         </div>

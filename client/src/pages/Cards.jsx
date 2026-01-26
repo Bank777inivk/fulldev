@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const Cards = () => {
     const navigate = useNavigate();
+    const { t, i18n } = useTranslation();
+    const currentLang = i18n.language;
+    const getPath = (path) => `/${currentLang}${path}`;
     const [isFlipped, setIsFlipped] = useState(false);
 
     return (
@@ -11,17 +15,17 @@ const Cards = () => {
             <section style={styles.hero} className="cards-hero">
                 <div style={styles.heroOverlay}>
                     <div className="container">
-                        <h1 style={styles.heroTitle}>NOS CARTES</h1>
-                        <p style={styles.breadcrumb}>ACCUEIL / NOS CARTES</p>
+                        <h1 style={styles.heroTitle}>{t('cards_page.hero.title')}</h1>
+                        <p style={styles.breadcrumb}>{t('cards_page.hero.breadcrumb')}</p>
                     </div>
                 </div>
             </section>
 
             {/* Intro Section */}
             <section className="container" style={styles.introSection}>
-                <h4 style={styles.introSubtitle}>NOS CARTES DE CRÉDIT</h4>
+                <h4 style={styles.introSubtitle}>{t('cards_page.intro.subtitle')}</h4>
                 <h2 style={styles.introTitle}>
-                    Des cartes adaptées à votre style de vie, pour des paiements sécurisés et des avantages exclusifs
+                    {t('cards_page.intro.title')}
                 </h2>
             </section>
 
@@ -36,11 +40,11 @@ const Cards = () => {
                         style={styles.cardImage}
                     />
                     <div style={styles.cardInfo}>
-                        <h3 style={styles.cardTitle}>Visa Silver Card</h3>
+                        <h3 style={styles.cardTitle}>{t('cards_page.cards.silver.title')}</h3>
                         <p style={styles.cardDesc}>
-                            La carte Visa Silver d'INVIK SA offre des paiements sécurisés avec des frais de transaction maîtrisés. Idéale pour les dépenses du quotidien.
+                            {t('cards_page.cards.silver.desc')}
                         </p>
-                        <button style={styles.cardButton} onClick={() => navigate('/register')}>OUVRIR UN COMPTE</button>
+                        <button style={styles.cardButton} onClick={() => navigate(getPath('/register'))}>{t('cards_page.cta_button')}</button>
                     </div>
                 </div>
 
@@ -52,11 +56,11 @@ const Cards = () => {
                         style={styles.cardImage}
                     />
                     <div style={styles.cardInfo}>
-                        <h3 style={styles.cardTitle}>Mastercard Gold Card</h3>
+                        <h3 style={styles.cardTitle}>{t('cards_page.cards.gold.title')}</h3>
                         <p style={styles.cardDesc}>
-                            Bénéficiez d'avantages exclusifs avec la Mastercard Gold, adaptée aux voyageurs et aux utilisateurs fréquents. Plafonds élevés et assurances incluses.
+                            {t('cards_page.cards.gold.desc')}
                         </p>
-                        <button style={styles.cardButton} onClick={() => navigate('/register')}>OUVRIR UN COMPTE</button>
+                        <button style={styles.cardButton} onClick={() => navigate(getPath('/register'))}>{t('cards_page.cta_button')}</button>
                     </div>
                 </div>
 
@@ -68,11 +72,11 @@ const Cards = () => {
                         style={styles.cardImage}
                     />
                     <div style={styles.cardInfo}>
-                        <h3 style={styles.cardTitle}>Visa Platinum Card</h3>
+                        <h3 style={styles.cardTitle}>{t('cards_page.cards.platinum.title')}</h3>
                         <p style={styles.cardDesc}>
-                            La carte Visa Platinum d'INVIK SA offre une expérience haut de gamme avec des services premium, des garanties d'assurance et d'assistance renforcées.
+                            {t('cards_page.cards.platinum.desc')}
                         </p>
-                        <button style={styles.cardButton} onClick={() => navigate('/register')}>OUVRIR UN COMPTE</button>
+                        <button style={styles.cardButton} onClick={() => navigate(getPath('/register'))}>{t('cards_page.cta_button')}</button>
                     </div>
                 </div>
 
@@ -81,18 +85,17 @@ const Cards = () => {
             {/* Virtual Card Section */}
             <section style={styles.virtualSection} className="container virtual-section">
                 <div style={styles.virtualContent} className="virtual-content">
-                    <h2 style={styles.virtualTitle}>La Carte Virtuelle INVIK</h2>
+                    <h2 style={styles.virtualTitle}>{t('cards_page.virtual.title')}</h2>
                     <p style={styles.virtualDesc}>
-                        Sécurisez vos achats en ligne avec nos cartes virtuelles éphémères ou permanentes.
-                        Générez-les instantanément depuis votre application.
+                        {t('cards_page.virtual.desc')}
                     </p>
                     <ul style={styles.virtualFeatures}>
-                        <li style={styles.virtualFeature}>✨ Création instantanée et illimitée</li>
-                        <li style={styles.virtualFeature}>🔒 Idéal pour les abonnements et achats web</li>
-                        <li style={styles.virtualFeature}>📱 Compatible Apple Pay & Google Pay</li>
+                        {t('cards_page.virtual.features', { returnObjects: true }).map((item, i) => (
+                            <li key={i} style={styles.virtualFeature}>{item}</li>
+                        ))}
                     </ul>
-                    <button style={styles.ctaButtonLarge} onClick={() => navigate('/register')}>
-                        OBTENIR UNE CARTE
+                    <button style={styles.ctaButtonLarge} onClick={() => navigate(getPath('/register'))}>
+                        {t('cards_page.virtual.button')}
                     </button>
                 </div>
 

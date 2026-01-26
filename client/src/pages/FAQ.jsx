@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const FAQ = () => {
+    const navigate = useNavigate();
+    const { t, i18n } = useTranslation();
+    const currentLang = i18n.language;
+    const getPath = (path) => `/${currentLang}${path}`;
+
     // State to track which FAQ item is open. 
     const [activeIndex, setActiveIndex] = useState(0); // Open first one by default
 
@@ -8,68 +15,16 @@ const FAQ = () => {
         setActiveIndex(activeIndex === index ? null : index);
     };
 
-    const faqData = [
-        // Column 1 (First 6 items)
-        {
-            question: "Comment puis-je ouvrir un compte chez INVIK SA ?",
-            answer: "Pour ouvrir un compte, rendez-vous sur notre page d’inscription, remplissez le formulaire avec vos informations personnelles, puis suivez les étapes de vérification de votre identité et de validation de votre dossier."
-        },
-        {
-            question: "Comment puis-je effectuer un transfert international ?",
-            answer: "Les transferts internationaux se réalisent depuis votre espace client en choisissant l’option « Transfert international ». Saisissez les coordonnées de votre bénéficiaire, le montant et la devise, puis validez l’opération après vérification des informations."
-        },
-        {
-            question: "Quels documents sont nécessaires pour l’ouverture de compte ?",
-            answer: "Vous aurez généralement besoin d’une pièce d’identité valide (passeport, carte d’identité) et d’un justificatif de domicile de moins de trois mois. Des documents complémentaires peuvent être demandés selon votre situation."
-        },
-        {
-            question: "Est-ce que mes informations sont sécurisées chez INVIK SA ?",
-            answer: "Oui. INVIK SA utilise des technologies de chiffrement et des protocoles de sécurité avancés pour protéger vos données personnelles et financières, ainsi que vos opérations en ligne."
-        },
-        {
-            question: "Comment puis-je commander une carte bancaire INVIK SA ?",
-            answer: "Une fois votre compte ouvert, vous pouvez demander une carte bancaire directement depuis votre espace client en ligne, dans la section « Mes cartes », puis suivre les instructions pour la commande et l’activation."
-        },
-        {
-            question: "Quels sont les plafonds de paiement et de retrait de mes cartes INVIK SA ?",
-            answer: "Chaque carte INVIK SA dispose de plafonds de paiement et de retrait définis par défaut (par jour et/ou par mois). Ces limites peuvent varier selon votre profil, le type de carte et votre historique. Vous pouvez consulter et ajuster vos plafonds, dans la limite des montants autorisés, directement depuis votre espace client ou notre application, si cette option est disponible."
-        },
-
-        // Column 2 (Last 6 items)
-        {
-            question: "Est-ce qu’INVIK SA propose des solutions de prêts ?",
-            answer: "Oui, INVIK SA propose plusieurs types de prêts, y compris des prêts personnels et des solutions de financement adaptées à vos projets, selon conditions et sous réserve d’acceptation. Consultez notre page « Nos services » pour plus de détails."
-        },
-        {
-            question: "Quels sont les frais de retrait aux distributeurs (DAB/ATM) ?",
-            answer: "Les retraits peuvent être gratuits jusqu’à un certain montant ou un certain nombre d’opérations par mois, puis facturés selon la grille tarifaire en vigueur. Les frais peuvent différer entre les retraits effectués en zone euro et à l’international (hors zone euro). Pour connaître le détail des frais de retrait (montant forfaitaire et/ou pourcentage), consultez la rubrique « Tarifs » de votre espace client ou notre documentation tarifaire."
-        },
-        {
-            question: "Quels frais sont associés aux comptes INVIK SA ?",
-            answer: "Nos frais sont conçus pour être transparents et compétitifs. Vous pouvez consulter l’ensemble des tarifs (tenue de compte, cartes, opérations, etc.) sur notre page dédiée à la grille tarifaire mise à jour."
-        },
-        {
-            question: "Comment contacter le service client d’INVIK SA ?",
-            answer: "Notre service client est disponible pour vous accompagner. Vous pouvez nous contacter par téléphone, par e-mail ou via le formulaire de contact ou le chat en ligne, selon les canaux indiqués sur notre page « Contact »."
-        },
-        {
-            question: "Puis-je gérer mon compte INVIK SA depuis un mobile ?",
-            answer: "Oui, notre plateforme est optimisée pour une utilisation sur mobile, tablette et ordinateur. Vous pouvez ainsi consulter vos soldes, suivre vos opérations et gérer vos services où que vous soyez."
-        },
-        {
-            question: "Que faire en cas de perte ou de vol de ma carte INVIK SA ?",
-            answer: "En cas de perte ou de vol, bloquez immédiatement votre carte depuis votre espace client, si cette fonctionnalité est disponible, et/ou contactez sans attendre notre service client pour mettre la carte en opposition et demander un remplacement."
-        },
-        {
-            question: "Quels sont les pays éligibles pour un crédit chez la banque INVIK ?",
-            answer: "La banque INVIK propose des crédits aux résidents de tous les pays d'Europe (Zone Euro, Union Européenne, Suisse, Royaume-Uni, etc.) et des pays des Amériques (États-Unis, Canada, Mexique, Brésil, Argentine, etc.). Pour être éligible, vous devez disposer d'un passeport valide, être en mesure de prouver votre identité et pouvoir justifier de revenus réguliers et suffisants pour le remboursement du prêt."
-        }
-    ];
+    const faqData = t('faq_page.items', { returnObjects: true }) || [];
 
     // Splitting data for 2 columns visual
     const midPoint = Math.ceil(faqData.length / 2);
     const leftColumnData = faqData.slice(0, midPoint);
     const rightColumnData = faqData.slice(midPoint);
+
+    const handleNavigate = (path) => {
+        navigate(getPath(path));
+    };
 
     return (
         <div style={styles.page}>
@@ -77,8 +32,8 @@ const FAQ = () => {
             <section style={styles.hero} className="faq-hero">
                 <div style={styles.heroOverlay}>
                     <div className="container">
-                        <h1 style={styles.heroTitle}>FAQ'S</h1>
-                        <p style={styles.breadcrumb}>ACCUEIL / FAQ'S</p>
+                        <h1 style={styles.heroTitle}>{t('faq_page.hero.title')}</h1>
+                        <p style={styles.breadcrumb}>{t('faq_page.hero.breadcrumb')}</p>
                     </div>
                 </div>
             </section>
@@ -115,14 +70,14 @@ const FAQ = () => {
             {/* CTA Section */}
             <section style={styles.ctaSection} className="faq-cta-banner">
                 <div className="container" style={styles.ctaContainer}>
-                    <h2 style={styles.ctaTitle}>Vous ne trouvez pas votre réponse ?</h2>
-                    <p style={styles.ctaText}>Nos conseillers sont là pour vous aider ou pour vous accompagner dans l'ouverture de votre compte.</p>
+                    <h2 style={styles.ctaTitle}>{t('faq_page.cta.title')}</h2>
+                    <p style={styles.ctaText}>{t('faq_page.cta.text')}</p>
                     <div style={styles.ctaButtons} className="faq-cta-buttons">
-                        <button style={styles.btnPrimary} onClick={() => window.location.href = '/register'}>
-                            OUVRIR UN COMPTE
+                        <button style={styles.btnPrimary} onClick={() => handleNavigate('/register')}>
+                            {t('faq_page.cta.buttons.open_account')}
                         </button>
-                        <button style={styles.btnSecondary} onClick={() => window.location.href = '/contact'}>
-                            NOUS CONTACTER
+                        <button style={styles.btnSecondary} onClick={() => handleNavigate('/contact')}>
+                            {t('faq_page.cta.buttons.contact')}
                         </button>
                     </div>
                 </div>

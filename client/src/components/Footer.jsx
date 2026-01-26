@@ -1,7 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const Footer = () => {
+    const { t, i18n } = useTranslation();
+    const currentLang = i18n.language;
+    const getPath = (path) => `/${currentLang}${path}`;
+
     return (
         <footer style={styles.footer}>
             <div className="container footer-container" style={styles.container}>
@@ -9,7 +14,7 @@ const Footer = () => {
                 <div style={styles.columnLogo} className="footer-column">
                     <img src="/logo.png" alt="INVIK SA Logo" style={styles.logo} className="footer-logo" />
                     <p style={styles.description}>
-                        INVIK SA est une banque en ligne digitale de droit luxembourgeois, basée au 38 PARC D'ACTIVITES CAPELLEN L-8308 CAP, Capellen Luxembourg. Contact : +33 06 46 72 32 86 — Email : contact@inviksa.com
+                        {t('footer.description')}
                     </p>
                     <div style={styles.socialIcons}>
                         <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" style={styles.iconCircle} className="footer-social"><i className="fab fa-facebook-f"></i></a>
@@ -20,39 +25,39 @@ const Footer = () => {
 
                 {/* Colonne 2: Informations légales */}
                 <div style={{ ...styles.column, animationDelay: '0.2s' }} className="footer-column">
-                    <h4 style={styles.subHeading}>Informations légales</h4>
+                    <h4 style={styles.subHeading}>{t('footer.legal.title')}</h4>
                     <ul style={styles.list}>
-                        <li style={styles.listItem}><Link to="/confidentialite" style={styles.link} className="footer-link">• Politique de confidentialité</Link></li>
-                        <li style={styles.listItem}><Link to="/cgu" style={styles.link} className="footer-link">• Conditions générales d'utilisation</Link></li>
-                        <li style={styles.listItem}><Link to="/mentions-legales" style={styles.link} className="footer-link">• Mentions légales</Link></li>
-                        <li style={styles.listItem}><Link to="/reviews" style={styles.link} className="footer-link">• Avis clients</Link></li>
+                        <li style={styles.listItem}><Link to={getPath('/confidentialite')} style={styles.link} className="footer-link">• {t('footer.legal.privacy')}</Link></li>
+                        <li style={styles.listItem}><Link to={getPath('/cgu')} style={styles.link} className="footer-link">• {t('footer.legal.cgu')}</Link></li>
+                        <li style={styles.listItem}><Link to={getPath('/mentions-legales')} style={styles.link} className="footer-link">• {t('footer.legal.mentions')}</Link></li>
+                        <li style={styles.listItem}><Link to={getPath('/reviews')} style={styles.link} className="footer-link">• {t('footer.legal.reviews')}</Link></li>
                     </ul>
                 </div>
 
                 {/* Colonne 3: Navigation */}
                 <div style={{ ...styles.column, animationDelay: '0.4s' }} className="footer-column">
-                    <h4 style={styles.subHeading}>Navigation</h4>
+                    <h4 style={styles.subHeading}>{t('footer.navigation.title')}</h4>
                     <ul style={styles.list}>
-                        <li style={styles.listItem}><Link to="/" style={styles.link} className="footer-link">• ACCUEIL</Link></li>
-                        <li style={styles.listItem}><Link to="/about" style={styles.link} className="footer-link">• À PROPOS</Link></li>
-                        <li style={styles.listItem}><Link to="/services" style={styles.link} className="footer-link">• NOS SERVICES</Link></li>
-                        <li style={styles.listItem}><Link to="/cards" style={styles.link} className="footer-link">• NOS CARTES</Link></li>
-                        <li style={styles.listItem}><Link to="/faq" style={styles.link} className="footer-link">• FAQ'S</Link></li>
+                        <li style={styles.listItem}><Link to={getPath('/')} style={styles.link} className="footer-link">• {t('footer.navigation.home')}</Link></li>
+                        <li style={styles.listItem}><Link to={getPath('/about')} style={styles.link} className="footer-link">• {t('footer.navigation.about')}</Link></li>
+                        <li style={styles.listItem}><Link to={getPath('/services')} style={styles.link} className="footer-link">• {t('footer.navigation.services')}</Link></li>
+                        <li style={styles.listItem}><Link to={getPath('/cards')} style={styles.link} className="footer-link">• {t('footer.navigation.cards')}</Link></li>
+                        <li style={styles.listItem}><Link to={getPath('/faq')} style={styles.link} className="footer-link">• {t('footer.navigation.faq')}</Link></li>
                     </ul>
                 </div>
 
                 {/* Colonne 4: Support */}
                 <div style={{ ...styles.column, animationDelay: '0.6s' }} className="footer-column">
-                    <h4 style={styles.subHeading}>Support</h4>
+                    <h4 style={styles.subHeading}>{t('footer.support.title')}</h4>
                     <ul style={styles.list}>
-                        <li style={styles.listItem}><Link to="/contact" style={styles.link} className="footer-link">• CONTACT</Link></li>
-                        <li style={styles.listItem}><Link to="/credit-request" style={styles.link} className="footer-link">• FAIRE UNE DEMANDE DE CREDIT</Link></li>
+                        <li style={styles.listItem}><Link to={getPath('/contact')} style={styles.link} className="footer-link">• {t('footer.support.contact')}</Link></li>
+                        <li style={styles.listItem}><Link to={getPath('/credit-request')} style={styles.link} className="footer-link">• {t('footer.support.credit_request')}</Link></li>
                     </ul>
                 </div>
             </div>
 
             <div style={styles.copyright}>
-                &copy; {new Date().getFullYear()} INVIK SA. Tous droits réservés.
+                &copy; {new Date().getFullYear()} {t('footer.copyright')}
             </div>
         </footer>
     );

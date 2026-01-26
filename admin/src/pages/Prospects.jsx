@@ -310,7 +310,7 @@ const Prospects = () => {
                     <div style={styles.detailSection}>
                         <div style={styles.sectionHeader}>
                             <i className="fas fa-user-circle" style={{ color: 'var(--secondary)', fontSize: '1.2rem' }}></i>
-                            <h3 style={styles.sectionTitle}>Identité & Contact</h3>
+                            <h3 style={styles.sectionTitle}>Identification & Dossier [REFRESHED]</h3>
                         </div>
                         <div style={styles.dataGrid}>
                             <div style={styles.dataItem}>
@@ -326,8 +326,8 @@ const Prospects = () => {
                                 <span style={styles.dataValue}>{selectedProspect.telephone || 'N/A'}</span>
                             </div>
                             <div style={styles.dataItem}>
-                                <span style={styles.dataLabel}>Date de naissance</span>
-                                <span style={styles.dataValue}>{selectedProspect.dateNaissance || 'N/A'}</span>
+                                <span style={styles.dataLabel}>Né(e) le</span>
+                                <span style={styles.dataValue}>{selectedProspect.dateNaissance || selectedProspect.dob || 'N/A'}</span>
                             </div>
                             <div style={styles.dataItem}>
                                 <span style={styles.dataLabel}>Lieu de naissance</span>
