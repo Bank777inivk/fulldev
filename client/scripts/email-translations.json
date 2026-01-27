@@ -1,0 +1,298 @@
+{
+  "pt": {
+    "publicLeadConfirmation": {
+      "subject": "Confirmação do seu pedido de simulação - INVIK BANK",
+      "greeting": "Bom dia",
+      "mainText": "Recebemos o seu pedido de simulação de crédito.Um consultor do INVIK BANK estudará suas informações para lhe oferecer uma solução adequada.",
+      "cta": "Finalizar meu pedido",
+      "closing": "Obrigado pela sua confiança",
+      "team": "A equipe de crédito do INVIK BANK"
+    },
+    "welcome": {
+      "subject": "Bem-vindo ao INVIK BANK - Conta ativada!",
+      "title": "PARABÉNS!",
+      "greeting": "Bem-vindo a bordo",
+      "mainText": "Seu endereço de e-mail foi validado com sucesso.Temos o prazer de contar com você entre nossos clientes privilegiados.",
+      "stepsTitle": "Próximas etapas:",
+      "cta": "Acesse meu painel",
+      "closing": "Obrigado pela sua confiança",
+      "team": "A equipe do BANCO INVIK"
+    },
+    "transferSent": {
+      "subject": "Confirmação de transferência - INVIK BANK",
+      "subtitle": "Confirmação de transferência",
+      "mainText": "Confirmamos que sua transferência foi enviada.",
+      "detailsText": "Os fundos ficarão disponíveis na conta do beneficiário de acordo com os prazos bancários habituais.",
+      "amount": "Quantia",
+      "beneficiary": "Beneficiário",
+      "reference": "Referência",
+      "status": "Status",
+      "sent": "Enviado"
+    },
+    "transferReceived": {
+      "subject": "Você recebeu uma transferência - INVIK BANK",
+      "subtitle": "Boas notícias!",
+      "mainText": "Você acabou de receber uma transferência para sua conta INVIK BANK.",
+      "detailsText": "Seu novo saldo já está disponível em seu aplicativo.",
+      "amountReceived": "Valor recebido",
+      "from": "De"
+    },
+    "verificationReminder": {
+      "subject": "Ação necessária: verifique sua identidade - INVIK BANK",
+      "subtitle": "Lembrete de verificação",
+      "mainText": "Sua conta INVIK BANK foi criada com sucesso, mas sua identidade ainda não foi verificada.",
+      "ctaText": "Verificar minha identidade",
+      "notice": "A verificação leva apenas alguns minutos."
+    },
+    "cardOrder": {
+      "subject": "Confirmação de pedido de cartão - INVIK BANK",
+      "tagline": "Elegância ao seu alcance",
+      "mainText": "Recebemos seu pedido do seu novo cartão INVIK",
+      "modelOrdered": "Modelo encomendado",
+      "deliveryAddress": "Endereço de entrega",
+      "estimatedDelivery": "Tempo estimado",
+      "deliveryTime": "3 a 5 dias úteis",
+      "cta": "Acompanhar meu pedido"
+    },
+    "loanRequest": {
+      "subject": "Confirmação do seu pedido de crédito - INVIK BANK",
+      "tagline": "Seu projeto, nossa prioridade",
+      "mainText": "Confirmamos a recepção do seu pedido de financiamento para o seu projecto",
+      "requestedAmount": "Valor solicitado",
+      "duration": "Duração",
+      "monthlyPayment": "Pagamento mensal estimado",
+      "currentStatus": "Estado atual",
+      "underReview": "Estudo em andamento"
+    },
+    "contactConfirmation": {
+      "subject": "Recebemos sua mensagem - INVIK BANK",
+      "subtitle": "Mensagem recebida",
+      "mainText": "Recebemos sua mensagem através do nosso formulário de contato.",
+      "responseTime": "Nossa equipe responderá o mais rápido possível, geralmente dentro de 24 horas úteis.",
+      "concernsLabel": "Sua solicitação diz respeito a:",
+      "urgentContact": "Se o seu pedido for urgente, você também pode entrar em contato conosco:"
+    }
+  },
+  "it": {
+    "publicLeadConfirmation": {
+      "subject": "Conferma della tua richiesta di simulazione - INVIK BANK",
+      "greeting": "Buon giorno",
+      "mainText": "Abbiamo ricevuto la tua richiesta di simulazione del credito.Un consulente INVIK BANK studierà le tue informazioni per offrirti una soluzione adeguata.",
+      "cta": "Finalizza la mia richiesta",
+      "closing": "Grazie per la fiducia",
+      "team": "Il team di credito INVIK BANK"
+    },
+    "welcome": {
+      "subject": "Benvenuto in INVIK BANK - Conto attivato!",
+      "title": "CONGRATULAZIONI!",
+      "greeting": "Benvenuto a bordo",
+      "mainText": "Il tuo indirizzo email è stato convalidato con successo.Siamo lieti di annoverarvi tra i nostri clienti privilegiati.",
+      "stepsTitle": "Passaggi successivi:",
+      "cta": "Accedi alla mia dashboard",
+      "closing": "Grazie per la fiducia",
+      "team": "Il team di INVIK BANK"
+    },
+    "transferSent": {
+      "subject": "Conferma del bonifico - INVIK BANK",
+      "subtitle": "Conferma del trasferimento",
+      "mainText": "Confermiamo che il tuo bonifico è stato inviato.",
+      "detailsText": "I fondi saranno disponibili sul conto del beneficiario secondo le consuete scadenze bancarie.",
+      "amount": "Quantità",
+      "beneficiary": "Beneficiario",
+      "reference": "Riferimento",
+      "status": "Stato",
+      "sent": "Inviato"
+    },
+    "transferReceived": {
+      "subject": "Hai ricevuto un bonifico - INVIK BANK",
+      "subtitle": "Buone notizie!",
+      "mainText": "Hai appena ricevuto un bonifico sul tuo conto INVIK BANK.",
+      "detailsText": "Il tuo nuovo saldo è ora disponibile sulla tua app.",
+      "amountReceived": "Importo ricevuto",
+      "from": "Da"
+    },
+    "verificationReminder": {
+      "subject": "Azione richiesta: verifica la tua identità - INVIK BANK",
+      "subtitle": "Promemoria di verifica",
+      "mainText": "Il tuo conto INVIK BANK è stato creato con successo, ma la tua identità non è ancora verificata.",
+      "ctaText": "Verifica la mia identità",
+      "notice": "La verifica richiede solo pochi minuti."
+    },
+    "cardOrder": {
+      "subject": "Conferma ordine carta - INVIK BANK",
+      "tagline": "L'eleganza a portata di mano",
+      "mainText": "Abbiamo ricevuto il tuo ordine per la tua nuova carta INVIK",
+      "modelOrdered": "Modello ordinato",
+      "deliveryAddress": "Indirizzo di consegna",
+      "estimatedDelivery": "Tempo stimato",
+      "deliveryTime": "Da 3 a 5 giorni lavorativi",
+      "cta": "Tieni traccia del mio ordine"
+    },
+    "loanRequest": {
+      "subject": "Conferma della tua richiesta di credito - INVIK BANK",
+      "tagline": "Il tuo progetto, la nostra priorità",
+      "mainText": "Confermiamo la ricezione della tua richiesta di finanziamento per il tuo progetto",
+      "requestedAmount": "Importo richiesto",
+      "duration": "Durata",
+      "monthlyPayment": "Pagamento mensile stimato",
+      "currentStatus": "Stato attuale",
+      "underReview": "Studio in corso"
+    },
+    "contactConfirmation": {
+      "subject": "Abbiamo ricevuto il tuo messaggio - INVIK BANK",
+      "subtitle": "Messaggio ricevuto",
+      "mainText": "Abbiamo ricevuto il tuo messaggio tramite il nostro modulo di contatto.",
+      "responseTime": "Il nostro team ti risponderà il prima possibile, generalmente entro 24 ore lavorative.",
+      "concernsLabel": "La tua richiesta riguarda:",
+      "urgentContact": "Se la tua richiesta è urgente puoi contattarci anche:"
+    }
+  },
+  "es": {
+    "publicLeadConfirmation": {
+      "subject": "Confirmación de su solicitud de simulación - INVIK BANK",
+      "greeting": "Buen día",
+      "mainText": "Hemos recibido su solicitud de simulación de crédito.Un asesor de INVIK BANK estudiará su información para ofrecerle una solución adecuada.",
+      "cta": "Finalizar mi solicitud",
+      "closing": "Gracias por tu confianza",
+      "team": "El equipo de crédito de INVIK BANK"
+    },
+    "welcome": {
+      "subject": "Bienvenido a INVIK BANK - ¡Cuenta activada!",
+      "title": "¡FELICIDADES!",
+      "greeting": "Bienvenido a bordo",
+      "mainText": "Su dirección de correo electrónico ha sido validada exitosamente.Estamos encantados de contarle entre nuestros clientes privilegiados.",
+      "stepsTitle": "Próximos pasos:",
+      "cta": "Accede a mi panel de control",
+      "closing": "Gracias por tu confianza",
+      "team": "El equipo de BANCO INVIK"
+    },
+    "transferSent": {
+      "subject": "Confirmación de transferencia - INVIK BANK",
+      "subtitle": "Confirmación de transferencia",
+      "mainText": "Confirmamos que tu transferencia ha sido enviada.",
+      "detailsText": "Los fondos estarán disponibles en la cuenta del beneficiario según los plazos bancarios habituales.",
+      "amount": "Cantidad",
+      "beneficiary": "Beneficiario",
+      "reference": "Referencia",
+      "status": "Estado",
+      "sent": "Enviado"
+    },
+    "transferReceived": {
+      "subject": "Ha recibido una transferencia - INVIK BANK",
+      "subtitle": "¡Albricias!",
+      "mainText": "Acaba de recibir una transferencia a su cuenta INVIK BANK.",
+      "detailsText": "Su nuevo saldo ya está disponible en su aplicación.",
+      "amountReceived": "Cantidad recibida",
+      "from": "De"
+    },
+    "verificationReminder": {
+      "subject": "Acción requerida: Verifique su identidad - INVIK BANK",
+      "subtitle": "Recordatorio de verificación",
+      "mainText": "Su cuenta INVIK BANK se ha creado correctamente, pero su identidad aún no está verificada.",
+      "ctaText": "Verificar mi identidad",
+      "notice": "La verificación sólo lleva unos minutos."
+    },
+    "cardOrder": {
+      "subject": "Confirmación de pedido de tarjeta - INVIK BANK",
+      "tagline": "Elegancia a tu alcance",
+      "mainText": "Hemos recibido tu pedido de tu nueva tarjeta INVIK",
+      "modelOrdered": "Modelo pedido",
+      "deliveryAddress": "Dirección de entrega",
+      "estimatedDelivery": "Tiempo estimado",
+      "deliveryTime": "3 a 5 días laborables",
+      "cta": "Seguimiento de mi pedido"
+    },
+    "loanRequest": {
+      "subject": "Confirmación de su solicitud de crédito - INVIK BANK",
+      "tagline": "Tu proyecto, nuestra prioridad",
+      "mainText": "Confirmamos la recepción de tu solicitud de financiación para tu proyecto",
+      "requestedAmount": "Monto solicitado",
+      "duration": "Duración",
+      "monthlyPayment": "Pago mensual estimado",
+      "currentStatus": "Estado actual",
+      "underReview": "Estudio en progreso"
+    },
+    "contactConfirmation": {
+      "subject": "Hemos recibido su mensaje - INVIK BANK",
+      "subtitle": "Mensaje recibido",
+      "mainText": "Hemos recibido su mensaje a través de nuestro formulario de contacto.",
+      "responseTime": "Nuestro equipo le responderá lo antes posible, generalmente en un plazo de 24 horas laborables.",
+      "concernsLabel": "Su solicitud se refiere a:",
+      "urgentContact": "Si tu solicitud es urgente, también puedes contactar con nosotros:"
+    }
+  },
+  "de": {
+    "publicLeadConfirmation": {
+      "subject": "Bestätigung Ihrer Simulationsanfrage – INVIK BANK",
+      "greeting": "Bonjour",
+      "mainText": "Wir haben Ihre Kreditsimulationsanfrage erhalten.Ein Berater der INVIK BANK wird Ihre Informationen prüfen, um Ihnen eine geeignete Lösung anzubieten.",
+      "cta": "Schließe meine Anfrage ab",
+      "closing": "Vielen Dank für Ihr Vertrauen",
+      "team": "Das INVIK BANK Credit-Team"
+    },
+    "welcome": {
+      "subject": "Willkommen bei INVIK BANK – Konto aktiviert!",
+      "title": "GLÜCKWUNSCH !",
+      "greeting": "Willkommen an Bord",
+      "mainText": "Ihre E-Mail-Adresse wurde erfolgreich validiert.Wir freuen uns, Sie zu unseren privilegierten Kunden zählen zu dürfen.",
+      "stepsTitle": "Nächste Schritte:",
+      "cta": "Greifen Sie auf mein Dashboard zu",
+      "closing": "Vielen Dank für Ihr Vertrauen",
+      "team": "Das Team der INVIK BANK"
+    },
+    "transferSent": {
+      "subject": "Überweisungsbestätigung – INVIK BANK",
+      "subtitle": "Übertragungsbestätigung",
+      "mainText": "Wir bestätigen, dass Ihre Überweisung gesendet wurde.",
+      "detailsText": "Die Mittel stehen innerhalb der üblichen Bankfristen auf dem Konto des Begünstigten zur Verfügung.",
+      "amount": "Menge",
+      "beneficiary": "Begünstigter",
+      "reference": "Referenz",
+      "status": "Status",
+      "sent": "Gesendet"
+    },
+    "transferReceived": {
+      "subject": "Sie haben eine Überweisung erhalten – INVIK BANK",
+      "subtitle": "Gute Nachrichten!",
+      "mainText": "Sie haben gerade eine Überweisung auf Ihr INVIK BANK-Konto erhalten.",
+      "detailsText": "Ihr neues Guthaben ist jetzt in Ihrer App verfügbar.",
+      "amountReceived": "Erhaltener Betrag",
+      "from": "Aus"
+    },
+    "verificationReminder": {
+      "subject": "Aktion erforderlich: Bestätigen Sie Ihre Identität – INVIK BANK",
+      "subtitle": "Verifizierungserinnerung",
+      "mainText": "Ihr INVIK BANK-Konto wurde erfolgreich erstellt, Ihre Identität ist jedoch noch nicht bestätigt.",
+      "ctaText": "Bestätige meine Identität",
+      "notice": "Die Verifizierung dauert nur wenige Minuten."
+    },
+    "cardOrder": {
+      "subject": "Bestätigung der Kartenbestellung - INVIK BANK",
+      "tagline": "Eleganz zum Greifen nah",
+      "mainText": "Wir haben Ihre Bestellung für Ihre neue INVIK-Karte erhalten",
+      "modelOrdered": "Modell bestellt",
+      "deliveryAddress": "Lieferadresse",
+      "estimatedDelivery": "Geschätzte Zeit",
+      "deliveryTime": "3 bis 5 Werktage",
+      "cta": "Verfolgen Sie meine Bestellung"
+    },
+    "loanRequest": {
+      "subject": "Bestätigung Ihrer Kreditanfrage – INVIK BANK",
+      "tagline": "Ihr Projekt, unsere Priorität",
+      "mainText": "Wir bestätigen den Eingang Ihrer Finanzierungsanfrage für Ihr Projekt",
+      "requestedAmount": "Angeforderter Betrag",
+      "duration": "Dauer",
+      "monthlyPayment": "Geschätzte monatliche Zahlung",
+      "currentStatus": "Aktueller Stand",
+      "underReview": "Studie läuft"
+    },
+    "contactConfirmation": {
+      "subject": "Wir haben Ihre Nachricht erhalten – INVIK BANK",
+      "subtitle": "Nachricht erhalten",
+      "mainText": "Wir haben Ihre Nachricht über unser Kontaktformular erhalten.",
+      "responseTime": "Unser Team wird Ihnen so schnell wie möglich antworten, in der Regel innerhalb von 24 Arbeitsstunden.",
+      "concernsLabel": "Ihre Anfrage betrifft:",
+      "urgentContact": "Wenn Ihr Anliegen dringend ist, können Sie uns auch kontaktieren:"
+    }
+  }
+}

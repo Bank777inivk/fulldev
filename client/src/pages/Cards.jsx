@@ -119,7 +119,7 @@ const Cards = () => {
                                     </div>
                                 </div>
                                 <div style={styles.cardBottom}>
-                                    <span style={{ fontSize: '0.8rem', opacity: 0.8 }}>Valide jusqu'au 12/28</span>
+                                    <span style={{ fontSize: '0.8rem', opacity: 0.8 }}>{t('cards_page.virtual.card_back.valid_until')} 12/28</span>
                                     <span style={{ fontWeight: 'bold', fontSize: '1.2rem', fontStyle: 'italic' }}>VISA</span>
                                 </div>
                             </div>
@@ -130,12 +130,11 @@ const Cards = () => {
                             <div style={styles.virtualCardBack} className="virtual-card virtual-card-back">
                                 <div style={styles.cardMagneticStrip}></div>
                                 <div style={styles.cardSignatureRow}>
-                                    <div style={styles.cardSignature}>Authorized Signature</div>
+                                    <div style={styles.cardSignature}>{t('cards_page.virtual.card_back.signature')}</div>
                                     <div style={styles.cardCvc}>123</div>
                                 </div>
                                 <div style={styles.cardBackText}>
-                                    This card is property of INVIK SA. If found, please return to nearest branch.
-                                    For support call +33 1 23 45 67 89.
+                                    {t('cards_page.virtual.card_back.text')}
                                 </div>
                             </div>
                         </div>

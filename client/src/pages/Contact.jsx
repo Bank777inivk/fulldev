@@ -31,7 +31,10 @@ const Contact = () => {
         e.preventDefault();
         setIsSubmitting(true);
         try {
-            await contactService.submitContactForm(formData);
+            await contactService.submitContactForm({
+                ...formData,
+                language: currentLang // Add user's current language
+            });
             showToast(t('contact_page.form.success'), 'success');
             setFormData({
                 name: '',

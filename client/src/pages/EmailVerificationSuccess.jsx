@@ -3,8 +3,10 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { applyActionCode } from 'firebase/auth';
 import { auth } from '../firebase/config';
+import { useTranslation } from 'react-i18next';
 
 const EmailVerificationSuccess = () => {
+    const { t, i18n } = useTranslation();
     const navigate = useNavigate();
     const { logout } = useAuth();
     const [searchParams] = useSearchParams();
@@ -45,7 +47,7 @@ const EmailVerificationSuccess = () => {
             }, 1000);
             return () => clearTimeout(timer);
         } else if (status === 'success' && countdown === 0) {
-            navigate('/login');
+            navigate(`/${i18n.language}/login`);
         }
     }, [status, countdown, navigate]);
 
@@ -54,7 +56,7 @@ const EmailVerificationSuccess = () => {
             <div style={styles.container}>
                 <div style={styles.card}>
                     <div style={styles.spinner}></div>
-                    <h1 style={styles.title}>Vérification en cours...</h1>
+                    <h1 style={styles.title}>{t('auth.verify_success.verifying')}</h1>
                 </div>
             </div>
         );
@@ -67,12 +69,12 @@ const EmailVerificationSuccess = () => {
                     <div style={{ ...styles.iconBox, background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' }}>
                         <i className="fas fa-times" style={styles.icon}></i>
                     </div>
-                    <h1 style={styles.title}>Erreur de vérification</h1>
+                    <h1 style={styles.title}>{t('auth.verify_success.error_title')}</h1>
                     <p style={styles.description}>
-                        Le lien de vérification est invalide ou a expiré.
+                        {t('auth.verify_success.error_desc')}
                     </p>
-                    <button style={styles.btn} onClick={() => navigate('/login')}>
-                        Retour à la connexion
+                    <button style={styles.btn} onClick={() => navigate(`/${i18n.language}/login`)}>
+                        {t('auth.verify_success.login_now')}
                     </button>
                 </div>
             </div>
@@ -85,16 +87,16 @@ const EmailVerificationSuccess = () => {
                 <div style={styles.iconBox}>
                     <i className="fas fa-check-circle" style={styles.icon}></i>
                 </div>
-                <h1 style={styles.title}>Email vérifié avec succès !</h1>
+                <h1 style={styles.title}>{t('auth.verify_success.success_title')}</h1>
                 <p style={styles.description}>
-                    Votre adresse email a été confirmée. Vous pouvez maintenant vous connecter à votre compte.
+                    {t('auth.verify_success.success_desc')}
                 </p>
                 <div style={styles.countdownBox}>
-                    <p style={styles.countdownText}>Redirection vers la page de connexion dans</p>
+                    <p style={styles.countdownText}>{t('auth.verify_success.redirect')}</p>
                     <div style={styles.countdownNumber}>{countdown}</div>
                 </div>
-                <button style={styles.btn} onClick={() => navigate('/login')}>
-                    Se connecter maintenant
+                <button style={styles.btn} onClick={() => navigate(`/${i18n.language}/login`)}>
+                    {t('auth.verify_success.login_now')}
                 </button>
             </div>
         </div>

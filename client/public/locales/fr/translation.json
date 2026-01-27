@@ -11,6 +11,279 @@
         "register": "Ouvrir un compte",
         "dashboard": "Tableau de bord"
     },
+    "simulator_page": {
+        "title": "Simulateur de Crédit",
+        "subtitle": "Estimez vos mensualités en quelques clics. Réponse de principe immédiate.",
+        "amount": "Montant du projet",
+        "duration": "Durée",
+        "rate_apr": "Taux (TAEG)",
+        "monthly": "Mensualité",
+        "total_cost": "Coût total",
+        "receive_email": "Recevoir ma simulation par email",
+        "email_placeholder": "votre@email.com",
+        "send": "Envoyer",
+        "success": "Votre simulation a été envoyée avec succès à {{email}}.",
+        "error": "Erreur lors de l'envoi de la simulation."
+    },
+    "auth": {
+        "action_handler": {
+            "processing": "Traitement de votre demande en cours...",
+            "invalid_link": "Lien invalide ou expiré.",
+            "unknown_action": "Action non reconnue.",
+            "verify_email": {
+                "success": "Votre adresse email a été vérifiée avec succès !",
+                "error": "Le code de vérification est invalide ou a déjà été utilisé."
+            },
+            "reset_password": {
+                "invalid": "Lien de réinitialisation invalide ou expiré.",
+                "success": "Votre mot de passe a été modifié avec succès.",
+                "mismatch": "Les mots de passe ne correspondent pas.",
+                "title": "Nouveau mot de passe",
+                "instruction": "Veuillez saisir votre nouveau mot de passe.",
+                "placeholder_new": "Nouveau mot de passe",
+                "placeholder_confirm": "Confirmer le mot de passe",
+                "submit": "Valider le changement"
+            },
+            "recover_email": {
+                "success": "Votre email a été restauré.",
+                "error": "Erreur lors de la récupération."
+            },
+            "titles": {
+                "success": "Félicitations !",
+                "error": "Oups !"
+            },
+            "buttons": {
+                "login": "Veuillez vous connecter pour avoir accès à votre espace client",
+                "back_login": "Retour à la connexion"
+            }
+        },
+        "login": {
+            "title": "Connexion Client",
+            "subtitle": "Accédez à votre espace bancaire sécurisé",
+            "identifier": "Identifiant Client (Email)",
+            "email_placeholder": "votre.email@exemple.com",
+            "password": "Mot de passe",
+            "password_placeholder": "••••••••",
+            "forgot_password": "Mot de passe oublié ?",
+            "submit": "Se connecter",
+            "loading": "Traitement...",
+            "sending": "Envoyer le lien",
+            "back_to_login": "Retour à la connexion",
+            "not_client": "Pas encore client ?",
+            "open_account": "Ouvrir un compte",
+            "error_empty_email": "Veuillez saisir votre adresse email pour réinitialiser le mot de passe.",
+            "success_reset": "Lien de réinitialisation envoyé ! Vérifiez votre boîte mail.",
+            "error_reset": "Impossible d'envoyer l'email de réinitialisation.",
+            "error_login": "Email ou mot de passe incorrect."
+        },
+        "register": {
+            "title": "Ouvrir un Compte",
+            "subtitle": "Rejoignez INVIK SA, la banque de demain.",
+            "selection": {
+                "title": "Choisissez votre type de compte",
+                "subtitle": "Une expérience bancaire sur-mesure pour chacun de vos besoins.",
+                "personal": {
+                    "title": "Particulier",
+                    "desc": "Gérez votre argent au quotidien, épargnez et accédez à nos crédits personnels.",
+                    "btn": "Ouvrir un compte Particulier"
+                },
+                "business": {
+                    "title": "Professionnel",
+                    "desc": "Des solutions puissantes pour les entreprises, freelances et associations.",
+                    "btn": "Ouvrir un compte Business"
+                }
+            },
+            "form": {
+                "personal_title": "Inscription Particulier",
+                "personal_subtitle": "Veuillez remplir vos informations personnelles obligatoires.",
+                "business_title": "Inscription Professionnel",
+                "business_subtitle": "Formulaire complet pour les entreprises et indépendants.",
+                "identity_section": "1. Identité",
+                "company_section": "1. Informations Société",
+                "coords_section": "2. Coordonnées & Préférences",
+                "rep_section": "2. Représentant Légal",
+                "security_section": "SÉCURITÉ & VALIDATION",
+                "fields": {
+                    "firstname": "Prénom",
+                    "lastname": "Nom",
+                    "dob": "Date de naissance",
+                    "birthplace": "Lieu de naissance",
+                    "birthplace_placeholder": "Ex: Paris",
+                    "gender": "Sexe",
+                    "nationality": "Nationalité",
+                    "residence": "Pays de résidence",
+                    "address": "Adresse complète",
+                    "address_placeholder": "Ex: 12 Rue de la Paix",
+                    "zip": "Code Postal",
+                    "zip_placeholder": "75001",
+                    "city": "Ville",
+                    "city_placeholder": "Paris",
+                    "phone": "Téléphone mobile",
+                    "phone_placeholder": "06 00 00 00 00",
+                    "email": "Email valide",
+                    "currency": "Devise du compte",
+                    "savings_opt": "Option Épargne",
+                    "company_name": "Dénomination sociale",
+                    "legal_form": "Forme juridique",
+                    "siret": "Numéro d'immatriculation (SIRET/TVA)",
+                    "sector": "Secteur d'activité",
+                    "hq_address": "Adresse du siège social",
+                    "function": "Fonction",
+                    "function_placeholder": "Ex: Gérant",
+                    "pro_email": "Email professionnel",
+                    "password": "Mot de passe sécurisé",
+                    "confirm_password": "Confirmation du mot de passe",
+                    "terms": "Je certifie l'exactitude des informations fournies et j'accepte les Conditions Générales d'Utilisation d'INVIK SA."
+                },
+                "submit": "Finaliser",
+                "submitting": "Création en cours...",
+                "back": "Retour",
+                "success": "Compte créé avec succès ! Un email de vérification a été envoyé à votre adresse.",
+                "error_match": "Les mots de passe ne correspondent pas.",
+                "error_length": "Le mot de passe doit contenir au moins 6 caractères.",
+                "error_exists": "Cette adresse email est déjà utilisée.",
+                "error_generic": "Une erreur est survenue lors de l'inscription. Veuillez réessayer.",
+                "placeholders": {
+                    "choose": "Choisir...",
+                    "select": "Sélectionner..."
+                },
+                "options": {
+                    "gender": {
+                        "male": "Masculin",
+                        "female": "Féminin"
+                    },
+                    "account_type": {
+                        "standard": "Standard uniquement",
+                        "savings": "Avec Épargne & Crédit automatique"
+                    },
+                    "legal_form": {
+                        "auto": "Auto-entrepreneur",
+                        "assoc": "Association",
+                        "other": "Autre"
+                    }
+                }
+            }
+        },
+        "verify_pending": {
+            "title": "Vérifiez votre adresse email",
+            "sent_to": "Un email de vérification a été envoyé à",
+            "instructions": "Veuillez cliquer sur le lien dans l'email, cette page se rafraîchira automatiquement.",
+            "waiting": "En attente de validation...",
+            "resend": "Renvoyer l'email de vérification",
+            "logout": "Retour à la connexion",
+            "help_title": "Vous n'avez pas reçu l'email ?",
+            "help_1": "Vérifiez votre dossier spam/courrier indésirable",
+            "help_2": "Assurez-vous que l'adresse email est correcte",
+            "help_3": "Attendez quelques minutes avant de renvoyer",
+            "resend_success": "Email de vérification renvoyé avec succès !",
+            "resend_error": "Erreur lors de l'envoi. Veuillez réessayer."
+        },
+        "verify_success": {
+            "verifying": "Vérification en cours...",
+            "error_title": "Erreur de vérification",
+            "error_desc": "Le lien de vérification est invalide ou a expiré.",
+            "success_title": "Email vérifié avec succès !",
+            "success_desc": "Votre adresse email a été confirmée. Vous pouvez maintenant vous connecter à votre compte.",
+            "redirect": "Redirection vers la page de connexion dans",
+            "login_now": "Se connecter maintenant"
+        }
+    },
+    "credit": {
+        "hero": {
+            "title": "Demande de Crédit",
+            "subtitle": "Étude de solvabilité en temps réel"
+        },
+        "steps": {
+            "general": "Informations Générales",
+            "identity": "Identité du demandeur",
+            "personal": "Situation personnelle",
+            "professional": "Situation professionnelle",
+            "financial": "Situation financière",
+            "banking": "Informations bancaires",
+            "consent": "Déclarations et consentements",
+            "result": "Analyse Terminée"
+        },
+        "fields": {
+            "type": "Type de crédit demandé",
+            "amount": "Montant du crédit demandé (€)",
+            "duration": "Durée souhaitée (en mois)",
+            "object": "Objet précis du crédit (obligatoire)",
+            "rate": "Taux d'intérêt souhaité (TAEG)",
+            "monthly": "Mensualité estimée",
+            "civility": "Civilité",
+            "lastname": "Nom",
+            "firstname": "Prénom(s)",
+            "email": "Email",
+            "phone": "Téléphone",
+            "dob": "Date de naissance",
+            "id_num_warn": "Numéro de pièce d'identité (Dernier rappel avant l'étape suivante)",
+            "id_type": "Type de pièce d’identité",
+            "marital": "Situation matrimoniale",
+            "children": "Nombre d’enfants à charge",
+            "housing": "Type de logement",
+            "street": "N° et Rue",
+            "street_placeholder": "Ex: 12 Rue de la Paix",
+            "zip": "Code Postal",
+            "zip_placeholder": "75001",
+            "city": "Ville",
+            "city_placeholder": "Paris",
+            "country": "Pays",
+            "status": "Statut professionnel",
+            "income": "Revenus mensuels nets (€)",
+            "employer": "Nom de l'employeur / entreprise",
+            "rent": "Loyer / Crédit immobilier mensuel (€)",
+            "other_credits": "Autres crédits en cours (€)",
+            "incident": "Incident bancaire antérieur ?",
+            "current_bank": "Banque actuelle",
+            "other_bank": "Nom de votre banque",
+            "iban": "IBAN / Numéro de compte",
+            "iban_placeholder": "FR76...",
+            "certify": "Je certifie que les informations fournies sont exactes et complètes.",
+            "authorize": "J’autorise INVIK SA à analyser mes données dans le cadre de l’étude de ma demande.",
+            "privacy": "Protection des données : Les données collectées sont destinées à INVIK SA exclusivement pour l’étude de la demande de crédit.",
+            "submit": "Soumettre ma demande",
+            "analyzing": "Analyse en cours...",
+            "next": "Suivant",
+            "back": "Retour"
+        },
+        "options": {
+            "personal": "Crédit personnel",
+            "consumption": "Crédit consommation",
+            "auto": "Crédit automobile",
+            "real_estate": "Crédit immobilier",
+            "pro": "Crédit professionnel",
+            "passport": "Passeport",
+            "cni": "Carte nationale d’identité",
+            "residence": "Titre de séjour",
+            "single": "Célibataire",
+            "married": "Marié(e)",
+            "divorced": "Divorcé(e)",
+            "widowed": "Veuf(ve)",
+            "owner": "Propriétaire",
+            "tenant": "Locataire",
+            "hosted": "Hébergé",
+            "cdi": "Salarié CDI",
+            "cdd": "Salarié CDD",
+            "official": "Fonctionnaire",
+            "freelance": "Travailleur indépendant",
+            "entrepreneur": "Entrepreneur",
+            "retired": "Retraité",
+            "unemployed": "Sans emploi",
+            "yes": "Oui",
+            "no": "Non",
+            "select_bank": "-- Sélectionner votre banque --"
+        },
+        "result": {
+            "green_title": "Forte probabilité d’acceptation",
+            "yellow_title": "Étude complémentaire requise",
+            "red_title": "Forte probabilité de rejet",
+            "green_desc": "Votre dossier présente une excellente solvabilité.",
+            "yellow_desc": "Certains éléments nécessitent une vérification manuelle.",
+            "red_desc": "Votre situation financière actuelle ne permet pas l’octroi du crédit.",
+            "disclaimer": "Décision finale soumise à validation interne INVIK SA",
+            "home_btn": "Retour à l'accueil"
+        }
+    },
     "home": {
         "slides": {
             "0": {
@@ -225,6 +498,15 @@
     },
     "footer": {
         "description": "INVIK SA est une banque en ligne digitale de droit luxembourgeois, basée au 38 PARC D'ACTIVITES CAPELLEN L-8308 CAP, Capellen Luxembourg. Contact : +33 06 46 72 32 86 — Email : contact@inviksa.com",
+        "shareholders": {
+            "title": "Actionnaires Principaux",
+            "lfg": "Leader européen de l'investissement financier",
+            "lfg_role": "Actionnaire majoritaire - 45%",
+            "etv": "Spécialiste des fintechs innovantes",
+            "etv_role": "Investisseur stratégique - 25%",
+            "cpi": "Fonds d'investissement de premier plan",
+            "cpi_role": "Investisseur institutionnel - 20%"
+        },
         "legal": {
             "title": "Informations légales",
             "privacy": "Politique de confidentialité",
@@ -247,424 +529,82 @@
         },
         "copyright": "INVIK SA. Tous droits réservés."
     },
-    "about_page": {
-        "hero": {
-            "title": "À Propos de INVIK SA",
-            "subtitle": "L'excellence bancaire au service de vos ambitions."
-        },
-        "history": {
-            "title": "Notre Histoire",
-            "p1": "Fondée en 2009 au Luxembourg, INVIK SA est née de la vision audacieuse de redéfinir l'expérience bancaire pour l'ère numérique. Nos fondateurs, experts en finance et technologie, ont identifié un besoin crucial : offrir des services bancaires modernes sans compromettre la sécurité ni la relation humaine.",
-            "p2": "Depuis nos débuts, nous avons connu une croissance remarquable, passant de quelques centaines de clients à plus de 500 000 utilisateurs actifs à travers l'Europe. Cette expansion témoigne de notre engagement constant envers l'innovation et l'excellence du service client.",
-            "p3": "Aujourd'hui, INVIK SA est reconnue comme l'une des banques en ligne les plus fiables et innovantes d'Europe, avec une présence établie au Luxembourg, en France, en Belgique et en Allemagne."
-        },
-        "services": {
-            "title": "Nos Services",
-            "subtitle": "Des solutions bancaires complètes adaptées à vos besoins",
-            "items": {
-                "accounts": {
-                    "title": "Comptes & Cartes",
-                    "text": "Comptes courants, épargne, cartes bancaires internationales avec protection contre la fraude"
-                },
-                "transfers": {
-                    "title": "Transferts Internationaux",
-                    "text": "Virements rapides et sécurisés dans plus de 150 pays avec des frais compétitifs"
-                },
-                "business": {
-                    "title": "Solutions Entreprises",
-                    "text": "Comptes professionnels, gestion de trésorerie, financement et services dédiés aux PME"
-                },
-                "invest": {
-                    "title": "Investissements",
-                    "text": "Accès à des produits d'investissement diversifiés avec accompagnement personnalisé"
-                },
-                "loans": {
-                    "title": "Crédits & Prêts",
-                    "text": "Prêts personnels, immobiliers et professionnels avec des taux compétitifs"
-                },
-                "insurance": {
-                    "title": "Assurances",
-                    "text": "Protection complète : voyage, santé, vie et biens avec des partenaires de confiance"
-                }
-            }
-        },
-        "vision": {
-            "title": "Notre Vision 2025-2035",
-            "subtitle": "Une feuille de route ambitieuse pour devenir la banque digitale de référence en Europe",
-            "phases": {
-                "p1": {
-                    "year": "2025-2027",
-                    "title": "Phase 1 : Consolidation & Expansion",
-                    "items": [
-                        "✓ Atteindre 1 million de clients actifs en Europe",
-                        "✓ Lancement dans 5 nouveaux pays (Espagne, Italie, Pays-Bas, Autriche, Portugal)",
-                        "✓ Développement de l'application mobile nouvelle génération avec IA intégrée",
-                        "✓ Partenariats avec 50 fintechs européennes pour enrichir notre écosystème",
-                        "✓ Certification ISO 27001 pour la sécurité des données",
-                        "✓ Lancement de INVIK Business Pro pour les PME"
-                    ]
-                },
-                "p2": {
-                    "year": "2028-2030",
-                    "title": "Phase 2 : Innovation & Leadership",
-                    "items": [
-                        "✓ 3 millions de clients à travers 15 pays européens",
-                        "✓ Lancement de INVIK Invest : plateforme d'investissement automatisé",
-                        "✓ Introduction de services bancaires basés sur la blockchain",
-                        "✓ Neutralité carbone complète de toutes nos opérations",
-                        "✓ Création d'un fonds d'investissement de 100M€ pour les startups vertes",
-                        "✓ Ouverture de 10 hubs d'innovation dans les capitales européennes",
-                        "✓ Lancement du programme INVIK Academy pour la formation financière"
-                    ]
-                },
-                "p3": {
-                    "year": "2031-2033",
-                    "title": "Phase 3 : Transformation Digitale",
-                    "items": [
-                        "✓ 5 millions de clients avec présence dans 20+ pays",
-                        "✓ Assistant financier IA personnalisé pour chaque client",
-                        "✓ Intégration complète des crypto-monnaies et actifs numériques",
-                        "✓ Lancement de INVIK Metaverse Banking Experience",
-                        "✓ Partenariats avec 500+ entreprises pour solutions B2B",
-                        "✓ Programme d'inclusion financière touchant 100 000 personnes non bancarisées",
-                        "✓ Développement de solutions de paiement instantané transfrontalier"
-                    ]
-                }
-            }
-        },
-        "goals": {
-            "title": "Objectifs Chiffrés 2035",
-            "items": {
-                "clients": {
-                    "number": "10M+",
-                    "label": "Clients Actifs",
-                    "desc": "À travers l'Europe et au-delà"
-                },
-                "assets": {
-                    "number": "€50Mds",
-                    "label": "Actifs Sous Gestion",
-                    "desc": "Croissance annuelle de 35%"
-                },
-                "countries": {
-                    "number": "25+",
-                    "label": "Pays de Présence",
-                    "desc": "Couverture européenne complète"
-                },
-                "carbon": {
-                    "number": "100%",
-                    "label": "Neutre en Carbone",
-                    "desc": "Impact environnemental positif"
-                }
-            }
-        },
-        "partners": {
-            "title": "Partenaires & Actionnaires",
-            "subtitle": "Des partenariats stratégiques au service de votre réussite",
-            "shareholders": {
-                "title": "Actionnaires Principaux",
-                "lfg": "Leader européen de l'investissement financier",
-                "etv": "Spécialiste des fintechs innovantes",
-                "cpi": "Fonds d'investissement de premier plan"
-            },
-            "ecosystem": {
-                "title": "Écosystème & Partenaires"
-            },
-            "clients": {
-                "title": "Grands Comptes & Entreprises Clientes",
-                "subtitle": "Plus de 15 000 entreprises nous font confiance",
-                "stats": {
-                    "pme": "PME Partenaires",
-                    "large": "Grandes Entreprises",
-                    "startups": "Startups & TPE",
-                    "volume": "Volume Transactions/An"
-                }
-            },
-            "cta": {
-                "title": "Votre entreprise souhaite devenir partenaire ?",
-                "text": "Rejoignez notre réseau de partenaires stratégiques et bénéficiez de solutions bancaires sur mesure",
-                "button": "Contactez notre équipe Corporate"
-            }
-        },
-        "values": {
-            "title": "Nos Valeurs",
-            "items": {
-                "security": {
-                    "title": "Sécurité Absolue",
-                    "text": "Protection maximale de vos données et avoirs avec les technologies de chiffrement les plus avancées"
-                },
-                "innovation": {
-                    "title": "Innovation Continue",
-                    "text": "Amélioration constante de nos services pour anticiper vos besoins et vous offrir le meilleur"
-                },
-                "transparency": {
-                    "title": "Transparence Totale",
-                    "text": "Aucun frais caché, communication claire et relation de confiance basée sur l'honnêteté"
-                },
-                "responsibility": {
-                    "title": "Responsabilité",
-                    "text": "Engagement envers le développement durable et l'impact social positif dans toutes nos actions"
-                }
-            }
-        }
-    },
-    "services_page": {
-        "hero": {
-            "title": "Nos Services",
-            "subtitle": "Des solutions bancaires conçues pour simplifier votre quotidien"
-        },
-        "services_list": [
-            {
-                "id": 5,
-                "title": "Crédits & Prêts",
-                "description": "Concrétisez vos projets avec nos solutions de financement flexibles. Prêt personnel, crédit immobilier ou financement professionnel, bénéficiez de taux compétitifs et d'une réponse rapide.",
-                "features": [
-                    "Prêt personnel de 1 000€ à 75 000€",
-                    "Crédit immobilier jusqu'à 500 000€",
-                    "Taux à partir de 2,0% TAEG",
-                    "Simulation en ligne instantanée",
-                    "Réponse de principe en 48h",
-                    "Remboursement anticipé sans frais"
-                ],
-                "useCases": [
-                    {
-                        "title": "Thomas, Achat d'une voiture",
-                        "case": "Thomas a obtenu un prêt personnel de 15 000€ sur 5 ans à 2,9% TAEG pour acheter une voiture électrique. Sa mensualité de 268€ est 40€ moins chère que l'offre de sa banque traditionnelle. Il a reçu l'argent sur son compte en 3 jours ouvrés."
-                    },
-                    {
-                        "title": "Famille Dubois, Achat résidence principale",
-                        "case": "Les Dubois ont financé leur maison de 280 000€ avec un crédit immobilier INVIK SA à 1,85% sur 25 ans. Grâce au taux compétitif, ils économisent 18 000€ d'intérêts sur la durée totale du prêt par rapport à leur première offre bancaire."
-                    }
-                ]
-            },
-            {
-                "id": 4,
-                "title": "Investissements & Épargne",
-                "description": "Faites fructifier votre argent avec nos solutions d'investissement diversifiées. Du compte épargne rémunéré aux portefeuilles d'investissement automatisés, nous vous accompagnons dans la construction de votre patrimoine.",
-                "features": [
-                    "Compte épargne rémunéré jusqu'à 3% par an",
-                    "Portefeuilles d'investissement automatisés",
-                    "Accès aux ETF et fonds indiciels",
-                    "Investissement socialement responsable (ISR)",
-                    "Conseils personnalisés selon votre profil",
-                    "Frais de gestion parmi les plus bas du marché"
-                ],
-                "useCases": [
-                    {
-                        "title": "Julie, 32 ans, Cadre en entreprise",
-                        "case": "Julie a ouvert un compte épargne INVIK SA avec un taux de 2,8% et investit 300€/mois dans un portefeuille ETF diversifié (60% actions, 40% obligations). Après 3 ans, son épargne de 10 800€ a généré 1 450€ de gains, soit un rendement annuel moyen de 4,5%."
-                    },
-                    {
-                        "title": "Pierre & Anne, Couple de retraités",
-                        "case": "Ce couple a transféré leur épargne de 150 000€ chez INVIK SA. Ils ont opté pour un portefeuille conservateur (20% actions, 80% obligations) qui leur rapporte en moyenne 3,2% par an, soit 4 800€ de revenus annuels, tout en préservant leur capital."
-                    }
-                ]
-            },
-            {
-                "id": 1,
-                "title": "Comptes Courants & Cartes",
-                "description": "Gérez votre argent au quotidien avec nos comptes courants flexibles et nos cartes bancaires internationales. Profitez d'une gestion simplifiée et d'une sécurité maximale pour toutes vos transactions.",
-                "features": [
-                    "Compte courant en EUR avec IBAN européen",
-                    "Carte de débit Mastercard ou Visa",
-                    "Virements SEPA gratuits et illimités",
-                    "Retraits gratuits dans toute l'Europe",
-                    "Application mobile intuitive",
-                    "Notifications en temps réel"
-                ],
-                "useCases": [
-                    {
-                        "title": "Sophie, Freelance Designer",
-                        "case": "Sophie utilise son compte INVIK SA pour recevoir les paiements de ses clients internationaux. Grâce aux virements SEPA gratuits, elle économise plus de 200€ par an en frais bancaires. L'application mobile lui permet de suivre ses revenus en temps réel et de catégoriser ses dépenses professionnelles."
-                    },
-                    {
-                        "title": "Marc, Étudiant Erasmus",
-                        "case": "En échange universitaire en Espagne, Marc profite de sa carte INVIK SA pour retirer de l'argent sans frais dans toute l'Europe. Il reçoit son allocation mensuelle instantanément et peut payer ses achats en ligne sans surcoût."
-                    }
-                ]
-            },
-            {
-                "id": 2,
-                "title": "Transferts Internationaux",
-                "description": "Envoyez et recevez de l'argent partout dans le monde en quelques clics. Nos transferts internationaux sont rapides, sécurisés et à des tarifs compétitifs, avec une transparence totale sur les frais et les taux de change.",
-                "features": [
-                    "Transferts vers plus de 150 pays",
-                    "Taux de change en temps réel",
-                    "Frais réduits et transparents",
-                    "Délai de traitement : 1-3 jours ouvrés",
-                    "Suivi en temps réel de vos transferts",
-                    "Support multi-devises (USD, GBP, CHF, etc.)"
-                ],
-                "useCases": [
-                    {
-                        "title": "Ahmed, Entrepreneur Import-Export",
-                        "case": "Ahmed importe des produits d'Asie et exporte vers l'Afrique. Avec INVIK SA, il effectue des transferts internationaux en USD et CNY à des taux 40% plus avantageux que sa banque traditionnelle. Il a économisé plus de 5 000€ en frais de change l'année dernière."
-                    },
-                    {
-                        "title": "Maria, Expatriée au Luxembourg",
-                        "case": "Maria envoie chaque mois 500€ à sa famille au Portugal. Grâce aux transferts SEPA gratuits d'INVIK SA, l'argent arrive en 24h sans aucun frais, contrairement à son ancienne banque qui prélevait 15€ par virement."
-                    }
-                ]
-            },
-            {
-                "id": 6,
-                "title": "Assurances & Protection",
-                "description": "Protégez ce qui compte le plus avec nos solutions d'assurance complètes. En partenariat avec les meilleurs assureurs européens, nous vous offrons une protection optimale à des tarifs négociés.",
-                "features": [
-                    "Assurance voyage internationale",
-                    "Assurance santé complémentaire",
-                    "Assurance vie et prévoyance",
-                    "Protection des moyens de paiement",
-                    "Assurance habitation et auto",
-                    "Assistance juridique 24/7"
-                ],
-                "useCases": [
-                    {
-                        "title": "Emma, Digital Nomad",
-                        "case": "Emma voyage 8 mois par an pour son travail. Son assurance voyage INVIK SA (45€/mois) couvre tous ses déplacements dans 180 pays, incluant rapatriement, frais médicaux jusqu'à 500 000€, et assurance bagages. Elle a été remboursée 2 800€ suite à une hospitalisation en Thaïlande."
-                    },
-                    {
-                        "title": "Famille Martin, Protection complète",
-                        "case": "Les Martin ont souscrit un pack famille INVIK SA (120€/mois) incluant assurance habitation, 2 voitures, santé complémentaire et prévoyance. Ils économisent 35% par rapport à leurs anciennes assurances séparées et gèrent tout depuis une seule application."
-                    }
-                ]
-            },
-            {
-                "id": 3,
-                "title": "Solutions Entreprises",
-                "description": "Des solutions bancaires professionnelles adaptées aux besoins des PME, startups et indépendants. Gérez votre trésorerie, vos factures et vos paiements avec des outils dédiés aux professionnels.",
-                "features": [
-                    "Compte professionnel multi-utilisateurs",
-                    "Cartes bancaires d'entreprise illimitées",
-                    "Gestion de trésorerie avancée",
-                    "Facturation et comptabilité intégrées",
-                    "API pour intégration ERP/CRM",
-                    "Conseiller dédié pour les entreprises"
-                ],
-                "useCases": [
-                    {
-                        "title": "TechStart SaaS, Startup de 15 employés",
-                        "case": "TechStart uses INVIK Business Pro pour gérer sa trésorerie. Chaque département dispose de sa propre carte virtuelle avec limite personnalisée. Le CEO suit les denses en temps réel via le dashboard et exporte automatiquement les données vers leur logiciel comptable. Gain de temps : 10h/mois."
-                    },
-                    {
-                        "title": "Dupont & Fils, Commerce de détail",
-                        "case": "Cette PME familiale a centralisé tous ses comptes chez INVIK SA. Ils utilisent l'API pour synchroniser leurs ventes avec leur compte bancaire, automatisant ainsi la réconciliation bancaire. Leur conseiller dédié les a aidés à optimiser leur trésorerie et à obtenir une ligne de crédit de 50 000€."
-                    }
-                ]
-            }
-        ],
-        "features_title": "Fonctionnalités clés",
-        "use_cases_title": "Cas pratiques",
-        "cta": {
-            "title": "Prêt à rejoindre INVIK SA ?",
-            "text": "Ouvrez votre compte en moins de 10 minutes et profitez de tous nos services",
-            "button": "Ouvrir un compte gratuitement"
-        },
-        "buttons": {
-            "open_account": "Ouvrir un compte",
-            "simulate": "Simuler mon crédit"
-        }
-    },
     "cards_page": {
         "hero": {
-            "title": "NOS CARTES",
-            "breadcrumb": "ACCUEIL / NOS CARTES"
+            "title": "NOS CARTES BANCAIRES",
+            "breadcrumb": "ACCUEIL / CARTES"
         },
         "intro": {
-            "subtitle": "NOS CARTES DE CRÉDIT",
-            "title": "Des cartes adaptées à votre style de vie, pour des paiements sécurisés et des avantages exclusifs"
+            "subtitle": "CHOISISSEZ L'EXCELLENCE",
+            "title": "Une gamme de cartes adaptées à votre style de vie"
         },
         "cards": {
             "silver": {
-                "title": "Visa Silver Card",
-                "desc": "La carte Visa Silver d'INVIK SA offre des paiements sécurisés avec des frais de transaction maîtrisés. Idéale pour les dépenses du quotidien."
+                "title": "Visa Classic Silver",
+                "desc": "L'essentiel pour vos paiements quotidiens avec des plafonds confortables et une assurance voyage incluse."
             },
             "gold": {
-                "title": "Mastercard Gold Card",
-                "desc": "Bénéficiez d'avantages exclusifs avec la Mastercard Gold, adaptée aux voyageurs et aux utilisateurs fréquents. Plafonds élevés et assurances incluses."
+                "title": "Mastercard Gold",
+                "desc": "Des privilèges exclusifs, des assurances étendues et des plafonds élevés pour une liberté totale."
             },
             "platinum": {
-                "title": "Visa Platinum Card",
-                "desc": "La carte Visa Platinum d'INVIK SA offre une expérience haut de gamme avec des services premium, des garanties d'assurance et d'assistance renforcées."
+                "title": "Visa Platinum",
+                "desc": "Le prestige sans compromis. Conciergerie 24/7, accès aux salons d'aéroport et assurances premium."
             }
         },
+        "cta_button": "COMMANDER CETTE CARTE",
         "virtual": {
             "title": "La Carte Virtuelle INVIK",
-            "desc": "Sécurisez vos achats en ligne avec nos cartes virtuelles éphémères ou permanentes. Générez-les instantanément depuis votre application.",
+            "desc": "Sécurisez vos achats en ligne avec notre carte virtuelle instantanée. Générez des numéros uniques pour chaque transaction ou utilisez-la pour vos abonnements.",
+            "button": "CRÉER MA CARTE VIRTUELLE",
             "features": [
-                "✨ Création instantanée et illimitée",
-                "🔒 Idéal pour les abonnements et achats web",
-                "📱 Compatible Apple Pay & Google Pay"
+                "Activation immédiate",
+                "Plafonds personnalisables",
+                "Compatible Apple Pay & Google Pay",
+                "Blocage instantané via l'app"
             ],
-            "button": "OBTENIR UNE CARTE"
-        },
-        "cta_button": "OUVRIR UN COMPTE"
+            "card_back": {
+                "signature": "Signature autorisée",
+                "text": "Cette carte est la propriété d'INVIK SA. Si trouvée, merci de la retourner à l'agence la plus proche. Support: +33 1 23 45 67 89.",
+                "valid_until": "Valide jusqu'au"
+            }
+        }
     },
-    "faq_page": {
+    "reviews_page": {
         "hero": {
-            "title": "FAQ'S",
-            "breadcrumb": "ACCUEIL / FAQ'S"
+            "title": "Votre avis compte",
+            "subtitle": "Partagez votre expérience avec la communauté INVIK SA"
         },
-        "items": [
-            {
-                "question": "Comment puis-je ouvrir un compte chez INVIK SA ?",
-                "answer": "Pour ouvrir un compte, rendez-vous sur notre page d’inscription, remplissez le formulaire avec vos informations personnelles, puis suivez les étapes de vérification de votre identité et de validation de votre dossier."
+        "form": {
+            "title": "Laissez un témoignage",
+            "success": {
+                "title": "Merci ! 🎉",
+                "message": "Votre avis a été envoyé avec succès et sera publié après modération."
             },
-            {
-                "question": "Comment puis-je effectuer un transfert international ?",
-                "answer": "Les transferts internationaux se réalisent depuis votre espace client en choisissant l’option « Transfert international ». Saisissez les coordonnées de votre bénéficiaire, le montant et la devise, puis validez l’opération après vérification des informations."
+            "labels": {
+                "firstname": "Prénom",
+                "lastname": "Nom",
+                "country": "Pays",
+                "rating": "Note (Étoiles)",
+                "comment": "Votre commentaire"
             },
-            {
-                "question": "Quels documents sont nécessaires pour l’ouverture de compte ?",
-                "answer": "Vous aurez généralement besoin d’une pièce d’identité valide (passeport, carte d’identité) et d’un justificatif de domicile de moins de trois mois. Des documents complémentaires peuvent être demandés selon votre situation."
+            "placeholders": {
+                "firstname": "Ex: Jean",
+                "lastname": "Ex: Martin",
+                "country": "Ex: France",
+                "comment": "Dites-nous ce que vous pensez de nos services..."
             },
-            {
-                "question": "Est-ce que mes informations sont sécurisées chez INVIK SA ?",
-                "answer": "Oui. INVIK SA utilise des technologies de chiffrement et des protocoles de sécurité avancés pour protéger vos données personnelles et financières, ainsi que vos opérations en ligne."
+            "submit": "Publier mon avis"
+        },
+        "info": {
+            "title": "Pourquoi témoigner ?",
+            "text": "Votre retour nous aide à améliorer nos services financiers au quotidien pour mieux vous satisfaire.",
+            "stats": {
+                "value": "98%",
+                "label": "Clients satisfaits"
             },
-            {
-                "question": "Comment puis-je commander une carte bancaire INVIK SA ?",
-                "answer": "Une fois votre compte ouvert, vous pouvez demander une carte bancaire directement depuis votre espace client en ligne, dans la section « Mes cartes », puis suivre les instructions pour la commande et l’activation."
-            },
-            {
-                "question": "Quels sont les plafonds de paiement et de retrait de mes cartes INVIK SA ?",
-                "answer": "Chaque carte INVIK SA dispose de plafonds de paiement et de retrait définis par défaut (par jour et/ou par mois). Ces limites peuvent varier selon votre profil, le type de carte et votre historique. Vous pouvez consulter et ajuster vos plafonds, dans la limite des montants autorisés, directement depuis votre espace client ou notre application, si cette option est disponible."
-            },
-            {
-                "question": "Est-ce qu’INVIK SA propose des solutions de prêts ?",
-                "answer": "Oui. INVIK SA propose plusieurs types de prêts, y compris des prêts personnels et des solutions de financement adaptées à vos projets, selon conditions et sous réserve d’acceptation. Consultez notre page « Nos services » pour plus de détails."
-            },
-            {
-                "question": "Quels sont les frais de retrait aux distributeurs (DAB/ATM) ?",
-                "answer": "Les retraits peuvent être gratuits jusqu’à un certain montant ou un certain nombre d’opérations par mois, puis facturés selon la grille tarifaire en vigueur. Les frais peuvent différer entre les retraits effectués en zone euro et à l’international (hors zone euro). Pour connaître le détail des frais de retrait (montant forfaitaire et/ou pourcentage), consultez la rubrique « Tarifs » de votre espace client ou notre documentation tarifaire."
-            },
-            {
-                "question": "Quels frais sont associés aux comptes INVIK SA ?",
-                "answer": "Nos frais sont conçus pour être transparents et compétitifs. Vous pouvez consulter l’ensemble des tarifs (tenue de compte, cartes, opérations, etc.) sur notre page dédiée à la grille tarifaire mise à jour."
-            },
-            {
-                "question": "Comment contacter le service client d’INVIK SA ?",
-                "answer": "Notre service client est disponible pour vous accompagner. Vous pouvez nous contacter par téléphone, par e-mail ou via le formulaire de contact ou le chat en ligne, selon les canaux indiqués sur notre page « Contact »."
-            },
-            {
-                "question": "Puis-je gérer mon compte INVIK SA depuis un mobile ?",
-                "answer": "Oui, notre plateforme est optimisée pour une utilisation sur mobile, tablette et ordinateur. Vous pouvez ainsi consulter vos soldes, suivre vos opérations et gérer vos services où que vous soyez."
-            },
-            {
-                "question": "Que faire en cas de perte ou de vol de ma carte INVIK SA ?",
-                "answer": "En cas de perte ou de vol, bloquez immédiatement votre carte depuis votre espace client, si cette fonctionnalité est disponible, et/ou contactez sans attendre notre service client pour mettre la carte en opposition et demander un remplacement."
-            },
-            {
-                "question": "Quels sont les pays éligibles pour un crédit chez la banque INVIK ?",
-                "answer": "La banque INVIK propose des crédits aux résidents de tous les pays d'Europe (Zone Euro, Union Européenne, Suisse, Royaume-Uni, etc.) et des pays des Amériques (États-Unis, Canada, Mexique, Brésil, Argentine, etc.). Pour être éligible, vous devez disposer d'un passeport valide, être en mesure de prouver votre identité et pouvoir justifier de revenus réguliers et suffisants pour le remboursement du prêt."
-            }
-        ],
-        "cta": {
-            "title": "Vous ne trouvez pas votre réponse ?",
-            "text": "Nos conseillers sont là pour vous aider ou pour vous accompagner dans l'ouverture de votre compte.",
-            "buttons": {
-                "open_account": "OUVRIR UN COMPTE",
-                "contact": "NOUS CONTACTER"
-            }
+            "trust": "🛡️ Vos données sont protégées et votre anonymat peut être préservé sur demande.",
+            "back": "← Retour à l'accueil"
         }
     },
     "contact_page": {
@@ -734,6 +674,219 @@
                     "+33 6 46 72 32 86"
                 ]
             }
+        }
+    },
+    "legal": {
+        "common": {
+            "last_update": "Dernière mise à jour : Décembre 2025",
+            "back_home": "ACCUEIL",
+            "cta_contact": "CONTACTER LE SERVICE CLIENT"
+        },
+        "privacy": {
+            "title": "POLITIQUE DE CONFIDENTIALITÉ",
+            "breadcrumb": "POLITIQUE DE CONFIDENTIALITÉ",
+            "intro_1": "Chez INVIK SA, nous attachons une importance primordiale à la confidentialité et à la sécurité des données personnelles des utilisateurs et des clients. La présente politique de confidentialité décrit la manière dont nous collectons, utilisons, conservons et protégeons vos informations lorsque vous utilisez notre site et nos services en ligne.",
+            "intro_2": "INVIK SA agit dans le respect de la réglementation applicable en matière de protection des données personnelles, notamment le Règlement général sur la protection des données (RGPD). En accédant à nos services, vous reconnaissez avoir pris connaissance de la présente politique et vous engagez à l’accepter.",
+            "sections": [
+                {
+                    "title": "1. Quelles données collectons-nous et pour quelles finalités ?",
+                    "text": "Nous collectons uniquement les informations nécessaires à la fourniture, à la gestion et à l’amélioration de nos services, ainsi qu’au respect de nos obligations légales et réglementaires. Selon les cas, les catégories de données que nous pouvons traiter sont :",
+                    "list": [
+                        "Données d’identification : nom, prénom, date de naissance, nationalité, pays de résidence, coordonnées (adresse, téléphone, email), profession.",
+                        "Données de contact et d’échange : informations transmises via les formulaires (contact, demande de crédit, ouverture de compte) et échanges avec notre service client.",
+                        "Données financières et de relation bancaire : informations relatives à vos comptes, opérations, demandes de crédit, revenus déclarés et autres données nécessaires à l’étude et à la gestion de votre dossier.",
+                        "Données de navigation et techniques : adresse IP, type de navigateur, pages consultées, horodatage des visites, afin d’assurer la sécurité du site, de prévenir la fraude et d’améliorer l’expérience utilisateur."
+                    ],
+                    "text_after": "Ces données peuvent être collectées directement auprès de vous (formulaires, échanges avec notre équipe) ou, le cas échéant, via des sources autorisées (par exemple, lorsque la loi exige certaines vérifications)."
+                },
+                {
+                    "title": "2. Bases légales, durée de conservation et partage des données",
+                    "text": "Le traitement de vos données personnelles par INVIK SA repose, selon les situations, sur plusieurs bases légales : l’exécution de mesures précontractuelles ou d’un contrat, le respect d’obligations légales et réglementaires, l’intérêt légitime d’INVIK SA ou, lorsque cela est requis, votre consentement.",
+                    "subsections": [
+                        {
+                            "title": "Durée de conservation",
+                            "text": "Nous conservons vos données personnelles pendant une durée n’excédant pas celle nécessaire aux finalités pour lesquelles elles sont collectées, augmentée le cas échéant des délais de prescription légale ou des obligations de conservation imposées par la réglementation."
+                        },
+                        {
+                            "title": "Partage des données",
+                            "text": "INVIK SA ne vend pas vos données personnelles. Elles peuvent toutefois être communiquées aux catégories de destinataires suivantes :",
+                            "list": [
+                                "Services internes d’INVIK SA habilités à traiter votre demande.",
+                                "Prestataires techniques et partenaires intervenant pour le compte d’INVIK SA (hébergement, outils de sécurité).",
+                                "Autorités administratives, judiciaires ou de contrôle, lorsque la loi l’exige."
+                            ]
+                        },
+                        {
+                            "title": "Mesures de sécurité",
+                            "text": "INVIK SA met en œuvre des mesures techniques et organisationnelles appropriées pour protéger vos données contre la perte, l’accès non autorisé ou la divulgation :",
+                            "list": [
+                                "Utilisation de solutions d’hébergement sécurisées et de pare-feu.",
+                                "Contrôles d’accès et limitation des données aux seules personnes habilitées.",
+                                "Procédures internes de sécurité et audits réguliers."
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "title": "3. Vos droits, les cookies et comment nous contacter",
+                    "subsections": [
+                        {
+                            "title": "Vos droits sur vos données",
+                            "text": "Conformément à la réglementation, vous disposez des droits suivants :",
+                            "list": [
+                                "Droit d’accès, de rectification et d’effacement de vos données.",
+                                "Droit à la limitation du traitement et droit d’opposition.",
+                                "Droit à la portabilité des données, lorsque cela est applicable."
+                            ],
+                            "text_after": "Vous pouvez exercer ces droits en nous contactant par email à : contact@inviksa.com."
+                        },
+                        {
+                            "title": "Cookies et traceurs",
+                            "text": "Lors de votre navigation, des cookies peuvent être déposés sur votre terminal pour assurer le bon fonctionnement du site et réaliser des statistiques. Vous pouvez gérer vos préférences via les paramètres de votre navigateur."
+                        },
+                        {
+                            "title": "Questions et réclamations",
+                            "text": "Si vous avez des questions concernant la présente politique, vous pouvez nous contacter via notre formulaire en ligne ou par email. Vous disposez également du droit d’introduire une réclamation auprès de l’autorité de contrôle compétente."
+                        }
+                    ]
+                }
+            ],
+            "cta": "NOUS CONTACTER AU SUJET DE VOS DONNÉES"
+        },
+        "cgu": {
+            "title": "CONDITIONS GÉNÉRALES D'UTILISATION",
+            "breadcrumb": "CONDITIONS GÉNÉRALES D'UTILISATION",
+            "intro_1": "Les présentes conditions générales d’utilisation (ci-après les « CGU ») ont pour objet d’encadrer l’accès au site et aux services en ligne proposés par INVIK SA, ainsi que leur utilisation par tout utilisateur (ci-après l’« Utilisateur »).",
+            "intro_2": "En accédant au site ou en utilisant les services d’INVIK SA, vous reconnaissez avoir pris connaissance des présentes CGU et vous engagez à les respecter. Si vous n’acceptez pas ces conditions, vous êtes invité à ne pas utiliser le site ni les services associés.",
+            "intro_3": "Les CGU s’appliquent en complément des autres documents contractuels d’INVIK SA, notamment les Conditions générales, les éventuelles Conditions particulières applicables à certains produits ou services, ainsi que la Politique de confidentialité et les Mentions légales.",
+            "sections": [
+                {
+                    "title": "1. Vos droits et responsabilités en tant qu’utilisateur",
+                    "text": "En tant qu’Utilisateur, vous vous engagez à utiliser le site et les services d’INVIK SA dans le respect de la loi, des présentes CGU et des règles de prudence usuelles en matière de services financiers en ligne.",
+                    "text2": "Vous vous engagez notamment à :",
+                    "list": [
+                        "Fournir des informations personnelles, bancaires et financières exactes, complètes et à jour lors de vos demandes (ouverture de compte, demande de crédit, formulaires de contact, etc.).",
+                        "Utiliser le site et les services uniquement pour des besoins personnels et légitimes, et ne pas les détourner à des fins frauduleuses, illicites ou contraires à l’ordre public.",
+                        "Ne pas tenter de porter atteinte à la sécurité ou à l’intégrité du site, des systèmes d’information d’INVIK SA ou de ses prestataires.",
+                        "Respecter les droits de propriété intellectuelle d’INVIK SA et des tiers, et ne pas reproduire, diffuser ou modifier les contenus du site sans autorisation."
+                    ],
+                    "text3": "Lorsque la création d’un espace client ou l’accès à des services spécifiques nécessite des identifiants, vous êtes responsable de leur confidentialité et de toute action effectuée au moyen de ces identifiants."
+                },
+                {
+                    "title": "2. Engagements d’INVIK SA, disponibilité du site et limitation de responsabilité",
+                    "subsections": [
+                        {
+                            "title": "Qualité et sécurité des services",
+                            "text": "INVIK SA met tout en œuvre pour proposer des services bancaires en ligne sécurisés, fiables et accessibles, et pour protéger vos données personnelles conformément à sa Politique de confidentialité.",
+                            "list": [
+                                "Mettre en place des mesures techniques et organisationnelles pour sécuriser l’accès au site.",
+                                "Limiter l’accès aux données personnelles aux seules personnes habilitées.",
+                                "Assurer la transparence sur les conditions de service et les frais applicables.",
+                                "Fournir une assistance client dans des délais raisonnables."
+                            ]
+                        },
+                        {
+                            "title": "Disponibilité du site",
+                            "text": "INVIK SA s’efforce de maintenir le site et les services accessibles 7j/7 et 24h/24. Toutefois, l’accès peut être suspendu temporairement pour des raisons techniques, de sécurité ou de maintenance."
+                        },
+                        {
+                            "title": "Limitation de responsabilité",
+                            "text": "INVIK SA ne saurait être tenue responsable :",
+                            "list": [
+                                "des conséquences liées à un usage non conforme du site ou des services par l’Utilisateur ;",
+                                "des dommages résultant d’un dysfonctionnement, d’une interruption ou d’une indisponibilité temporaire du site ;",
+                                "des dommages indirects, immatériels ou accessoires, tels que perte de chance, perte de données ou de revenus."
+                            ],
+                            "text_after": "Les informations communiquées sur le site sont fournies à titre indicatif et ne valent pas offertes contractuelles fermes."
+                        },
+                        {
+                            "title": "Modification des CGU",
+                            "text": "INVIK SA se réserve le droit de modifier à tout moment les présentes CGU. La version en vigueur est celle accessible sur cette page à la date de votre consultation."
+                        }
+                    ]
+                }
+            ]
+        },
+        "mentions": {
+            "title": "MENTIONS LÉGALES",
+            "breadcrumb": "MENTIONS LÉGALES",
+            "intro_1": "Les présentes mentions légales ont pour objet d’informer les utilisateurs des informations relatives à l’identification et à l’exploitation du site d’INVIK SA. Elles sont établies en conformité avec la réglementation applicable afin de garantir la transparence et de renforcer la confiance avec nos utilisateurs.",
+            "intro_2": "En accédant à ce site, vous reconnaissez avoir pris connaissance des présentes mentions légales et vous engagez à les respecter.",
+            "sections": [
+                {
+                    "title": "1. Éditeur du site",
+                    "text": "Le site est édité par la société INVIK S.A.",
+                    "list": [
+                        "Dénomination sociale : INVIK S.A.",
+                        "Type d’entreprise : Société anonyme de droit luxembourgeois",
+                        "RCS Luxembourg : B 138.554",
+                        "Capital social : 31 000 000 EUR"
+                    ],
+                    "subsections": [
+                        {
+                            "title": "Siège social (adresse légale) :",
+                            "text": "51, Boulevard Grande-Duchesse Charlotte, L-1331 Luxembourg, Grand-Duché de Luxembourg"
+                        },
+                        {
+                            "title": "Adresse opérationnelle / centre d’activités :",
+                            "text": "38 Parc d’Activités Capellen, L-8308 Capellen, Grand-Duché de Luxembourg",
+                            "extra": "Pays associés : Suisse, Finlande, France, Royaume-Uni, Suède"
+                        },
+                        {
+                            "title": "Coordonnées :",
+                            "list": [
+                                "Téléphone : +33 6 46 72 32 86",
+                                "Email : contact@inviksa.com",
+                                "Directeur de la publication : M. CHAINTEREAU CHRISTOPHE JEAN-PIERRE"
+                            ]
+                        },
+                        {
+                            "title": "Identifiants internationaux :",
+                            "list": [
+                                "Identifiant de l’intermédiaire mondial : J78DUL.99999.SL.442",
+                                "Code d’entité universel : 7222-8247-9450-3808",
+                                "LEI (Legal Entity Identifier) : 213800ZI4ZNQZMZ4SW41"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "title": "2. Hébergeur du site",
+                    "text": "Le site est hébergé par :",
+                    "list": [
+                        "Raison sociale : Hostinger",
+                        "Siège social : Vilnius, Lituanie",
+                        "Activité : Hébergeur web",
+                        "Président : Daugirdas Jankus"
+                    ]
+                },
+                {
+                    "title": "3. Activité et cadre général",
+                    "text": "INVIK SA propose, via sa plateforme digitale, des services financiers et bancaires en ligne, sous réserve des conditions contractuelles applicables et des législations en vigueur dans les pays d’activité concernés.",
+                    "text2": "Les produits et services présentés sur le site peuvent être soumis à des conditions d’éligibilité, à des restrictions géographiques ou à des limitations réglementaires. Il appartient à chaque utilisateur de vérifier la compatibilité des services proposés avec sa situation personnelle, fiscale et juridique."
+                },
+                {
+                    "title": "4. Responsabilité et utilisation du site",
+                    "text": "L’utilisateur s’engage à utiliser le site dans le respect des lois et réglementations en vigueur et à ne pas porter atteinte à l’intégrité ou au bon fonctionnement du site.",
+                    "list": [
+                        "Utilisation du site dans un cadre légal et personnel uniquement.",
+                        "Interdiction de toute tentative d’accès non autorisé aux systèmes d’information.",
+                        "Interdiction de perturber, altérer ou interrompre le fonctionnement du site."
+                    ]
+                },
+                {
+                    "title": "5. Propriété intellectuelle",
+                    "text": "L’ensemble des éléments composant ce site (textes, logos, marques, graphiques, vidéos, icônes, sons, logiciels, mises en page, etc.) est protégé par les lois applicables en matière de propriété intellectuelle. Toute reproduction, représentation, modification, diffusion ou exploitation, totale ou partielle, du contenu du site, par quelque procédé que ce soit, sans l’autorisation écrite préalable d’INVIK SA, est strictement interdite."
+                },
+                {
+                    "title": "6. Données personnelles et cookies",
+                    "text": "Les modalités de collecte et de traitement de vos données personnelles, ainsi que les informations relatives à l’utilisation des cookies sur ce site, sont détaillées dans notre Politique de confidentialité."
+                },
+                {
+                    "title": "7. Droit applicable et juridiction compétente",
+                    "text": "Le présent site ainsi que les relations pouvant en découler sont soumis à la législation luxembourgeoise. En cas de litige, les tribunaux compétents du Grand-Duché de Luxembourg seront seuls compétents."
+                }
+            ]
         }
     }
 }

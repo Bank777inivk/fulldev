@@ -185,17 +185,17 @@ const About = () => {
                         <div style={styles.partnersGrid} className="partners-grid">
                             <div className="partner-card-hover" style={styles.partnerCard}>
                                 <h4 style={styles.partnerName}>Luxembourg Financial Group</h4>
-                                <p style={styles.partnerRole}>Actionnaire majoritaire - 45%</p>
+                                <p style={styles.partnerRole}>{t('about_page.partners.shareholders.lfg_role')}</p>
                                 <p style={styles.partnerDesc}>{t('about_page.partners.shareholders.lfg')}</p>
                             </div>
                             <div className="partner-card-hover" style={styles.partnerCard}>
                                 <h4 style={styles.partnerName}>European Tech Ventures</h4>
-                                <p style={styles.partnerRole}>Investisseur stratégique - 25%</p>
+                                <p style={styles.partnerRole}>{t('about_page.partners.shareholders.etv_role')}</p>
                                 <p style={styles.partnerDesc}>{t('about_page.partners.shareholders.etv')}</p>
                             </div>
                             <div className="partner-card-hover" style={styles.partnerCard}>
                                 <h4 style={styles.partnerName}>Capital Partners International</h4>
-                                <p style={styles.partnerRole}>Investisseur institutionnel - 20%</p>
+                                <p style={styles.partnerRole}>{t('about_page.partners.shareholders.cpi_role')}</p>
                                 <p style={styles.partnerDesc}>{t('about_page.partners.shareholders.cpi')}</p>
                             </div>
                         </div>

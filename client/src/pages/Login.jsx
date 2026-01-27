@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useNotifications } from '../contexts/NotificationContext';
+import { useTranslation } from 'react-i18next';
 
 const Login = () => {
+    const { t, i18n } = useTranslation();
     const navigate = useNavigate();
     const { login, resetPassword } = useAuth();
     const { showToast } = useNotifications();
@@ -17,17 +19,17 @@ const Login = () => {
     const handleForgotPassword = async (e) => {
         e.preventDefault();
         if (!email) {
-            setError("Veuillez saisir votre adresse email pour réinitialiser le mot de passe.");
+            setError(t('auth.login.error_empty_email'));
             return;
         }
         setLoading(true);
         try {
             await resetPassword(email);
             setError('');
-            showToast("Lien de réinitialisation envoyé ! Vérifiez votre boîte mail.", 'info');
+            showToast(t('auth.login.success_reset'), 'info');
             setIsForgotMode(false); // Optionally return to login mode
         } catch (err) {
-            setError("Impossible d'envoyer l'email de réinitialisation.");
+            setError(t('auth.login.error_reset'));
         } finally {
             setLoading(false);
         }
@@ -40,10 +42,10 @@ const Login = () => {
 
         try {
             await login(email, password);
-            navigate('/dashboard');
+            navigate(`/${t('lang', { defaultValue: i18n.language })}/dashboard`);
         } catch (err) {
             console.error("Erreur de connexion:", err);
-            setError("Email ou mot de passe incorrect.");
+            setError(t('auth.login.error_login'));
         } finally {
             setLoading(false);
         }
@@ -55,8 +57,8 @@ const Login = () => {
                 <div style={styles.authCard} className="auth-card">
 
                     <div style={styles.formContent} className="auth-form-content">
-                        <h2 style={styles.title}>Connexion Client</h2>
-                        <p style={styles.subtitle}>Accédez à votre espace bancaire sécurisé</p>
+                        <h2 style={styles.title}>{t('auth.login.title')}</h2>
+                        <p style={styles.subtitle}>{t('auth.login.subtitle')}</p>
 
                         {error && (
                             <div style={{
@@ -75,10 +77,10 @@ const Login = () => {
 
                         <form onSubmit={isForgotMode ? handleForgotPassword : handleSubmit}>
                             <div style={styles.formGroup}>
-                                <label style={styles.label}>Identifiant Client (Email)</label>
+                                <label style={styles.label}>{t('auth.login.identifier')}</label>
                                 <input
                                     type="email"
-                                    placeholder="votre.email@exemple.com"
+                                    placeholder={t('auth.login.email_placeholder')}
                                     style={styles.input}
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
@@ -89,11 +91,11 @@ const Login = () => {
                             {!isForgotMode && (
                                 <>
                                     <div style={styles.formGroup}>
-                                        <label style={styles.label}>Mot de passe</label>
+                                        <label style={styles.label}>{t('auth.login.password')}</label>
                                         <div style={{ position: 'relative' }}>
                                             <input
                                                 type={showPassword ? "text" : "password"}
-                                                placeholder="••••••••"
+                                                placeholder={t('auth.login.password_placeholder')}
                                                 style={{ ...styles.input, paddingRight: '3.5rem' }}
                                                 value={password}
                                                 onChange={(e) => setPassword(e.target.value)}
@@ -123,7 +125,7 @@ const Login = () => {
                                         </div>
                                     </div>
                                     <div style={styles.forgot}>
-                                        <a href="#" onClick={(e) => { e.preventDefault(); setIsForgotMode(true); }} style={styles.link}>Mot de passe oublié ?</a>
+                                        <a href="#" onClick={(e) => { e.preventDefault(); setIsForgotMode(true); }} style={styles.link}>{t('auth.login.forgot_password')}</a>
                                     </div>
                                 </>
                             )}
@@ -137,12 +139,12 @@ const Login = () => {
                                 }}
                                 disabled={loading}
                             >
-                                {loading ? "Traitement..." : (isForgotMode ? "Envoyer le lien" : "Se connecter")}
+                                {loading ? t('auth.login.loading') : (isForgotMode ? t('auth.login.sending') : t('auth.login.submit'))}
                             </button>
 
                             {isForgotMode && (
                                 <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-                                    <a href="#" onClick={(e) => { e.preventDefault(); setIsForgotMode(false); }} style={styles.link}>Retour à la connexion</a>
+                                    <a href="#" onClick={(e) => { e.preventDefault(); setIsForgotMode(false); }} style={styles.link}>{t('auth.login.back_to_login')}</a>
                                 </div>
                             )}
                         </form>
@@ -150,14 +152,14 @@ const Login = () => {
                         {!isForgotMode && (
                             <>
                                 <div style={styles.divider}>
-                                    <span>Pas encore client ?</span>
+                                    <span>{t('auth.login.not_client')}</span>
                                 </div>
 
                                 <button
-                                    onClick={() => navigate('/register')}
+                                    onClick={() => navigate(`/${i18n.language}/register`)}
                                     style={styles.registerButton}
                                 >
-                                    Ouvrir un compte
+                                    {t('auth.login.open_account')}
                                 </button>
                             </>
                         )}

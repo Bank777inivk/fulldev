@@ -11,7 +11,7 @@ import {
     updateDoc,
     deleteDoc
 } from 'firebase/firestore';
-import { emailService } from './emailService';
+import emailService from './emailService';
 
 const CARDS_COLLECTION = 'cards';
 const USERS_COLLECTION = 'users';

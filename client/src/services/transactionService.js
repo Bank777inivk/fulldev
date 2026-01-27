@@ -12,7 +12,7 @@ import {
     getDocs
 } from 'firebase/firestore';
 import { notificationService } from './notificationService';
-import { emailService } from './emailService';
+import emailService from './emailService';
 
 const WALLETS_COLLECTION = 'wallets';
 const TRANSACTIONS_COLLECTION = 'transactions';

@@ -10,7 +10,7 @@ import {
     getDoc,
     serverTimestamp
 } from 'firebase/firestore';
-import { emailService } from './emailService';
+import emailService from './emailService';
 
 const LOANS_COLLECTION = 'loans';
 const USERS_COLLECTION = 'users';

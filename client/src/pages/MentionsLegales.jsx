@@ -1,15 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const MentionsLegales = () => {
+    const { t } = useTranslation();
+    const sections = t('legal.mentions.sections', { returnObjects: true });
+
     return (
         <div style={styles.page}>
             {/* Hero Section */}
             <section style={styles.hero} className="legal-hero">
                 <div style={styles.heroOverlay}>
                     <div className="container">
-                        <h1 style={styles.heroTitle}>MENTIONS LÉGALES</h1>
-                        <p style={styles.breadcrumb}>ACCUEIL / MENTIONS LÉGALES</p>
+                        <h1 style={styles.heroTitle}>{t('legal.mentions.title')}</h1>
+                        <p style={styles.breadcrumb}>{t('legal.common.back_home')} / {t('legal.mentions.breadcrumb')}</p>
                     </div>
                 </div>
             </section>
@@ -17,98 +21,45 @@ const MentionsLegales = () => {
             {/* Content Section */}
             <section className="container" style={styles.contentSection}>
                 <div style={styles.card} className="legal-content-card">
-                    <p style={styles.lastUpdate}>Dernière mise à jour : Décembre 2025</p>
+                    <p style={styles.lastUpdate}>{t('legal.common.last_update')}</p>
 
-                    <p style={styles.intro}>
-                        Les présentes mentions légales ont pour objet d’informer les utilisateurs des informations relatives à l’identification et à l’exploitation du site d’<strong>INVIK SA</strong>. Elles sont établies en conformité avec la réglementation applicable afin de garantir la transparence et de renforcer la confiance avec nos utilisateurs.
-                    </p>
+                    <p style={styles.intro}>{t('legal.mentions.intro_1')}</p>
+                    <p style={styles.intro}>{t('legal.mentions.intro_2')}</p>
 
-                    <p style={styles.intro}>
-                        En accédant à ce site, vous reconnaissez avoir pris connaissance des présentes mentions légales et vous engagez à les respecter.
-                    </p>
+                    {sections.map((section, index) => (
+                        <div key={index}>
+                            <h2 style={styles.sectionTitle}>{section.title}</h2>
+                            {section.text && <p style={styles.text}>{section.text}</p>}
+                            {section.text2 && <p style={styles.text}>{section.text2}</p>}
 
-                    <h2 style={styles.sectionTitle}>1. Éditeur du site</h2>
-                    <p style={styles.text}>Le site est édité par la société <strong>INVIK S.A.</strong></p>
-                    <ul style={styles.list}>
-                        <li style={styles.listItem}><strong>Dénomination sociale :</strong> INVIK S.A.</li>
-                        <li style={styles.listItem}><strong>Type d’entreprise :</strong> Société anonyme de droit luxembourgeois</li>
-                        <li style={styles.listItem}><strong>RCS Luxembourg :</strong> B 138.554</li>
-                        <li style={styles.listItem}><strong>Capital social :</strong> 31 000 000 EUR</li>
-                    </ul>
+                            {section.list && (
+                                <ul style={styles.list}>
+                                    {section.list.map((item, i) => (
+                                        <li key={i} style={styles.listItem}>{item}</li>
+                                    ))}
+                                </ul>
+                            )}
 
-                    <h3 style={styles.subSectionTitle}>Siège social (adresse légale) :</h3>
-                    <p style={styles.text}>
-                        51, Boulevard Grande-Duchesse Charlotte,<br />
-                        L-1331 Luxembourg, Grand-Duché de Luxembourg
-                    </p>
-
-                    <h3 style={styles.subSectionTitle}>Adresse opérationnelle / centre d’activités :</h3>
-                    <p style={styles.text}>
-                        38 Parc d’Activités Capellen,<br />
-                        L-8308 Capellen, Grand-Duché de Luxembourg
-                    </p>
-
-                    <p style={styles.text}><strong>Pays associés :</strong> Suisse, Finlande, France, Royaume-Uni, Suède</p>
-
-                    <h3 style={styles.subSectionTitle}>Coordonnées :</h3>
-                    <ul style={styles.list}>
-                        <li style={styles.listItem}><strong>Téléphone :</strong> +33 6 46 72 32 86</li>
-                        <li style={styles.listItem}><strong>Email :</strong> contact@inviksa.com</li>
-                        <li style={styles.listItem}><strong>Directeur de la publication :</strong> M. CHAINTEREAU CHRISTOPHE JEAN-PIERRE</li>
-                    </ul>
-
-                    <h3 style={styles.subSectionTitle}>Identifiants internationaux :</h3>
-                    <ul style={styles.list}>
-                        <li style={styles.listItem}><strong>Identifiant de l’intermédiaire mondial :</strong> J78DUL.99999.SL.442</li>
-                        <li style={styles.listItem}><strong>Code d’entité universel :</strong> 7222-8247-9450-3808</li>
-                        <li style={styles.listItem}><strong>LEI (Legal Entity Identifier) :</strong> 213800ZI4ZNQZMZ4SW41</li>
-                    </ul>
-
-                    <h2 style={styles.sectionTitle}>2. Hébergeur du site</h2>
-                    <p style={styles.text}>Le site est hébergé par :</p>
-                    <ul style={styles.list}>
-                        <li style={styles.listItem}><strong>Raison sociale :</strong> Hostinger</li>
-                        <li style={styles.listItem}><strong>Siège social :</strong> Vilnius, Lituanie</li>
-                        <li style={styles.listItem}><strong>Activité :</strong> Hébergeur web</li>
-                        <li style={styles.listItem}><strong>Président :</strong> Daugirdas Jankus</li>
-                    </ul>
-
-                    <h2 style={styles.sectionTitle}>3. Activité et cadre général</h2>
-                    <p style={styles.text}>
-                        INVIK SA propose, via sa plateforme digitale, des services financiers et bancaires en ligne, sous réserve des conditions contractuelles applicables et des législations en vigueur dans les pays d’activité concernés.
-                    </p>
-                    <p style={styles.text}>
-                        Les produits et services présentés sur le site peuvent être soumis à des conditions d’éligibilité, à des restrictions géographiques ou à des limitations réglementaires. Il appartient à chaque utilisateur de vérifier la compatibilité des services proposés avec sa situation personnelle, fiscale et juridique.
-                    </p>
-
-                    <h2 style={styles.sectionTitle}>4. Responsabilité et utilisation du site</h2>
-                    <p style={styles.text}>
-                        L’utilisateur s’engage à utiliser le site dans le respect des lois et réglementations en vigueur et à ne pas porter atteinte à l’intégrité ou au bon fonctionnement du site.
-                    </p>
-                    <ul style={styles.list}>
-                        <li style={styles.listItem}>Utilisation du site dans un cadre légal et personnel uniquement.</li>
-                        <li style={styles.listItem}>Interdiction de toute tentative d’accès non autorisé aux systèmes d’information.</li>
-                        <li style={styles.listItem}>Interdiction de perturber, altérer ou interrompre le fonctionnement du site.</li>
-                    </ul>
-
-                    <h2 style={styles.sectionTitle}>5. Propriété intellectuelle</h2>
-                    <p style={styles.text}>
-                        L’ensemble des éléments composant ce site (textes, logos, marques, graphiques, vidéos, icônes, sons, logiciels, mises en page, etc.) est protégé par les lois applicables en matière de propriété intellectuelle. Toute reproduction, représentation, modification, diffusion ou exploitation, totale ou partielle, du contenu du site, par quelque procédé que ce soit, sans l’autorisation écrite préalable d’INVIK SA, est strictement interdite.
-                    </p>
-
-                    <h2 style={styles.sectionTitle}>6. Données personnelles et cookies</h2>
-                    <p style={styles.text}>
-                        Les modalités de collecte et de traitement de vos données personnelles, ainsi que les informations relatives à l’utilisation des cookies sur ce site, sont détaillées dans notre Politique de confidentialité.
-                    </p>
-
-                    <h2 style={styles.sectionTitle}>7. Droit applicable et juridiction compétente</h2>
-                    <p style={styles.text}>
-                        Le présent site ainsi que les relations pouvant en découler sont soumis à la législation luxembourgeoise. En cas de litige, les tribunaux compétents du Grand-Duché de Luxembourg seront seuls compétents.
-                    </p>
+                            {section.subsections && section.subsections.map((sub, j) => (
+                                <div key={j}>
+                                    <h3 style={styles.subSectionTitle}>{sub.title}</h3>
+                                    {sub.text && <p style={styles.text}>{sub.text}</p>}
+                                    {sub.extra && <p style={styles.text}>{sub.extra}</p>}
+                                    {sub.list && (
+                                        <ul style={styles.list}>
+                                            {sub.list.map((item, k) => (
+                                                <li key={k} style={styles.listItem}>{item}</li>
+                                            ))}
+                                        </ul>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    ))}
 
                     <div style={styles.ctaWrapper}>
                         <Link to="/contact" style={styles.ctaButton} className="premium-button legal-cta-btn">
-                            CONTACTER LE SERVICE CLIENT
+                            {t('legal.common.cta_contact')}
                         </Link>
                     </div>
                 </div>

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-
 import { loanService } from '../services/loanService';
 import { useNotifications } from '../contexts/NotificationContext';
+import { useTranslation } from 'react-i18next';
 
 const CreditRequest = () => {
+    const { t, i18n } = useTranslation();
     const navigate = useNavigate();
     const location = useLocation();
     const { showToast } = useNotifications();
@@ -197,14 +198,15 @@ const CreditRequest = () => {
                 taux: interestRate,
                 mensualite: monthlyPayment,
                 coutTotal: (monthlyPayment * formData.duree).toFixed(2),
-                score: finalScore
+                score: finalScore,
+                language: i18n.language // Add user's language
             });
 
             setScore(finalScore);
             setStep(8); // Success/Result step
         } catch (error) {
             console.error("Error submitting lead:", error);
-            showToast("Une erreur est survenue lors de l'envoi de votre demande. Veuillez réessayer.", "error");
+            showToast(t('auth.register.form.error_generic'), "error");
         } finally {
             setIsSubmitting(false);
         }
@@ -217,41 +219,41 @@ const CreditRequest = () => {
                     <div className="form-step">
                         <div style={styles.stepHeader}>
                             <span style={styles.stepNumber}>Étape 1 sur 7</span>
-                            <h3 style={styles.stepTitle}>Informations Générales</h3>
+                            <h3 style={styles.stepTitle}>{t('credit.steps.general')}</h3>
                         </div>
                         <div style={styles.formGroup}>
-                            <label>Type de crédit demandé *</label>
+                            <label>{t('credit.fields.type')} *</label>
                             <select name="typeCredit" value={formData.typeCredit} onChange={handleInputChange} style={styles.input}>
-                                <option value="personnel">Crédit personnel</option>
-                                <option value="consommation">Crédit consommation</option>
-                                <option value="automobile">Crédit automobile</option>
-                                <option value="immobilier">Crédit immobilier</option>
-                                <option value="professionnel">Crédit professionnel</option>
+                                <option value="personnel">{t('credit.options.personal')}</option>
+                                <option value="consommation">{t('credit.options.consumption')}</option>
+                                <option value="automobile">{t('credit.options.auto')}</option>
+                                <option value="immobilier">{t('credit.options.real_estate')}</option>
+                                <option value="professionnel">{t('credit.options.pro')}</option>
                             </select>
                         </div>
                         <div style={styles.formGroup}>
-                            <label>Montant du crédit demandé (€) *</label>
+                            <label>{t('credit.fields.amount')} *</label>
                             <input type="number" name="montant" value={formData.montant} onChange={handleInputChange} style={{ ...styles.input, borderColor: errors.montant ? 'red' : '#e0e0e0' }} />
                             {errors.montant && <span style={styles.errorText}>{errors.montant}</span>}
                         </div>
                         <div style={styles.formGroup}>
-                            <label>Durée souhaitée (en mois) *</label>
+                            <label>{t('credit.fields.duration')} *</label>
                             <input type="number" name="duree" value={formData.duree} onChange={handleInputChange} style={styles.input} />
                         </div>
                         <div style={styles.formGroup}>
-                            <label>Objet précis du crédit (obligatoire) *</label>
+                            <label>{t('credit.fields.object')} *</label>
                             <textarea
                                 name="objet"
                                 value={formData.objet}
                                 onChange={handleInputChange}
                                 style={{ ...styles.textarea, borderColor: errors.objet ? 'red' : '#e0e0e0' }}
-                                placeholder="Décrivez l'objet de votre financement..."
+                                placeholder=""
                             />
                             {errors.objet && <span style={styles.errorText}>{errors.objet}</span>}
                         </div>
 
                         <div style={styles.inputGroup}>
-                            <label style={styles.label}>Taux d'intérêt souhaité (TAEG) : {interestRate}%</label>
+                            <label style={styles.label}>{t('credit.fields.rate')} : {interestRate}%</label>
                             <input
                                 type="range"
                                 min="1.0"
@@ -272,16 +274,16 @@ const CreditRequest = () => {
                             marginBottom: '2rem'
                         }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-                                <span style={{ color: '#666', fontSize: '0.9rem' }}>Taux d'intérêt (TAEG)</span>
+                                <span style={{ color: '#666', fontSize: '0.9rem' }}>{t('credit.fields.rate')} (TAEG)</span>
                                 <strong style={{ color: '#003366' }}>{interestRate}%</strong>
                             </div>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <span style={{ color: '#666', fontSize: '0.9rem' }}>Mensualité estimée</span>
+                                <span style={{ color: '#666', fontSize: '0.9rem' }}>{t('credit.fields.monthly')}</span>
                                 <strong style={{ color: '#003366', fontSize: '1.4rem' }}>{monthlyPayment} €</strong>
                             </div>
                         </div>
 
-                        <button onClick={nextStep} style={styles.submitButton}>Suivant</button>
+                        <button onClick={nextStep} style={styles.submitButton}>{t('credit.fields.next')}</button>
                     </div>
                 );
             case 2:
@@ -289,11 +291,11 @@ const CreditRequest = () => {
                     <div className="form-step">
                         <div style={styles.stepHeader}>
                             <span style={styles.stepNumber}>Étape 2 sur 7</span>
-                            <h3 style={styles.stepTitle}>👤 Identité du demandeur</h3>
+                            <h3 style={styles.stepTitle}>👤 {t('credit.steps.identity')}</h3>
                         </div>
                         <div style={styles.row}>
                             <div style={styles.formGroup}>
-                                <label>Civilité *</label>
+                                <label>{t('credit.fields.civility')} *</label>
                                 <select name="civilite" value={formData.civilite} onChange={handleInputChange} style={styles.input}>
                                     <option value="M.">M.</option>
                                     <option value="Mme">Mme</option>
@@ -302,48 +304,48 @@ const CreditRequest = () => {
                         </div>
                         <div style={styles.row}>
                             <div style={styles.formGroup}>
-                                <label>Nom *</label>
+                                <label>{t('credit.fields.lastname')} *</label>
                                 <input type="text" name="nom" value={formData.nom} onChange={handleInputChange} style={{ ...styles.input, borderColor: errors.nom ? 'red' : '#e0e0e0' }} />
                                 {errors.nom && <span style={styles.errorText}>{errors.nom}</span>}
                             </div>
                             <div style={styles.formGroup}>
-                                <label>Prénom(s) *</label>
+                                <label>{t('credit.fields.firstname')} *</label>
                                 <input type="text" name="prenom" value={formData.prenom} onChange={handleInputChange} style={{ ...styles.input, borderColor: errors.prenom ? 'red' : '#e0e0e0' }} />
                                 {errors.prenom && <span style={styles.errorText}>{errors.prenom}</span>}
                             </div>
                         </div>
                         <div style={styles.row}>
                             <div style={styles.formGroup}>
-                                <label>Email *</label>
+                                <label>{t('credit.fields.email')} *</label>
                                 <input type="email" name="email" value={formData.email} onChange={handleInputChange} style={{ ...styles.input, borderColor: errors.email ? 'red' : '#e0e0e0' }} placeholder="votre@email.com" />
                                 {errors.email && <span style={styles.errorText}>{errors.email}</span>}
                             </div>
                             <div style={styles.formGroup}>
-                                <label>Téléphone *</label>
-                                <input type="tel" name="telephone" value={formData.telephone} onChange={handleInputChange} style={{ ...styles.input, borderColor: errors.telephone ? 'red' : '#e0e0e0' }} placeholder="06 00 00 00 00" />
+                                <label>{t('credit.fields.phone')} *</label>
+                                <input type="tel" name="telephone" value={formData.telephone} onChange={handleInputChange} style={{ ...styles.input, borderColor: errors.telephone ? 'red' : '#e0e0e0' }} placeholder={t('credit.fields.phone_placeholder')} />
                                 {errors.telephone && <span style={styles.errorText}>{errors.telephone}</span>}
                             </div>
                         </div>
                         <div style={styles.formGroup}>
-                            <label>Date de naissance *</label>
+                            <label>{t('credit.fields.dob')} *</label>
                             <input type="date" name="dateNaissance" value={formData.dateNaissance} onChange={handleInputChange} style={{ ...styles.input, borderColor: errors.dateNaissance ? 'red' : '#e0e0e0' }} />
                             {errors.dateNaissance && <span style={styles.errorText}>{errors.dateNaissance}</span>}
                         </div>
                         <div style={styles.formGroup}>
-                            <label>Numéro de pièce d'identité (Dernier rappel avant l'étape suivante)</label>
-                            <p style={{ fontSize: '0.8rem', color: '#888' }}>Veuillez avoir votre pièce d'identité à portée de main pour la suite.</p>
+                            <label>{t('credit.fields.id_num_warn')}</label>
+                            <p style={{ fontSize: '0.8rem', color: '#888' }}></p>
                         </div>
                         <div style={styles.formGroup}>
-                            <label>Type de pièce d’identité *</label>
+                            <label>{t('credit.fields.id_type')} *</label>
                             <select name="typePieceIdentite" value={formData.typePieceIdentite} onChange={handleInputChange} style={styles.input}>
-                                <option value="passeport">Passeport</option>
-                                <option value="cni">Carte nationale d’identité</option>
-                                <option value="sejour">Titre de séjour</option>
+                                <option value="passeport">{t('credit.options.passport')}</option>
+                                <option value="cni">{t('credit.options.cni')}</option>
+                                <option value="sejour">{t('credit.options.residence')}</option>
                             </select>
                         </div>
                         <div style={styles.row}>
-                            <button onClick={prevStep} style={styles.secondaryButton}>Retour</button>
-                            <button onClick={nextStep} style={styles.submitButton}>Suivant</button>
+                            <button onClick={prevStep} style={styles.secondaryButton}>{t('credit.fields.back')}</button>
+                            <button onClick={nextStep} style={styles.submitButton}>{t('credit.fields.next')}</button>
                         </div>
                     </div>
                 );
@@ -352,54 +354,54 @@ const CreditRequest = () => {
                     <div className="form-step">
                         <div style={styles.stepHeader}>
                             <span style={styles.stepNumber}>Étape 3 sur 7</span>
-                            <h3 style={styles.stepTitle}>🏠 Situation personnelle</h3>
+                            <h3 style={styles.stepTitle}>🏠 {t('credit.steps.personal')}</h3>
                         </div>
                         <div style={styles.formGroup}>
-                            <label>Situation matrimoniale *</label>
+                            <label>{t('credit.fields.marital')} *</label>
                             <select name="situationMatrimoniale" value={formData.situationMatrimoniale} onChange={handleInputChange} style={styles.input}>
-                                <option value="celibataire">Célibataire</option>
-                                <option value="marie">Marié(e)</option>
-                                <option value="divorce">Divorcé(e)</option>
-                                <option value="veuf">Veuf(ve)</option>
+                                <option value="celibataire">{t('credit.options.single')}</option>
+                                <option value="marie">{t('credit.options.married')}</option>
+                                <option value="divorce">{t('credit.options.divorced')}</option>
+                                <option value="veuf">{t('credit.options.widowed')}</option>
                             </select>
                         </div>
                         <div style={styles.formGroup}>
-                            <label>Nombre d’enfants à charge</label>
+                            <label>{t('credit.fields.children')}</label>
                             <input type="number" name="nbEnfants" value={formData.nbEnfants} onChange={handleInputChange} style={styles.input} />
                         </div>
                         <div style={styles.formGroup}>
-                            <label>Type de logement *</label>
+                            <label>{t('credit.fields.housing')} *</label>
                             <select name="typeLogement" value={formData.typeLogement} onChange={handleInputChange} style={styles.input}>
-                                <option value="proprietaire">Propriétaire</option>
-                                <option value="locataire">Locataire</option>
-                                <option value="heberge">Hébergé</option>
+                                <option value="proprietaire">{t('credit.options.owner')}</option>
+                                <option value="locataire">{t('credit.options.tenant')}</option>
+                                <option value="heberge">{t('credit.options.hosted')}</option>
                             </select>
                         </div>
                         <div style={styles.formGroup}>
-                            <label>N° et Rue *</label>
-                            <input type="text" name="adresseRue" value={formData.adresseRue} onChange={handleInputChange} style={{ ...styles.input, borderColor: errors.adresseRue ? 'red' : '#e0e0e0' }} placeholder="Ex: 12 Rue de la Paix" />
+                            <label>{t('credit.fields.street')} *</label>
+                            <input type="text" name="adresseRue" value={formData.adresseRue} onChange={handleInputChange} style={{ ...styles.input, borderColor: errors.adresseRue ? 'red' : '#e0e0e0' }} placeholder={t('credit.fields.street_placeholder')} />
                             {errors.adresseRue && <span style={styles.errorText}>{errors.adresseRue}</span>}
                         </div>
                         <div style={styles.row}>
                             <div style={styles.formGroup}>
-                                <label>Code Postal *</label>
-                                <input type="text" name="adresseCodePostal" value={formData.adresseCodePostal} onChange={handleInputChange} style={{ ...styles.input, borderColor: errors.adresseCodePostal ? 'red' : '#e0e0e0' }} placeholder="75001" />
+                                <label>{t('credit.fields.zip')} *</label>
+                                <input type="text" name="adresseCodePostal" value={formData.adresseCodePostal} onChange={handleInputChange} style={{ ...styles.input, borderColor: errors.adresseCodePostal ? 'red' : '#e0e0e0' }} placeholder={t('credit.fields.zip_placeholder')} />
                                 {errors.adresseCodePostal && <span style={styles.errorText}>{errors.adresseCodePostal}</span>}
                             </div>
                             <div style={styles.formGroup}>
-                                <label>Ville *</label>
-                                <input type="text" name="adresseVille" value={formData.adresseVille} onChange={handleInputChange} style={{ ...styles.input, borderColor: errors.adresseVille ? 'red' : '#e0e0e0' }} placeholder="Paris" />
+                                <label>{t('credit.fields.city')} *</label>
+                                <input type="text" name="adresseVille" value={formData.adresseVille} onChange={handleInputChange} style={{ ...styles.input, borderColor: errors.adresseVille ? 'red' : '#e0e0e0' }} placeholder={t('credit.fields.city_placeholder')} />
                                 {errors.adresseVille && <span style={styles.errorText}>{errors.adresseVille}</span>}
                             </div>
                         </div>
                         <div style={styles.formGroup}>
-                            <label>Pays *</label>
+                            <label>{t('credit.fields.country')} *</label>
                             <input type="text" name="adressePays" value={formData.adressePays} onChange={handleInputChange} style={{ ...styles.input, borderColor: errors.adressePays ? 'red' : '#e0e0e0' }} />
                             {errors.adressePays && <span style={styles.errorText}>{errors.adressePays}</span>}
                         </div>
                         <div style={styles.row}>
-                            <button onClick={prevStep} style={styles.secondaryButton}>Retour</button>
-                            <button onClick={nextStep} style={styles.submitButton}>Suivant</button>
+                            <button onClick={prevStep} style={styles.secondaryButton}>{t('credit.fields.back')}</button>
+                            <button onClick={nextStep} style={styles.submitButton}>{t('credit.fields.next')}</button>
                         </div>
                     </div>
                 );
@@ -408,33 +410,33 @@ const CreditRequest = () => {
                     <div className="form-step">
                         <div style={styles.stepHeader}>
                             <span style={styles.stepNumber}>Étape 4 sur 7</span>
-                            <h3 style={styles.stepTitle}>💼 Situation professionnelle</h3>
+                            <h3 style={styles.stepTitle}>💼 {t('credit.steps.professional')}</h3>
                         </div>
                         <div style={styles.formGroup}>
-                            <label>Statut professionnel *</label>
+                            <label>{t('credit.fields.status')} *</label>
                             <select name="statutPro" value={formData.statutPro} onChange={handleInputChange} style={styles.input}>
-                                <option value="cdi">Salarié CDI</option>
-                                <option value="cdd">Salarié CDD</option>
-                                <option value="fonctionnaire">Fonctionnaire</option>
-                                <option value="independant">Travailleur indépendant</option>
-                                <option value="entrepreneur">Entrepreneur</option>
-                                <option value="retraite">Retraité</option>
-                                <option value="sans_emploi">Sans emploi</option>
+                                <option value="cdi">{t('credit.options.cdi')}</option>
+                                <option value="cdd">{t('credit.options.cdd')}</option>
+                                <option value="fonctionnaire">{t('credit.options.official')}</option>
+                                <option value="independant">{t('credit.options.freelance')}</option>
+                                <option value="entrepreneur">{t('credit.options.entrepreneur')}</option>
+                                <option value="retraite">{t('credit.options.retired')}</option>
+                                <option value="sans_emploi">{t('credit.options.unemployed')}</option>
                             </select>
                         </div>
                         <div style={styles.formGroup}>
-                            <label>Revenus mensuels nets (€) *</label>
+                            <label>{t('credit.fields.income')} *</label>
                             <input type="number" name="revenusMensuels" value={formData.revenusMensuels} onChange={handleInputChange} style={{ ...styles.input, borderColor: errors.revenusMensuels ? 'red' : '#e0e0e0' }} />
                             {errors.revenusMensuels && <span style={styles.errorText}>{errors.revenusMensuels}</span>}
                         </div>
                         <div style={styles.formGroup}>
-                            <label>Nom de l'employeur / entreprise *</label>
+                            <label>{t('credit.fields.employer')} *</label>
                             <input type="text" name="nomEmployeur" value={formData.nomEmployeur} onChange={handleInputChange} style={{ ...styles.input, borderColor: errors.nomEmployeur ? 'red' : '#e0e0e0' }} />
                             {errors.nomEmployeur && <span style={styles.errorText}>{errors.nomEmployeur}</span>}
                         </div>
                         <div style={styles.row}>
-                            <button onClick={prevStep} style={styles.secondaryButton}>Retour</button>
-                            <button onClick={nextStep} style={styles.submitButton}>Suivant</button>
+                            <button onClick={prevStep} style={styles.secondaryButton}>{t('credit.fields.back')}</button>
+                            <button onClick={nextStep} style={styles.submitButton}>{t('credit.fields.next')}</button>
                         </div>
                     </div>
                 );
@@ -443,26 +445,26 @@ const CreditRequest = () => {
                     <div className="form-step">
                         <div style={styles.stepHeader}>
                             <span style={styles.stepNumber}>Étape 5 sur 7</span>
-                            <h3 style={styles.stepTitle}>💰 Situation financière</h3>
+                            <h3 style={styles.stepTitle}>💰 {t('credit.steps.financial')}</h3>
                         </div>
                         <div style={styles.formGroup}>
-                            <label>Loyer / Crédit immobilier mensuel (€)</label>
+                            <label>{t('credit.fields.rent')}</label>
                             <input type="number" name="loyer" value={formData.loyer} onChange={handleInputChange} style={styles.input} />
                         </div>
                         <div style={styles.formGroup}>
-                            <label>Autres crédits en cours (€)</label>
+                            <label>{t('credit.fields.other_credits')}</label>
                             <input type="number" name="autresCredits" value={formData.autresCredits} onChange={handleInputChange} style={styles.input} />
                         </div>
                         <div style={styles.formGroup}>
-                            <label>Incident bancaire antérieur ? *</label>
+                            <label>{t('credit.fields.incident')} *</label>
                             <select name="incidentBancaire" value={formData.incidentBancaire} onChange={handleInputChange} style={styles.input}>
-                                <option value="non">Non</option>
-                                <option value="oui">Oui</option>
+                                <option value="non">{t('credit.options.no')}</option>
+                                <option value="oui">{t('credit.options.yes')}</option>
                             </select>
                         </div>
                         <div style={styles.row}>
-                            <button onClick={prevStep} style={styles.secondaryButton}>Retour</button>
-                            <button onClick={nextStep} style={styles.submitButton}>Suivant</button>
+                            <button onClick={prevStep} style={styles.secondaryButton}>{t('credit.fields.back')}</button>
+                            <button onClick={nextStep} style={styles.submitButton}>{t('credit.fields.next')}</button>
                         </div>
                     </div>
                 );
@@ -471,17 +473,17 @@ const CreditRequest = () => {
                     <div className="form-step">
                         <div style={styles.stepHeader}>
                             <span style={styles.stepNumber}>Étape 6 sur 7</span>
-                            <h3 style={styles.stepTitle}>🏦 Informations bancaires</h3>
+                            <h3 style={styles.stepTitle}>🏦 {t('credit.steps.banking')}</h3>
                         </div>
                         <div style={styles.formGroup}>
-                            <label>Banque actuelle *</label>
+                            <label>{t('credit.fields.current_bank')} *</label>
                             <select
                                 name="banqueActuelle"
                                 value={formData.banqueActuelle}
                                 onChange={handleInputChange}
                                 style={{ ...styles.input, borderColor: errors.banqueActuelle ? 'red' : '#e0e0e0' }}
                             >
-                                <option value="">-- Sélectionner votre banque --</option>
+                                <option value="">{t('credit.options.select_bank')}</option>
                                 {frenchBanks.map(bank => (
                                     <option key={bank} value={bank}>{bank}</option>
                                 ))}
@@ -490,26 +492,26 @@ const CreditRequest = () => {
                         </div>
                         {formData.banqueActuelle === 'Autres' && (
                             <div style={styles.formGroup}>
-                                <label>Nom de votre banque *</label>
+                                <label>{t('credit.fields.other_bank')} *</label>
                                 <input
                                     type="text"
                                     name="autreBanqueNom"
                                     value={formData.autreBanqueNom}
                                     onChange={handleInputChange}
                                     style={{ ...styles.input, borderColor: errors.autreBanqueNom ? 'red' : '#e0e0e0' }}
-                                    placeholder="Entrez le nom de l'établissement"
+                                    placeholder=""
                                 />
                                 {errors.autreBanqueNom && <span style={styles.errorText}>{errors.autreBanqueNom}</span>}
                             </div>
                         )}
                         <div style={styles.formGroup}>
-                            <label>IBAN / Numéro de compte *</label>
-                            <input type="text" name="iban" value={formData.iban} onChange={handleInputChange} style={{ ...styles.input, borderColor: errors.iban ? 'red' : '#e0e0e0' }} placeholder="FR76..." />
+                            <label>{t('credit.fields.iban')} *</label>
+                            <input type="text" name="iban" value={formData.iban} onChange={handleInputChange} style={{ ...styles.input, borderColor: errors.iban ? 'red' : '#e0e0e0' }} placeholder={t('credit.fields.iban_placeholder')} />
                             {errors.iban && <span style={styles.errorText}>{errors.iban}</span>}
                         </div>
                         <div style={styles.row}>
-                            <button onClick={prevStep} style={styles.secondaryButton}>Retour</button>
-                            <button onClick={nextStep} style={styles.submitButton}>Suivant</button>
+                            <button onClick={prevStep} style={styles.secondaryButton}>{t('credit.fields.back')}</button>
+                            <button onClick={nextStep} style={styles.submitButton}>{t('credit.fields.next')}</button>
                         </div>
                     </div>
                 );
@@ -518,23 +520,23 @@ const CreditRequest = () => {
                     <div className="form-step">
                         <div style={styles.stepHeader}>
                             <span style={styles.stepNumber}>Étape 7 sur 7</span>
-                            <h3 style={styles.stepTitle}>⚖️ Déclarations et consentements</h3>
+                            <h3 style={styles.stepTitle}>⚖️ {t('credit.steps.consent')}</h3>
                         </div>
                         <div style={styles.checkboxGroup}>
                             <input type="checkbox" name="certifieBase" checked={formData.certifieBase} onChange={handleInputChange} />
-                            <label>Je certifie que les informations fournies sont exactes et complètes.</label>
+                            <label>{t('credit.fields.certify')}</label>
                         </div>
                         <div style={styles.checkboxGroup}>
                             <input type="checkbox" name="autoriseAnalyse" checked={formData.autoriseAnalyse} onChange={handleInputChange} />
-                            <label>J’autorise INVIK SA à analyser mes données dans le cadre de l’étude de ma demande.</label>
+                            <label>{t('credit.fields.authorize')}</label>
                         </div>
                         <div style={{ padding: '1rem', backgroundColor: '#f8f9fa', borderRadius: '8px', fontSize: '0.8rem', color: '#666', marginTop: '1rem' }}>
-                            <strong>🔐 Protection des données :</strong> Les données collectées sont destinées à INVIK SA exclusivement pour l’étude de la demande de crédit.
+                            <strong>🔐 {t('credit.fields.privacy').split(':')[0]} :</strong> {t('credit.fields.privacy').split(':')[1]}
                         </div>
                         <div style={{ ...styles.row, marginTop: '2rem' }}>
-                            <button onClick={prevStep} style={styles.secondaryButton}>Retour</button>
+                            <button onClick={prevStep} style={styles.secondaryButton}>{t('credit.fields.back')}</button>
                             <button onClick={handleSubmit} style={styles.submitButton} disabled={isSubmitting}>
-                                {isSubmitting ? 'Analyse en cours...' : 'Soumettre ma demande'}
+                                {isSubmitting ? t('credit.fields.analyzing') : t('credit.fields.submit')}
                             </button>
                         </div>
                     </div>
@@ -542,7 +544,7 @@ const CreditRequest = () => {
             case 8:
                 return (
                     <div className="form-step" style={{ textAlign: 'center' }}>
-                        <h2 style={{ color: 'var(--primary-color)' }}>Analyse Terminée</h2>
+                        <h2 style={{ color: 'var(--primary-color)' }}>{t('credit.steps.result')}</h2>
                         <div style={{
                             padding: '2rem',
                             borderRadius: '16px',
@@ -557,20 +559,20 @@ const CreditRequest = () => {
                                 fontSize: '1.5rem',
                                 marginBottom: '1rem'
                             }}>
-                                {score === 'GREEN' ? 'Forte probabilité d’acceptation' :
-                                    score === 'YELLOW' ? 'Étude complémentaire requise' :
-                                        'Forte probabilité de rejet'}
+                                {score === 'GREEN' ? t('credit.result.green_title') :
+                                    score === 'YELLOW' ? t('credit.result.yellow_title') :
+                                        t('credit.result.red_title')}
                             </h3>
                             <p style={{ color: '#666' }}>
-                                {score === 'GREEN' ? 'Votre dossier présente une excellente solvabilité.' :
-                                    score === 'YELLOW' ? 'Certains éléments nécessitent une vérification manuelle.' :
-                                        'Votre situation financière actuelle ne permet pas l’octroi du crédit.'}
+                                {score === 'GREEN' ? t('credit.result.green_desc') :
+                                    score === 'YELLOW' ? t('credit.result.yellow_desc') :
+                                        t('credit.result.red_desc')}
                             </p>
                         </div>
                         <p style={{ fontSize: '0.9rem', color: '#888', fontStyle: 'italic' }}>
-                            Décision finale soumise à validation interne INVIK SA
+                            {t('credit.result.disclaimer')}
                         </p>
-                        <button onClick={() => navigate('/')} style={{ ...styles.submitButton, marginTop: '2rem' }}>Retour à l'accueil</button>
+                        <button onClick={() => navigate(`/${i18n.language}`)} style={{ ...styles.submitButton, marginTop: '2rem' }}>{t('credit.result.home_btn')}</button>
                     </div>
                 );
             default:
@@ -583,8 +585,8 @@ const CreditRequest = () => {
             <section style={styles.hero}>
                 <div style={styles.heroOverlay}>
                     <div className="container">
-                        <h1>Demande de Crédit</h1>
-                        <p>Étude de solvabilité en temps réel</p>
+                        <h1>{t('credit.hero.title')}</h1>
+                        <p>{t('credit.hero.subtitle')}</p>
                     </div>
                 </div>
             </section>

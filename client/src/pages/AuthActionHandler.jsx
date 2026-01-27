@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { auth } from '../firebase/config';
 import {
     applyActionCode,
@@ -9,10 +10,11 @@ import {
 } from 'firebase/auth';
 
 const AuthActionHandler = () => {
+    const { t } = useTranslation();
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
-    const [status, setStatus] = useState('processing'); // processing, success, error, password-reset
-    const [message, setMessage] = useState('Traitement de votre demande en cours...');
+    const [status, setStatus] = useState('processing');
+    const [message, setMessage] = useState(t('auth.action_handler.processing'));
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
@@ -24,7 +26,7 @@ const AuthActionHandler = () => {
     useEffect(() => {
         if (!mode || !oobCode) {
             setStatus('error');
-            setMessage('Lien invalide ou expiré.');
+            setMessage(t('auth.action_handler.invalid_link'));
             return;
         }
 
@@ -40,7 +42,7 @@ const AuthActionHandler = () => {
                 break;
             default:
                 setStatus('error');
-                setMessage('Action non reconnue.');
+                setMessage(t('auth.action_handler.unknown_action'));
         }
     }, [mode, oobCode]);
 
@@ -50,11 +52,11 @@ const AuthActionHandler = () => {
             // Sign out the user immediately after verification as requested
             await signOut(auth);
             setStatus('success');
-            setMessage('Votre adresse email a été vérifiée avec succès !');
+            setMessage(t('auth.action_handler.verify_email.success'));
         } catch (error) {
             console.error('Verify email error:', error);
             setStatus('error');
-            setMessage('Le code de vérification est invalide ou a déjà été utilisé.');
+            setMessage(t('auth.action_handler.verify_email.error'));
         }
     };
 
@@ -65,7 +67,7 @@ const AuthActionHandler = () => {
         } catch (error) {
             console.error('Reset password error:', error);
             setStatus('error');
-            setMessage('Lien de réinitialisation invalide ou expiré.');
+            setMessage(t('auth.action_handler.reset_password.invalid'));
         }
     };
 
@@ -73,17 +75,17 @@ const AuthActionHandler = () => {
         try {
             // Logique de récupération d'email si nécessaire
             setStatus('success');
-            setMessage('Votre email a été restauré.');
+            setMessage(t('auth.action_handler.recover_email.success'));
         } catch (error) {
             setStatus('error');
-            setMessage('Erreur lors de la récupération.');
+            setMessage(t('auth.action_handler.recover_email.error'));
         }
     };
 
     const onPasswordSubmit = async (e) => {
         e.preventDefault();
         if (newPassword !== confirmPassword) {
-            alert('Les mots de passe ne correspondent pas.');
+            alert(t('auth.action_handler.reset_password.mismatch'));
             return;
         }
         try {
@@ -91,7 +93,7 @@ const AuthActionHandler = () => {
             // Sign out the session after password reset to ensure a clean login
             await signOut(auth);
             setStatus('success');
-            setMessage('Votre mot de passe a été modifié avec succès.');
+            setMessage(t('auth.action_handler.reset_password.success'));
         } catch (error) {
             alert('Erreur: ' + error.message);
         }
@@ -114,10 +116,10 @@ const AuthActionHandler = () => {
                 {status === 'success' && (
                     <div style={styles.body}>
                         <div style={styles.successIcon}>✓</div>
-                        <h2 style={styles.title}>Félicitations !</h2>
+                        <h2 style={styles.title}>{t('auth.action_handler.titles.success')}</h2>
                         <p style={styles.text}>{message}</p>
                         <button style={styles.button} onClick={() => navigate('/login')}>
-                            Veuillez vous connecter pour avoir accès à votre espace client
+                            {t('auth.action_handler.buttons.login')}
                         </button>
                     </div>
                 )}
@@ -125,23 +127,23 @@ const AuthActionHandler = () => {
                 {status === 'error' && (
                     <div style={styles.body}>
                         <div style={styles.errorIcon}>✕</div>
-                        <h2 style={styles.title}>Oups !</h2>
+                        <h2 style={styles.title}>{t('auth.action_handler.titles.error')}</h2>
                         <p style={styles.text}>{message}</p>
                         <button style={styles.button} onClick={() => navigate('/login')}>
-                            Retour à la connexion
+                            {t('auth.action_handler.buttons.back_login')}
                         </button>
                     </div>
                 )}
 
                 {status === 'password-reset' && (
                     <div style={styles.body}>
-                        <h2 style={styles.title}>Nouveau mot de passe</h2>
-                        <p style={styles.text}>Veuillez saisir votre nouveau mot de passe.</p>
+                        <h2 style={styles.title}>{t('auth.action_handler.reset_password.title')}</h2>
+                        <p style={styles.text}>{t('auth.action_handler.reset_password.instruction')}</p>
                         <form onSubmit={onPasswordSubmit} style={styles.form}>
                             <div style={{ position: 'relative' }}>
                                 <input
                                     type={showPassword ? "text" : "password"}
-                                    placeholder="Nouveau mot de passe"
+                                    placeholder={t('auth.action_handler.reset_password.placeholder_new')}
                                     style={styles.input}
                                     value={newPassword}
                                     onChange={(e) => setNewPassword(e.target.value)}
@@ -158,7 +160,7 @@ const AuthActionHandler = () => {
                             <div style={{ position: 'relative' }}>
                                 <input
                                     type={showConfirmPassword ? "text" : "password"}
-                                    placeholder="Confirmer le mot de passe"
+                                    placeholder={t('auth.action_handler.reset_password.placeholder_confirm')}
                                     style={styles.input}
                                     value={confirmPassword}
                                     onChange={(e) => setConfirmPassword(e.target.value)}
@@ -173,7 +175,7 @@ const AuthActionHandler = () => {
                                 </button>
                             </div>
                             <button type="submit" style={styles.button}>
-                                Valider le changement
+                                {t('auth.action_handler.reset_password.submit')}
                             </button>
                         </form>
                     </div>

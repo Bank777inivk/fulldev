@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNotifications } from '../contexts/NotificationContext';
 import { loanService } from '../services/loanService';
+import { useTranslation } from 'react-i18next';
 
 const Simulator = () => {
+    const { t, i18n } = useTranslation();
+    const currentLang = i18n.language;
     const { showToast } = useNotifications();
     const [amount, setAmount] = useState(10000);
     const [duration, setDuration] = useState(24);
@@ -42,26 +45,27 @@ const Simulator = () => {
                 taux: interestRate,
                 typeCredit: 'Simulation Simulateur',
                 nom: 'Prospect Simulateur',
-                score: amount > 50000 ? 'GREEN' : 'YELLOW'
+                score: amount > 50000 ? 'GREEN' : 'YELLOW',
+                language: currentLang // Add user's language
             };
 
             await loanService.createLead(leadData);
-            showToast(`Votre simulation a été envoyée avec succès à ${email}.`, 'success');
+            showToast(t('simulator_page.success', { email }), 'success');
         } catch (error) {
             console.error("Simulator lead error:", error);
-            showToast("Erreur lors de l'envoi de la simulation.", "error");
+            showToast(t('simulator_page.error'), "error");
         }
     };
 
     return (
         <div className="container" style={{ padding: '3rem 1rem', maxWidth: '800px' }}>
-            <h1 style={{ textAlign: 'center', marginBottom: '2rem', color: 'var(--primary-color)' }}>Simulateur de Crédit</h1>
-            <p style={{ textAlign: 'center', marginBottom: '3rem' }}>Estimez vos mensualités en quelques clics. Réponse de principe immédiate.</p>
+            <h1 style={{ textAlign: 'center', marginBottom: '2rem', color: 'var(--primary-color)' }}>{t('simulator_page.title')}</h1>
+            <p style={{ textAlign: 'center', marginBottom: '3rem' }}>{t('simulator_page.subtitle')}</p>
 
             <div style={styles.simulatorCard}>
                 <form onSubmit={handleSubmit}>
                     <div style={styles.formGroup}>
-                        <label style={styles.label}>Montant du projet : <span style={styles.value}>{amount.toLocaleString()} €</span></label>
+                        <label style={styles.label}>{t('simulator_page.amount')} : <span style={styles.value}>{amount.toLocaleString()} €</span></label>
                         <input
                             type="range"
                             min="1000"
@@ -74,7 +78,7 @@ const Simulator = () => {
                     </div>
 
                     <div style={styles.formGroup}>
-                        <label style={styles.label}>Durée : <span style={styles.value}>{duration} mois</span></label>
+                        <label style={styles.label}>{t('simulator_page.duration')} : <span style={styles.value}>{duration} mois</span></label>
                         <input
                             type="range"
                             min="6"
@@ -88,31 +92,31 @@ const Simulator = () => {
 
                     <div style={styles.results}>
                         <div style={styles.resultItem}>
-                            <span>Taux (TAEG)</span>
+                            <span>{t('simulator_page.rate_apr')}</span>
                             <span style={styles.resultValue}>{interestRate}%</span>
                         </div>
                         <div style={styles.resultItem}>
-                            <span>Mensualité</span>
+                            <span>{t('simulator_page.monthly')}</span>
                             <span style={styles.resultValueHighlight}>{monthlyPayment.toFixed(2)} €</span>
                         </div>
                         <div style={styles.resultItem}>
-                            <span>Coût total</span>
+                            <span>{t('simulator_page.total_cost')}</span>
                             <span style={styles.resultValue}>{totalCost.toFixed(2)} €</span>
                         </div>
                     </div>
 
                     <div style={styles.emailSection}>
-                        <label style={styles.label}>Recevoir ma simulation par email</label>
+                        <label style={styles.label}>{t('simulator_page.receive_email')}</label>
                         <div style={{ display: 'flex', gap: '1rem' }}>
                             <input
                                 type="email"
-                                placeholder="votre@email.com"
+                                placeholder={t('simulator_page.email_placeholder')}
                                 required
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 style={styles.input}
                             />
-                            <button type="submit" style={styles.button}>Envoyer</button>
+                            <button type="submit" style={styles.button}>{t('simulator_page.send')}</button>
                         </div>
                     </div>
                 </form>

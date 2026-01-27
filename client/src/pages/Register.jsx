@@ -3,13 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { countries } from '../data/countries';
 import { useAuth } from '../contexts/AuthContext';
 import { useNotifications } from '../contexts/NotificationContext';
+import { useTranslation } from 'react-i18next';
 
 // --- SUB-COMPONENTS (Extracted to prevent re-renders) ---
 
-const SelectionStep = ({ handleSelectType, styles }) => (
+const SelectionStep = ({ handleSelectType, styles, t }) => (
     <div style={styles.selectionContainer} className="fadeInUp register-selection-card">
-        <h2 style={styles.gatewayTitle}>Choisissez votre type de compte</h2>
-        <p style={styles.gatewaySubtitle}>Une expérience bancaire sur-mesure pour chacun de vos besoins.</p>
+        <h2 style={styles.gatewayTitle}>{t('auth.register.selection.title')}</h2>
+        <p style={styles.gatewaySubtitle}>{t('auth.register.selection.subtitle')}</p>
 
         <div style={styles.cardsGrid} className="selection-grid">
             {/* Personal Card */}
@@ -19,14 +20,14 @@ const SelectionStep = ({ handleSelectType, styles }) => (
                 onClick={() => handleSelectType('personal')}
             >
                 <div style={styles.iconCircle}>👤</div>
-                <h3 style={styles.cardTypeTitle}>Particulier</h3>
-                <p style={styles.cardTypeDesc}>Gérez votre argent au quotidien, épargnez et accédez à nos crédits personnels.</p>
+                <h3 style={styles.cardTypeTitle}>{t('auth.register.selection.personal.title')}</h3>
+                <p style={styles.cardTypeDesc}>{t('auth.register.selection.personal.desc')}</p>
                 <ul style={styles.cardFeatures}>
                     <li>✓ Compte courant & Épargne</li>
                     <li>✓ Cartes Visa / Mastercard</li>
                     <li>✓ Prêts personnels</li>
                 </ul>
-                <button style={styles.cardBtn}>Ouvrir un compte Particulier</button>
+                <button style={styles.cardBtn}>{t('auth.register.selection.personal.btn')}</button>
             </div>
 
             {/* Business Card */}
@@ -36,20 +37,20 @@ const SelectionStep = ({ handleSelectType, styles }) => (
                 onClick={() => handleSelectType('business')}
             >
                 <div style={styles.iconCircleBlue}>🏢</div>
-                <h3 style={styles.cardTypeTitle}>Professionnel</h3>
-                <p style={styles.cardTypeDesc}>Des solutions puissantes pour les entreprises, freelances et associations.</p>
+                <h3 style={styles.cardTypeTitle}>{t('auth.register.selection.business.title')}</h3>
+                <p style={styles.cardTypeDesc}>{t('auth.register.selection.business.desc')}</p>
                 <ul style={styles.cardFeatures}>
                     <li>✓ Gestion de trésorerie</li>
                     <li>✓ Paiements internationaux</li>
                     <li>✓ Crédits professionnels</li>
                 </ul>
-                <button style={styles.cardBtnBlue}>Ouvrir un compte Business</button>
+                <button style={styles.cardBtnBlue}>{t('auth.register.selection.business.btn')}</button>
             </div>
         </div>
     </div>
 );
 
-const SecuritySection = ({ formData, handleChange, loading, error, styles, setStep, suffix }) => {
+const SecuritySection = ({ formData, handleChange, loading, error, styles, setStep, suffix, t }) => {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -71,10 +72,10 @@ const SecuritySection = ({ formData, handleChange, loading, error, styles, setSt
 
     return (
         <div style={styles.sectionNoBorder}>
-            <h4 style={styles.sectionHeading}>SÉCURITÉ & VALIDATION</h4>
+            <h4 style={styles.sectionHeading}>{t('auth.register.form.security_section')}</h4>
             <div style={styles.formGrid} className="register-form-grid">
                 <div style={styles.formGroup}>
-                    <label style={styles.label}>Mot de passe sécurisé *</label>
+                    <label style={styles.label}>{t('auth.register.form.fields.password')} *</label>
                     <div style={{ position: 'relative' }}>
                         <input
                             type={showPassword ? "text" : "password"}
@@ -90,7 +91,7 @@ const SecuritySection = ({ formData, handleChange, loading, error, styles, setSt
                     </div>
                 </div>
                 <div style={styles.formGroup}>
-                    <label style={styles.label}>Confirmation du mot de passe *</label>
+                    <label style={styles.label}>{t('auth.register.form.fields.confirm_password')} *</label>
                     <div style={{ position: 'relative' }}>
                         <input
                             type={showConfirmPassword ? "text" : "password"}
@@ -110,7 +111,7 @@ const SecuritySection = ({ formData, handleChange, loading, error, styles, setSt
             <div style={styles.checkboxGroup}>
                 <input type="checkbox" name="termsAccepted" id={`terms-${suffix}`} checked={formData.termsAccepted} onChange={handleChange} required style={styles.checkbox} />
                 <label htmlFor={`terms-${suffix}`} style={styles.checkboxLabel}>
-                    Je certifie l'exactitude des informations fournies et j'accepte les <a href="#" style={styles.link}>Conditions Générales d'Utilisation</a> d'INVIK SA.
+                    {t('auth.register.form.fields.terms')}
                 </label>
             </div>
 
@@ -140,46 +141,48 @@ const SecuritySection = ({ formData, handleChange, loading, error, styles, setSt
                     className="register-submit-btn"
                     disabled={loading}
                 >
-                    {loading ? "Création en cours..." : "Finaliser"}
+                    {loading ? t('auth.register.form.submitting') : t('auth.register.form.submit')}
                 </button>
                 <div style={{ marginTop: '1.5rem' }}>
-                    <a onClick={() => setStep(0)} style={{ ...styles.link, fontSize: '0.9rem' }}>← Retour</a>
+                    <a onClick={() => setStep(0)} style={{ ...styles.link, fontSize: '0.9rem' }}>← {t('auth.register.form.back')}</a>
                 </div>
             </div>
         </div>
     );
 };
 
-const PersonalForm = ({ formData, handleChange, handleSubmit, loading, error, setStep, view, styles }) => (
+const PersonalForm = ({ formData, handleChange, handleSubmit, loading, error, setStep, view, styles, t }) => (
     <div className="fadeInUp">
-        <h2 style={styles.formTitle}>Inscription Particulier</h2>
-        <p style={styles.formSubtitle}>Veuillez remplir vos informations personnelles obligatoires.</p>
+        <h2 style={styles.formTitle}>{t('auth.register.form.personal_title')}</h2>
+        <p style={styles.formSubtitle}>{t('auth.register.form.personal_subtitle')}</p>
 
         <form onSubmit={handleSubmit}>
             <div style={styles.section}>
-                <h4 style={styles.sectionHeading}>1. Identité</h4>
+                <h4 style={styles.sectionHeading}>{t('auth.register.form.identity_section')}</h4>
                 <div style={styles.formGrid} className="register-form-grid">
-                    <div style={styles.formGroup}><label style={styles.label}>Prénom *</label><input type="text" name="firstName" value={formData.firstName} onChange={handleChange} required style={styles.input} /></div>
-                    <div style={styles.formGroup}><label style={styles.label}>Nom *</label><input type="text" name="lastName" value={formData.lastName} onChange={handleChange} required style={styles.input} /></div>
-                    <div style={styles.formGroup}><label style={styles.label}>Date de naissance *</label><input type="date" name="dob" value={formData.dob} onChange={handleChange} required style={styles.input} /></div>
-                    <div style={styles.formGroup}><label style={styles.label}>Lieu de naissance *</label><input type="text" name="birthPlace" placeholder="Ex: Paris" value={formData.birthPlace} onChange={handleChange} required style={styles.input} /></div>
+                    <div style={styles.formGroup}><label style={styles.label}>{t('auth.register.form.fields.firstname')} *</label><input type="text" name="firstName" value={formData.firstName} onChange={handleChange} required style={styles.input} /></div>
+                    <div style={styles.formGroup}><label style={styles.label}>{t('auth.register.form.fields.lastname')} *</label><input type="text" name="lastName" value={formData.lastName} onChange={handleChange} required style={styles.input} /></div>
+                    <div style={styles.formGroup}><label style={styles.label}>{t('auth.register.form.fields.dob')} *</label><input type="date" name="dob" value={formData.dob} onChange={handleChange} required style={styles.input} /></div>
+                    <div style={styles.formGroup}><label style={styles.label}>{t('auth.register.form.fields.birthplace')} *</label><input type="text" name="birthPlace" placeholder={t('auth.register.form.fields.birthplace_placeholder')} value={formData.birthPlace} onChange={handleChange} required style={styles.input} /></div>
                     <div style={styles.formGroup}>
-                        <label style={styles.label}>Sexe *</label>
+                        <label style={styles.label}>{t('auth.register.form.fields.gender')} *</label>
                         <select name="gender" value={formData.gender} onChange={handleChange} required style={styles.select}>
-                            <option value="">Choisir...</option><option value="M">Masculin</option><option value="F">Féminin</option>
+                            <option value="">{t('auth.register.form.placeholders.choose')}</option>
+                            <option value="M">{t('auth.register.form.options.gender.male')}</option>
+                            <option value="F">{t('auth.register.form.options.gender.female')}</option>
                         </select>
                     </div>
                     <div style={styles.formGroup}>
-                        <label style={styles.label}>Nationalité *</label>
+                        <label style={styles.label}>{t('auth.register.form.fields.nationality')} *</label>
                         <select name="nationality" value={formData.nationality} onChange={handleChange} required style={styles.select}>
-                            <option value="">Sélectionner...</option>
+                            <option value="">{t('auth.register.form.placeholders.select')}</option>
                             {countries.map(c => <option key={c} value={c}>{c}</option>)}
                         </select>
                     </div>
                     <div style={styles.formGroup}>
-                        <label style={styles.label}>Pays de résidence *</label>
+                        <label style={styles.label}>{t('auth.register.form.fields.residence')} *</label>
                         <select name="countryOfResidence" value={formData.countryOfResidence} onChange={handleChange} required style={styles.select}>
-                            <option value="">Sélectionner...</option>
+                            <option value="">{t('auth.register.form.placeholders.select')}</option>
                             {countries.map(c => <option key={c} value={c}>{c}</option>)}
                         </select>
                     </div>
@@ -187,23 +190,24 @@ const PersonalForm = ({ formData, handleChange, handleSubmit, loading, error, se
             </div>
 
             <div style={styles.section}>
-                <h4 style={styles.sectionHeading}>2. Coordonnées & Préférences</h4>
+                <h4 style={styles.sectionHeading}>{t('auth.register.form.coords_section')}</h4>
                 <div style={styles.formGrid} className="register-form-grid">
-                    <div className="full-width-mobile" style={{ gridColumn: '1/-1' }}><label style={styles.label}>Adresse complète *</label><input type="text" name="address" value={formData.address} onChange={handleChange} required style={styles.input} /></div>
-                    <div style={styles.formGroup}><label style={styles.label}>Code Postal *</label><input type="text" name="zipCode" value={formData.zipCode} onChange={handleChange} required style={styles.input} /></div>
-                    <div style={styles.formGroup}><label style={styles.label}>Ville *</label><input type="text" name="city" value={formData.city} onChange={handleChange} required style={styles.input} /></div>
-                    <div style={styles.formGroup}><label style={styles.label}>Téléphone mobile *</label><input type="tel" name="phone" value={formData.phone} onChange={handleChange} required style={styles.input} /></div>
-                    <div style={styles.formGroup}><label style={styles.label}>Email valide *</label><input type="email" name="email" value={formData.email} onChange={handleChange} required style={styles.input} /></div>
+                    <div className="full-width-mobile" style={{ gridColumn: '1/-1' }}><label style={styles.label}>{t('auth.register.form.fields.address')} *</label><input type="text" name="address" value={formData.address} onChange={handleChange} required style={styles.input} /></div>
+                    <div style={styles.formGroup}><label style={styles.label}>{t('auth.register.form.fields.zip')} *</label><input type="text" name="zipCode" value={formData.zipCode} onChange={handleChange} required style={styles.input} /></div>
+                    <div style={styles.formGroup}><label style={styles.label}>{t('auth.register.form.fields.city')} *</label><input type="text" name="city" value={formData.city} onChange={handleChange} required style={styles.input} /></div>
+                    <div style={styles.formGroup}><label style={styles.label}>{t('auth.register.form.fields.phone')} *</label><input type="tel" name="phone" value={formData.phone} onChange={handleChange} required style={styles.input} /></div>
+                    <div style={styles.formGroup}><label style={styles.label}>{t('auth.register.form.fields.email')} *</label><input type="email" name="email" value={formData.email} onChange={handleChange} required style={styles.input} /></div>
                     <div style={styles.formGroup}>
-                        <label style={styles.label}>Devise du compte *</label>
+                        <label style={styles.label}>{t('auth.register.form.fields.currency')} *</label>
                         <select name="currency" value={formData.currency} onChange={handleChange} required style={styles.select}>
                             <option value="EUR">EUR (€)</option><option value="USD">USD ($)</option>
                         </select>
                     </div>
                     <div style={styles.formGroup}>
-                        <label style={styles.label}>Option Épargne *</label>
+                        <label style={styles.label}>{t('auth.register.form.fields.savings_opt')} *</label>
                         <select name="accountType" value={formData.accountType} onChange={handleChange} required style={styles.select}>
-                            <option value="standard">Standard uniquement</option><option value="savings">Avec Épargne & Crédit automatique</option>
+                            <option value="standard">{t('auth.register.form.options.account_type.standard')}</option>
+                            <option value="savings">{t('auth.register.form.options.account_type.savings')}</option>
                         </select>
                     </div>
                 </div>
@@ -217,48 +221,55 @@ const PersonalForm = ({ formData, handleChange, handleSubmit, loading, error, se
                 styles={styles}
                 setStep={setStep}
                 suffix={view}
+                t={t}
             />
         </form>
     </div>
 );
 
-const BusinessForm = ({ formData, handleChange, handleSubmit, loading, error, setStep, view, styles }) => (
+const BusinessForm = ({ formData, handleChange, handleSubmit, loading, error, setStep, view, styles, t }) => (
     <div className="fadeInUp">
-        <h2 style={styles.formTitle}>Inscription Professionnel</h2>
-        <p style={styles.formSubtitle}>Formulaire complet pour les entreprises et indépendants.</p>
+        <h2 style={styles.formTitle}>{t('auth.register.form.business_title')}</h2>
+        <p style={styles.formSubtitle}>{t('auth.register.form.business_subtitle')}</p>
 
         <form onSubmit={handleSubmit}>
             <div style={styles.section}>
-                <h4 style={styles.sectionHeading}>1. Informations Société</h4>
+                <h4 style={styles.sectionHeading}>{t('auth.register.form.company_section')}</h4>
                 <div style={styles.formGrid} className="register-form-grid">
-                    <div className="full-width-mobile" style={{ gridColumn: '1/-1' }}><label style={styles.label}>Dénomination sociale (Nom de l'entreprise) *</label><input type="text" name="companyName" value={formData.companyName} onChange={handleChange} required style={styles.input} /></div>
+                    <div className="full-width-mobile" style={{ gridColumn: '1/-1' }}><label style={styles.label}>{t('auth.register.form.fields.company_name')} *</label><input type="text" name="companyName" value={formData.companyName} onChange={handleChange} required style={styles.input} /></div>
                     <div style={styles.formGroup}>
-                        <label style={styles.label}>Forme juridique *</label>
+                        <label style={styles.label}>{t('auth.register.form.fields.legal_form')} *</label>
                         <select name="legalForm" value={formData.legalForm} onChange={handleChange} required style={styles.select}>
-                            <option value="">Choisir...</option><option value="SARL">SARL / EURL</option><option value="SAS">SAS / SASU</option><option value="SA">SA</option><option value="AUTO">Auto-entrepreneur</option><option value="ASSOC">Association</option><option value="OTHER">Autre</option>
+                            <option value="">{t('auth.register.form.placeholders.choose')}</option>
+                            <option value="SARL">SARL / EURL</option>
+                            <option value="SAS">SAS / SASU</option>
+                            <option value="SA">SA</option>
+                            <option value="AUTO">{t('auth.register.form.options.legal_form.auto')}</option>
+                            <option value="ASSOC">{t('auth.register.form.options.legal_form.assoc')}</option>
+                            <option value="OTHER">{t('auth.register.form.options.legal_form.other')}</option>
                         </select>
                     </div>
-                    <div style={styles.formGroup}><label style={styles.label}>Numéro d'immatriculation (SIRET/TVA/VAT) *</label><input type="text" name="registrationNumber" value={formData.registrationNumber} onChange={handleChange} required style={styles.input} /></div>
-                    <div style={styles.formGroup}><label style={styles.label}>Secteur d'activité *</label><input type="text" name="activitySector" value={formData.activitySector} onChange={handleChange} required style={styles.input} /></div>
+                    <div style={styles.formGroup}><label style={styles.label}>{t('auth.register.form.fields.siret')} *</label><input type="text" name="registrationNumber" value={formData.registrationNumber} onChange={handleChange} required style={styles.input} /></div>
+                    <div style={styles.formGroup}><label style={styles.label}>{t('auth.register.form.fields.sector')} *</label><input type="text" name="activitySector" value={formData.activitySector} onChange={handleChange} required style={styles.input} /></div>
                     <div style={styles.formGroup}>
-                        <label style={styles.label}>Pays d'immatriculation *</label>
+                        <label style={styles.label}>{t('auth.register.form.fields.residence')} *</label>
                         <select name="countryOfResidence" value={formData.countryOfResidence} onChange={handleChange} required style={styles.select}>
-                            <option value="">Sélectionner...</option>
+                            <option value="">{t('auth.register.form.placeholders.select')}</option>
                             {countries.map(c => <option key={c} value={c}>{c}</option>)}
                         </select>
                     </div>
-                    <div className="full-width-mobile" style={{ gridColumn: '1/-1' }}><label style={styles.label}>Adresse du siège social *</label><input type="text" name="address" value={formData.address} onChange={handleChange} required style={styles.input} /></div>
+                    <div className="full-width-mobile" style={{ gridColumn: '1/-1' }}><label style={styles.label}>{t('auth.register.form.fields.hq_address')} *</label><input type="text" name="address" value={formData.address} onChange={handleChange} required style={styles.input} /></div>
                 </div>
             </div>
 
             <div style={styles.section}>
-                <h4 style={styles.sectionHeading}>2. Représentant Légal</h4>
+                <h4 style={styles.sectionHeading}>{t('auth.register.form.rep_section')}</h4>
                 <div style={styles.formGrid} className="register-form-grid">
-                    <div style={styles.formGroup}><label style={styles.label}>Prénom *</label><input type="text" name="firstName" value={formData.firstName} onChange={handleChange} required style={styles.input} /></div>
-                    <div style={styles.formGroup}><label style={styles.label}>Nom *</label><input type="text" name="lastName" value={formData.lastName} onChange={handleChange} required style={styles.input} /></div>
-                    <div style={styles.formGroup}><label style={styles.label}>Lieu de naissance *</label><input type="text" name="birthPlace" placeholder="Ex: Paris" value={formData.birthPlace} onChange={handleChange} required style={styles.input} /></div>
-                    <div style={styles.formGroup}><label style={styles.label}>Fonction *</label><input type="text" name="repFunction" placeholder="Ex: Gérant" value={formData.repFunction} onChange={handleChange} required style={styles.input} /></div>
-                    <div style={styles.formGroup}><label style={styles.label}>Email professionnel *</label><input type="email" name="email" value={formData.email} onChange={handleChange} required style={styles.input} /></div>
+                    <div style={styles.formGroup}><label style={styles.label}>{t('auth.register.form.fields.firstname')} *</label><input type="text" name="firstName" value={formData.firstName} onChange={handleChange} required style={styles.input} /></div>
+                    <div style={styles.formGroup}><label style={styles.label}>{t('auth.register.form.fields.lastname')} *</label><input type="text" name="lastName" value={formData.lastName} onChange={handleChange} required style={styles.input} /></div>
+                    <div style={styles.formGroup}><label style={styles.label}>{t('auth.register.form.fields.birthplace')} *</label><input type="text" name="birthPlace" placeholder={t('auth.register.form.fields.birthplace_placeholder')} value={formData.birthPlace} onChange={handleChange} required style={styles.input} /></div>
+                    <div style={styles.formGroup}><label style={styles.label}>{t('auth.register.form.fields.function')} *</label><input type="text" name="repFunction" placeholder={t('auth.register.form.fields.function_placeholder')} value={formData.repFunction} onChange={handleChange} required style={styles.input} /></div>
+                    <div style={styles.formGroup}><label style={styles.label}>{t('auth.register.form.fields.pro_email')} *</label><input type="email" name="email" value={formData.email} onChange={handleChange} required style={styles.input} /></div>
                 </div>
             </div>
 
@@ -270,26 +281,27 @@ const BusinessForm = ({ formData, handleChange, handleSubmit, loading, error, se
                 styles={styles}
                 setStep={setStep}
                 suffix={view}
+                t={t}
             />
         </form>
     </div>
 );
 
-const MobileSelection = ({ handleSelectType }) => (
+const MobileSelection = ({ handleSelectType, t }) => (
     <div className="mobile-selection-wrapper">
         <div className="mobile-selection-item" onClick={() => handleSelectType('personal')}>
             <div className="mobile-selection-icon">👤</div>
             <div className="mobile-selection-info">
-                <h3>Compte Particulier</h3>
-                <p>Pour vos besoins quotidiens</p>
+                <h3>{t('auth.register.selection.personal.title')}</h3>
+                <p>{t('auth.register.selection.personal.desc')}</p>
             </div>
             <i className="fas fa-chevron-right"></i>
         </div>
         <div className="mobile-selection-item" onClick={() => handleSelectType('business')}>
             <div className="mobile-selection-icon blue">🏢</div>
             <div className="mobile-selection-info">
-                <h3>Compte Professionnel</h3>
-                <p>Pour votre entreprise</p>
+                <h3>{t('auth.register.selection.business.title')}</h3>
+                <p>{t('auth.register.selection.business.desc')}</p>
             </div>
             <i className="fas fa-chevron-right"></i>
         </div>
@@ -299,6 +311,7 @@ const MobileSelection = ({ handleSelectType }) => (
 // --- MAIN COMPONENT ---
 
 const Register = () => {
+    const { t, i18n } = useTranslation();
     const navigate = useNavigate();
     const { register } = useAuth();
     const { showToast } = useNotifications();
@@ -355,12 +368,12 @@ const Register = () => {
         setError('');
 
         if (formData.password !== formData.confirmPassword) {
-            setError("Les mots de passe ne correspondent pas.");
+            setError(t('auth.register.form.error_match'));
             return;
         }
 
         if (formData.password.length < 6) {
-            setError("Le mot de passe doit contenir au moins 6 caractères.");
+            setError(t('auth.register.form.error_length'));
             return;
         }
 
@@ -373,14 +386,14 @@ const Register = () => {
                 displayName: userType === 'personal' ? `${formData.firstName} ${formData.lastName}` : formData.companyName
             });
 
-            showToast("Compte créé avec succès ! Un email de vérification a été envoyé à votre adresse.", 'success');
-            navigate('/email-verification-pending');
+            showToast(t('auth.register.form.success'), 'success');
+            navigate(`/${i18n.language}/email-verification-pending`);
         } catch (err) {
             console.error("Erreur d'inscription:", err);
             if (err.code === 'auth/email-already-in-use') {
-                setError("Cette adresse email est déjà utilisée.");
+                setError(t('auth.register.form.error_exists'));
             } else {
-                setError("Une erreur est survenue lors de l'inscription. Veuillez réessayer.");
+                setError(t('auth.register.form.error_generic'));
             }
         } finally {
             setLoading(false);
@@ -393,8 +406,8 @@ const Register = () => {
             <section style={styles.hero} className="register-hero desktop-only">
                 <div style={styles.heroOverlay}>
                     <div className="container" style={{ textAlign: 'center' }}>
-                        <h1 style={styles.heroTitle} className="register-hero-title">Ouvrir un Compte</h1>
-                        <p style={styles.heroSubtitle}>Rejoignez INVIK SA, la banque de demain.</p>
+                        <h1 style={styles.heroTitle} className="register-hero-title">{t('auth.register.title')}</h1>
+                        <p style={styles.heroSubtitle}>{t('auth.register.subtitle')}</p>
                     </div>
                 </div>
             </section>
@@ -404,7 +417,7 @@ const Register = () => {
                 <button onClick={() => step === 1 ? setStep(0) : navigate(-1)} className="mobile-back-btn">
                     <i className="fas fa-arrow-left"></i>
                 </button>
-                <h1>{step === 0 ? "Inscription" : (userType === 'personal' ? "Particulier" : "Professionnel")}</h1>
+                <h1>{step === 0 ? "Inscription" : (userType === 'personal' ? t('auth.register.selection.personal.title') : t('auth.register.selection.business.title'))}</h1>
                 <div style={{ width: '40px' }}></div> {/* Spacer */}
             </div>
 
@@ -412,7 +425,7 @@ const Register = () => {
                 {/* Desktop Version */}
                 <div className="desktop-register-view">
                     {step === 0 ? (
-                        <SelectionStep handleSelectType={handleSelectType} styles={styles} />
+                        <SelectionStep handleSelectType={handleSelectType} styles={styles} t={t} />
                     ) : (
                         <div style={styles.formCard} className="register-form-card">
                             {userType === 'personal' ? (
@@ -425,6 +438,7 @@ const Register = () => {
                                     setStep={setStep}
                                     view="desktop"
                                     styles={styles}
+                                    t={t}
                                 />
                             ) : (
                                 <BusinessForm
@@ -436,6 +450,7 @@ const Register = () => {
                                     setStep={setStep}
                                     view="desktop"
                                     styles={styles}
+                                    t={t}
                                 />
                             )}
                         </div>
@@ -445,7 +460,7 @@ const Register = () => {
                 {/* Mobile Version Rendering */}
                 <div className="mobile-register-view">
                     {step === 0 ? (
-                        <MobileSelection handleSelectType={handleSelectType} />
+                        <MobileSelection handleSelectType={handleSelectType} t={t} />
                     ) : (
                         <div className="mobile-form-container">
                             {userType === 'personal' ? (
@@ -458,6 +473,7 @@ const Register = () => {
                                     setStep={setStep}
                                     view="mobile"
                                     styles={styles}
+                                    t={t}
                                 />
                             ) : (
                                 <BusinessForm
@@ -469,6 +485,7 @@ const Register = () => {
                                     setStep={setStep}
                                     view="mobile"
                                     styles={styles}
+                                    t={t}
                                 />
                             )}
                         </div>

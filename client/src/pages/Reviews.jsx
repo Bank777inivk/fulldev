@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const Reviews = () => {
+    const { t, i18n } = useTranslation();
+    const currentLang = i18n.language;
+    const getPath = (path) => `/${currentLang}${path}`;
+
     const [formData, setFormData] = useState({
         nom: '',
         prenom: '',
@@ -25,8 +30,8 @@ const Reviews = () => {
             {/* Header Section */}
             <section style={styles.header} className="reviews-header">
                 <div className="container">
-                    <h1 style={styles.title}>Votre avis compte</h1>
-                    <p style={styles.subtitle}>Partagez votre expérience avec la communauté INVIK SA</p>
+                    <h1 style={styles.title}>{t('reviews_page.hero.title')}</h1>
+                    <p style={styles.subtitle}>{t('reviews_page.hero.subtitle')}</p>
                 </div>
             </section>
 
@@ -34,27 +39,27 @@ const Reviews = () => {
                 <div style={styles.grid} className="reviews-grid">
                     {/* Form Side */}
                     <div style={styles.formCard} className="fadeInUp reviews-form-card">
-                        <h2 style={styles.formTitle}>Laissez un témoignage</h2>
+                        <h2 style={styles.formTitle}>{t('reviews_page.form.title')}</h2>
                         {submitted ? (
                             <div style={styles.successMsg}>
-                                <h3>Merci ! 🎉</h3>
-                                <p>Votre avis a été envoyé avec succès et sera publié après modération.</p>
+                                <h3>{t('reviews_page.form.success.title')}</h3>
+                                <p>{t('reviews_page.form.success.message')}</p>
                             </div>
                         ) : (
                             <form onSubmit={handleSubmit} style={styles.form}>
                                 <div style={styles.row} className="reviews-form-row">
                                     <div style={styles.group}>
-                                        <label style={styles.label}>Nom</label>
+                                        <label style={styles.label}>{t('reviews_page.form.labels.lastname')}</label>
                                         <input
-                                            type="text" required placeholder="Ex: Martin"
+                                            type="text" required placeholder={t('reviews_page.form.placeholders.lastname')}
                                             style={styles.input}
                                             onChange={(e) => setFormData({ ...formData, nom: e.target.value })}
                                         />
                                     </div>
                                     <div style={styles.group}>
-                                        <label style={styles.label}>Prénom</label>
+                                        <label style={styles.label}>{t('reviews_page.form.labels.firstname')}</label>
                                         <input
-                                            type="text" required placeholder="Ex: Jean"
+                                            type="text" required placeholder={t('reviews_page.form.placeholders.firstname')}
                                             style={styles.input}
                                             onChange={(e) => setFormData({ ...formData, prenom: e.target.value })}
                                         />
@@ -62,16 +67,16 @@ const Reviews = () => {
                                 </div>
 
                                 <div style={styles.group}>
-                                    <label style={styles.label}>Pays</label>
+                                    <label style={styles.label}>{t('reviews_page.form.labels.country')}</label>
                                     <input
-                                        type="text" required placeholder="Ex: France"
+                                        type="text" required placeholder={t('reviews_page.form.placeholders.country')}
                                         style={styles.input}
                                         onChange={(e) => setFormData({ ...formData, pays: e.target.value })}
                                     />
                                 </div>
 
                                 <div style={styles.group}>
-                                    <label style={styles.label}>Note (Étoiles)</label>
+                                    <label style={styles.label}>{t('reviews_page.form.labels.rating')}</label>
                                     <div style={styles.starsContainer}>
                                         {[1, 2, 3, 4, 5].map((star) => (
                                             <span
@@ -86,16 +91,16 @@ const Reviews = () => {
                                 </div>
 
                                 <div style={styles.group}>
-                                    <label style={styles.label}>Votre commentaire</label>
+                                    <label style={styles.label}>{t('reviews_page.form.labels.comment')}</label>
                                     <textarea
-                                        required placeholder="Dites-nous ce que vous pensez de nos services..."
+                                        required placeholder={t('reviews_page.form.placeholders.comment')}
                                         style={styles.textarea}
                                         onChange={(e) => setFormData({ ...formData, comment: e.target.value })}
                                     ></textarea>
                                 </div>
 
                                 <button type="submit" style={styles.submitBtn} className="submit-btn-hover reviews-submit-btn">
-                                    Publier mon avis
+                                    {t('reviews_page.form.submit')}
                                 </button>
                             </form>
                         )}
@@ -104,20 +109,20 @@ const Reviews = () => {
                     {/* Info Side */}
                     <div style={styles.infoSide} className="reviews-info-side">
                         <div style={styles.infoCard} className="reviews-info-card">
-                            <h3 style={styles.infoTitle}>Pourquoi témoigner ?</h3>
-                            <p style={styles.infoText}>Votre retour nous aide à améliorer nos services financiers au quotidien pour mieux vous satisfaire.</p>
+                            <h3 style={styles.infoTitle}>{t('reviews_page.info.title')}</h3>
+                            <p style={styles.infoText}>{t('reviews_page.info.text')}</p>
 
                             <div style={styles.statBox}>
-                                <span style={styles.statNum}>98%</span>
-                                <span style={styles.statLabel}>Clients satisfaits</span>
+                                <span style={styles.statNum}>{t('reviews_page.info.stats.value')}</span>
+                                <span style={styles.statLabel}>{t('reviews_page.info.stats.label')}</span>
                             </div>
 
                             <div style={styles.trustBox}>
-                                🛡️ <span>Vos données sont protégées et votre anonymat peut être préservé sur demande.</span>
+                                {t('reviews_page.info.trust')}
                             </div>
                         </div>
 
-                        <Link to="/" style={styles.backLink}>← Retour à l'accueil</Link>
+                        <Link to={getPath('/')} style={styles.backLink}>{t('reviews_page.info.back')}</Link>
                     </div>
                 </div>
             </div>

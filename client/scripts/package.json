@@ -1,0 +1,12 @@
+{
+    "name": "invik-translation-tool",
+    "version": "1.0.0",
+    "description": "Auto-translate INVIK Bank UI to multiple languages",
+    "main": "translate.js",
+    "scripts": {
+        "translate": "node translate.js"
+    },
+    "dependencies": {
+        "translate-google": "^1.5.0"
+    }
+}

@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { sendEmailVerification } from 'firebase/auth';
+import { useTranslation } from 'react-i18next';
 
 const EmailVerificationPending = () => {
+    const { t, i18n } = useTranslation();
     const { user, checkEmailVerification, logout } = useAuth();
     const navigate = useNavigate();
     const [resendStatus, setResendStatus] = useState('');
@@ -11,7 +13,7 @@ const EmailVerificationPending = () => {
     const handleLogout = async () => {
         try {
             await logout();
-            navigate('/login');
+            navigate(`/${i18n.language}/login`);
         } catch (error) {
             console.error("Logout failed", error);
         }
@@ -20,7 +22,7 @@ const EmailVerificationPending = () => {
     useEffect(() => {
         // If user is verified, redirect to dashboard
         if (user?.emailVerified) {
-            navigate('/dashboard');
+            navigate(`/${i18n.language}/dashboard`);
         }
     }, [user, navigate]);
 
@@ -42,10 +44,10 @@ const EmailVerificationPending = () => {
     const handleResendEmail = async () => {
         try {
             await sendEmailVerification(user);
-            setResendStatus('Email de vérification renvoyé avec succès !');
+            setResendStatus(t('auth.verify_pending.resend_success'));
             setTimeout(() => setResendStatus(''), 5000);
         } catch (error) {
-            setResendStatus('Erreur lors de l\'envoi. Veuillez réessayer.');
+            setResendStatus(t('auth.verify_pending.resend_error'));
         }
     };
 
@@ -55,12 +57,12 @@ const EmailVerificationPending = () => {
                 <div style={styles.iconBox}>
                     <i className="fas fa-envelope" style={styles.icon}></i>
                 </div>
-                <h1 style={styles.title}>Vérifiez votre adresse email</h1>
+                <h1 style={styles.title}>{t('auth.verify_pending.title')}</h1>
                 <p style={styles.description}>
-                    Un email de vérification a été envoyé à <strong>{user?.email}</strong>
+                    {t('auth.verify_pending.sent_to')} <strong>{user?.email}</strong>
                 </p>
                 <p style={styles.instructions}>
-                    Veuillez cliquer sur le lien dans l'email, cette page se rafraîchira automatiquement.
+                    {t('auth.verify_pending.instructions')}
                 </p>
 
                 {resendStatus && (
@@ -72,22 +74,22 @@ const EmailVerificationPending = () => {
                 <div style={styles.actions}>
                     <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
                         <div style={styles.spinner}></div>
-                        <p style={{ color: '#718096', fontSize: '0.9rem' }}>En attente de validation...</p>
+                        <p style={{ color: '#718096', fontSize: '0.9rem' }}>{t('auth.verify_pending.waiting')}</p>
                     </div>
                     <button style={styles.secondaryBtn} onClick={handleResendEmail}>
-                        Renvoyer l'email de vérification
+                        {t('auth.verify_pending.resend')}
                     </button>
                     <button style={styles.logoutBtn} onClick={handleLogout}>
-                        Retour à la connexion
+                        {t('auth.verify_pending.logout')}
                     </button>
                 </div>
 
                 <div style={styles.helpText}>
-                    <p>Vous n'avez pas reçu l'email ?</p>
+                    <p>{t('auth.verify_pending.help_title')}</p>
                     <ul style={styles.helpList}>
-                        <li>Vérifiez votre dossier spam/courrier indésirable</li>
-                        <li>Assurez-vous que l'adresse email est correcte</li>
-                        <li>Attendez quelques minutes avant de renvoyer</li>
+                        <li>{t('auth.verify_pending.help_1')}</li>
+                        <li>{t('auth.verify_pending.help_2')}</li>
+                        <li>{t('auth.verify_pending.help_3')}</li>
                     </ul>
                 </div>
             </div>

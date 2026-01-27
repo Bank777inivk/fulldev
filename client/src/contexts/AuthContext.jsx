@@ -14,7 +14,7 @@ import { walletService } from '../services/walletService';
 import { cardService } from '../services/cardService';
 import { ribService } from '../services/ribService';
 import { userService } from '../services/userService';
-import { emailService } from '../services/emailService';
+import emailService from '../services/emailService';
 
 const AuthContext = createContext();
 

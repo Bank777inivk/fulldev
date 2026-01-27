@@ -1,15 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const PrivacyPolicy = () => {
+    const { t, i18n } = useTranslation();
+    const sections = t('legal.privacy.sections', { returnObjects: true });
+
     return (
         <div style={styles.page}>
             {/* Hero Section */}
             <section style={styles.hero} className="legal-hero">
                 <div style={styles.heroOverlay}>
                     <div className="container">
-                        <h1 style={styles.heroTitle}>POLITIQUE DE CONFIDENTIALITÉ</h1>
-                        <p style={styles.breadcrumb}>ACCUEIL / POLITIQUE DE CONFIDENTIALITÉ</p>
+                        <h1 style={styles.heroTitle}>{t('legal.privacy.title')}</h1>
+                        <p style={styles.breadcrumb}>{t('legal.common.back_home')} / {t('legal.privacy.breadcrumb')}</p>
                     </div>
                 </div>
             </section>
@@ -17,87 +21,46 @@ const PrivacyPolicy = () => {
             {/* Content Section */}
             <section className="container" style={styles.contentSection}>
                 <div style={styles.card} className="legal-content-card">
-                    <p style={styles.lastUpdate}>Dernière mise à jour : Décembre 2025</p>
+                    <p style={styles.lastUpdate}>{t('legal.common.last_update')}</p>
 
-                    <p style={styles.intro}>
-                        Chez <strong>INVIK SA</strong>, nous attachons une importance primordiale à la confidentialité et à la sécurité des données personnelles des utilisateurs et des clients. La présente politique de confidentialité décrit la manière dont nous collectons, utilisons, conservons et protégeons vos informations lorsque vous utilisez notre site et nos services en ligne.
-                    </p>
+                    <p style={styles.intro}>{t('legal.privacy.intro_1')}</p>
+                    <p style={styles.intro}>{t('legal.privacy.intro_2')}</p>
 
-                    <p style={styles.intro}>
-                        INVIK SA agit dans le respect de la réglementation applicable en matière de protection des données personnelles, notamment le Règlement général sur la protection des données (RGPD). En accédant à nos services, vous reconnaissez avoir pris connaissance de la présente politique et vous engagez à l’accepter.
-                    </p>
+                    {sections.map((section, index) => (
+                        <div key={index}>
+                            <h2 style={styles.sectionTitle}>{section.title}</h2>
+                            {section.text && <p style={styles.text}>{section.text}</p>}
 
-                    <h2 style={styles.sectionTitle}>1. Quelles données collectons-nous et pour quelles finalités ?</h2>
-                    <p style={styles.text}>
-                        Nous collectons uniquement les informations nécessaires à la fourniture, à la gestion et à l’amélioration de nos services, ainsi qu’au respect de nos obligations légales et réglementaires. Selon les cas, les catégories de données que nous pouvons traiter sont :
-                    </p>
-                    <ul style={styles.list}>
-                        <li style={styles.listItem}><strong>Données d’identification :</strong> nom, prénom, date de naissance, nationalité, pays de résidence, coordonnées (adresse, téléphone, email), profession.</li>
-                        <li style={styles.listItem}><strong>Données de contact et d’échange :</strong> informations transmises via les formulaires (contact, demande de crédit, ouverture de compte) et échanges avec notre service client.</li>
-                        <li style={styles.listItem}><strong>Données financières et de relation bancaire :</strong> informations relatives à vos comptes, opérations, demandes de crédit, revenus déclarés et autres données nécessaires à l’étude et à la gestion de votre dossier.</li>
-                        <li style={styles.listItem}><strong>Données de navigation et techniques :</strong> adresse IP, type de navigateur, pages consultées, horodatage des visites, afin d’assurer la sécurité du site, de prévenir la fraude et d’améliorer l’expérience utilisateur.</li>
-                    </ul>
-                    <p style={styles.text}>
-                        Ces données peuvent être collectées directement auprès de vous (formulaires, échanges avec notre équipe) ou, le cas échéant, via des sources autorisées (par exemple, lorsque la loi exige certaines vérifications).
-                    </p>
+                            {section.list && (
+                                <ul style={styles.list}>
+                                    {section.list.map((item, i) => (
+                                        <li key={i} style={styles.listItem}>{item}</li>
+                                    ))}
+                                </ul>
+                            )}
 
-                    <h2 style={styles.sectionTitle}>2. Bases légales, durée de conservation et partage des données</h2>
-                    <p style={styles.text}>
-                        Le traitement de vos données personnelles par INVIK SA repose, selon les situations, sur plusieurs bases légales : l’exécution de mesures précontractuelles ou d’un contrat, le respect d’obligations légales et réglementaires, l’intérêt légitime d’INVIK SA ou, lorsque cela est requis, votre consentement.
-                    </p>
+                            {section.text_after && <p style={styles.text}>{section.text_after}</p>}
 
-                    <h3 style={styles.subSectionTitle}>Durée de conservation</h3>
-                    <p style={styles.text}>
-                        Nous conservons vos données personnelles pendant une durée n’excédant pas celle nécessaire aux finalités pour lesquelles elles sont collectées, augmentée le cas échéant des délais de prescription légale ou des obligations de conservation imposées par la réglementation.
-                    </p>
-
-                    <h3 style={styles.subSectionTitle}>Partage des données</h3>
-                    <p style={styles.text}>
-                        INVIK SA ne vend pas vos données personnelles. Elles peuvent toutefois être communiquées aux catégories de destinataires suivantes :
-                    </p>
-                    <ul style={styles.list}>
-                        <li style={styles.listItem}>Services internes d’INVIK SA habilités à traiter votre demande.</li>
-                        <li style={styles.listItem}>Prestataires techniques et partenaires intervenant pour le compte d’INVIK SA (hébergement, outils de sécurité).</li>
-                        <li style={styles.listItem}>Autorités administratives, judiciaires ou de contrôle, lorsque la loi l’exige.</li>
-                    </ul>
-
-                    <h3 style={styles.subSectionTitle}>Mesures de sécurité</h3>
-                    <p style={styles.text}>
-                        INVIK SA met en œuvre des mesures techniques et organisationnelles appropriées pour protéger vos données contre la perte, l’accès non autorisé ou la divulgation :
-                    </p>
-                    <ul style={styles.list}>
-                        <li style={styles.listItem}>Utilisation de solutions d’hébergement sécurisées et de pare-feu.</li>
-                        <li style={styles.listItem}>Contrôles d’accès et limitation des données aux seules personnes habilitées.</li>
-                        <li style={styles.listItem}>Procédures internes de sécurité et audits réguliers.</li>
-                    </ul>
-
-                    <h2 style={styles.sectionTitle}>3. Vos droits, les cookies et comment nous contacter</h2>
-                    <h3 style={styles.subSectionTitle}>Vos droits sur vos données</h3>
-                    <p style={styles.text}>
-                        Conformément à la réglementation, vous disposez des droits suivants :
-                    </p>
-                    <ul style={styles.list}>
-                        <li style={styles.listItem}>Droit d’accès, de rectification et d’effacement de vos données.</li>
-                        <li style={styles.listItem}>Droit à la limitation du traitement et droit d’opposition.</li>
-                        <li style={styles.listItem}>Droit à la portabilité des données, lorsque cela est applicable.</li>
-                    </ul>
-                    <p style={styles.text}>
-                        Vous pouvez exercer ces droits en nous contactant par email à : <strong>contact@inviksa.com</strong>.
-                    </p>
-
-                    <h3 style={styles.subSectionTitle}>Cookies et traceurs</h3>
-                    <p style={styles.text}>
-                        Lors de votre navigation, des cookies peuvent être déposés sur votre terminal pour assurer le bon fonctionnement du site et réaliser des statistiques. Vous pouvez gérer vos préférences via les paramètres de votre navigateur.
-                    </p>
-
-                    <h3 style={styles.subSectionTitle}>Questions et réclamations</h3>
-                    <p style={styles.text}>
-                        Si vous avez des questions concernant la présente politique, vous pouvez nous contacter via notre formulaire en ligne ou par email. Vous disposez également du droit d’introduire une réclamation auprès de l’autorité de contrôle compétente.
-                    </p>
+                            {section.subsections && section.subsections.map((sub, j) => (
+                                <div key={j}>
+                                    <h3 style={styles.subSectionTitle}>{sub.title}</h3>
+                                    {sub.text && <p style={styles.text}>{sub.text}</p>}
+                                    {sub.list && (
+                                        <ul style={styles.list}>
+                                            {sub.list.map((item, k) => (
+                                                <li key={k} style={styles.listItem}>{item}</li>
+                                            ))}
+                                        </ul>
+                                    )}
+                                    {sub.text_after && <p style={styles.text}>{sub.text_after}</p>}
+                                </div>
+                            ))}
+                        </div>
+                    ))}
 
                     <div style={styles.ctaWrapper}>
                         <Link to="/contact" style={styles.ctaButton} className="premium-button legal-cta-btn">
-                            NOUS CONTACTER AU SUJET DE VOS DONNÉES
+                            {t('legal.privacy.cta')}
                         </Link>
                     </div>
                 </div>

@@ -11,6 +11,279 @@
         "register": "Open an Account",
         "dashboard": "Dashboard"
     },
+    "simulator_page": {
+        "title": "Credit Simulator",
+        "subtitle": "Estimate your monthly payments in a few clicks. Immediate decision in principle.",
+        "amount": "Project Amount",
+        "duration": "Duration",
+        "rate_apr": "Rate (APR)",
+        "monthly": "Monthly Payment",
+        "total_cost": "Total Cost",
+        "receive_email": "Receive my simulation by email",
+        "email_placeholder": "your@email.com",
+        "send": "Send",
+        "success": "Your simulation has been successfully sent to {{email}}.",
+        "error": "Error sending simulation."
+    },
+    "auth": {
+        "action_handler": {
+            "processing": "Processing your request...",
+            "invalid_link": "Invalid or expired link.",
+            "unknown_action": "Unknown action.",
+            "verify_email": {
+                "success": "Your email address has been successfully verified!",
+                "error": "The verification code is invalid or has already been used."
+            },
+            "reset_password": {
+                "invalid": "Invalid or expired reset link.",
+                "success": "Your password has been successfully changed.",
+                "mismatch": "Passwords do not match.",
+                "title": "New Password",
+                "instruction": "Please enter your new password.",
+                "placeholder_new": "New Password",
+                "placeholder_confirm": "Confirm Password",
+                "submit": "Confirm Change"
+            },
+            "recover_email": {
+                "success": "Your email has been restored.",
+                "error": "Error during recovery."
+            },
+            "titles": {
+                "success": "Congratulations!",
+                "error": "Oops!"
+            },
+            "buttons": {
+                "login": "Please log in to access your client area",
+                "back_login": "Back to Login"
+            }
+        },
+        "login": {
+            "title": "Client Login",
+            "subtitle": "Access your secure banking area",
+            "identifier": "Client ID (Email)",
+            "email_placeholder": "your.email@example.com",
+            "password": "Password",
+            "password_placeholder": "••••••••",
+            "forgot_password": "Forgot Password?",
+            "submit": "Login",
+            "loading": "Processing...",
+            "sending": "Send Link",
+            "back_to_login": "Back to Login",
+            "not_client": "Not yet a client?",
+            "open_account": "Open an Account",
+            "error_empty_email": "Please enter your email address to reset password.",
+            "success_reset": "Reset link sent! Check your email.",
+            "error_reset": "Unable to send reset email.",
+            "error_login": "Incorrect email or password."
+        },
+        "register": {
+            "title": "Open an Account",
+            "subtitle": "Join INVIK SA, the bank of tomorrow.",
+            "selection": {
+                "title": "Choose your account type",
+                "subtitle": "A tailored banking experience for your every need.",
+                "personal": {
+                    "title": "Personal",
+                    "desc": "Manage your daily finances, save, and access our personal loans.",
+                    "btn": "Open a Personal Account"
+                },
+                "business": {
+                    "title": "Business",
+                    "desc": "Powerful solutions for companies, freelancers, and associations.",
+                    "btn": "Open a Business Account"
+                }
+            },
+            "form": {
+                "personal_title": "Personal Registration",
+                "personal_subtitle": "Please fill in your mandatory personal information.",
+                "business_title": "Business Registration",
+                "business_subtitle": "Complete form for companies and freelancers.",
+                "identity_section": "1. Identity",
+                "company_section": "1. Company Information",
+                "coords_section": "2. Contact & Preferences",
+                "rep_section": "2. Legal Representative",
+                "security_section": "SECURITY & VALIDATION",
+                "fields": {
+                    "firstname": "First Name",
+                    "lastname": "Last Name",
+                    "dob": "Date of Birth",
+                    "birthplace": "Place of Birth",
+                    "birthplace_placeholder": "Ex: London",
+                    "gender": "Gender",
+                    "nationality": "Nationality",
+                    "residence": "Country of Residence",
+                    "address": "Full Address",
+                    "address_placeholder": "Ex: 10 Downing Street",
+                    "zip": "Zip Code",
+                    "zip_placeholder": "SW1A 2AA",
+                    "city": "City",
+                    "city_placeholder": "London",
+                    "phone": "Mobile Phone",
+                    "phone_placeholder": "+44 7000 000000",
+                    "email": "Valid Email",
+                    "currency": "Account Currency",
+                    "savings_opt": "Savings Option",
+                    "company_name": "Company Name",
+                    "legal_form": "Legal Form",
+                    "siret": "Registration Number (ID/VAT)",
+                    "sector": "Activity Sector",
+                    "hq_address": "Headquarters Address",
+                    "function": "Position",
+                    "function_placeholder": "Ex: Manager",
+                    "pro_email": "Business Email",
+                    "password": "Secure Password",
+                    "confirm_password": "Confirm Password",
+                    "terms": "I certify the accuracy of the information provided and agree to INVIK SA Terms of Use."
+                },
+                "submit": "Finalize",
+                "submitting": "Creating account...",
+                "back": "Back",
+                "success": "Account created successfully! A verification email has been sent to your address.",
+                "error_match": "Passwords do not match.",
+                "error_length": "Password must be at least 6 characters.",
+                "error_exists": "This email address is already in use.",
+                "error_generic": "An error occurred during registration. Please try again.",
+                "placeholders": {
+                    "choose": "Choose...",
+                    "select": "Select..."
+                },
+                "options": {
+                    "gender": {
+                        "male": "Male",
+                        "female": "Female"
+                    },
+                    "account_type": {
+                        "standard": "Standard only",
+                        "savings": "With Savings & Automatic Credit"
+                    },
+                    "legal_form": {
+                        "auto": "Sole Proprietorship",
+                        "assoc": "Non-Profit Organization",
+                        "other": "Other"
+                    }
+                }
+            }
+        },
+        "verify_pending": {
+            "title": "Verify your email address",
+            "sent_to": "A verification email has been sent to",
+            "instructions": "Please click the link in the email, this page will refresh automatically.",
+            "waiting": "Waiting for validation...",
+            "resend": "Resend verification email",
+            "logout": "Back to Login",
+            "help_title": "Did not receive the email?",
+            "help_1": "Check your spam/junk folder",
+            "help_2": "Ensure the email address is correct",
+            "help_3": "Wait a few minutes before resending",
+            "resend_success": "Verification email resent successfully!",
+            "resend_error": "Error sending email. Please try again."
+        },
+        "verify_success": {
+            "verifying": "Verifying...",
+            "error_title": "Verification Error",
+            "error_desc": "The verification link is invalid or has expired.",
+            "success_title": "Email verified successfully!",
+            "success_desc": "Your email address has been confirmed. You can now log in to your account.",
+            "redirect": "Redirecting to login page in",
+            "login_now": "Login Now"
+        }
+    },
+    "credit": {
+        "hero": {
+            "title": "Credit Request",
+            "subtitle": "Real-time solvency check"
+        },
+        "steps": {
+            "general": "General Information",
+            "identity": "Applicant Identity",
+            "personal": "Personal Situation",
+            "professional": "Professional Situation",
+            "financial": "Financial Situation",
+            "banking": "Banking Information",
+            "consent": "Declarations and Consents",
+            "result": "Analysis Completed"
+        },
+        "fields": {
+            "type": "Credit Type Requested",
+            "amount": "Requested Amount (€)",
+            "duration": "Duration (months)",
+            "object": "Specific purpose of credit (mandatory)",
+            "rate": "Desired Interest Rate (APR)",
+            "monthly": "Estimated Monthly Payment",
+            "civility": "Civility",
+            "lastname": "Last Name",
+            "firstname": "First Name",
+            "email": "Email",
+            "phone": "Phone",
+            "dob": "Date of Birth",
+            "id_num_warn": "ID Number (Last reminder before next step)",
+            "id_type": "ID Type",
+            "marital": "Marital Status",
+            "children": "Number of dependent children",
+            "housing": "Housing Type",
+            "street": "Street & No.",
+            "street_placeholder": "Ex: 10 Downing Street",
+            "zip": "Zip Code",
+            "zip_placeholder": "SW1A 2AA",
+            "city": "City",
+            "city_placeholder": "London",
+            "country": "Country",
+            "status": "Employment Status",
+            "income": "Net Monthly Income (€)",
+            "employer": "Employer / Company Name",
+            "rent": "Rent / Monthly Mortgage (€)",
+            "other_credits": "Other current credits (€)",
+            "incident": "Previous banking incident?",
+            "current_bank": "Current Bank",
+            "other_bank": "Bank Name",
+            "iban": "IBAN / Account Number",
+            "iban_placeholder": "FR76...",
+            "certify": "I certify that the information provided is accurate and complete.",
+            "authorize": "I authorize INVIK SA to analyze my data for the purpose of this credit application.",
+            "privacy": "Data Protection: Collected data is intended for INVIK SA exclusively for credit application assessment.",
+            "submit": "Submit Application",
+            "analyzing": "Analyzing...",
+            "next": "Next",
+            "back": "Back"
+        },
+        "options": {
+            "personal": "Personal Loan",
+            "consumption": "Consumer Loan",
+            "auto": "Auto Loan",
+            "real_estate": "Mortgage",
+            "pro": "Business Loan",
+            "passport": "Passport",
+            "cni": "National ID Card",
+            "residence": "Residence Permit",
+            "single": "Single",
+            "married": "Married",
+            "divorced": "Divorced",
+            "widowed": "Widowed",
+            "owner": "Owner",
+            "tenant": "Tenant",
+            "hosted": "Hosted",
+            "cdi": "Permanent Contract (CDI)",
+            "cdd": "Fixed-Term Contract (CDD)",
+            "official": "Civil Servant",
+            "freelance": "Freelancer",
+            "entrepreneur": "Entrepreneur",
+            "retired": "Retired",
+            "unemployed": "Unemployed",
+            "yes": "Yes",
+            "no": "No",
+            "select_bank": "-- Select your bank --"
+        },
+        "result": {
+            "green_title": "High Probability of Acceptance",
+            "yellow_title": "Further Review Required",
+            "red_title": "High Probability of Rejection",
+            "green_desc": "Your file shows excellent solvency.",
+            "yellow_desc": "Some elements require manual verification.",
+            "red_desc": "Your current financial situation does not allow for this credit grant.",
+            "disclaimer": "Final decision subject to INVIK SA internal validation",
+            "home_btn": "Return to Home"
+        }
+    },
     "home": {
         "slides": {
             "0": {
@@ -363,8 +636,11 @@
             "shareholders": {
                 "title": "Main Shareholders",
                 "lfg": "European leader in financial investment",
+                "lfg_role": "Majority Shareholder - 45%",
                 "etv": "Specialist in innovative fintechs",
-                "cpi": "Leading investment fund"
+                "etv_role": "Strategic Investor - 25%",
+                "cpi": "Leading investment fund",
+                "cpi_role": "Institutional Investor - 20%"
             },
             "ecosystem": {
                 "title": "Ecosystem & Partners"
@@ -566,105 +842,80 @@
     },
     "cards_page": {
         "hero": {
-            "title": "OUR CARDS",
-            "breadcrumb": "HOME / OUR CARDS"
+            "title": "OUR DEBIT & CREDIT CARDS",
+            "breadcrumb": "HOME / CARDS"
         },
         "intro": {
-            "subtitle": "OUR CREDIT CARDS",
-            "title": "Cards adapted to your lifestyle, for secure payments and exclusive benefits"
+            "subtitle": "CHOOSE EXCELLENCE",
+            "title": "A range of cards adapted to your lifestyle"
         },
         "cards": {
             "silver": {
-                "title": "Visa Silver Card",
-                "desc": "The INVIK SA Visa Silver offers secure payments with controlled transaction fees. Ideal for daily expenses."
+                "title": "Visa Classic Silver",
+                "desc": "The essentials for your daily payments with comfortable limits and included travel insurance."
             },
             "gold": {
-                "title": "Mastercard Gold Card",
-                "desc": "Enjoy exclusive benefits with the Mastercard Gold, suitable for travelers and frequent users. High limits and included insurance."
+                "title": "Mastercard Gold",
+                "desc": "Exclusive privileges, extended insurance, and high limits for total freedom."
             },
             "platinum": {
-                "title": "Visa Platinum Card",
-                "desc": "The INVIK SA Visa Platinum offers a premium experience with premium services, reinforced insurance and assistance guarantees."
+                "title": "Visa Platinum",
+                "desc": "Prestige without compromise. 24/7 Concierge, airport lounge access, and premium insurance."
             }
         },
+        "cta_button": "ORDER THIS CARD",
         "virtual": {
             "title": "The INVIK Virtual Card",
-            "desc": "Secure your online purchases with our ephemeral or permanent virtual cards. Generate them instantly from your app.",
+            "desc": "Secure your online purchases with our instant virtual card. Generate unique numbers for each transaction or use it for your subscriptions.",
+            "button": "CREATE MY VIRTUAL CARD",
             "features": [
-                "✨ Instant and unlimited creation",
-                "🔒 Ideal for subscriptions and web purchases",
-                "📱 Apple Pay & Google Pay compatible"
+                "Immediate activation",
+                "Customizable limits",
+                "Apple Pay & Google Pay compatible",
+                "Instant blocking via app"
             ],
-            "button": "GET A CARD"
-        },
-        "cta_button": "OPEN AN ACCOUNT"
+            "card_back": {
+                "signature": "Authorized Signature",
+                "text": "This card is property of INVIK SA. If found, please return to nearest branch. Support: +33 1 23 45 67 89.",
+                "valid_until": "Valid thru"
+            }
+        }
     },
-    "faq_page": {
+    "reviews_page": {
         "hero": {
-            "title": "FAQ'S",
-            "breadcrumb": "HOME / FAQ'S"
+            "title": "Your Opinion Matters",
+            "subtitle": "Share your experience with the INVIK SA community"
         },
-        "items": [
-            {
-                "question": "How can I open an account with INVIK SA?",
-                "answer": "To open an account, go to our registration page, complete the form with your personal information, then follow the steps to verify your identity and validate your file."
+        "form": {
+            "title": "Leave a Testimonial",
+            "success": {
+                "title": "Thank you! 🎉",
+                "message": "Your review has been successfully submitted and will be published after moderation."
             },
-            {
-                "question": "How can I make an international transfer?",
-                "answer": "International transfers are made from your client area by choosing the \"International Transfer\" option. Enter your beneficiary's details, the amount and currency, then validate the operation after verifying the information."
+            "labels": {
+                "firstname": "First Name",
+                "lastname": "Last Name",
+                "country": "Country",
+                "rating": "Rating (Stars)",
+                "comment": "Your Comment"
             },
-            {
-                "question": "What documents are required for account opening?",
-                "answer": "You will generally need a valid ID (passport, ID card) and proof of address less than three months old. Additional documents may be requested depending on your situation."
+            "placeholders": {
+                "firstname": "Ex: John",
+                "lastname": "Ex: Doe",
+                "country": "Ex: USA",
+                "comment": "Tell us what you think about our services..."
             },
-            {
-                "question": "Is my information secure at INVIK SA?",
-                "answer": "Yes. INVIK SA uses advanced encryption technologies and security protocols to protect your personal and financial data, as well as your online operations."
+            "submit": "Publish my Review"
+        },
+        "info": {
+            "title": "Why leave a review?",
+            "text": "Your feedback helps us improve our financial services daily to better satisfy you.",
+            "stats": {
+                "value": "98%",
+                "label": "Satisfied Clients"
             },
-            {
-                "question": "How can I order an INVIK SA bank card?",
-                "answer": "Once your account is open, you can request a bank card directly from your online client area, in the \"My Cards\" section, then follow the instructions for ordering and activation."
-            },
-            {
-                "question": "What are the payment and withdrawal limits of my INVIK SA cards?",
-                "answer": "Each INVIK SA card has default payment and withdrawal limits (per day and/or month). These limits may vary depending on your profile, card type, and history. You can view and adjust your limits, up to authorized amounts, directly from your client area or our app."
-            },
-            {
-                "question": "Does INVIK SA offer loan solutions?",
-                "answer": "Yes, INVIK SA offers several types of loans, including personal loans and financing solutions adapted to your projects, subject to conditions and acceptance. Consult our \"Our Services\" page for more details."
-            },
-            {
-                "question": "What are the withdrawal fees at ATMs?",
-                "answer": "Withdrawals may be free up to a certain amount or number of operations per month, then charged according to the current fee schedule. Fees may differ between withdrawals made in the Eurozone and internationally. Consult the \"Rates\" section of your client area."
-            },
-            {
-                "question": "What fees are associated with INVIK SA accounts?",
-                "answer": "Our fees are designed to be transparent and competitive. You can consult all rates (account maintenance, cards, operations, etc.) on our dedicated fee schedule page."
-            },
-            {
-                "question": "How to contact INVIK SA customer service?",
-                "answer": "Our customer service is available to assist you. You can contact us by phone, email, or via the contact form or online chat, according to the channels indicated on our \"Contact\" page."
-            },
-            {
-                "question": "Can I manage my INVIK SA account from a mobile?",
-                "answer": "Yes, our platform is optimized for use on mobile, tablet, and computer. You can view your balances, track your operations, and manage your services wherever you are."
-            },
-            {
-                "question": "What to do if my INVIK SA card is lost or stolen?",
-                "answer": "In case of loss or theft, immediately block your card from your client area, if available, and/or contact our customer service immediately to oppose the card and request a replacement."
-            },
-            {
-                "question": "Which countries are eligible for a credit at INVIK bank?",
-                "answer": "INVIK bank offers credits to residents of all European countries (Eurozone, EU, Switzerland, UK, etc.) and Americas (USA, Canada, Mexico, Brazil, Argentina, etc.). To be eligible, you must have a valid passport, prove identity, and justify regular income."
-            }
-        ],
-        "cta": {
-            "title": "Can't find your answer?",
-            "text": "Our advisors are here to help you or guide you in opening your account.",
-            "buttons": {
-                "open_account": "OPEN AN ACCOUNT",
-                "contact": "CONTACT US"
-            }
+            "trust": "🛡️ Your data is protected and your anonymity can be preserved upon request.",
+            "back": "← Back to Home"
         }
     },
     "contact_page": {
@@ -734,6 +985,287 @@
                     "+33 6 46 72 32 86"
                 ]
             }
+        }
+    },
+    "faq_page": {
+        "hero": {
+            "title": "FAQ'S",
+            "breadcrumb": "HOME / FAQ'S"
+        },
+        "items": [
+            {
+                "question": "How can I open an account with INVIK SA?",
+                "answer": "To open an account, go to our registration page, complete the form with your personal information, then follow the steps to verify your identity and validate your file."
+            },
+            {
+                "question": "How can I make an international transfer?",
+                "answer": "International transfers are made from your client area by choosing the \"International Transfer\" option. Enter your beneficiary's details, the amount and currency, then validate the operation after verifying the information."
+            },
+            {
+                "question": "What documents are required for account opening?",
+                "answer": "You will generally need a valid ID (passport, ID card) and proof of address less than three months old. Additional documents may be requested depending on your situation."
+            },
+            {
+                "question": "Is my information secure at INVIK SA?",
+                "answer": "Yes. INVIK SA uses advanced encryption technologies and security protocols to protect your personal and financial data, as well as your online operations."
+            },
+            {
+                "question": "How can I order an INVIK SA bank card?",
+                "answer": "Once your account is open, you can request a bank card directly from your online client area, in the \"My Cards\" section, then follow the instructions for ordering and activation."
+            },
+            {
+                "question": "What are the payment and withdrawal limits of my INVIK SA cards?",
+                "answer": "Each INVIK SA card has default payment and withdrawal limits (per day and/or month). These limits may vary depending on your profile, card type, and history. You can view and adjust your limits, up to authorized amounts, directly from your client area or our app."
+            },
+            {
+                "question": "Does INVIK SA offer loan solutions?",
+                "answer": "Yes, INVIK SA offers several types of loans, including personal loans and financing solutions adapted to your projects, subject to conditions and acceptance. Consult our \"Our Services\" page for more details."
+            },
+            {
+                "question": "What are the withdrawal fees at ATMs?",
+                "answer": "Withdrawals may be free up to a certain amount or number of operations per month, then charged according to the current fee schedule. Fees may differ between withdrawals made in the Eurozone and internationally. Consult the \"Rates\" section of your client area."
+            },
+            {
+                "question": "What fees are associated with INVIK SA accounts?",
+                "answer": "Our fees are designed to be transparent and competitive. You can consult all rates (account maintenance, cards, operations, etc.) on our dedicated fee schedule page."
+            },
+            {
+                "question": "How to contact INVIK SA customer service?",
+                "answer": "Our customer service is available to assist you. You can contact us by phone, email, or via the contact form or online chat, according to the channels indicated on our \"Contact\" page."
+            },
+            {
+                "question": "Can I manage my INVIK SA account from a mobile?",
+                "answer": "Yes, our platform is optimized for use on mobile, tablet, and computer. You can view your balances, track your operations, and manage your services wherever you are."
+            },
+            {
+                "question": "What to do if my INVIK SA card is lost or stolen?",
+                "answer": "In case of loss or theft, immediately block your card from your client area, if available, and/or contact our customer service immediately to oppose the card and request a replacement."
+            },
+            {
+                "question": "Which countries are eligible for a credit at INVIK bank?",
+                "answer": "INVIK bank offers credits to residents of all European countries (Eurozone, EU, Switzerland, UK, etc.) and Americas (USA, Canada, Mexico, Brazil, Argentina, etc.). To be eligible, you must have a valid passport, prove identity, and justify regular income."
+            }
+        ],
+        "cta": {
+            "title": "Can't find your answer?",
+            "text": "Our advisors are here to help you or guide you in opening your account.",
+            "buttons": {
+                "open_account": "OPEN AN ACCOUNT",
+                "contact": "CONTACT US"
+            }
+        }
+    },
+    "legal": {
+        "common": {
+            "last_update": "Last update: December 2025",
+            "back_home": "HOME",
+            "cta_contact": "CONTACT CUSTOMER SUPPORT"
+        },
+        "privacy": {
+            "title": "PRIVACY POLICY",
+            "breadcrumb": "PRIVACY POLICY",
+            "intro_1": "At INVIK SA, we attach paramount importance to the privacy and security of the personal data of our users and clients. This privacy policy describes how we collect, use, store, and protect your information when you use our site and online services.",
+            "intro_2": "INVIK SA acts in compliance with applicable regulations regarding personal data protection, notably the General Data Protection Regulation (GDPR). By accessing our services, you acknowledge having read this policy and agree to accept it.",
+            "sections": [
+                {
+                    "title": "1. What data do we collect and for what purposes?",
+                    "text": "We collect only the information necessary for the provision, management, and improvement of our services, as well as for compliance with our legal and regulatory obligations. Depending on the case, the categories of data we may process are:",
+                    "list": [
+                        "Identification data: name, first name, date of birth, nationality, country of residence, contact details (address, phone, email), profession.",
+                        "Contact and exchange data: information transmitted via forms (contact, credit request, account opening) and exchanges with our customer service.",
+                        "Financial and banking relationship data: information relating to your accounts, operations, credit requests, declared income and other data necessary for the study and management of your file.",
+                        "Navigation and technical data: IP address, browser type, pages viewed, timestamp of visits, to ensure site security, prevent fraud and improve user experience."
+                    ],
+                    "text_after": "This data may be collected directly from you (forms, exchanges with our team) or, where applicable, via authorized sources (for example, when the law requires certain verifications)."
+                },
+                {
+                    "title": "2. Legal bases, retention period and data sharing",
+                    "text": "The processing of your personal data by INVIK SA relies, depending on the situation, on several legal bases: the execution of pre-contractual measures or a contract, compliance with legal and regulatory obligations, the legitimate interest of INVIK SA or, when required, your consent.",
+                    "subsections": [
+                        {
+                            "title": "Retention period",
+                            "text": "We keep your personal data for a period not exceeding that necessary for the purposes for which they are collected, increased where applicable by legal prescription periods or retention obligations imposed by regulations."
+                        },
+                        {
+                            "title": "Data sharing",
+                            "text": "INVIK SA does not sell your personal data. However, they may be communicated to the following categories of recipients:",
+                            "list": [
+                                "Internal services of INVIK SA authorized to process your request.",
+                                "Technical providers and partners intervening on behalf of INVIK SA (hosting, security tools).",
+                                "Administrative, judicial or supervisory authorities, when the law requires it."
+                            ]
+                        },
+                        {
+                            "title": "Security measures",
+                            "text": "INVIK SA implements appropriate technical and organizational measures to protect your data against loss, unauthorized access or disclosure:",
+                            "list": [
+                                "Use of secure hosting solutions and firewalls.",
+                                "Access controls and limitation of data to authorized persons only.",
+                                "Internal security procedures and regular audits."
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "title": "3. Your rights, cookies and how to contact us",
+                    "subsections": [
+                        {
+                            "title": "Your rights regarding your data",
+                            "text": "In accordance with regulations, you have the following rights:",
+                            "list": [
+                                "Right of access, rectification and erasure of your data.",
+                                "Right to restriction of processing and right to object.",
+                                "Right to data portability, where applicable."
+                            ],
+                            "text_after": "You can exercise these rights by contacting us by email at: contact@inviksa.com."
+                        },
+                        {
+                            "title": "Cookies and trackers",
+                            "text": "During your navigation, cookies may be placed on your terminal to ensure the proper functioning of the site and for statistical purposes. You can manage your preferences via your browser settings."
+                        },
+                        {
+                            "title": "Questions and complaints",
+                            "text": "If you have questions regarding this policy, you can contact us via our online form or by email. You also have the right to lodge a complaint with the competent supervisory authority."
+                        }
+                    ]
+                }
+            ],
+            "cta": "CONTACT US ABOUT YOUR DATA"
+        },
+        "cgu": {
+            "title": "TERMS OF USE",
+            "breadcrumb": "TERMS OF USE",
+            "intro_1": "These general conditions of use (hereinafter the \"Terms\") are intended to govern access to the site and online services offered by INVIK SA, as well as their use by any user (hereinafter the \"User\").",
+            "intro_2": "By accessing the site or using INVIK SA services, you acknowledge having read these Terms and agree to respect them. If you do not accept these conditions, you are invited not to use the site or associated services.",
+            "intro_3": "The Terms apply in addition to other contractual documents of INVIK SA, notably the General Conditions, any Special Conditions applicable to certain products or services, as well as the Privacy Policy and Legal Notice.",
+            "sections": [
+                {
+                    "title": "1. Your rights and responsibilities as a user",
+                    "text": "As a User, you undertake to use the site and services of INVIK SA in compliance with the law, these Terms and usual prudence rules regarding online financial services.",
+                    "text2": "You notably undertake to:",
+                    "list": [
+                        "Provide accurate, complete and up-to-date personal, banking and financial information during your requests (account opening, credit request, contact forms, etc.).",
+                        "Use the site and services only for personal and legitimate needs, and not to divert them for fraudulent, illicit purposes or contrary to public order.",
+                        "Not attempt to compromise the security or integrity of the site, INVIK SA information systems or its providers.",
+                        "Respect the intellectual property rights of INVIK SA and third parties, and not reproduce, distribute or modify the site contents without authorization."
+                    ],
+                    "text3": "When the creation of a client area or access to specific services requires identifiers, you are responsible for their confidentiality and any action performed using these identifiers."
+                },
+                {
+                    "title": "2. INVIK SA commitments, site availability and limitation of liability",
+                    "subsections": [
+                        {
+                            "title": "Quality and security of services",
+                            "text": "INVIK SA strives to offer secure, reliable and accessible online banking services, and to protect your personal data in accordance with its Privacy Policy.",
+                            "list": [
+                                "Implement technical and organizational measures to secure access to the site.",
+                                "Limit access to personal data to authorized persons only.",
+                                "Ensure transparency on service conditions and applicable fees.",
+                                "Provide customer support within reasonable timeframes."
+                            ]
+                        },
+                        {
+                            "title": "Site availability",
+                            "text": "INVIK SA strives to maintain the site and services accessible 24/7. However, access may be temporarily suspended for technical, security or maintenance reasons."
+                        },
+                        {
+                            "title": "Limitation of liability",
+                            "text": "INVIK SA cannot be held liable:",
+                            "list": [
+                                "for consequences related to improper use of the site or services by the User;",
+                                "for damages resulting from a malfunction, interruption or temporary unavailability of the site;",
+                                "for indirect, intangible or incidental damages, such as loss of opportunity, loss of data or income."
+                            ],
+                            "text_after": "The information communicated on the site is provided for information purposes and does not constitute a firm contractual offer."
+                        },
+                        {
+                            "title": "Modification of Terms",
+                            "text": "INVIK SA reserves the right to modify these Terms at any time. The version in force is that accessible on this page at the date of your consultation."
+                        }
+                    ]
+                }
+            ]
+        },
+        "mentions": {
+            "title": "LEGAL NOTICE",
+            "breadcrumb": "LEGAL NOTICE",
+            "intro_1": "This legal notice is intended to inform users of information relating to the identification and operation of the INVIK SA site. It is established in compliance with applicable regulations to guarantee transparency and strengthen trust with our users.",
+            "intro_2": "By accessing this site, you acknowledge having read this legal notice and agree to respect it.",
+            "sections": [
+                {
+                    "title": "1. Site Publisher",
+                    "text": "The site is published by the company INVIK S.A.",
+                    "list": [
+                        "Corporate Name: INVIK S.A.",
+                        "Company Type: Public Limited Company under Luxembourg law",
+                        "RCS Luxembourg: B 138.554",
+                        "Share Capital: 31,000,000 EUR"
+                    ],
+                    "subsections": [
+                        {
+                            "title": "Registered Office (Legal Address):",
+                            "text": "51, Boulevard Grande-Duchesse Charlotte, L-1331 Luxembourg, Grand Duchy of Luxembourg"
+                        },
+                        {
+                            "title": "Operational Address / Activity Center:",
+                            "text": "38 Parc d’Activités Capellen, L-8308 Capellen, Grand Duchy of Luxembourg",
+                            "extra": "Associated Countries: Switzerland, Finland, France, United Kingdom, Sweden"
+                        },
+                        {
+                            "title": "Contact Details:",
+                            "list": [
+                                "Phone: +33 6 46 72 32 86",
+                                "Email: contact@inviksa.com",
+                                "Director of Publication: Mr. CHAINTEREAU CHRISTOPHE JEAN-PIERRE"
+                            ]
+                        },
+                        {
+                            "title": "International Identifiers:",
+                            "list": [
+                                "Global Intermediary Identification Number (GIIN): J78DUL.99999.SL.442",
+                                "Universal Entity Code: 7222-8247-9450-3808",
+                                "LEI (Legal Entity Identifier): 213800ZI4ZNQZMZ4SW41"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "title": "2. Site Host",
+                    "text": "The site is hosted by:",
+                    "list": [
+                        "Company Name: Hostinger",
+                        "Registered Office: Vilnius, Lithuania",
+                        "Activity: Web Hosting",
+                        "President: Daugirdas Jankus"
+                    ]
+                },
+                {
+                    "title": "3. Activity and General Framework",
+                    "text": "INVIK SA offers, via its digital platform, online financial and banking services, subject to applicable contractual conditions and laws in force in the concerned countries of activity.",
+                    "text2": "The products and services presented on the site may be subject to eligibility conditions, geographical restrictions or regulatory limitations. It is up to each user to verify the compatibility of the proposed services with their personal, fiscal and legal situation."
+                },
+                {
+                    "title": "4. Liability and Site Use",
+                    "text": "The user undertakes to use the site in compliance with laws and regulations in force and not to compromise the integrity or proper functioning of the site.",
+                    "list": [
+                        "Use of the site in a legal and personal framework only.",
+                        "Prohibition of any attempt of unauthorized access to information systems.",
+                        "Prohibition to disrupt, alter or interrupt the operation of the site."
+                    ]
+                },
+                {
+                    "title": "5. Intellectual Property",
+                    "text": "All elements composing this site (texts, logos, brands, graphics, videos, icons, sounds, software, layouts, etc.) are protected by applicable laws regarding intellectual property. Any reproduction, representation, modification, distribution or exploitation, total or partial, of the site content, by any process whatsoever, without the prior written authorization of INVIK SA, is strictly prohibited."
+                },
+                {
+                    "title": "6. Personal Data and Cookies",
+                    "text": "The methods of collection and processing of your personal data, as well as information regarding the use of cookies on this site, are detailed in our Privacy Policy."
+                },
+                {
+                    "title": "7. Applicable Law and Competent Jurisdiction",
+                    "text": "This site and the relations that may arise from it are subject to Luxembourg law. In case of dispute, the competent courts of the Grand Duchy of Luxembourg shall have exclusive jurisdiction."
+                }
+            ]
         }
     }
 }
