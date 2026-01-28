@@ -57,7 +57,7 @@ const RibModal = ({ isOpen, onClose, rib, wallet, showToast }) => {
                         { label: t('accounts.rib_modal.labels.iban'), value: rib.iban },
                         { label: t('accounts.rib_modal.labels.bic'), value: rib.bic },
                         { label: t('accounts.rib_modal.labels.bank'), value: 'INVIK BANK' },
-                        { label: t('accounts.rib_modal.labels.type'), value: rib.accountName }
+                        { label: t('accounts.rib_modal.labels.type'), value: t(`accounts.card.${rib.walletType || 'main'}`) }
                     ].map((item, idx) => (
                         <div key={idx} style={{
                             padding: '8px 12px', background: '#f8fafc', borderRadius: '12px',

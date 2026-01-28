@@ -45,7 +45,7 @@ const Cards = () => {
         try {
             await cardService.requestPhysicalCard(currentUser.uid, {
                 cardType: 'Black Edition',
-                deliveryAddress: 'Adresse associée au compte' // Simplified for now
+                deliveryAddress: t('cards.physical_order.default_address_label')
             });
             showToast(t('cards.messages.order_success'), "success");
         } catch (error) {
@@ -148,8 +148,8 @@ const Cards = () => {
                                 {formatCardNumber(card.cardNumber, showNumbers[card.id])}
                             </div>
                             <div style={styles.cardBottom}>
-                                <div style={styles.cardHolder}><span style={styles.label}>{t('cards.details.holder') || 'TITULAIRE'}</span><span style={styles.value}>{currentUser.displayName || 'CLIENT'}</span></div>
-                                <div style={styles.cardExpiry}><span style={styles.label}>{t('cards.details.expiry') || 'EXPIRE FIN'}</span><span style={styles.value}>{card.expiryDate}</span></div>
+                                <div style={styles.cardHolder}><span style={styles.label}>{t('cards.details.holder')}</span><span style={styles.value}>{currentUser.displayName || t('common.client')}</span></div>
+                                <div style={styles.cardExpiry}><span style={styles.label}>{t('cards.details.expiry')}</span><span style={styles.value}>{card.expiryDate}</span></div>
                             </div>
                         </div>
                     </div>

@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 const DashboardHeader = ({ toggleSidebar }) => {
     const { userData } = useAuth();
     const navigate = useNavigate();
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const [notifications, setNotifications] = useState([]);
     const [showNotifications, setShowNotifications] = useState(false);
     const unreadCount = notifications.filter(n => !n.read).length;
@@ -69,7 +69,7 @@ const DashboardHeader = ({ toggleSidebar }) => {
 
                 <div
                     className="header-profile"
-                    onClick={() => navigate('/dashboard/settings')}
+                    onClick={() => navigate(`/${i18n.language}/dashboard/settings`)}
                     title={t('header.profile_title')}
                 >
                     <div className="profile-avatar">

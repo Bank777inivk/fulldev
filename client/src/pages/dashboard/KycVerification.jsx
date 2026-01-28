@@ -121,7 +121,7 @@ const KycVerification = () => {
     const { kycStatus } = useData();
     const { showToast } = useNotifications();
     const navigate = useNavigate();
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
 
     const [docTypes, setDocTypes] = useState({
         id1: '',
@@ -159,12 +159,12 @@ const KycVerification = () => {
     useEffect(() => {
         if (kycStatus?.status === 'submitted') {
             showToast(t('kyc.status.submitted'), "info");
-            navigate('/dashboard');
+            navigate(`/${i18n.language}/dashboard`);
         } else if (kycStatus?.status === 'verified') {
             showToast(t('kyc.status.verified'), "success");
-            navigate('/dashboard');
+            navigate(`/${i18n.language}/dashboard`);
         }
-    }, [kycStatus?.status, navigate, showToast, t]);
+    }, [kycStatus?.status, navigate, showToast, t, i18n.language]);
 
     const handleFileChange = (e, type) => {
         const file = e.target.files[0];
@@ -260,7 +260,7 @@ const KycVerification = () => {
 
             setProgress(100);
             showToast(t('kyc.messages.success'), "success");
-            setTimeout(() => navigate('/dashboard'), 2000);
+            setTimeout(() => navigate(`/${i18n.language}/dashboard`), 2000);
         } catch (error) {
             showToast(t('kyc.messages.error') + error.message, "error");
         } finally {
@@ -486,7 +486,7 @@ const KycVerification = () => {
                         </button>
                         <button
                             type="button"
-                            onClick={() => navigate('/dashboard')}
+                            onClick={() => navigate(`/${i18n.language}/dashboard`)}
                             style={styles.cancelBtn}
                             disabled={uploading}
                         >

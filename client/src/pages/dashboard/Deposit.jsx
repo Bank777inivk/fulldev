@@ -266,12 +266,12 @@ const Deposit = () => {
                                 />
                                 <div style={styles.cardBottom}>
                                     <div style={{ flex: 1 }}>
-                                        <div style={styles.cardLabel}>TITULAIRE</div>
+                                        <div style={styles.cardLabel}>{t('deposit.form.holder_label')}</div>
                                         <input
                                             style={styles.cardInputSmall}
                                             value={cardHolder}
                                             onChange={(e) => setCardHolder(e.target.value.toUpperCase())}
-                                            placeholder="NOM PRENOM"
+                                            placeholder={t('deposit.form.holder_placeholder')}
                                         />
                                     </div>
                                     <div style={{ width: '60px' }}>
@@ -351,7 +351,7 @@ const Deposit = () => {
                                     background: isFormValid ? '#003366' : '#94a3b8'
                                 }}
                             >
-                                {submitting ? <i className="fas fa-spinner fa-spin"></i> : `Recharger ${amount ? amount + ' €' : ''}`}
+                                {submitting ? <i className="fas fa-spinner fa-spin"></i> : t('deposit.form.pay', { amount: amount || '0' })}
                             </button>
                         </div>
                     )}
@@ -498,8 +498,8 @@ const Deposit = () => {
                     ) : (
                         <div style={styles.transferInfo}>
                             <div style={styles.qrCodePlaceholder}><i className="fas fa-qrcode"></i></div>
-                            <h3 style={{ color: '#003366', marginBottom: '1rem' }}>Virement Bancaire</h3>
-                            <p style={{ color: '#666', marginBottom: '2rem' }}>Utilisez les coordonnées ci-dessous pour effectuer votre virement depuis votre autre banque.</p>
+                            <h3 style={{ color: '#003366', marginBottom: '1rem' }}>{t('deposit.methods.bank.title')}</h3>
+                            <p style={{ color: '#666', marginBottom: '2rem' }}>{t('deposit.methods.bank.desc_full')}</p>
 
                             <div style={styles.bankDetailRow}>
                                 <span>{t('deposit.bank_details.beneficiary')}</span>

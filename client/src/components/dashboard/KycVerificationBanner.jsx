@@ -10,7 +10,7 @@ const KycVerificationBanner = ({ children, variant = 'default', style = {} }) =>
     const { kycStatus, loading } = useData();
     const { showToast } = useNotifications();
     const navigate = useNavigate();
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
     useEffect(() => {
@@ -40,7 +40,7 @@ const KycVerificationBanner = ({ children, variant = 'default', style = {} }) =>
         } else if (status === 'submitted') {
             showToast(t('banner.toasts.submitted'), "info");
         } else {
-            navigate('/dashboard/kyc');
+            navigate(`/${i18n.language}/dashboard/kyc`);
         }
     };
 

@@ -28,7 +28,7 @@ export const ribService = {
                 userId,
                 walletId: wallet.id,
                 walletType: wallet.type,
-                accountName: `Compte ${wallet.type === 'main' ? 'Courant' : (wallet.type === 'savings' ? 'Épargne' : 'Crédit')}`,
+                accountName: wallet.type.charAt(0).toUpperCase() + wallet.type.slice(1),
                 holderName: wallet.holderName || 'Non défini',
                 iban: wallet.iban,
                 bic: wallet.bic || 'INVKFR2P',

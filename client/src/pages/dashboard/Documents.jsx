@@ -73,7 +73,8 @@ const Documents = () => {
         // Date
         doc.setFontSize(9);
         doc.setFont("helvetica", "italic");
-        const locale = i18n.language === 'en' ? 'en-US' : 'fr-FR';
+        const localeMap = { 'en': 'en-US', 'fr': 'fr-FR', 'de': 'de-DE', 'es': 'es-ES', 'it': 'it-IT', 'pt': 'pt-PT' };
+        const locale = localeMap[i18n.language] || 'en-US';
         doc.text(`${t('history.columns.date')}: ${new Date().toLocaleDateString(locale)} ${t('common.at')} ${new Date().toLocaleTimeString(locale)}`, 20, 68);
 
         // --- Footer ---
@@ -128,45 +129,51 @@ const Documents = () => {
             doc.text("L-1331 Luxembourg", 120, 107);
 
             // --- Banking Details Table ---
+            const tableY = 120;
+            const tableHeight = 60;
+            const tableWidth = pageWidth - 40;
+            const colWidth = tableWidth / 4;
+
             doc.setFillColor(248, 251, 255);
-            doc.rect(20, 120, pageWidth - 40, 60, 'F');
+            doc.rect(20, tableY, tableWidth, tableHeight, 'F');
             doc.setDrawColor(0, 51, 102);
             doc.setLineWidth(0.5);
-            doc.rect(20, 120, pageWidth - 40, 60, 'S');
+            doc.rect(20, tableY, tableWidth, tableHeight, 'S');
 
             doc.setDrawColor(230, 230, 230);
-            doc.line(55, 120, 55, 180);
-            doc.line(90, 120, 90, 180);
-            doc.line(pageWidth - 45, 120, pageWidth - 45, 180);
+            doc.line(20 + colWidth, tableY, 20 + colWidth, tableY + tableHeight);
+            doc.line(20 + colWidth * 2, tableY, 20 + colWidth * 2, tableY + tableHeight);
+            doc.line(20 + colWidth * 3, tableY, 20 + colWidth * 3, tableY + tableHeight);
 
-            doc.setFontSize(9);
+            doc.setFontSize(8); // Slightly smaller for long labels
             doc.setTextColor(100, 100, 100);
             doc.setFont("helvetica", "bold");
-            doc.text(t('documents.rib.bank_code').toUpperCase(), 25, 130);
-            doc.text(t('documents.rib.branch_code').toUpperCase(), 60, 130);
-            doc.text(t('documents.rib.account_number').toUpperCase(), 95, 130);
-            doc.text(t('documents.rib.key').toUpperCase(), pageWidth - 40, 130);
+            doc.text(t('documents.rib.bank_code').toUpperCase(), 20 + 5, tableY + 10);
+            doc.text(t('documents.rib.branch_code').toUpperCase(), 20 + colWidth + 5, tableY + 10);
+            doc.text(t('documents.rib.account_number').toUpperCase(), 20 + colWidth * 2 + 5, tableY + 10);
+            doc.text(t('documents.rib.key').toUpperCase(), 20 + colWidth * 3 + 5, tableY + 10);
 
-            doc.setFontSize(11);
+            doc.setFontSize(10);
             doc.setTextColor(0, 51, 102);
             doc.setFont("courier", "bold");
-            doc.text(rib.bankCode || "12345", 25, 145);
-            doc.text(rib.branchCode || "67890", 60, 145);
-            doc.text(rib.accountNumber || "XXXXXXXX", 95, 145);
-            doc.text(rib.ribKey || "00", pageWidth - 38, 145);
+            doc.text(rib.bankCode || "12345", 20 + 5, tableY + 25);
+            doc.text(rib.branchCode || "67890", 20 + colWidth + 5, tableY + 25);
+            doc.text(rib.accountNumber || "XXXXXXXX", 20 + colWidth * 2 + 5, tableY + 25);
+            doc.text(rib.ribKey || "00", 20 + colWidth * 3 + 5, tableY + 25);
 
             doc.setFontSize(11);
             doc.setTextColor(0, 0, 0);
             doc.setFont("helvetica", "bold");
-            doc.text(`${t('documents.rib.iban')} :`, 25, 160);
-            doc.text(`${t('documents.rib.bic')} :`, 25, 172);
+            doc.text(`${t('documents.rib.iban')} :`, 25, tableY + 40);
+            doc.text(`${t('documents.rib.bic')} :`, 25, tableY + 52);
 
             doc.setFont("courier", "bold");
-            doc.text(rib.iban || t('documents.rib.not_defined'), 55, 160);
+            doc.text(rib.iban || t('documents.rib.not_defined'), 55, tableY + 40);
             doc.setFont("helvetica", "normal");
-            doc.text(rib.bic || "INVKFR2P", 55, 172);
+            doc.text(rib.bic || "INVKFR2P", 55, tableY + 52);
 
-            doc.save(`RIB_INVIK_SA_${rib.accountName.split(' ').join('_')}.pdf`);
+            const accountLabel = t(`accounts.card.${rib.walletType || 'main'}`);
+            doc.save(`RIB_INVIK_SA_${accountLabel.split(' ').join('_')}.pdf`);
             showToast(t('documents.messages.rib_success'), "success");
         } catch (error) {
             console.error("PDF Generation error:", error);
@@ -209,10 +216,10 @@ const Documents = () => {
             doc.setFontSize(10);
             const intro = t('documents.contract.object_text');
             const splitIntro = doc.splitTextToSize(intro, pageWidth - 40);
-            doc.text(splitIntro, 20, 135);
+            doc.text(splitIntro, 20, 135, { lineHeightFactor: 1.5 });
 
             doc.setFont("helvetica", "bold");
-            doc.text(t('documents.contract.terms_title'), 20, 150);
+            doc.text(t('documents.contract.terms_title'), 20, 155);
             doc.setFont("helvetica", "normal");
             const terms = [
                 t('documents.contract.terms_1'),
@@ -220,32 +227,45 @@ const Documents = () => {
                 t('documents.contract.terms_3'),
                 t('documents.contract.terms_4')
             ];
-            doc.text(terms, 25, 160);
+
+            let currentY = 165;
+            terms.forEach(term => {
+                const splitTerm = doc.splitTextToSize(term, pageWidth - 50);
+                doc.text(splitTerm, 25, currentY, { lineHeightFactor: 1.4 });
+                currentY += (splitTerm.length * 7); // Increment Y based on lines
+            });
 
             doc.setFont("helvetica", "bold");
-            doc.text(t('documents.contract.duration_title'), 20, 195);
+            doc.text(t('documents.contract.duration_title'), 20, currentY + 10);
             doc.setFont("helvetica", "normal");
-            doc.text(t('documents.contract.duration_text'), 20, 205, { maxWidth: pageWidth - 40 });
+            const durationText = t('documents.contract.duration_text');
+            const splitDuration = doc.splitTextToSize(durationText, pageWidth - 40);
+            doc.text(splitDuration, 20, currentY + 20, { lineHeightFactor: 1.4 });
 
-            // --- Signatures ---
+            // --- Signatures (New Page) ---
+            doc.addPage();
+            await addPdfBranding(doc, t('documents.sections.contract'));
+
+            const sigY = 85;
             doc.setFont("helvetica", "bold");
-            doc.text(t('documents.contract.signatures_title'), 20, 230);
+            doc.text(t('documents.contract.signatures_title'), 20, sigY);
 
             doc.setFontSize(9);
-            const localeDate = i18n.language === 'en' ? 'en-US' : 'fr-FR';
-            doc.text(t('documents.contract.made_at', { date: new Date().toLocaleDateString(localeDate) }), 20, 238);
+            const localeMap = { 'en': 'en-US', 'fr': 'fr-FR', 'de': 'de-DE', 'es': 'es-ES', 'it': 'it-IT', 'pt': 'pt-PT' };
+            const localeDate = localeMap[i18n.language] || 'en-US';
+            doc.text(t('documents.contract.made_at', { date: new Date().toLocaleDateString(localeDate) }), 20, sigY + 8);
 
-            doc.rect(20, 245, 70, 30); // Client Box
-            doc.text(t('documents.contract.client_sig'), 25, 250);
+            doc.rect(20, sigY + 15, 70, 30); // Client Box
+            doc.text(t('documents.contract.client_sig'), 25, sigY + 20);
             doc.setFontSize(8);
-            doc.text(t('documents.contract.certified_sig'), 25, 270);
+            doc.text(t('documents.contract.certified_sig'), 25, sigY + 40);
 
-            doc.rect(pageWidth - 90, 245, 70, 30); // Bank Box
+            doc.rect(pageWidth - 90, sigY + 15, 70, 30); // Bank Box
             doc.setFontSize(9);
-            doc.text(t('documents.contract.bank_sig'), pageWidth - 85, 250);
+            doc.text(t('documents.contract.bank_sig'), pageWidth - 85, sigY + 20);
 
             if (logoData) {
-                doc.addImage(logoData, 'PNG', pageWidth - 55, 255, 15, 15);
+                doc.addImage(logoData, 'PNG', pageWidth - 55, sigY + 15, 15, 15);
             }
 
             doc.save(`CONTRAT_INVIK_SA_${fullName.split(' ').join('_')}.pdf`);
@@ -261,10 +281,11 @@ const Documents = () => {
     };
 
     const handleShare = (rib) => {
+        const accountLabel = t(`accounts.card.${rib.walletType || 'main'}`);
         if (navigator.share) {
             navigator.share({
-                title: `RIB - ${rib.accountName}`,
-                text: t('documents.rib.share_msg', { name: rib.accountName, iban: rib.iban }),
+                title: `RIB - ${accountLabel}`,
+                text: t('documents.rib.share_msg', { name: accountLabel, iban: rib.iban }),
                 url: window.location.href // In real app, this would be the PDF URL
             }).catch(console.error);
         } else {
@@ -310,7 +331,7 @@ const Documents = () => {
                                             <i className="fas fa-file-invoice-dollar"></i>
                                         </div>
                                         <div style={styles.cardInfo}>
-                                            <h3 style={styles.docTitle}>RIB - {rib.accountName}</h3>
+                                            <h3 style={styles.docTitle}>{t('documents.rib.title', { name: t(`accounts.card.${rib.walletType || 'main'}`) })}</h3>
                                             <div style={styles.ribDetails}>
                                                 <div style={styles.detailRow}>
                                                     <span style={styles.detailLabel}>{t('documents.rib.holder')}:</span>
@@ -355,7 +376,7 @@ const Documents = () => {
                                             <i className="fas fa-download"></i>
                                             <span>{t('documents.rib.download_pdf')}</span>
                                         </button>
-                                        <button onClick={handlePrint} style={styles.printBtn} title="Imprimer">
+                                        <button onClick={handlePrint} style={styles.printBtn} title={t('documents.rib.print')}>
                                             <i className="fas fa-print"></i>
                                         </button>
                                     </div>
@@ -383,7 +404,7 @@ const Documents = () => {
                                     <h3 style={styles.docTitle}>{t('documents.contract.title')}</h3>
                                     <p style={styles.docMeta}>
                                         <i className="far fa-clock" style={{ marginRight: '5px' }}></i>
-                                        {t('documents.contract.signed_on', { date: userData?.createdAt?.toDate().toLocaleDateString(i18n.language === 'en' ? 'en-US' : 'fr-FR') || 'N/A' })}
+                                        {t('documents.contract.signed_on', { date: userData?.createdAt?.toDate().toLocaleDateString(i18n.language === 'en' ? 'en-US' : (i18n.language === 'de' ? 'de-DE' : (i18n.language === 'es' ? 'es-ES' : (i18n.language === 'it' ? 'it-IT' : (i18n.language === 'pt' ? 'pt-PT' : 'fr-FR'))))) || 'N/A' })}
                                     </p>
                                 </div>
                             </div>
@@ -416,7 +437,7 @@ const Documents = () => {
                                 <i className="fas fa-file-alt"></i>
                             </div>
                             <div style={styles.mobileCardInfo}>
-                                <h3>{rib.accountName}</h3>
+                                <h3>{t(`accounts.card.${rib.walletType || 'main'}`)}</h3>
                                 <p>{rib.iban.match(/.{1,4}/g).join(' ').substring(0, 20)}...</p>
                             </div>
                         </div>
@@ -438,7 +459,7 @@ const Documents = () => {
                         </div>
                         <div style={styles.mobileCardInfo}>
                             <h3>{t('documents.contract.client_contract')}</h3>
-                            <p>{t('documents.contract.signed_on', { date: userData?.createdAt?.toDate().toLocaleDateString(i18n.language === 'en' ? 'en-US' : 'fr-FR') || 'N/A' })}</p>
+                            <p>{t('documents.contract.signed_on', { date: userData?.createdAt?.toDate().toLocaleDateString(i18n.language === 'en' ? 'en-US' : (i18n.language === 'de' ? 'de-DE' : (i18n.language === 'es' ? 'es-ES' : (i18n.language === 'it' ? 'it-IT' : (i18n.language === 'pt' ? 'pt-PT' : 'fr-FR'))))) || 'N/A' })}</p>
                         </div>
                     </div>
                     <div style={styles.mobileCardActions}>

@@ -46,6 +46,33 @@ const Settings = () => {
         }
     };
 
+    const handleLanguageChange = (newLangCode) => {
+        if (newLangCode === i18n.language) return;
+
+        // Map language code to display name for Firestore if needed, 
+        // but the URL sync is the primary driver now.
+        const langMap = {
+            'fr': 'Français',
+            'en': 'English',
+            'es': 'Español',
+            'it': 'Italiano',
+            'pt': 'Português',
+            'de': 'Deutsch'
+        };
+
+        const currentPath = window.location.pathname;
+        const pathParts = currentPath.split('/');
+
+        // Replace the lang prefix (it's always the second element because path starts with /)
+        if (pathParts[1] && ['fr', 'en', 'es', 'it', 'pt', 'de'].includes(pathParts[1])) {
+            pathParts[1] = newLangCode;
+        }
+
+        const newPath = pathParts.join('/');
+        i18n.changeLanguage(newLangCode);
+        window.location.href = newPath;
+    };
+
     const handlePasswordChange = async (e) => {
         e.preventDefault();
         if (passwordData.new !== passwordData.confirm) {
@@ -266,9 +293,17 @@ const Settings = () => {
                             <div style={styles.mobileActionRow}>
                                 <div style={styles.mobileActionIcon}><i className="fas fa-language"></i></div>
                                 <div style={{ flex: 1 }}><strong>{t('settings.preferences.lang_label')}</strong></div>
-                                <select style={styles.mobileSelect} value={i18n.language === 'en' ? 'English' : 'Français'} disabled>
-                                    <option>Français</option>
-                                    <option>English</option>
+                                <select
+                                    style={styles.mobileSelect}
+                                    value={i18n.language}
+                                    onChange={(e) => handleLanguageChange(e.target.value)}
+                                >
+                                    <option value="fr">Français</option>
+                                    <option value="en">English</option>
+                                    <option value="es">Español</option>
+                                    <option value="it">Italiano</option>
+                                    <option value="pt">Português</option>
+                                    <option value="de">Deutsch</option>
                                 </select>
                             </div>
                         </div>
@@ -502,7 +537,7 @@ const Settings = () => {
                                             <ul style={{ margin: 0, paddingLeft: '1.5rem', fontSize: '0.85rem', color: '#64748b', lineHeight: '1.8' }}>
                                                 <li>{t('settings.security.tip_8_chars')}</li>
                                                 <li>{t('settings.security.tip_caps')}</li>
-                                                <li>{t('settings.security.tip_caps')}</li>
+                                                <li>{t('settings.security.tip_numbers')}</li>
                                                 <li>{t('settings.security.tip_special')}</li>
                                             </ul>
                                         </div>
@@ -520,9 +555,17 @@ const Settings = () => {
                                             <div style={{ fontWeight: 'bold' }}>{t('settings.preferences.lang_label')}</div>
                                             <div style={{ fontSize: '0.85rem', color: '#64748b' }}>{t('settings.preferences.lang_desc')}</div>
                                         </div>
-                                        <select style={styles.select} value={i18n.language === 'en' ? 'English' : 'Français'} disabled>
-                                            <option>Français</option>
-                                            <option>English</option>
+                                        <select
+                                            style={styles.select}
+                                            value={i18n.language}
+                                            onChange={(e) => handleLanguageChange(e.target.value)}
+                                        >
+                                            <option value="fr">Français</option>
+                                            <option value="en">English</option>
+                                            <option value="es">Español</option>
+                                            <option value="it">Italiano</option>
+                                            <option value="pt">Português</option>
+                                            <option value="de">Deutsch</option>
                                         </select>
                                     </div>
                                 </div>

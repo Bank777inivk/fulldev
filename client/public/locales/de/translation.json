@@ -1276,5 +1276,798 @@
                 }
             ]
         }
-    }
+    },
+    "accounts": {
+        "title": "Meine Konten",
+        "subtitle": "Übersicht über Ihre finanzielle Situation.",
+        "total_balance": "Gesamtguthaben",
+        "main": "Girokonto",
+        "savings": "Sparkonto",
+        "credit": "Kreditkonto",
+        "hidden_iban": "IBAN ausgeblendet (Verifizierung erforderlich)",
+        "rate": "Jahreszins: 3,50%",
+        "repayment": "Nächste Rate in Bearbeitung",
+        "no_debt": "Keine aufgelaufenen Schulden",
+        "card": {
+            "main": "Girokonto",
+            "savings": "Sparkonto",
+            "credit": "Kreditkonto",
+            "currency": "Währungskonto",
+            "other": "Anderes Konto",
+            "actions": {
+                "transfer": "Überweisen",
+                "deposit": "Aufladen",
+                "rib": "RIB anzeigen"
+            }
+        },
+        "rib_modal": {
+            "title": "Bankverbindung (RIB)",
+            "subtitle": "Kontodaten für den Empfang von Überweisungen.",
+            "copy_toast": "{{label}} kopiert!",
+            "close": "Schließen",
+            "labels": {
+                "holder": "Inhaber",
+                "iban": "IBAN",
+                "bic": "BIC / SWIFT",
+                "bank": "Bank",
+                "type": "Kontotyp"
+            }
+        },
+        "request_modal": {
+            "title": "Neues Konto eröffnen",
+            "subtitle": "Beantragen Sie die Eröffnung eines neuen Kontotyps.",
+            "button": "Neues Konto",
+            "type_label": "Kontotyp wählen",
+            "message_label": "Zusätzliche Informationen (optional)",
+            "placeholder": "Beschreiben Sie kurz Ihr Anliegen...",
+            "cancel": "Abbrechen",
+            "confirm": "Antrag senden",
+            "success": "Eröffnungsantrag gesendet!",
+            "error": "Fehler beim Senden des Antrags."
+        }
+    },
+    "transactions": {
+        "title": "Letzte Transaktionen",
+        "empty": "Keine letzten Transaktionen.",
+        "review": "In Prüfung",
+        "deposit": "Einzahlung",
+        "transfer": "Überweisung",
+        "by_card": "per Karte",
+        "by_transfer": "per Überweisung"
+    },
+    "actions": {
+        "title": "Schnellaktionen",
+        "transfer": "Überweisen",
+        "credit": "Kredite",
+        "deposit": "Aufladen",
+        "cards": "Karten"
+    },
+    "transfers": {
+        "title": "Überweisungen",
+        "subtitle": "Geld sofort im INVIK-Netzwerk oder per SEPA senden.",
+        "tabs": {
+            "internal": "Eigene Konten",
+            "internal_desc": "Sofortige Überweisung zwischen Ihren Konten",
+            "invik": "INVIK-Mitglied",
+            "invik_desc": "Sofort & Kostenlos",
+            "sepa": "SEPA-Überweisung",
+            "sepa_desc": "An eine andere Bank",
+            "history": "Verlauf"
+        },
+        "steps": {
+            "accounts": "Konten",
+            "amount": "Betrag",
+            "validation": "Bestätigung"
+        },
+        "warnings": {
+            "security": "Sicherheit aktiviert",
+            "instant": "INVIK-Überweisungen werden rund um die Uhr in Echtzeit verarbeitet.",
+            "sepa_delay": "SEPA-Überweisungen können 24 bis 48 Werktage dauern.",
+            "single_account_title": "Zweitkonto erforderlich",
+            "single_account_desc": "Sie benötigen mindestens zwei Konten, um interne Überweisungen vorzunehmen."
+        },
+        "invik_network": {
+            "title": "INVIK-Netzwerk",
+            "desc": "Kostenlose und sofortige Überweisung zwischen Mitgliedern"
+        },
+        "account_selection": {
+            "source": "Von Konto",
+            "dest": "An Konto"
+        },
+        "beneficiary_type": {
+            "select": "Empfängertyp",
+            "internal": "Eigene Konten",
+            "external": "Extern (SEPA)",
+            "invik": "INVIK-Mitglied",
+            "saved": "Gespeicherter Empfänger",
+            "new": "Neuer Empfänger"
+        },
+        "inputs": {
+            "select_invik": "INVIK-Empfänger auswählen",
+            "select_beneficiary": "Empfänger auswählen",
+            "name": "Vollständiger Name",
+            "name_placeholder": "Z.B. Max Mustermann",
+            "iban": "IBAN",
+            "iban_placeholder": "DE... oder FR...",
+            "bic": "BIC (Optional)",
+            "bic_placeholder": "Z.B. ABCDFRPP",
+            "email": "E-Mail (Optional)",
+            "email_placeholder": "Für sofortige Benachrichtigung",
+            "save_invik": "Diesen Empfänger speichern",
+            "save_beneficiary": "Empfänger für zukünftige Überweisungen speichern"
+        },
+        "amount": {
+            "title": "Überweisungsbetrag",
+            "available": "Verfügbares Guthaben:",
+            "insufficient_funds": "Unzureichendes Guthaben.",
+            "limit_exceeded": "Limit überschritten (Max. 50.000 €)"
+        },
+        "review": {
+            "title": "Überprüfung",
+            "from": "Von",
+            "to": "An",
+            "total": "Gesamtbetrag",
+            "certified": "Zertifizierte Überweisung",
+            "certified_desc": "Ausführung über das sichere INVIK-Netzwerk."
+        },
+        "success": {
+            "title": "ÜBERWEISUNG ERFOLGREICH",
+            "review_title": "ZUSAMMENFASSUNG",
+            "new_button": "Neue Überweisung"
+        },
+        "history": {
+            "title": "Letzte Überweisungen",
+            "empty": "Keine Transaktionen."
+        },
+        "buttons": {
+            "next": "Weiter",
+            "back": "Zurück",
+            "confirm": "Bestätigen",
+            "edit": "Ändern"
+        },
+        "errors": {
+            "invalid_amount": "Ungültiger Betrag",
+            "insufficient_balance": "Guthaben nicht ausreichend",
+            "limit_exceeded": "Max. 50.000 € pro Überweisung",
+            "check_beneficiary": "Empfängerdaten prüfen",
+            "not_invik_iban": "Keine INVIK-IBAN. Bitte SEPA verwenden.",
+            "invalid_iban": "IBAN-Format ungültig"
+        },
+        "success_messages": {
+            "internal": "Interne Überweisung erfolgreich!",
+            "instant": "Sofortüberweisung an {{name}} erfolgreich!",
+            "pending": "Überweisung wird geprüft. SEPA-Dauer: 24h-48h."
+        },
+        "mobile_title": "Überweisung",
+        "form": {
+            "step_source": "1. Quellkonto",
+            "step_dest": "2. Zielkonto",
+            "step_dest_invik": "2. INVIK-Empfänger",
+            "step_dest_beneficiary": "2. Empfänger",
+            "step_amount": "Betrag",
+            "sending": "Wird gesendet..."
+        },
+        "pagination": {
+            "page": "Seite {{current}} von {{total}}"
+        }
+    },
+    "cards": {
+        "title": "Meine Karten",
+        "subtitle": "Verwalten Sie Ihre physischen und virtuellen Karten.",
+        "empty": {
+            "title": "Keine aktive Karte",
+            "desc": "Sie haben noch keine Karte mit Ihrem Konto verknüpft.",
+            "button": "Karte bestellen"
+        },
+        "list_title": "Ihre aktiven Karten ({{count}})",
+        "actions": {
+            "show_number": "Nummer zeigen",
+            "hide_number": "Ausblenden",
+            "flip": "Drehen",
+            "block": "Sperren",
+            "unblock": "Entsperren",
+            "disabled": "Deaktiviert",
+            "activate": "Aktivieren",
+            "options": "Optionen",
+            "delete": "Löschen"
+        },
+        "details": {
+            "status": "Status:",
+            "type": "Typ:",
+            "limit": "Limit:",
+            "updated": "Aktualisiert:",
+            "holder": "KARTENINHABER",
+            "expiry": "GÜLTIG BIS",
+            "cvv": "CVV",
+            "support": "Support",
+            "title": "Kartendetails",
+            "virtual_uppercase": "VIRTUELLE KARTE",
+            "physical_uppercase": "PHYSISCHE KARTE",
+            "property_notice": "Diese Karte ist Eigentum der INVIK BANK SA. Im Falle eines Verlusts sperren Sie diese bitte sofort über die App.",
+            "active": "Aktiv",
+            "inactive": "Deaktiviert",
+            "blocked": "Gesperrt",
+            "virtual": "Virtuell",
+            "physical": "Physisch",
+            "recently": "Vor kurzem"
+        },
+        "physical_order": {
+            "title": "Physische Karte",
+            "mobile_title": "Physische Karte bestellen",
+            "desc": "Erhalten Sie Ihre exklusive INVIK-Karte innerhalb von 3-5 Werktagen direkt zu Ihnen nach Hause.",
+            "default_address_label": "Mit dem Konto verknüpfte Adresse",
+            "features": {
+                "withdrawals": "Kostenlose Abhebungen überall",
+                "contactless": "Kontaktloses Bezahlen",
+                "design": "Premium Matt-Schwarz Design"
+            },
+            "button": {
+                "order_now": "Jetzt bestellen",
+                "processing": "Bestellung läuft",
+                "shipped": "Karte versendet",
+                "delivered": "Karte erhalten ✅",
+                "cancel": "Bestellung stornieren"
+            },
+            "status": {
+                "pending": "Wir bearbeiten Ihre Bestellung",
+                "delivered": "Glückwunsch! Ihre Karte ist da. Genießen Sie Ihre neuen Vorteile! 🎁✨",
+                "shipped": "Ihre Karte ist unterwegs! 🚀 Sie wird in 3-5 Tagen ankommen.",
+                "rejected": "Letzte Bestellung abgelehnt:",
+                "default_reject_reason": "Identitätsnachweis nicht konform.",
+                "free": "Kostenlos • In Ihrem Angebot enthalten"
+            }
+        },
+        "virtual_promo": {
+            "title": "Virtuelle Karte benötigt?",
+            "desc": "Erstellen Sie sofort eine Karte für Ihre sicheren Online-Einkäufe.",
+            "button": "Virtuelle Karte erstellen"
+        },
+        "options_modal": {
+            "title": "Kartenoptionen",
+            "alias_label": "KARTENNAME (ALIAS)",
+            "alias_placeholder": "Z.B. Amazon, Privat...",
+            "limit_label": "MONATLICHES LIMIT (€)",
+            "limit_help": "Das Standardlimit beträgt 2.000 €.",
+            "save": "Änderungen speichern"
+        },
+        "messages": {
+            "blocked": "Ihre Karte wurde gesperrt.",
+            "unblocked": "Ihre Karte wurde entsperrt.",
+            "order_success": "Ihre Kartenbestellung wurde erfolgreich gesendet!",
+            "order_error": "Fehler bei der Kartenbestellung.",
+            "options_saved": "Karteneinstellungen aktualisiert!",
+            "delete_confirm": "Möchten Sie diese Karte wirklich dauerhaft löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+            "delete_success": "Karte erfolgreich gelöscht.",
+            "request_cancel_confirm": "Diese Kartenbestellung wirklich stornieren?",
+            "request_cancelled": "Bestellung storniert."
+        }
+    },
+    "credits": {
+        "title": "Kredite & Finanzierung",
+        "subtitle": "Simulieren Sie Ihr Projekt und erhalten Sie eine Antwort innerhalb von 24 Stunden",
+        "form": {
+            "simulator_title": "Simulator",
+            "your_simulation": "Ihre Simulation",
+            "project_type": "Projektart",
+            "project_description": "Projektbeschreibung (Pflichtfeld)",
+            "project_description_placeholder": "Beschreiben Sie Ihr Projekt kurz...",
+            "specific_project": "Ihr spezifisches Projekt",
+            "specific_project_placeholder": "Kurzbeschreibung Ihres Projekts...",
+            "amount": "Kreditbetrag",
+            "months": "Rückzahlungsdauer",
+            "interest_rate": "Zinssatz (eff. Jahreszins)",
+            "monthly_payment": "Monatliche Rate",
+            "monthly_payment_est": "geschätzt",
+            "apply_button": "Diesen Kredit beantragen",
+            "apply_button_official": "Offiziellen Antrag stellen",
+            "processing": "Wird bearbeitet...",
+            "sending": "Wird gesendet...",
+            "years": "Jahre",
+            "months_label": "Monate"
+        },
+        "types": {
+            "personnel": "Privatkredit",
+            "immobilier": "Immobilienkredit",
+            "vehicule": "Fahrzeugkredit",
+            "professionnel": "Geschäftliches Projekt",
+            "autre": "Sonstiges (Bitte angeben...)"
+        },
+        "status": {
+            "pending": "In Prüfung",
+            "approved": "Genehmigt ",
+            "rejected": "Abgelehnt",
+            "dossier_title": "Unterlagen in Prüfung",
+            "dossier_desc": "Wir prüfen derzeit Ihren Antrag über {{amount}} €.",
+            "dossier_notice": "Sie werden per E-Mail in Echtzeit über den Fortschritt informiert. Für Änderungen kontaktieren Sie bitte den Support."
+        },
+        "history": {
+            "title": "Meine Anträge",
+            "tracking": "Antragsverfolgung",
+            "empty": "Keine laufenden Anträge.",
+            "empty_desktop": "Ihre Kreditanträge werden hier angezeigt."
+        },
+        "messages": {
+            "already_pending": "Sie haben bereits einen laufenden Antrag.",
+            "description_short": "Bitte beschreiben Sie Ihr Projekt (mind. 10 Zeichen).",
+            "success": "Antrag gesendet! Ein Berater wird Sie kontaktieren.",
+            "error": "Fehler beim Antrag.",
+            "confirm_title": "Antrag bestätigen",
+            "confirm_button": "Bestätigen und Absenden",
+            "credit_opened": "Ihr Kreditkonto wurde eröffnet und die Mittel ausgezahlt.",
+            "credit_available_title": "Kredit genehmigt ",
+            "credit_available_desc": "Ihr Kreditantrag über {{amount}} € wurde genehmigt. Die Mittel sind verfügbar.",
+            "congrats": "Glückwunsch! Ihr Kredit über {{amount}} € ist verfügbar."
+        },
+        "support": {
+            "contact_btn": "Support kontaktieren",
+            "need_help": "Benötigen Sie Hilfe?",
+            "advisors_desc": "Unsere Berater stehen zur Verfügung, um Ihre komplexen Unterlagen zu prüfen.",
+            "contact_advisor": "Berater kontaktieren",
+            "fonds_avail": "Mittel in Ihrem Bereich verfügbar",
+            "access_btn": "Auf meinen Kredit zugreifen"
+        }
+    },
+    "deposit": {
+        "title": "Aufladen",
+        "subtitle": "Füllen Sie Ihr Konto sicher auf.",
+        "methods": {
+            "card": {
+                "title": "Bankkarte",
+                "desc": "Sofortige Gutschrift"
+            },
+            "bank": {
+                "title": "SEPA-Überweisung",
+                "desc": "2-3 Werktage",
+                "desc_full": "Verwenden Sie die untenstehenden Daten für Ihre Überweisung von einer anderen Bank."
+            }
+        },
+        "form": {
+            "amount_label": "Guthabenbetrag",
+            "amount_placeholder": "0.00",
+            "card_number": "Kartennummer",
+            "holder_label": "KARTENINHABER",
+            "holder_placeholder": "VORNAME NACHNAME",
+            "expiry_label": "GÜLT",
+            "cvc_label": "CVC / CVV",
+            "target_account": "Zielkonto",
+            "account_types": {
+                "main": "Girokonto",
+                "savings": "Sparkonto"
+            },
+            "submit_card": "{{amount}} € aufladen",
+            "enter_amount": "Betrag eingeben",
+            "invalid_card": "Ungültige Karte",
+            "invalid_expiry": "Ablaufdatum ungültig",
+            "invalid_cvc": "CVC ungültig",
+            "pay": "{{amount}} EUR bezahlen",
+            "secure_notice": "Sichere SSL-Transaktion"
+        },
+        "bank_details": {
+            "title": "Banküberweisung",
+            "desc": "Nutzen Sie diese Daten für Ihre Überweisung.",
+            "beneficiary": "Begünstigter",
+            "bank_name": "Bank",
+            "bic": "BIC / SWIFT",
+            "iban": "IBAN",
+            "processing_delay": "Bearbeitungszeit: 24 bis 48 Werktage.",
+            "copy_toast": "{{label}} kopiert!",
+            "header": "Überweisungsdetails"
+        },
+        "history": {
+            "title": "Letzte Aufladungen",
+            "empty": "Keine Einzahlungen.",
+            "methods": {
+                "card": "Karte",
+                "transfer": "Überweisung"
+            }
+        },
+        "messages": {
+            "check_card": "Prüfen Sie Ihre Karteninfos.",
+            "success": "Antrag in Bearbeitung. Guthaben wird in Kürze aktualisiert.",
+            "pending_alert": "Einzahlung wird derzeit bearbeitet."
+        },
+        "pagination": {
+            "page": "Seite {{current}} von {{total}}"
+        }
+    },
+    "sidebar": {
+        "nav": {
+            "dashboard": "Dashboard",
+            "accounts": "Meine Konten",
+            "transfers": "Überweisungen",
+            "beneficiaries": "Empfänger",
+            "deposit": "Aufladen",
+            "cards": "Karten",
+            "credits": "Kredite",
+            "history": "Verlauf",
+            "documents": "Dokumente",
+            "support": "Support",
+            "settings": "Einstellungen"
+        },
+        "user": {
+            "account_type": "{{type}}-Konto"
+        },
+        "logout": "Abmelden"
+    },
+    "history": {
+        "title": "Verlauf",
+        "subtitle": "Alle Ihre bisherigen Transaktionen anzeigen.",
+        "empty": "Keine Transaktionen gefunden.",
+        "columns": {
+            "date": "Datum",
+            "type": "Typ",
+            "category": "Kategorie",
+            "amount": "Betrag",
+            "fees": "Gebühren"
+        },
+        "types": {
+            "deposit": "Einzahlung",
+            "transfer_internal": "Interne Überw. an {{name}}",
+            "transfer_instant": "Sofortüberw. an {{name}}",
+            "receive_instant": "Soforteingang",
+            "transfer_external": "Externe Überw. an {{name}}",
+            "operation": "Operation",
+            "internal_account": "Internes Konto",
+            "beneficiary": "Empfänger"
+        },
+        "details": {
+            "iban_label": "IBAN: {{iban}}",
+            "ref": "Ref:",
+            "sender": "Von {{name}}"
+        }
+    },
+    "status": {
+        "pending": "Ausstehend",
+        "completed": "Abgeschlossen",
+        "rejected": "Abgelehnt",
+        "in_review": "In Prüfung"
+    },
+    "beneficiaries": {
+        "title": "Empfänger",
+        "subtitle": "Verwalten Sie Ihre Überweisungsempfänger.",
+        "stats": {
+            "total": "{{count}} Empfänger",
+            "active": "Aktive Empfänger",
+            "invik": "{{count}} Sofort"
+        },
+        "search_placeholder": "Empfänger suchen...",
+        "empty": {
+            "title": "Keine Empfänger",
+            "subtitle": "Fügen Sie Ihren ersten Empfänger hinzu.",
+            "search_no_results": "Keine Ergebnisse für Ihre Suche.",
+            "search_try_again": "Versuchen Sie es mit einem anderen Namen oder IBAN."
+        },
+        "form": {
+            "add_title": "Empfänger hinzufügen",
+            "new_title": "Neuer Empfänger",
+            "name_label": "VOLLSTÄNDIGER NAME",
+            "name_placeholder": "Z.B. Max Mustermann",
+            "iban_label": "IBAN",
+            "iban_placeholder": "DE ...",
+            "bic_label": "BIC (OPTIONAL)",
+            "bic_placeholder": "Optional",
+            "email_label": "E-MAIL (OPTIONAL)",
+            "email_placeholder": "Optional",
+            "confirm_submit": "Hinzufügen",
+            "validation": {
+                "iban_invalid": "IBAN-Format ungültig",
+                "iban_valid": "IBAN gültig"
+            }
+        },
+        "card": {
+            "actions": {
+                "transfer": "Überweisen"
+            }
+        },
+        "toasts": {
+            "add_success": "Empfänger erfolgreich hinzugefügt!",
+            "add_error": "Fehler beim Hinzufügen des Empfängers.",
+            "delete_success": "Empfänger gelöscht.",
+            "delete_error": "Fehler beim Löschen des Empfängers."
+        },
+        "confirm_delete": {
+            "title": "Empfänger löschen",
+            "message": "Möchten Sie diesen Empfänger wirklich löschen?",
+            "confirm": "Löschen",
+            "cancel": "Abbrechen"
+        }
+    },
+    "settings": {
+        "title": "Kontoeinstellungen",
+        "subtitle": "Anzeigen und Ändern Ihres Bankprofils.",
+        "tabs": {
+            "profile": "Profil",
+            "security": "Sicherheit",
+            "prefs": "Einstellungen",
+            "my_info": "Meine Informationen",
+            "security_access": "Sicherheit & Zugriff",
+            "preferences": "Präferenzen"
+        },
+        "profile": {
+            "title": "Persönliche Informationen",
+            "email_verified": "Email verifiziert",
+            "email_contact": "KONTAKT-E-MAIL",
+            "first_name": "Vorname",
+            "last_name": "Nachname",
+            "dob": "Geburtsdatum",
+            "pob": "Geburtsort",
+            "phone": "Telefon",
+            "nationality": "Nationalität",
+            "address": "Adresse",
+            "city": "Stadt",
+            "zip": "Postleitzahl",
+            "save_btn": "Einstellungen speichern",
+            "update_btn": "Parameter aktualisieren"
+        },
+        "security": {
+            "title": "Authentifizierungssicherheit",
+            "password_title": "Passwortsicherheit",
+            "password_desc": "Ein starkes Passwort schützt Ihr Bankkonto vor unbefugtem Zugriff.",
+            "new_password": "Neues Passwort",
+            "confirm_password": "Passwort bestätigen",
+            "update_pwd_btn": "Passwort aktualisieren",
+            "update_access_btn": "Meine Zugriffe aktualisieren",
+            "last_mod": "Letzte Änderung",
+            "days_ago": "Vor {{count}} Tagen",
+            "encrypted_storage": "Verschlüsselte Speicherung",
+            "protected_aes": "Geschützt durch AES-256",
+            "security_reqs": "Sicherheitsanforderungen",
+            "tip_8_chars": "Mindestens 8 Zeichen",
+            "tip_caps": "Ein Großbuchstabe",
+            "tip_numbers": "Eine Zahl",
+            "tip_special": "Ein Sonderzeichen (!@#$)",
+            "strength": {
+                "label": "Stärke:",
+                "weak": "Schwach",
+                "medium": "Mittel",
+                "excellent": "Hervorragend"
+            }
+        },
+        "advisor": {
+            "title": "MEIN FINANZBERATER",
+            "role": "Senior Wealth Management Advisor",
+            "available": "Derzeit verfügbar",
+            "email_label": "BERUFLICHE E-MAIL",
+            "phone_label": "DIREKTWAHL"
+        },
+        "preferences": {
+            "title": "Kontopräferenzen",
+            "lang_label": "Oberflächensprache",
+            "lang_desc": "Sprache für Menüs und Auszüge."
+        }
+    },
+    "support": {
+        "title": "Hilfe & Support",
+        "subtitle": "Online-Hilfe konsultieren oder mit einem Berater chatten.",
+        "faq": {
+            "title": "FAQ & Schnelle Hilfe",
+            "q1": {
+                "q": "Überweisungen nicht erhalten",
+                "a": "Eine klassische SEPA-Überweisung dauert in der Regel 1 bis 2 Werktage. Wenn Sie auf eine internationale Überweisung warten, kann dies bis zu 5 Tage dauern. Überprüfen Sie, ob die angegebene IBAN korrekt ist."
+            },
+            "q2": {
+                "q": "Kartenlimits",
+                "a": "Sie können Ihre aktuellen Limits im Bereich 'Karten' einsehen. Für eine temporäre oder permanente Erhöhung kontaktieren Sie bitte Ihren Berater über ein Support-Ticket."
+            },
+            "q3": {
+                "q": "Mein Konto sichern",
+                "a": "Aktivieren Sie immer die Zwei-Faktor-Authentifizierung (2FA). Geben Sie niemals Ihre per SMS erhaltenen Codes weiter. Im Falle eines Zweifels an einer Transaktion sperren Sie Ihre Karte sofort über die App."
+            },
+            "q4": {
+                "q": "Bankgebühren",
+                "a": "Unsere Tarife sind transparent. Das Standardkonto ist kostenlos. Die Kontoführungsgebühren für Premium-Konten werden monatlich erhoben. Konsultieren Sie unsere Gebührentabelle unter 'Dokumente'."
+            },
+            "q5": {
+                "q": "Passwort vergessen",
+                "a": "Klicken Sie auf der Login-Seite auf 'Passwort vergessen?'. Ein Link zum Zurücksetzen wird Ihnen umgehend per E-Mail zugeschickt."
+            }
+        },
+        "tickets": {
+            "title": "Meine Anfragen",
+            "new_btn": "Neues Ticket",
+            "subject_placeholder": "Betreff",
+            "message_placeholder": "Bitte beschreiben Sie Ihr Anliegen für eine schnellere Bearbeitung...",
+            "create_btn": "Ticket erstellen",
+            "send_btn": "Ticket senden",
+            "cancel_btn": "Abbrechen",
+            "empty": "Sie haben keine aktiven Support-Tickets.",
+            "status": {
+                "open": "IN BEARBEITUNG",
+                "resolved": "GELÖST",
+                "closed": "Geschlossen"
+            },
+            "categories": {
+                "technical": "Technisches Problem",
+                "billing": "Frage zu Gebühren",
+                "cards": "Kartenverwaltung",
+                "other": "Sonstiges"
+            }
+        },
+        "chat": {
+            "reply_placeholder": "Antworten...",
+            "input_placeholder": "Beschreiben Sie Ihr Problem...",
+            "send": "Senden"
+        }
+    },
+    "documents": {
+        "title": "Meine Dokumente",
+        "subtitle": "Laden Sie Ihre Bankidentitätsnachweise und offiziellen Bescheinigungen herunter.",
+        "sections": {
+            "rib": "Bankidentitätsnachweise (RIB)",
+            "contracts": "Bescheinigungen & Verträge"
+        },
+        "rib": {
+            "title": "RIB - {{name}}",
+            "holder": "Kontoinhaber",
+            "bank": "BANKINSTITUT",
+            "bank_code": "Bankleitzahl",
+            "branch_code": "Zweigstellen-Code",
+            "account_number": "Kontonummer",
+            "key": "RIB-Schlüssel",
+            "iban": "IBAN",
+            "bic": "BIC (SWIFT)",
+            "download_pdf": "PDF herunterladen",
+            "print": "Drucken",
+            "share_msg": "Hier sind meine Bankdaten für das Konto {{name}} (IBAN: {{iban}})",
+            "not_defined": "Nicht definiert"
+        },
+        "contract": {
+            "title": "Kontoeröffnungsvertrag",
+            "client_contract": "Kundenvertrag",
+            "signed_on": "Unterzeichnet am {{date}}",
+            "download": "PDF HERUNTERLADEN",
+            "pdf_title": "VERTRAG ZUR ERÖFFNUNG EINES PRIVATKONTOS",
+            "parties": "ZWISCHEN DEN UNTERZEICHNETEN:",
+            "bank_party": "1. Das Bankinstitut INVIK S.A., im Folgenden 'Die Bank' genannt.",
+            "client_party": "2. Herr/Frau {{name}}, im Folgenden 'Der Kunde' genannt.",
+            "residing_at": "Wohnhaft in: {{address}}, {{zip}} {{city}}",
+            "object_title": "GEGENSTAND DES VERTRAGS",
+            "object_text": "Gegenstand dieses Vertrags ist die Festlegung der allgemeinen und besonderen Bedingungen für die Eröffnung und Führung von Konten, die im Namen des Kunden in den Büchern von INVIK S.A. geführt werden.",
+            "terms_title": "NUTZUNGSBEDINGUNGEN",
+            "terms_1": "- Der Kunde hat permanenten Zugriff auf seine Konten über die gesicherte digitale Schnittstelle.",
+            "terms_2": "- Die Bank verpflichtet sich, die Sicherheit der Gelder und die Vertraulichkeit der Daten gemäß der DSGVO zu gewährleisten.",
+            "terms_3": "- Der Kunde ist für die Geheimhaltung seiner Bankzugangsdaten verantwortlich.",
+            "terms_4": "- Überweisungen und Zahlungen unterliegen den in den Gebührenbedingungen festgelegten Limits.",
+            "duration_title": "DAUER UND KÜNDIGUNG",
+            "duration_text": "Dieser Vertrag wird auf unbestimmte Zeit geschlossen. Jede Partei kann ihn jederzeit unter Einhaltung einer Frist von 30 Tagen gemäß den geltenden Vorschriften kündigen.",
+            "signatures_title": "UNTERSCHRIFTEN",
+            "made_at": "Geschehen in Luxemburg, am {{date}}",
+            "client_sig": "Unterschrift des Kunden",
+            "certified_sig": "(Zertifizierte digitale Unterschrift)",
+            "bank_sig": "Für INVIK S.A."
+        },
+        "branding": {
+            "tagline": "Premium-Digitalbank",
+            "legal_1": "Dieses Dokument ist ein offizielles Dokument, das von den digitalen Diensten der INVIK S.A. erstellt wurde.",
+            "legal_2": "INVIK S.A. - Luxemburger Recht S.A. - RCS Luxemburg B 138.554 - Kapital 31.000.000 EUR",
+            "legal_3": "Sitz der Gesellschaft: 51, Boulevard Grande-Duchesse Charlotte, L-1331 Luxemburg"
+        },
+        "messages": {
+            "rib_success": "RIB erfolgreich generiert!",
+            "rib_error": "Fehler bei der RIB-Generierung",
+            "contract_success": "Vertrag erfolgreich generiert!",
+            "contract_error": "Fehler bei der Vertragsgenerierung",
+            "iban_copied": "IBAN in die Zwischenablage kopiert!",
+            "empty": "Kein Dokument verfügbar.",
+            "available": "Verfügbar"
+        }
+    },
+    "kyc": {
+        "title": "Identitätsprüfung (KYC)",
+        "subtitle": "Um Ihr Konto zu sichern, senden Sie uns bitte einen Identitätsnachweis und die erforderlichen zusätzlichen Dokumente.",
+        "status": {
+            "submitted": "Ihre Dokumente werden bereits geprüft.",
+            "verified": "Ihr Konto ist bereits verifiziert.",
+            "action_required": "Aktion erforderlich:",
+            "rejection_msg": "Einige Dokumente müssen erneut eingereicht werden."
+        },
+        "sections": {
+            "required": "(PFLICHTFELD)",
+            "identity": "1. Identitätsnachweis",
+            "identity_sub": "Wählen Sie ein erstes gültiges Dokument (Personalausweis, Reisepass usw.)",
+            "biometric": "2. Biometrische Verifizierung",
+            "biometric_sub": "Aktuelle Fotos zur Bestätigung Ihrer Identität.",
+            "address": "3. Adressnachweis",
+            "address_sub": "Offizielles Dokument, das nicht älter als 3 Monate ist.",
+            "income": "4. Einkommensnachweis",
+            "income_sub": "Je nach Ihrer Situation (Angestellter, Rentner usw.).",
+            "bank": "5. Banknachweis",
+            "bank_sub": "Kontoidentitätsnachweis (RIB / IBAN).",
+            "bank_notice": "Der RIB muss zwingend auf den Namen des Antragstellers lauten (Alleininhaber)."
+        },
+        "labels": {
+            "type_doc": "Dokumenttyp",
+            "select_type": "Dokumenttyp auswählen",
+            "front": "Vorderseite / Hauptseite",
+            "back": "Rückseite (falls zutreffend)",
+            "load_front": "Vorderseite laden",
+            "load_back": "Rückseite laden",
+            "load_doc": "Dokument laden",
+            "selfie": "Einfaches Selfie",
+            "selfie_hint": "Ohne Filter oder Brille",
+            "face_clear": "Klares Gesicht",
+            "selfie_id": "Selfie mit Dokument",
+            "selfie_id_hint": "Muss lesbar sein",
+            "hold_id": "Halten Sie Ihren Ausweis",
+            "example": "Beispiel ansehen",
+            "loaded": "Dokument geladen",
+            "example_ref": "Referenz für konformen Versand",
+            "back_btn": "Zurück",
+            "submit_btn": "Meine vollständigen Unterlagen einreichen",
+            "sending": "Sicherer Versand...",
+            "securing_sending": "Sichern und Senden..."
+        },
+        "types": {
+            "id": {
+                "cni": "Nationaler Identitätsnachweis (Personalausweis)",
+                "passport": "Reisepass",
+                "driver": "Führerschein",
+                "residence": "Aufenthaltstitel"
+            },
+            "address": {
+                "utility": "Strom- / Gas- / Wasserrechnung",
+                "telecom": "Internet- / Festnetzrechnung",
+                "tax": "Steuerbescheid",
+                "insurance": "Hausratversicherungsbescheinigung",
+                "rent": "Mietquittung",
+                "hosting": "Wohnsitzbestätigung + ID des Gastgebers"
+            },
+            "income": {
+                "payslip": "Letzte 3 Lohnabrechnungen",
+                "contract": "Arbeitsvertrag",
+                "tax": "Letzter Steuerbescheid",
+                "kbis": "Gewerbeanmeldung (Unternehmer)",
+                "pension": "Rentennachweis (Rentner)",
+                "unemployment": "Bescheinigung der Arbeitsagentur",
+                "statement": "Aktueller Kontoauszug"
+            }
+        },
+        "messages": {
+            "file_too_large": "Die Datei ist zu groß (max. 5 MB)",
+            "upload_error": "Fehler beim Hochladen",
+            "select_id_type": "Bitte wählen Sie eine Ausweisart aus.",
+            "missing_files": "Bitte reichen Sie alle erforderlichen Nachweise ein.",
+            "success": "Vollständige KYC-Unterlagen erfolgreich eingereicht!",
+            "error": "Beim Senden ist ein Fehler aufgetreten: "
+        },
+        "legal": "Die bereitgestellten Dokumente werden ausschließlich zur Identitätsprüfung (KYC), zur Betrugsprävention und zur Einhaltung gesetzlicher Vorschriften verwendet. Sie werden gemäß der DSGVO sicher und vertraulich verarbeitet."
+    },
+    "header": {
+        "search_placeholder": "Transaktion suchen...",
+        "profile_title": "Kontoeinstellungen"
+    },
+    "banner": {
+        "loading": "Verifizierung wird geladen...",
+        "toasts": {
+            "verified": "Ihre Identität ist verifiziert. Sie haben Zugriff auf alle Funktionen.",
+            "submitted": "Ihre Dokumente werden analysiert. Sie werden benachrichtigt, sobald die Verifizierung abgeschlossen ist."
+        },
+        "status": {
+            "verified": "Verifiziertes Konto",
+            "submitted": "In Bearbeitung...",
+            "rejected": "Abgelehnt (Details)",
+            "verify_now": "Identität verifizieren",
+            "click_to_verify": "Zum Verifizieren klicken"
+        },
+        "blocking": {
+            "refused": "Validierung abgelehnt",
+            "in_progress": "Verifizierung läuft",
+            "required": "Verifizierung erforderlich",
+            "motif": "Grund:",
+            "not_compliant": "Einige Dokumente entsprechen nicht den Anforderungen. Bitte reichen Sie diese erneut ein.",
+            "analyzing": "Wir analysieren Ihre Dokumente. Dieses Verfahren dauert in der Regel weniger als 24 Stunden.",
+            "restricted": "Aus Sicherheits- und Compliance-Gründen ist der Zugriff auf diese Funktion eingeschränkt. Bitte schließen Sie Ihre Identitätsprüfung ab, um Ihr Konto freizuschalten.",
+            "waiting": "Warten auf Validierung",
+            "start": "Verifizierung starten",
+            "secure": "Verschlüsselte & sichere Daten"
+        }
+    },
+    "notifications": {
+        "title": "Benachrichtigungen",
+        "mark_all_read": "Alle als gelesen markieren",
+        "empty": "Keine Benachrichtigungen",
+        "close": "Schließen"
+    },
+    "welcome": "Willkommen bei der INVIK BANK",
+    "loading": "Ihr persönlicher Bereich wird vorbereitet..."
 }

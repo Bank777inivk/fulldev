@@ -1276,5 +1276,787 @@
                 }
             ]
         }
-    }
+    },
+    "accounts": {
+        "title": "Minhas Contas",
+        "subtitle": "Resumo da sua situação financeira.",
+        "total_balance": "Saldo Total",
+        "main": "Conta Corrente",
+        "savings": "Conta Poupança",
+        "credit": "Conta de Crédito",
+        "hidden_iban": "IBAN oculto (Verificação necessária)",
+        "rate": "Taxa anual: 3.50%",
+        "repayment": "Próxima parcela em curso",
+        "no_debt": "Sem dívida acumulada",
+        "card": {
+            "main": "Conta Corrente",
+            "savings": "Conta Poupança",
+            "credit": "Conta de Crédito",
+            "currency": "Conta em Divisas",
+            "other": "Outra conta",
+            "actions": {
+                "transfer": "Transferir",
+                "deposit": "Recarregar",
+                "rib": "Ver RIB"
+            }
+        },
+        "rib_modal": {
+            "title": "Identidade Bancária (RIB)",
+            "subtitle": "Detalhes da sua conta para receber transferências.",
+            "copy_toast": "{{label}} copiado!",
+            "close": "Fechar",
+            "labels": {
+                "holder": "Titular",
+                "iban": "IBAN",
+                "bic": "BIC / SWIFT",
+                "bank": "Banco",
+                "type": "Tipo de conta"
+            }
+        },
+        "request_modal": {
+            "title": "Abrir uma nova conta",
+            "subtitle": "Solicite a abertura de um novo tipo de conta.",
+            "button": "Nova conta",
+            "type_label": "Escolha o tipo de conta",
+            "message_label": "Informações complementares (opcional)",
+            "placeholder": "Descreva brevemente a sua necessidade...",
+            "cancel": "Cancelar",
+            "confirm": "Enviar pedido",
+            "success": "Pedido de abertura enviado!",
+            "error": "Erro ao enviar o pedido."
+        }
+    },
+    "transactions": {
+        "title": "Últimas Transações",
+        "empty": "Nenhuma transação recente.",
+        "deposit": "Depósito",
+        "transfer": "Transferência",
+        "by_card": "por cartão",
+        "by_transfer": "por transferência"
+    },
+    "actions": {
+        "title": "Ações Rápidas",
+        "transfer": "Transferir",
+        "credit": "Créditos",
+        "deposit": "Recarregar",
+        "cards": "Cartões"
+    },
+    "transfers": {
+        "title": "Área de Transferências",
+        "subtitle": "Gira as suas transferências com facilidade.",
+        "tabs": {
+            "internal": "Minhas Contas",
+            "internal_desc": "Transferência interna",
+            "invik": "Transferência INVIK",
+            "invik_desc": "Instantânea e Gratuita",
+            "sepa": "Transferência SEPA",
+            "sepa_desc": "Para outro banco",
+            "history": "Acompanhamento"
+        },
+        "steps": {
+            "accounts": "Contas",
+            "amount": "Montante",
+            "validation": "Validação"
+        },
+        "account_selection": {
+            "source": "De qual conta?",
+            "dest": "Para qual beneficiário?"
+        },
+        "warnings": {
+            "single_account_title": "Transferência interna impossível",
+            "single_account_desc": "Você possui apenas uma conta."
+        },
+        "invik_network": {
+            "title": "REDE INVIK INSTANTÂNEA",
+            "desc": "Transfira fundos em milissegundos para qualquer cliente INVIK BANK, sem custos."
+        },
+        "beneficiary_type": {
+            "saved": "Cliente Registrado",
+            "new": "Novo Beneficiário"
+        },
+        "inputs": {
+            "select_invik": "Selecione um cliente INVIK",
+            "select_beneficiary": "Selecione um beneficiário",
+            "name": "Nome Completo",
+            "name_placeholder": "Ex: João Silva",
+            "iban": "IBAN",
+            "iban_placeholder": "PT... ou FR...",
+            "bic": "BIC (opcional)",
+            "bic_placeholder": "Ex: ABCDFRPP",
+            "email": "Email do beneficiário (opcional)",
+            "email_placeholder": "Para notificação imediata",
+            "save_invik": "Guardar este beneficiário INVIK",
+            "save_beneficiary": "Guardar este beneficiário para futuras transferências"
+        },
+        "amount": {
+            "title": "Quanto gostaria de transferir?",
+            "available": "Saldo disponível:",
+            "insufficient_funds": "Aviso: O montante excede o saldo disponível.",
+            "limit_exceeded": "Limite máximo autorizado: 50.000 € por transferência"
+        },
+        "review": {
+            "title": "Verificar detalhes",
+            "from": "De",
+            "to": "Para",
+            "total": "Total",
+            "certified": "Transferência Instantânea Certificada",
+            "certified_desc": "Execução imediata através da rede segura INVIK BANK."
+        },
+        "success": {
+            "title": "TRANSFERÊNCIA CONCLUÍDA",
+            "review_title": "INFORMAÇÕES CRÍTICAS",
+            "new_button": "Fazer outra transferência"
+        },
+        "history": {
+            "title": "Histórico de transferências recentes",
+            "empty": "Nenhuma transferência recente."
+        },
+        "buttons": {
+            "next": "Seguinte",
+            "back": "Voltar",
+            "confirm": "Confirmar",
+            "edit": "Editar"
+        },
+        "errors": {
+            "invalid_amount": "Por favor, insira um montante válido",
+            "insufficient_balance": "Saldo insuficiente para esta operação",
+            "limit_exceeded": "O montante máximo por transferência é de 50.000 €",
+            "check_beneficiary": "Verifique as informações do beneficiário",
+            "not_invik_iban": "Este IBAN não pertence à rede INVIK. Use o separador 'Transferência SEPA'.",
+            "invalid_iban": "Formato de IBAN inválido."
+        },
+        "success_messages": {
+            "internal": "Transferência interna realizada com sucesso!",
+            "instant": "Transferência instantânea para {{name}} realizada com sucesso!",
+            "pending": "Transferência pendente de verificação de segurança. Prazo SEPA: 24h a 48h."
+        },
+        "form": {
+            "step_source": "1. Conta de origem",
+            "step_dest": "2. Conta de destino",
+            "step_dest_invik": "2. Destinatário INVIK",
+            "step_dest_beneficiary": "2. Beneficiário",
+            "step_amount": "Montante a transferir",
+            "sending": "A enviar..."
+        }
+    },
+    "cards": {
+        "title": "Meus Cartões",
+        "subtitle": "Gira os seus cartões físicos e virtuais.",
+        "empty": {
+            "title": "Nenhum cartão ativo",
+            "desc": "Ainda não tem nenhum cartão associado à sua conta.",
+            "button": "Pedir um cartão"
+        },
+        "list_title": "Os seus Cartões Ativos ({{count}})",
+        "actions": {
+            "show_number": "Ver número",
+            "hide_number": "Ocultar",
+            "flip": "Girar",
+            "block": "Bloquear",
+            "unblock": "Desbloquear",
+            "disabled": "Desativado",
+            "activate": "Ativar",
+            "options": "Opções",
+            "delete": "Eliminar"
+        },
+        "details": {
+            "status": "Estado:",
+            "type": "Tipo:",
+            "limit": "Limite:",
+            "updated": "Atualizado:",
+            "holder": "TITULAR",
+            "expiry": "VALIDADE",
+            "cvv": "CVV",
+            "support": "Suporte",
+            "title": "Detalhes do cartão",
+            "virtual_uppercase": "CARTÃO VIRTUAL",
+            "physical_uppercase": "CARTÃO FÍSICO",
+            "property_notice": "Este cartão é propriedade do INVIK BANK SA.",
+            "active": "Ativo",
+            "inactive": "Desativado",
+            "blocked": "Bloqueado",
+            "virtual": "Virtual",
+            "physical": "Físico"
+        },
+        "physical_order": {
+            "title": "Cartão Físico",
+            "mobile_title": "Pedir cartão físico",
+            "desc": "Receba o seu cartão exclusivo INVIK em sua casa no prazo de 3 a 5 dias úteis.",
+            "features": {
+                "withdrawals": "Levantamentos gratuitos em qualquer lugar",
+                "contactless": "Pagamento contactless",
+                "design": "Design Preto Mate Premium"
+            },
+            "button": {
+                "order": "Pedir agora",
+                "processing": "Pedido em curso",
+                "shipped": "Cartão enviado",
+                "delivered": "Cartão recebido ✅",
+                "cancel": "Cancelar pedido"
+            },
+            "status": {
+                "pending": "Estamos a processar o seu pedido",
+                "delivered": "Parabéns! O seu cartão chegou. Desfrute das suas novas vantagens! 🎁✨",
+                "shipped": "O seu cartão está a caminho! 🚀 Chegará em 3 a 5 dias.",
+                "rejected": "Último pedido rejeitado:",
+                "free": "Gratuito • Incluído na sua oferta"
+            }
+        },
+        "virtual_promo": {
+            "title": "Precisa de um cartão virtual?",
+            "desc": "Crie um cartão instantaneamente para as suas compras online seguras.",
+            "button": "Criar cartão virtual"
+        },
+        "options_modal": {
+            "title": "Opções do cartão",
+            "alias_label": "NOME DO CARTÃO (ALIAS)",
+            "alias_placeholder": "Ex: Compras Amazon, Pessoal...",
+            "limit_label": "LIMITE MENSAL (€)",
+            "limit_help": "O limite predefinido é de 2.000 €.",
+            "save": "Guardar alterações"
+        },
+        "messages": {
+            "blocked": "O seu cartão foi bloqueado.",
+            "unblocked": "O seu cartão foi desbloqueado.",
+            "order_success": "O seu pedido de cartão físico foi enviado com sucesso!",
+            "order_error": "Ocorreu um erro ao pedir o cartão.",
+            "options_saved": "Definições do cartão atualizadas!",
+            "delete_confirm": "Deseja realmente eliminar permanentemente este cartão do seu espaço? Esta ação é irreversível.",
+            "delete_success": "Cartão eliminado com sucesso.",
+            "request_cancel_confirm": "Cancelar e eliminar este pedido de cartão?",
+            "request_cancelled": "Pedido cancelado."
+        }
+    },
+    "credits": {
+        "title": "Créditos e Financiamentos",
+        "subtitle": "Simule o seu projeto e obtenha uma resposta em 24 horas",
+        "form": {
+            "simulator_title": "Simulador",
+            "your_simulation": "A sua simulação",
+            "project_type": "Tipo de projeto",
+            "project_description": "Descrição do projeto (Obrigatório)",
+            "project_description_placeholder": "Detalhe o seu projeto em algumas linhas...",
+            "specific_project": "O seu projeto específico",
+            "specific_project_placeholder": "Descreva brevemente o seu projeto...",
+            "amount": "Montante do empréstimo",
+            "months": "Duração do reembolso",
+            "interest_rate": "Taxa de juro (TAEG)",
+            "monthly_payment": "Mensalidade",
+            "monthly_payment_est": "estimada",
+            "apply_button": "Pedir este empréstimo",
+            "apply_button_official": "Fazer um pedido oficial",
+            "processing": "Processando...",
+            "sending": "Enviando...",
+            "years": "anos",
+            "months_label": "meses"
+        },
+        "types": {
+            "personnel": "Empréstimo Pessoal",
+            "immobilier": "Crédito Imobiliário",
+            "vehicule": "Crédito Veículo",
+            "professionnel": "Projeto Profissional",
+            "autre": "Outro (Especificar...)"
+        },
+        "status": {
+            "pending": "Em análise",
+            "approved": "Aprovado ",
+            "rejected": "Rejeitado",
+            "dossier_title": "Processo em análise",
+            "dossier_desc": "Estamos atualmente a analisar o seu pedido de {{amount}} €.",
+            "dossier_notice": "Será informado do progresso em tempo real por email. Para qualquer modificação, contacte o suporte."
+        },
+        "history": {
+            "title": "Os meus pedidos",
+            "tracking": "Acompanhamento de pedidos",
+            "empty": "Nenhum pedido em curso.",
+            "empty_desktop": "Os seus pedidos de crédito aparecerão aqui."
+        },
+        "messages": {
+            "already_pending": "Já tem um pedido em curso.",
+            "description_short": "Por favor, descreva o seu projeto (mín. 10 caracteres).",
+            "success": "Pedido enviado! Um consultor entrará em contacto.",
+            "error": "Ocorreu um erro durante o pedido.",
+            "confirm_title": "Confirmar o seu pedido",
+            "confirm_button": "Confirmar e Enviar",
+            "credit_opened": "A sua Conta de Crédito foi aberta e os fundos depositados.",
+            "credit_available_title": "Crédito Aprovado ",
+            "credit_available_desc": "O seu pedido de crédito de {{amount}} € foi aprovado. Os fundos estão disponíveis.",
+            "congrats": "Parabéns! O seu crédito de {{amount}} € está disponível."
+        },
+        "support": {
+            "contact_btn": "Contactar o suporte",
+            "need_help": "Precisa de assistência?",
+            "advisors_desc": "Os nossos consultores estão disponíveis para analisar o seu processo complexo.",
+            "contact_advisor": "Contactar um consultor",
+            "fonds_avail": "Fundos disponíveis no seu espaço",
+            "access_btn": "Aceder ao meu Crédito"
+        }
+    },
+    "deposit": {
+        "title": "Recarregar",
+        "subtitle": "Alimente a sua conta de forma segura.",
+        "methods": {
+            "card": {
+                "title": "Cartão Bancário",
+                "desc": "Crédito imediato"
+            },
+            "bank": {
+                "title": "Transferência SEPA",
+                "desc": "2-3 dias úteis"
+            }
+        },
+        "form": {
+            "amount_label": "Montante a creditar",
+            "amount_placeholder": "0.00",
+            "card_number": "Número do cartão",
+            "holder_label": "TITULAR",
+            "holder_placeholder": "NOME APELIDO",
+            "expiry_label": "VAL",
+            "cvc_label": "CVC / CVV",
+            "target_account": "Conta de destino",
+            "account_types": {
+                "main": "Conta Principal",
+                "savings": "Conta Poupança"
+            },
+            "submit_card": "Recarregar {{amount}} €",
+            "enter_amount": "Insira um montante",
+            "invalid_card": "Número de cartão inválido",
+            "invalid_expiry": "Data de validade inválida",
+            "invalid_cvc": "CVC inválido",
+            "pay": "Pagar {{amount}} EUR",
+            "secure_notice": "Transação segura SSL"
+        },
+        "bank_details": {
+            "title": "Transferência Bancaria",
+            "desc": "Use os detalhes abaixo para realizar a sua transferência do seu outro banco.",
+            "beneficiary": "Beneficiário",
+            "bank_name": "Banco",
+            "bic": "BIC / SWIFT",
+            "iban": "IBAN",
+            "processing_delay": "O tempo de processamento é de 24 a 48 horas úteis.",
+            "copy_toast": "{{label}} copiado para a área de transferência!",
+            "header": "Detalhes da transferência"
+        },
+        "history": {
+            "title": "As suas recargas recentes",
+            "empty": "Nenhum depósito recente.",
+            "methods": {
+                "card": "Cartão",
+                "transfer": "Transferência"
+            }
+        },
+        "messages": {
+            "check_card": "Por favor, verifique as informações do seu cartão.",
+            "success": "O seu pedido de recarga está a ser processado. O seu saldo será atualizado em breve.",
+            "pending_alert": "Um depósito está atualmente a ser processado na sua conta."
+        },
+        "pagination": {
+            "page": "Página {{current}} de {{total}}"
+        }
+    },
+    "sidebar": {
+        "nav": {
+            "dashboard": "Painel de Controlo",
+            "accounts": "Minhas Contas",
+            "transfers": "Transferências",
+            "beneficiaries": "Beneficiários",
+            "deposit": "Recarregar",
+            "cards": "Cartões",
+            "credits": "Créditos",
+            "history": "Histórico",
+            "documents": "Documentos",
+            "support": "Suporte",
+            "settings": "Ajustes"
+        },
+        "user": {
+            "account_type": "Conta {{type}}"
+        },
+        "logout": "Sair"
+    },
+    "history": {
+        "title": "Histórico",
+        "subtitle": "Consulte todas as suas transações passadas.",
+        "empty": "Nenhuma transação encontrada.",
+        "columns": {
+            "date": "Data",
+            "type": "Tipo",
+            "category": "Categoria",
+            "amount": "Montante",
+            "fees": "Taxas"
+        },
+        "types": {
+            "deposit": "Depósito",
+            "transfer_internal": "Transf. Interna para {{name}}",
+            "transfer_instant": "Transf. Instantânea para {{name}}",
+            "receive_instant": "Receção Instantânea",
+            "transfer_external": "Transf. Externa para {{name}}",
+            "operation": "Operação",
+            "internal_account": "Conta Interna",
+            "beneficiary": "Beneficiário"
+        },
+        "details": {
+            "iban_label": "IBAN: {{iban}}",
+            "ref": "Ref:",
+            "sender": "De {{name}}"
+        }
+    },
+    "status": {
+        "pending": "Pendente",
+        "completed": "Concluído",
+        "rejected": "Rejeitado",
+        "in_review": "Em revisão"
+    },
+    "beneficiaries": {
+        "title": "Beneficiários",
+        "subtitle": "Gira os seus destinatários de transferência.",
+        "stats": {
+            "total": "{{count}} Beneficiários",
+            "invik": "{{count}} Instantâneos"
+        },
+        "empty": {
+            "title": "Nenhum beneficiário",
+            "subtitle": "Adicione o seu primeiro beneficiário para começar as suas transferências.",
+            "search_no_results": "Nenhum resultado para a sua pesquisa.",
+            "search_try_again": "Tente novamente com outro nome ou IBAN."
+        },
+        "card": {
+            "iban_prefix": "IBAN",
+            "bic_prefix": "BIC",
+            "email_prefix": "Email",
+            "actions": {
+                "transfer": "Transferir",
+                "quick_transfer": "Transferência Rápida",
+                "delete": "Eliminar"
+            }
+        },
+        "form": {
+            "add_title": "Adicionar um Beneficiário",
+            "new_title": "Novo Beneficiario",
+            "name_label": "NOME COMPLETO",
+            "name_placeholder": "Ex: João Silva",
+            "iban_label": "IBAN",
+            "iban_placeholder": "PT...",
+            "bic_label": "BIC (OPCIONAL)",
+            "bic_placeholder": "Opcional",
+            "email_label": "EMAIL (OPZIONALE)",
+            "email_placeholder": "Opcional",
+            "submit": "Adicionar beneficiário",
+            "confirm_submit": "Confirmar adição",
+            "validation": {
+                "iban_invalid": "Formato de IBAN inválido",
+                "iban_valid": "IBAN válido"
+            }
+        },
+        "search_placeholder": "Procurar um beneficiário...",
+        "toasts": {
+            "add_success": "Beneficiário adicionado com sucesso!",
+            "add_error": "Erro ao adicionar o beneficiário.",
+            "delete_success": "Beneficiario eliminado.",
+            "delete_error": "Erro ao eliminar o beneficiário."
+        },
+        "confirm_delete": "Tem a certeza que deseja eliminar este beneficiário?"
+    },
+    "settings": {
+        "title": "Ajustes da Conta",
+        "subtitle": "Consulte e modifique o seu perfil bancario.",
+        "tabs": {
+            "profile": "Perfil",
+            "security": "Segurança",
+            "prefs": "Ajustes",
+            "my_info": "Minhas Informações",
+            "security_access": "Segurança & Acesso",
+            "preferences": "Preferências"
+        },
+        "profile": {
+            "title": "Informações Pessoais",
+            "email_verified": "Email Verificado",
+            "email_contact": "EMAIL DE CONTACTO",
+            "first_name": "Nome",
+            "last_name": "Apelido",
+            "dob": "Data de nascimento",
+            "pob": "Naturalidade",
+            "phone": "Telefone",
+            "nationality": "Nacionalidade",
+            "address": "Morada",
+            "city": "Cidade",
+            "zip": "Código Postal",
+            "save_btn": "Guardar ajustes",
+            "update_btn": "Actualizar parâmetros"
+        },
+        "security": {
+            "title": "Segurança de Autenticação",
+            "password_title": "Segurança de Senha",
+            "password_desc": "Uma senha forte protege a sua conta bancária de acessos não autorizados.",
+            "new_password": "Nova senha",
+            "confirm_password": "Confirmar senha",
+            "update_pwd_btn": "Actualizar senha",
+            "update_access_btn": "Actualizar meus acessos",
+            "last_mod": "Última modificação",
+            "days_ago": "Há {{count}} dias",
+            "encrypted_storage": "Armazenamento Criptografado",
+            "protected_aes": "Protegido por AES-256",
+            "security_reqs": "Requisitos de segurança",
+            "tip_8_chars": "Pelo menos 8 caracteres",
+            "tip_caps": "Uma letra maiúscula",
+            "tip_numbers": "Um número",
+            "tip_special": "Um carácter especial (!@#$)",
+            "strength": {
+                "label": "Força:",
+                "weak": "Fraca",
+                "medium": "Média",
+                "excellent": "Excelente"
+            }
+        },
+        "advisor": {
+            "title": "O MEU ASSESSOR FINANCEIRO",
+            "role": "Assessor Sénior de Gestão de Património",
+            "available": "Disponível agora",
+            "email_label": "EMAIL PROFISSIONAL",
+            "phone_label": "LINHA DIRETA"
+        },
+        "preferences": {
+            "title": "Preferências da Conta",
+            "lang_label": "Idioma da Interface",
+            "lang_desc": "Idioma utilizado para os menus e extractos."
+        },
+        "messages": {
+            "success": "Ajustes atualizados com sucesso.",
+            "error": "Ocorreu um erro.",
+            "pwd_success": "Senha atualizada com sucesso."
+        }
+    },
+    "support": {
+        "title": "Assistência & Suporte",
+        "subtitle": "Consulte a ajuda online ou converse com um assessor.",
+        "faq": {
+            "title": "FAQ & Ajuda rápida",
+            "q1": {
+                "q": "Transferências não recebidas",
+                "a": "Uma transferência SEPA clássica demora geralmente 1 a 2 dias úteis. Se espera uma transferência internacional, pode demorar até 5 dias. Verifique se o IBAN fornecido está correto."
+            },
+            "q2": {
+                "q": "Limites do cartão",
+                "a": "Pode consultar os seus limites atuais na secção 'Cartões'. Para um aumento temporário ou permanente, contacte o seu assessor através de um ticket de suporte."
+            },
+            "q3": {
+                "q": "Segurar a minha conta",
+                "a": "Ative sempre a autenticação de dois fatores (2FA). Nunca partilhe os códigos recebidos por SMS. Em caso de dúvida sobre uma transação, bloqueie imediatamente o seu cartão através da aplicação."
+            },
+            "q4": {
+                "q": "Taxas bancárias",
+                "a": "As nossas tarifas são transparentes. A conta padrão é gratuita. As taxas de manutenção de conta para as contas premium são cobradas mensalmente. Consulte a nossa tabela de tarifas em 'Documentos'."
+            },
+            "q5": {
+                "q": "Senha esquecida",
+                "a": "Clique em 'Esqueceu a senha?' na página de login. Um link de redefinição será enviado por e-mail instantaneamente."
+            }
+        },
+        "tickets": {
+            "title": "Meus pedidos",
+            "new_btn": "Novo ticket",
+            "subject_placeholder": "Assunto",
+            "message_placeholder": "Detalhe o seu pedido para um processamento mais rápido...",
+            "create_btn": "Criar ticket",
+            "send_btn": "Enviar ticket",
+            "cancel_btn": "Cancelar",
+            "empty": "Não tem nenhum ticket de suporte ativo.",
+            "status": {
+                "open": "EM CURSO",
+                "resolved": "RESOLVIDO",
+                "closed": "Fechado"
+            },
+            "categories": {
+                "technical": "Problema técnico",
+                "billing": "Questão sobre taxas",
+                "cards": "Gestão de cartões",
+                "other": "Outro"
+            }
+        },
+        "chat": {
+            "reply_placeholder": "Responder...",
+            "input_placeholder": "Descreva o seu problema...",
+            "send": "Enviar"
+        }
+    },
+    "documents": {
+        "title": "Meus Documentos",
+        "subtitle": "Descarregue os seus comprovativos de identidade bancária e certificados oficiais.",
+        "sections": {
+            "rib": "Comprovativos de Identidade Bancária (RIB)",
+            "contracts": "Certificados & Contratos"
+        },
+        "rib": {
+            "title": "RIB - {{name}}",
+            "holder": "Titular da conta",
+            "bank": "ESTABELECIMENTO BANCÁRIO",
+            "bank_code": "Código do Banco",
+            "branch_code": "Código da Agência",
+            "account_number": "Número da conta",
+            "key": "Chave RIB",
+            "iban": "IBAN",
+            "bic": "BIC (SWIFT)",
+            "download_pdf": "Descarregar PDF",
+            "print": "Imprimir",
+            "share_msg": "Aqui estão os meus dados bancários para a conta {{name}} (IBAN: {{iban}})",
+            "not_defined": "Não definido"
+        },
+        "contract": {
+            "title": "Contrato de Abertura",
+            "client_contract": "Contrato de Cliente",
+            "signed_on": "Assinado em {{date}}",
+            "download": "DESCARREGAR PDF",
+            "pdf_title": "CONTRATO DE ABERTURA DE CONTA PESSOAL",
+            "parties": "ENTRE OS ABAIXO ASSINADOS:",
+            "bank_party": "1. O estabelecimento bancário INVIK S.A., doravante designado 'O Banco'.",
+            "client_party": "2. Sr./Sra. {{name}}, doravante designado 'O Cliente'.",
+            "residing_at": "Residente em: {{address}}, {{zip}} {{city}}",
+            "object_title": "OBJETO DO CONTRATO",
+            "object_text": "O objetivo deste contrato é definir as condições gerais e especiais para a abertura e funcionamento das contas abertas em nome do Cliente nos livros do INVIK S.A.",
+            "terms_title": "CONDIÇÕES DE UTILIZAÇÃO",
+            "terms_1": "- O Cliente tem acesso permanente às suas contas através da interface digital segura.",
+            "terms_2": "- O Banco compromete-se a garantir a segurança dos fundos e a confidencialità dos dados em conformidade com o RGPD.",
+            "terms_3": "- O Cliente é responsável por manter a confidencialidade dos seus acessos bancários.",
+            "terms_4": "- As operações de transferência e pagamento estão sujeitas aos limites definidos nas condições tarifárias.",
+            "duration_title": "DURAÇÃO E RESCISÃO",
+            "duration_text": "Este contrato é celebrado por tempo indeterminado. Cada parte pode rescindi-lo a qualquer momento, mediante pré-aviso de 30 dias, em conformidade com os regulamentos aplicáveis.",
+            "signatures_title": "ASSINATURAS",
+            "made_at": "Feito no Luxemburgo, em {{date}}",
+            "client_sig": "Assinatura do Cliente",
+            "certified_sig": "(Assinatura digital certificada)",
+            "bank_sig": "Pelo INVIK S.A."
+        },
+        "branding": {
+            "tagline": "Banco Digital Premium",
+            "legal_1": "Este documento é um ato oficial gerado pelos serviços digitais do INVIK S.A.",
+            "legal_2": "INVIK S.A. - Direito luxemburguês S.A. - RCS Luxemburgo B 138.554 - Capital 31.000.000 EUR",
+            "legal_3": "Sede social: 51, Boulevard Grande-Duchesse Charlotte, L-1331 Luxemburgo"
+        },
+        "messages": {
+            "rib_success": "RIB gerado com sucesso!",
+            "rib_error": "Erro durante a geração do RIB",
+            "contract_success": "Contrato gerado com sucesso!",
+            "contract_error": "Erro durante a geração do contrato",
+            "iban_copied": "IBAN copiado para a área de transferência!",
+            "empty": "Nenhum documento disponível.",
+            "available": "Disp."
+        }
+    },
+    "kyc": {
+        "title": "Verificação de Identidade (KYC)",
+        "subtitle": "Para proteger a sua conta, envie-nos um documento de identidade e os outros documentos solicitados.",
+        "status": {
+            "submitted": "Os seus documentos já estão a ser revistos.",
+            "verified": "A sua conta já está verificada.",
+            "action_required": "Ação necessária:",
+            "rejection_msg": "Alguns documentos precisam de ser reenviados."
+        },
+        "sections": {
+            "required": "(OBRIGATÓRIO)",
+            "identity": "1. Justificativo de identidade",
+            "identity_sub": "Escolha um primeiro documento válido (Cartão Cidadão, Passaporte, etc.)",
+            "biometric": "2. Verificação biométrica",
+            "biometric_sub": "Fotos recentes para confirmar a sua identidade.",
+            "address": "3. Justificativo de morada",
+            "address_sub": "Documento oficial com menos de 3 meses.",
+            "income": "4. Justificativo de rendimentos",
+            "income_sub": "Dependendo da sua situação (Empregado, Reformado, etc.).",
+            "bank": "5. Justificativo bancário",
+            "bank_sub": "Extrato de Identidade Bancária (RIB / IBAN).",
+            "bank_notice": "O RIB deve ser imperativamente em nome do requerente (titular exclusivo)."
+        },
+        "labels": {
+            "type_doc": "Tipo de documento",
+            "select_type": "Selecionar tipo de documento",
+            "front": "Frente / Página principal",
+            "back": "Verso (se aplicável)",
+            "load_front": "Carregar frente",
+            "load_back": "Carregar verso",
+            "load_doc": "Carregar documento",
+            "selfie": "Selfie Simples",
+            "selfie_hint": "Sem filtros ou óculos",
+            "face_clear": "Rosto visível",
+            "selfie_id": "Selfie com documento",
+            "selfie_id_hint": "Deve estar legível",
+            "hold_id": "Segure o seu documento de identidade",
+            "example": "Ver um exemplo",
+            "loaded": "Documento carregado",
+            "example_ref": "Referência para um envio conforme",
+            "back_btn": "Voltar",
+            "submit_btn": "Enviar dossiê completo",
+            "sending": "Envio seguro...",
+            "securing_sending": "Protegendo e enviando..."
+        },
+        "types": {
+            "id": {
+                "cni": "Cartão de Cidadão / Bilhete de Identidade",
+                "passport": "Passaporte",
+                "driver": "Carta de condução",
+                "residence": "Título de residência"
+            },
+            "address": {
+                "utility": "Fatura de Eletricidade / Gás / Água",
+                "telecom": "Fatura de Internet / Telefone fixo",
+                "tax": "Aviso fiscal",
+                "insurance": "Certificado seguro de habitação",
+                "rent": "Recibo de aluguer",
+                "hosting": "Atestado de residência + ID do anfitrião"
+            },
+            "income": {
+                "payslip": "Últimos 3 recibos de vencimento",
+                "contract": "Contrato de trabalho",
+                "tax": "Último aviso fiscal",
+                "kbis": "Certidão comercial (Empresário)",
+                "pension": "Declaração de pensão (Reformado)",
+                "unemployment": "Certificado de desemprego",
+                "statement": "Extrato bancário recente"
+            }
+        },
+        "messages": {
+            "file_too_large": "O ficheiro é demasiado grande (máx 5MB)",
+            "upload_error": "Erro de carregamento",
+            "select_id_type": "Selecione um tipo de documento de identidade.",
+            "missing_files": "Por favor, forneça todos os comprovativos obrigatórios.",
+            "success": "Dossiê KYC enviado com sucesso!",
+            "error": "Ocorreu um erro durante o envio: "
+        },
+        "legal": "Os documentos fornecidos são utilizados exclusivamente para fins de verificação de identidade (KYC), para a prevenção de fraude e para a conformidade regulamentar. São tratados de forma segura e confidencial de acordo com o RGPD."
+    },
+    "header": {
+        "search_placeholder": "Procurar uma transação...",
+        "profile_title": "Ajustes da conta"
+    },
+    "banner": {
+        "loading": "Carregando verificação...",
+        "toasts": {
+            "verified": "A sua identidade está verificada. Tem acesso a todas as funcionalidades.",
+            "submitted": "Os seus documentos estão a ser analisados. Será notificado assim que a verificação estiver completa."
+        },
+        "status": {
+            "verified": "Conta Verificada",
+            "submitted": "Em curso...",
+            "rejected": "Rejeitada (Detalhes)",
+            "verify_now": "Verificar Identidade",
+            "click_to_verify": "Clique para verificar"
+        },
+        "blocking": {
+            "refused": "Validação Recusada",
+            "in_progress": "Verificação em curso",
+            "required": "Verificação Necessária",
+            "motif": "Motivo:",
+            "not_compliant": "Alguns documentos não estão conformes. Por favor, reenvie-os.",
+            "analyzing": "Estamos a analisar os seus documentos. Este procedimento demora geralmente menos de 24 horas.",
+            "restricted": "Por razões de segurança e conformidade, o acesso a esta funcionalidade está restrito. Complete a verificação de identidade para desbloquear a sua conta.",
+            "waiting": "A aguardar validação",
+            "start": "Iniciar verificação",
+            "secure": "Dados Encriptados e Seguros"
+        }
+    },
+    "notifications": {
+        "title": "Notificações",
+        "mark_all_read": "Marcar tudo como lido",
+        "empty": "Nenhuma notificação",
+        "close": "Fechar"
+    },
+    "welcome": "Olá, {{name}} 👋",
+    "loading": "Preparando o seu espaço pessoal..."
 }
