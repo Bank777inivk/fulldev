@@ -888,5 +888,1105 @@
                 }
             ]
         }
+    },
+    "loading": "Préparation de votre espace personnel...",
+    "welcome": "Bonjour, {{name}} 👋",
+    "accounts": {
+        "title": "Mes Comptes",
+        "subtitle": "Gérez vos portefeuilles et consultez vos coordonnées bancaires.",
+        "main": "Compte Courant",
+        "savings": "Compte Épargne",
+        "credit": "Compte Crédit",
+        "hidden_iban": "IBAN masqué (Vérification requise)",
+        "rate": "Taux: 2.5% / an",
+        "repayment": "Remboursement en cours",
+        "no_debt": "Aucune dette",
+        "card": {
+            "main": "Compte Principal",
+            "savings": "Compte Épargne",
+            "credit": "Compte Crédit",
+            "currency": "Compte Devise",
+            "other": "Autre Compte",
+            "actions": {
+                "transfer": "Virement",
+                "deposit": "Dépôt",
+                "rib": "RIB / IBAN"
+            }
+        },
+        "rib_modal": {
+            "title": "Détails Bancaires",
+            "subtitle": "Informations officielles pour recevoir des fonds",
+            "close": "Fermer",
+            "copy_toast": "{{label}} copié !",
+            "labels": {
+                "holder": "Titulaire",
+                "iban": "IBAN",
+                "bic": "BIC / SWIFT",
+                "bank": "Banque",
+                "type": "Type"
+            }
+        },
+        "request_modal": {
+            "button": "Ouvrir un compte",
+            "subtitle": "Épargne, Crédit ou Devise",
+            "title": "Demande d'ouverture",
+            "type_label": "Type de compte",
+            "message_label": "Message (optionnel)",
+            "placeholder": "Détaillez votre demande...",
+            "cancel": "Annuler",
+            "confirm": "Confirmer",
+            "success": "Votre demande a été envoyée avec succès.",
+            "error": "Erreur lors de l'envoi de la demande."
+        }
+    },
+    "transactions": {
+        "title": "Transactions récentes",
+        "deposit": "Dépôt",
+        "transfer": "Virement",
+        "review": "Traitement en cours",
+        "empty": "Aucune transaction pour le moment.",
+        "by_card": "par Carte Bancaire",
+        "by_transfer": "par Virement SEPA"
+    },
+    "actions": {
+        "title": "Actions Rapides",
+        "transfer": "Faire un virement",
+        "credit": "Demander un crédit",
+        "deposit": "Ajouter des fonds",
+        "cards": "Mes cartes"
+    },
+    "transfers": {
+        "title": "Espace Virements",
+        "subtitle": "Gérez vos transferts en toute simplicité.",
+        "tabs": {
+            "internal": "Mes Comptes",
+            "internal_desc": "Virement interne",
+            "invik": "Virement INVIK",
+            "invik_desc": "Instantané & Gratuit",
+            "sepa": "Virement SEPA",
+            "sepa_desc": "Vers une autre banque",
+            "history": "Suivi"
+        },
+        "steps": {
+            "accounts": "Comptes",
+            "amount": "Montant",
+            "validation": "Validation"
+        },
+        "account_selection": {
+            "source": "Depuis quel compte ?",
+            "dest": "Vers quel bénéficiaire ?"
+        },
+        "warnings": {
+            "single_account_title": "Virement interne impossible",
+            "single_account_desc": "Vous ne possédez qu'un seul compte."
+        },
+        "invik_network": {
+            "title": "RÉSEAU INVIK INSTANTANÉ",
+            "desc": "Transférez des fonds en quelques millisecondes vers n'importe quel client INVIK BANK, sans frais."
+        },
+        "beneficiary_type": {
+            "saved": "Client Enregistré",
+            "new": "Nouveau Bénéficiaire"
+        },
+        "inputs": {
+            "select_invik": "Sélectionnez un client INVIK",
+            "select_beneficiary": "Sélectionnez un bénéficiaire",
+            "name": "Nom Complet",
+            "iban": "IBAN",
+            "bic": "BIC (optionnel)",
+            "email": "Email du bénéficiaire (optionnel)",
+            "save_invik": "Enregistrer ce bénéficiaire INVIK",
+            "save_beneficiary": "Enregistrer ce bénéficiaire pour de futurs virements"
+        },
+        "amount": {
+            "title": "Combien souhaitez-vous transférer ?",
+            "available": "Solde disponible :",
+            "insufficient_funds": "Attention : Le montant dépasse le solde disponible.",
+            "limit_exceeded": "Plafond maximum autorisé : 50 000 € par virement"
+        },
+        "review": {
+            "title": "Vérifiez les détails",
+            "from": "Depuis",
+            "to": "Vers",
+            "total": "Total",
+            "certified": "Virement Instantané Certifié",
+            "certified_desc": "Exécution immédiate via le réseau sécurisé INVIK BANK."
+        },
+        "success": {
+            "title": "VIREMENT EFFECTUÉ",
+            "review_title": "INFORMATIONS CAPITALES",
+            "new_button": "Faire un autre virement"
+        },
+        "history": {
+            "title": "Historique des virements récents",
+            "empty": "Aucun virement récent."
+        },
+        "buttons": {
+            "next": "Suivant",
+            "back": "Retour",
+            "confirm": "Confirmer",
+            "edit": "Modifier"
+        },
+        "errors": {
+            "invalid_amount": "Veuillez entrer un montant valide",
+            "insufficient_balance": "Solde insuffisant pour cette opération",
+            "limit_exceeded": "Le montant maximum par virement est de 50 000 €",
+            "check_beneficiary": "Veuillez vérifier les informations du bénéficiaire",
+            "not_invik_iban": "Cet IBAN n'appartient pas au réseau INVIK. Utilisez l'onglet 'Virement SEPA'.",
+            "invalid_iban": "Format IBAN invalide. Veuillez vérifier le numéro saisi."
+        },
+        "success_messages": {
+            "internal": "Virement interne réussi ! Votre solde a été mis à jour instantanément.",
+            "instant": "Virement instantané vers {{name}} réussi ! Fonds transférés immédiatement via le réseau INVIK.",
+            "pending": "Virement en attente de vérification de sécurité. Délai SEPA standard : 24h à 48h."
+        },
+        "mobile_title": "Nouveau Virement",
+        "form": {
+            "step_source": "1. Compte de départ",
+            "step_dest": "2. Compte de destination",
+            "step_dest_invik": "2. Destinataire INVIK",
+            "step_dest_beneficiary": "2. Bénéficiaire",
+            "step_amount": "Montant à virer",
+            "sending": "Envoi..."
+        }
+    },
+    "status": {
+        "pending": "En attente",
+        "rejected": "Refusé",
+        "completed": "Validé",
+        "done": "Terminé",
+        "in_review": "En cours d'examen",
+        "title": "Statut"
+    },
+    "cards": {
+        "title": "Mes Cartes",
+        "subtitle": "Gérez vos cartes physiques et virtuelles.",
+        "empty": {
+            "title": "Aucune carte active",
+            "desc": "Vous n'avez pas encore de carte associée à votre compte.",
+            "button": "Commander une carte"
+        },
+        "list_title": "Vos Cartes Actives ({{count}})",
+        "actions": {
+            "show_number": "Voir le numéro",
+            "hide_number": "Masquer",
+            "flip": "Tourner",
+            "block": "Bloquer",
+            "unblock": "Débloquer",
+            "disabled": "Désactivée",
+            "activate": "Activer",
+            "options": "Options",
+            "delete": "Suppr."
+        },
+        "details": {
+            "status": "Statut :",
+            "type": "Type :",
+            "limit": "Plafond :",
+            "updated": "Mise à jour :",
+            "holder": "TITULAIRE",
+            "expiry": "EXPIRE FIN",
+            "cvv": "CVV",
+            "support": "Support",
+            "title": "Détails de la carte",
+            "virtual_uppercase": "CARTE VIRTUELLE",
+            "physical_uppercase": "CARTE PHYSIQUE",
+            "property_notice": "Cette carte est la propriété de INVIK BANK SA. En cas de perte, veuillez la bloquer immédiatement depuis l'application.",
+            "active": "Active",
+            "inactive": "Désactivée",
+            "blocked": "Bloquée",
+            "virtual": "Virtuelle",
+            "physical": "Physique",
+            "recently": "Récemment"
+        },
+        "physical_order": {
+            "title": "Carte Physique",
+            "mobile_title": "Demander une carte physique",
+            "desc": "Recevez votre carte exclusive INVIK chez vous sous 3 à 5 jours ouvrés.",
+            "features": {
+                "withdrawals": "Retraits gratuits partout",
+                "contactless": "Paiement sans contact",
+                "design": "Design Noir Mat Premium"
+            },
+            "button": {
+                "order": "Commander maintenant",
+                "processing": "Demande en cours",
+                "shipped": "Carte expédiée",
+                "delivered": "Carte reçue ✅",
+                "cancel": "Annuler la demande"
+            },
+            "status": {
+                "pending": "Nous traitons votre demande",
+                "delivered": "Félicitations ! Votre carte est arrivée. Profitez bien de vos nouveaux avantages ! 🎁✨",
+                "shipped": "Votre carte est en route ! 🚀 Elle arrivera sous 3 à 5 jours.",
+                "rejected": "Dernière demande rejetée :",
+                "free": "Gratuit • Inclus dans votre offre"
+            }
+        },
+        "virtual_promo": {
+            "title": "Besoin d'une carte virtuelle ?",
+            "desc": "Créez une carte instantanément pour vos achats en ligne sécurisés.",
+            "button": "Créer une carte virtuelle"
+        },
+        "options_modal": {
+            "title": "Options de la carte",
+            "alias_label": "NOM DE LA CARTE (ALIAS)",
+            "alias_placeholder": "Ex: Achats Amazon, Perso...",
+            "limit_label": "PLAFOND MENSUEL (€)",
+            "limit_help": "Le plafond par défaut est de 2 000 €.",
+            "save": "Enregistrer les modifications"
+        },
+        "messages": {
+            "blocked": "Votre carte a été bloquée.",
+            "unblocked": "Votre carte a été débloquée.",
+            "order_success": "Votre demande de carte physique a été envoyée avec succès !",
+            "order_error": "Une erreur est survenue lors de la commande.",
+            "options_saved": "Paramètres de la carte mis à jour !",
+            "delete_confirm": "Voulez-vous vraiment supprimer définitivement cette carte de votre espace ? Cette action est irréversible.",
+            "delete_success": "Carte supprimée avec succès.",
+            "request_cancel_confirm": "Annuler et supprimer cette demande de carte ?",
+            "request_cancelled": "Demande annulée."
+        }
+    },
+    "credits": {
+        "title": "Crédits & Financements",
+        "subtitle": "Simulez votre projet et obtenez une réponse en 24h.",
+        "form": {
+            "simulator_title": "Simulateur",
+            "your_simulation": "Votre simulation",
+            "project_type": "Type de projet",
+            "project_description": "Description du projet (Obligatoire)",
+            "project_description_placeholder": "Détaillez votre projet en quelques lignes...",
+            "specific_project": "Votre projet spécifique",
+            "specific_project_placeholder": "Décrivez brièvement votre projet...",
+            "amount": "Montant du prêt",
+            "months": "Durée du remboursement",
+            "interest_rate": "Taux d'intérêt (TAEG)",
+            "monthly_payment": "Mensualité",
+            "monthly_payment_est": "estimée",
+            "apply_button": "Demander ce prêt",
+            "apply_button_official": "Faire une demande officielle",
+            "processing": "Traitement...",
+            "sending": "Envoi...",
+            "years": "ans",
+            "months_label": "mois"
+        },
+        "types": {
+            "personnel": "Prêt Personnel",
+            "immobilier": "Crédit Immobilier",
+            "vehicule": "Crédit Véhicule",
+            "professionnel": "Projet Professionnel",
+            "autre": "Autre (Préciser...)"
+        },
+        "status": {
+            "pending": "Étude en cours",
+            "approved": "Approuvé ✅",
+            "rejected": "Refusé",
+            "dossier_title": "Dossier en cours d'étude",
+            "dossier_desc": "Nous étudions actuellement votre demande de {{amount}} €.",
+            "dossier_notice": "Vous serez informé de la progression en temps réel par mail. Pour toute modification, contactez le support."
+        },
+        "history": {
+            "title": "Mes demandes",
+            "tracking": "Suivi des demandes",
+            "empty": "Aucune demande en cours.",
+            "empty_desktop": "Vos demandes de crédit apparaîtront ici."
+        },
+        "messages": {
+            "already_pending": "Vous avez déjà une demande en cours.",
+            "description_short": "Veuillez décrire votre projet (min. 10 caractères).",
+            "success": "Demande envoyée ! Un conseiller vous contactera.",
+            "error": "Erreur lors de la demande.",
+            "confirm_title": "Confirmer votre demande",
+            "confirm_button": "Confirmer et Envoyer",
+            "credit_opened": "Votre Compte Crédit a été ouvert et les fonds versés.",
+            "credit_available_title": "Crédit Approuvé 🎉",
+            "credit_available_desc": "Votre demande de crédit de {{amount}} € a été approuvée. Les fonds sont disponibles.",
+            "congrats": "Félicitations ! Votre crédit de {{amount}} € est disponible."
+        },
+        "support": {
+            "contact_btn": "Contacter le support",
+            "need_help": "Besoin d'un accompagnement ?",
+            "advisors_desc": "Nos conseillers sont disponibles pour étudier votre dossier complexe.",
+            "contact_advisor": "Contacter un conseiller",
+            "fonds_avail": "Fonds disponibles sur votre espace",
+            "access_btn": "Accéder à mon Crédit"
+        }
+    },
+    "deposit": {
+        "title": "Rechargement",
+        "subtitle": "Alimentez votre compte en toute sécurité.",
+        "methods": {
+            "card": {
+                "title": "Carte Bancaire",
+                "desc": "Crédit immédiat"
+            },
+            "bank": {
+                "title": "Virement SEPA",
+                "desc": "2-3 jours ouvrés"
+            }
+        },
+        "form": {
+            "amount_label": "Montant à créditer",
+            "amount_placeholder": "0.00",
+            "card_number": "Numéro de carte",
+            "holder_label": "TITULAIRE",
+            "holder_placeholder": "NOM PRENOM",
+            "expiry_label": "EXP",
+            "cvc_label": "CVC / CVV",
+            "target_account": "Compte cible",
+            "account_types": {
+                "main": "Compte Principal",
+                "savings": "Compte Épargne"
+            },
+            "submit_card": "Recharger {{amount}} €",
+            "enter_amount": "Saisissez un montant",
+            "invalid_card": "Numéro de carte invalide",
+            "invalid_expiry": "Date d'expiration invalide",
+            "invalid_cvc": "CVC invalide",
+            "pay": "Payer {{amount}} EUR",
+            "secure_notice": "Transaction sécurisée SSL"
+        },
+        "bank_details": {
+            "title": "Virement Bancaire",
+            "desc": "Utilisez les coordonnées ci-dessous pour effectuer votre virement depuis votre autre banque.",
+            "beneficiary": "Bénéficiaire",
+            "bank_name": "Banque",
+            "bic": "BIC / SWIFT",
+            "iban": "IBAN",
+            "processing_delay": "Le délai de traitement est de 24 à 48h ouvrées.",
+            "copy_toast": "{{label}} copié dans le presse-papier !",
+            "header": "Détails du virement"
+        },
+        "history": {
+            "title": "Vos rechargements récents",
+            "empty": "Aucun dépôt récent.",
+            "methods": {
+                "card": "Carte",
+                "transfer": "Virement"
+            }
+        },
+        "messages": {
+            "check_card": "Veuillez vérifier les informations de votre carte.",
+            "success": "Votre demande de rechargement est en cours de traitement. Votre solde sera actualisé sous peu.",
+            "pending_alert": "Un dépôt est actuellement en cours de traitement sur votre compte."
+        },
+        "pagination": {
+            "page": "Page {{current}} sur {{total}}"
+        }
+    },
+    "sidebar": {
+        "nav": {
+            "dashboard": "Mon Espace Client",
+            "accounts": "Mes Comptes",
+            "transfers": "Virements",
+            "beneficiaries": "Bénéficiaires",
+            "deposit": "Dépôt / Recharger",
+            "cards": "Mes Cartes",
+            "credits": "Crédits",
+            "history": "Historique",
+            "documents": "Documents",
+            "support": "Support client",
+            "settings": "Paramètres"
+        },
+        "user": {
+            "account_type": "Compte {{type}}"
+        },
+        "logout": "Déconnexion"
+    },
+    "beneficiaries": {
+        "title": "Bénéficiaires",
+        "subtitle": "Gérez vos destinataires de virement.",
+        "stats": {
+            "total": "{{count}} Bénéficiaires",
+            "invik": "{{count}} Instants"
+        },
+        "empty": {
+            "title": "Aucun bénéficiaire",
+            "subtitle": "Ajoutez votre premier bénéficiaire pour commencer vos virements.",
+            "search_no_results": "Aucun résultat pour votre recherche.",
+            "search_try_again": "Réessayez avec un autre nom ou IBAN."
+        },
+        "card": {
+            "iban_prefix": "IBAN",
+            "bic_prefix": "BIC",
+            "email_prefix": "Email",
+            "actions": {
+                "transfer": "Transférer",
+                "quick_transfer": "Virement Rapide",
+                "delete": "Supprimer"
+            }
+        },
+        "form": {
+            "add_title": "Ajouter un Bénéficiaire",
+            "new_title": "Nouveau Bénéficiaire",
+            "name_label": "NOM COMPLET",
+            "name_placeholder": "Ex: Jean Dupont",
+            "iban_label": "IBAN",
+            "iban_placeholder": "FR76 ...",
+            "bic_label": "BIC (OPTIONNEL)",
+            "bic_placeholder": "Optionnel",
+            "email_label": "EMAIL (OPTIONNEL)",
+            "email_placeholder": "Optionnel",
+            "submit": "Ajouter le bénéficiaire",
+            "confirm_submit": "Confirmer l'ajout",
+            "validation": {
+                "iban_invalid": "Format IBAN invalide",
+                "iban_valid": "IBAN valide"
+            }
+        },
+        "search_placeholder": "Rechercher un bénéficiaire...",
+        "toasts": {
+            "add_success": "Bénéficiaire ajouté avec succès !",
+            "add_error": "Erreur lors de l'ajout du bénéficiaire.",
+            "delete_success": "Bénéficiaire supprimé.",
+            "delete_error": "Erreur lors de la suppression du bénéficiaire."
+        },
+        "confirm_delete": "Êtes-vous sûr de vouloir supprimer ce bénéficiaire ?"
+    },
+    "history": {
+        "title": "Historique des opérations",
+        "subtitle": "Consultez et exportez vos transactions en détail.",
+        "empty": "Aucune opération trouvée.",
+        "columns": {
+            "date": "DATE",
+            "type": "TYPE",
+            "category": "CATÉGORIE",
+            "amount": "MONTANT",
+            "fees": "FRAIS"
+        },
+        "types": {
+            "deposit": "Dépôt sur compte",
+            "transfer_internal": "Virement vers {{name}}",
+            "transfer_instant": "Virement instantané -> {{name}}",
+            "receive_instant": "Virement instantané reçu",
+            "transfer_external": "Virement SEPA -> {{name}}",
+            "operation": "Opération bancaire",
+            "internal_account": "Compte interne",
+            "beneficiary": "Bénéficiaire",
+            "unknown": "Inconnu"
+        },
+        "details": {
+            "from": "De : {{name}}",
+            "ref": "Réf :",
+            "fee_label": "Frais :",
+            "uncategorized": "À catégoriser",
+            "to": "À : {{name}}",
+            "iban_label": "IBAN : {{iban}}",
+            "sender": "Expéditeur : {{name}}",
+            "recipient": "Destinataire : {{name}}"
+        }
+    },
+    "settings": {
+        "title": "Paramètres du Compte",
+        "subtitle": "Consultez et modifiez les informations de votre profil bancaire.",
+        "tabs": {
+            "profile": "Profil",
+            "security": "Sécurité",
+            "prefs": "Réglages",
+            "my_info": "Mes Informations",
+            "security_access": "Sécurité & Accès",
+            "preferences": "Préférences"
+        },
+        "profile": {
+            "title": "Informations Personnelles",
+            "client_folder": "Dossier Client",
+            "login_id": "IDENTIFIANT DE CONNEXION",
+            "email_contact": "EMAIL DE CONTACT",
+            "email_verified": "Email Vérifié",
+            "first_name": "Prénom",
+            "last_name": "Nom",
+            "dob": "Date de naissance",
+            "pob": "Lieu de naissance",
+            "phone": "Téléphone",
+            "nationality": "Nationalité",
+            "address": "Adresse de résidence",
+            "city": "Ville",
+            "zip": "Code Postal",
+            "location": "Localisation",
+            "save_btn": "Enregistrer les réglages",
+            "update_btn": "Mettre à jour les paramètres"
+        },
+        "security": {
+            "title": "Sécurité de l'Authentification",
+            "password_title": "Sécurité du Mot de Passe",
+            "password_desc": "Un mot de passe fort protège votre compte bancaire des accès non autorisés.",
+            "new_password": "Nouveau Mot de Passe",
+            "confirm_password": "Confirmer le Mot de Passe",
+            "update_pwd_btn": "Mettre à jour le mot de passe",
+            "update_access_btn": "Mettre à jour mon accès",
+            "strength": {
+                "label": "Force :",
+                "weak": "Faible",
+                "medium": "Moyen",
+                "excellent": "Excellent"
+            },
+            "protection_level": "NIVEAU DE PROTECTION",
+            "optimal_verified": "Optimal et Vérifié",
+            "security_tips": "CONSEILS DE SÉCURITÉ",
+            "security_reqs": "Exigences de sécurité",
+            "tip_8_chars": "Au moins 8 caractères",
+            "tip_caps": "Une majuscule et un chiffre",
+            "tip_special": "Un caractère spécial (!@#$)",
+            "tip_avoid_personal": "Évitez les informations personnelles",
+            "last_mod": "Dernière modification",
+            "days_ago": "Il y a {{count}} jours",
+            "encrypted_storage": "Stockage Chiffré",
+            "protected_aes": "Protégé par AES-256"
+        },
+        "advisor": {
+            "title": "MON CONSEILLER FINANCIER",
+            "role": "Conseiller Senior en Gestion de Patrimoine",
+            "available": "Actuellement disponible",
+            "email_label": "EMAIL PROFESSIONNEL",
+            "phone_label": "LIGNE DIRECTE"
+        },
+        "preferences": {
+            "title": "Préférences de Compte",
+            "personalization": "Personnalisation",
+            "lang_label": "Langue de l'interface",
+            "lang_desc": "Langue utilisée pour les menus et relevés."
+        },
+        "messages": {
+            "success": "Paramètres mis à jour avec succès.",
+            "error": "Une erreur est survenue.",
+            "pwd_mismatch": "Les mots de passe ne correspondent pas.",
+            "pwd_short": "Le mot de passe doit contenir au moins 8 caractères.",
+            "pwd_success": "Mot de passe mis à jour avec succès.",
+            "pwd_error": "Erreur lors du changement. Veuillez vous reconnecter."
+        }
+    },
+    "support": {
+        "title": "Assistance & Support",
+        "subtitle": "Consultez l'aide en ligne ou échangez avec un conseiller.",
+        "faq": {
+            "title": "FAQ & Aide rapide",
+            "q1": {
+                "q": "Virements non reçus",
+                "a": "Un virement SEPA classique prend généralement 1 à 2 jours ouvrables. Si vous attendez un virement international, cela peut prendre jusqu'à 5 jours. Vérifiez que l'IBAN fourni est correct."
+            },
+            "q2": {
+                "q": "Plafonds de carte",
+                "a": "Vous pouvez consulter vos plafonds actuels dans la section 'Cartes'. Pour une augmentation temporaire ou permanente, veuillez contacter votre conseiller via un ticket de support."
+            },
+            "q3": {
+                "q": "Sécuriser mon compte",
+                "a": "Activez toujours l'authentification à deux facteurs (2FA). Ne partagez jamais vos codes reçus par SMS. En cas de doute sur une transaction, bloquez immédiatement votre carte depuis l'application."
+            },
+            "q4": {
+                "q": "Frais bancaires",
+                "a": "Nos tarifs sont transparents. Le compte standard est gratuit. Les frais de tenue de compte pour les comptes premium sont prélevés mensuellement. Consultez notre grille tarifaire dans 'Documents'."
+            },
+            "q5": {
+                "q": "Mot de passe oublié",
+                "a": "Cliquez sur 'Mot de passe oublié' sur la page de connexion. Un lien de réinitialisation vous sera envoyé par email instantanément."
+            }
+        },
+        "tickets": {
+            "title": "Mes demandes",
+            "new_btn": "Nouveau ticket",
+            "subject_placeholder": "Sujet",
+            "message_placeholder": "Détaillez votre demande pour un traitement plus rapide...",
+            "create_btn": "Créer le ticket",
+            "send_btn": "Envoyer le ticket",
+            "cancel_btn": "Annuler",
+            "empty": "Vous n'avez aucun ticket de support actif.",
+            "opened_on": "Ouvert le {{date}}",
+            "status": {
+                "open": "EN COURS",
+                "resolved": "RÉSOLU",
+                "online": "Support en ligne",
+                "resolved_msg": "Ticket résolu",
+                "closed": "Clôturé"
+            },
+            "categories": {
+                "technical": "Problème technique",
+                "billing": "Question sur les frais",
+                "cards": "Gestion des cartes",
+                "other": "Autre"
+            }
+        },
+        "chat": {
+            "reply_placeholder": "Répondre...",
+            "input_placeholder": "Décrivez votre problème ou posez une question...",
+            "send": "Envoyer",
+            "resolved_notice": "Ce ticket a été marqué comme résolu. Si vous avez une autre question, merci d'ouvrir un nouveau ticket.",
+            "starting": "Démarrage de la discussion...",
+            "support_name": "Support INVIK"
+        },
+        "messages": {
+            "success": "Ticket créé avec succès",
+            "error": "Erreur lors de l'envoi",
+            "msg_error": "Erreur lors de l'envoi du message"
+        }
+    },
+    "documents": {
+        "title": "Mes Documents",
+        "subtitle": "Téléchargez vos relevés d'identité bancaire et attestations officielles.",
+        "sections": {
+            "rib": "Relevés d'Identité Bancaire (RIB)",
+            "contracts": "Attestations & Contrats"
+        },
+        "rib": {
+            "title": "RIB - {{name}}",
+            "holder": "Titulaire du compte",
+            "bank": "ÉTABLISSEMENT BANCAIRE",
+            "bank_code": "Code Banque",
+            "branch_code": "Code Guichet",
+            "account_number": "Numéro de compte",
+            "key": "Clé RIB",
+            "iban": "IBAN",
+            "bic": "BIC (SWIFT)",
+            "download_pdf": "Télécharger PDF",
+            "print": "Imprimer",
+            "share_msg": "Voici mon RIB pour le compte {{name}} (IBAN: {{iban}})",
+            "not_defined": "Non défini"
+        },
+        "contract": {
+            "title": "Contrat d'ouverture",
+            "client_contract": "Contrat Client",
+            "signed_on": "Signé le {{date}}",
+            "download": "TÉLÉCHARGER PDF",
+            "pdf_title": "CONTRAT D'OUVERTURE DE COMPTE PARTICULIER",
+            "parties": "ENTRE LES SOUSSIGNÉS :",
+            "bank_party": "1. L'établissement bancaire INVIK S.A., ci-après dénommé 'La Banque'.",
+            "client_party": "2. M./Mme {{name}}, ci-après dénommé 'Le Client'.",
+            "residing_at": "Demeurant au : {{address}}, {{zip}} {{city}}",
+            "object_title": "OBJET DU CONTRAT",
+            "object_text": "Le présent contrat a pour objet de définir les conditions générales et particulières d'ouverture et de fonctionnement des comptes ouverts au nom du Client dans les livres de INVIK S.A.",
+            "terms_title": "CONDITIONS D'UTILISATION",
+            "terms_1": "- Le Client bénéficie d'un accès permanent à ses comptes via l'interface digitale sécurisée.",
+            "terms_2": "- La Banque s'engage à assurer la sécurité des fonds et la confidentialité des données conformément au RGPD.",
+            "terms_3": "- Le Client est responsable du maintien de la confidentialité de ses accès bancaires.",
+            "terms_4": "- Les opérations de virement et de paiement sont soumises aux plafonds définis dans les conditions tarifaires.",
+            "duration_title": "DURÉE ET RÉSILIATION",
+            "duration_text": "Ce contrat est conclu pour une durée indéterminée. Chaque partie peut y mettre fin à tout moment sous réserve d'un préavis de 30 jours, conformément à la réglementation en vigueur.",
+            "signatures_title": "SIGNATURES",
+            "made_at": "Fait à Luxembourg, le {{date}}",
+            "client_sig": "Signature du Client",
+            "certified_sig": "(Signature numérique certifiée)",
+            "bank_sig": "Pour INVIK S.A."
+        },
+        "branding": {
+            "tagline": "Banque Digitale Premium",
+            "legal_1": "Ce document est un acte officiel généré par les services numériques de INVIK S.A.",
+            "legal_2": "INVIK S.A. - S.A. de droit luxembourgeois - RCS Luxembourg B 138.554 - Capital 31.000.000 EUR",
+            "legal_3": "Siège social : 51, Boulevard Grande-Duchesse Charlotte, L-1331 Luxembourg"
+        },
+        "messages": {
+            "rib_success": "RIB généré avec succès !",
+            "rib_error": "Erreur lors de la génération du RIB",
+            "contract_success": "Contrat généré avec succès !",
+            "contract_error": "Erreur lors de la génération du contrat",
+            "iban_copied": "IBAN copié dans le presse-papier !",
+            "empty": "Aucun document disponible.",
+            "available": "Dispo."
+        }
+    },
+    "kyc": {
+        "title": "Vérification d'identité (KYC)",
+        "subtitle": "Pour sécuriser votre compte, veuillez nous transmettre un justificatif d'identité et les documents complémentaires requis.",
+        "status": {
+            "submitted": "Vos documents sont déjà en cours d'examen.",
+            "verified": "Votre compte est déjà vérifié.",
+            "action_required": "Action requise :",
+            "rejection_msg": "Certains documents doivent être renvoyés."
+        },
+        "sections": {
+            "required": "(OBLIGATOIRE)",
+            "identity": "1. Justificatif d’identité",
+            "identity_sub": "Choisissez un premier document valide (CNI, Passeport, etc.)",
+            "biometric": "2. Vérification biométrique",
+            "biometric_sub": "Photos récentes pour confirmer votre identité.",
+            "address": "3. Justificatif de domicile",
+            "address_sub": "Document officiel datant de moins de 3 mois.",
+            "income": "4. Justificatifs de revenus",
+            "income_sub": "Selon votre situation (Salarié, Retraité, etc.).",
+            "bank": "5. Justificatif bancaire",
+            "bank_sub": "Relevé d'Identité Bancaire (RIB / IBAN).",
+            "bank_notice": "Le RIB doit impérativement être au nom du demandeur (titulaire exclusif)."
+        },
+        "labels": {
+            "type_doc": "Type de document",
+            "select_type": "Sélectionner le type de document",
+            "front": "Recto / Page principale",
+            "back": "Verso (si applicable)",
+            "load_front": "Charger le recto",
+            "load_back": "Charger le verso",
+            "load_doc": "Charger le document",
+            "selfie": "Selfie Simple",
+            "selfie_hint": "Sans filtre ni lunettes",
+            "face_clear": "Visage dégagé",
+            "selfie_id": "Selfie avec document",
+            "selfie_id_hint": "Doit être lisible",
+            "hold_id": "Tenez votre pièce d'identité",
+            "example": "Voir un exemple",
+            "loaded": "Document chargé",
+            "example_ref": "Référence pour un envoi conforme",
+            "back_btn": "Retour",
+            "submit_btn": "Soumettre mon dossier complet",
+            "sending": "Envoi sécurisé...",
+            "securing_sending": "Sécurisation et envoi..."
+        },
+        "types": {
+            "id": {
+                "cni": "Carte Nationale d'Identité (CNI)",
+                "passport": "Passeport",
+                "driver": "Permis de conduire",
+                "residence": "Titre de séjour"
+            },
+            "address": {
+                "utility": "Facture d'électricité / Gaz / Eau",
+                "telecom": "Facture Internet / Téléphone fixe",
+                "tax": "Avis d'imposition",
+                "insurance": "Attestation d'assurance habitation",
+                "rent": "Quittance de loyer",
+                "hosting": "Attestation d'hébergement + ID hébergeant"
+            },
+            "income": {
+                "payslip": "3 derniers bulletins de salaire",
+                "contract": "Contrat de travail",
+                "tax": "Dernier avis d'imposition",
+                "kbis": "Extrait Kbis (Entrepreneur)",
+                "pension": "Relevé de pension (Retraité)",
+                "unemployment": "Attestation Pôle Emploi",
+                "statement": "Relevé bancaire récent"
+            }
+        },
+        "messages": {
+            "file_too_large": "Le fichier est trop volumineux (max 5Mo)",
+            "upload_error": "Erreur d'upload",
+            "select_id_type": "Veuillez sélectionner un type de document d'identité.",
+            "missing_files": "Veuillez fournir tous les justificatifs obligatoires.",
+            "success": "Dossier KYC complet soumis avec succès !",
+            "error": "Une erreur est survenue lors de l'envoi : "
+        },
+        "legal": "Les documents fournis sont utilisés exclusivement à des fins de vérification d’identité (KYC), de lutte contre la fraude et de conformité réglementaire. Ils sont traités de manière sécurisée et confidentielle conformément au RGPD."
+    },
+    "header": {
+        "search_placeholder": "Rechercher une transaction...",
+        "profile_title": "Paramètres du compte"
+    },
+    "banner": {
+        "loading": "Chargement de la vérification...",
+        "toasts": {
+            "verified": "Votre identité est vérifiée. Vous avez accès à toutes les fonctionnalités.",
+            "submitted": "Vos documents sont en cours d'analyse. Vous serez notifié dès que la vérification sera terminée."
+        },
+        "status": {
+            "verified": "Compte Vérifié",
+            "submitted": "En cours...",
+            "rejected": "Rejeté (Détails)",
+            "verify_now": "Vérifier Identité",
+            "click_to_verify": "Cliquez pour vérifier"
+        },
+        "blocking": {
+            "refused": "Validation Refusee",
+            "in_progress": "Vérification en cours",
+            "required": "Vérification Requise",
+            "motif": "Motif :",
+            "not_compliant": "Certains documents ne sont pas conformes. Veuillez les soumettre à nouveau.",
+            "analyzing": "Nous analysons vos documents. Cette procédure prend généralement moins de 24h.",
+            "restricted": "Pour des raisons de sécurité et de conformité, l'accès à cette fonctionnalité est restreint. Veuillez compléter votre vérification d'identité pour débloquer votre compte.",
+            "waiting": "En attente de validation",
+            "start": "Commencer la vérification",
+            "secure": "Données chiffrées & Sécurisées"
+        },
+        "legacy": {
+            "action_required": "Action requise sur votre KYC",
+            "identity_required": "Vérification d'identité requise",
+            "not_validated": "Votre dossier n'a pas pu être validé en l'état.",
+            "complete_kyc": "Pour accéder à toutes les fonctionnalités de votre compte, veuillez compléter votre vérification KYC.",
+            "fix_file": "Corriger mon dossier",
+            "verify_identity": "Vérifier mon identité"
+        }
+    },
+    "about_page": {
+        "hero": {
+            "title": "À propos d'INVIK SA",
+            "subtitle": "L'excellence bancaire au service de vos ambitions."
+        },
+        "history": {
+            "title": "Notre Histoire",
+            "p1": "Fondée en 2009 au Luxembourg, INVIK SA est née d'une vision audacieuse de redéfinir l'expérience bancaire pour l'ère numérique. Nos fondateurs, experts en finance et technologie, ont identifié un besoin crucial : offrir des services bancaires modernes sans compromettre la sécurité ni les relations humaines.",
+            "p2": "Depuis nos débuts, nous avons connu une croissance remarquable, passant de quelques centaines de clients à plus de 500 000 utilisateurs actifs à travers l'Europe. Cette expansion témoigne de notre engagement constant envers l'innovation et l'excellence du service client.",
+            "p3": "Aujourd'hui, INVIK SA est reconnue comme l'une des banques en ligne les plus fiables et innovantes d'Europe, avec une présence établie au Luxembourg, en France, en Belgique et en Allemagne."
+        },
+        "services": {
+            "title": "Nos Services",
+            "subtitle": "Des solutions bancaires complètes adaptées à vos besoins",
+            "items": {
+                "accounts": {
+                    "title": "Comptes & Cartes",
+                    "text": "Comptes courants, épargne, cartes bancaires internationales avec protection contre la fraude"
+                },
+                "transfers": {
+                    "title": "Virements Internationaux",
+                    "text": "Transferts rapides et sécurisés vers plus de 150 pays avec des frais compétitifs"
+                },
+                "business": {
+                    "title": "Solutions Entreprises",
+                    "text": "Comptes professionnels, gestion de trésorerie, financement et services dédiés aux PME"
+                },
+                "invest": {
+                    "title": "Investissements",
+                    "text": "Accès à des produits d'investissement diversifiés avec accompagnement personnalisé"
+                },
+                "loans": {
+                    "title": "Crédits & Prêts",
+                    "text": "Prêts personnels, immobiliers et professionnels avec des taux compétitifs"
+                },
+                "insurance": {
+                    "title": "Assurances",
+                    "text": "Protection complète : voyage, santé, vie et biens avec des partenaires de confiance"
+                }
+            }
+        },
+        "vision": {
+            "title": "Notre Vision 2025-2035",
+            "subtitle": "Une feuille de route ambitieuse pour devenir la banque digitale de référence en Europe",
+            "phases": {
+                "p1": {
+                    "year": "2025-2027",
+                    "title": "Phase 1 : Consolidation & Expansion",
+                    "items": [
+                        "✓ Atteindre 1 million de clients actifs en Europe",
+                        "✓ Lancement dans 5 nouveaux pays (Espagne, Italie, Pays-Bas, Autriche, Portugal)",
+                        "✓ Développement d'une app mobile nouvelle génération avec IA intégrée",
+                        "✓ Partenariats avec 50 fintechs européennes pour enrichir notre écosystème",
+                        "✓ Certification ISO 27001 pour la sécurité des données",
+                        "✓ Lancement d'INVIK Business Pro pour les PME"
+                    ]
+                },
+                "p2": {
+                    "year": "2028-2030",
+                    "title": "Phase 2 : Innovation & Leadership",
+                    "items": [
+                        "✓ 3 millions de clients dans 15 pays européens",
+                        "✓ Lancement d'INVIK Invest : plateforme d'investissement automatisée",
+                        "✓ Introduction de services bancaires basés sur la blockchain",
+                        "✓ Neutralité carbone totale de toutes nos opérations",
+                        "✓ Création d'un fonds d'investissement de 100M€ pour les startups vertes",
+                        "✓ Ouverture de 10 hubs d'innovation dans les capitales européennes",
+                        "✓ Lancement du programme INVIK Academy pour l'éducation financière"
+                    ]
+                },
+                "p3": {
+                    "year": "2031-2033",
+                    "title": "Phase 3 : Transformation Digitale",
+                    "items": [
+                        "✓ 5 millions de clients avec présence dans 20+ pays",
+                        "✓ Assistant financier IA personnalisé pour chaque client",
+                        "✓ Intégration complète des cryptomonnaies et actifs numériques",
+                        "✓ Lancement d'INVIK Metaverse Banking Experience",
+                        "✓ Partenariats avec 500+ entreprises pour solutions B2B",
+                        "✓ Programme d'inclusion financière touchant 100 000 personnes non bancarisées",
+                        "✓ Développement de solutions de paiement instantané transfrontalier"
+                    ]
+                }
+            }
+        },
+        "goals": {
+            "title": "Objectifs Clés 2035",
+            "items": {
+                "clients": {
+                    "number": "10M+",
+                    "label": "Clients Actifs",
+                    "desc": "À travers l'Europe et au-delà"
+                },
+                "assets": {
+                    "number": "50Mds€",
+                    "label": "Actifs Sous Gestion",
+                    "desc": "Croissance annuelle de 35%"
+                },
+                "countries": {
+                    "number": "25+",
+                    "label": "Pays de Présence",
+                    "desc": "Couverture européenne complète"
+                },
+                "carbon": {
+                    "number": "100%",
+                    "label": "Neutre en Carbone",
+                    "desc": "Impact environnemental positif"
+                }
+            }
+        },
+        "partners": {
+            "title": "Partenaires & Actionnaires",
+            "subtitle": "Des partenariats stratégiques au service de votre réussite",
+            "shareholders": {
+                "title": "Actionnaires Principaux",
+                "lfg": "Leader européen de l'investissement financier",
+                "lfg_role": "Actionnaire Majoritaire - 45%",
+                "etv": "Spécialiste des fintechs innovantes",
+                "etv_role": "Investisseur Stratégique - 25%",
+                "cpi": "Fonds d'investissement de premier plan",
+                "cpi_role": "Investisseur Institutionnel - 20%"
+            },
+            "ecosystem": {
+                "title": "Écosystème & Partenaires"
+            },
+            "clients": {
+                "title": "Grands Comptes & Clients Corporate",
+                "subtitle": "Plus de 15 000 entreprises nous font confiance",
+                "cta": "DEVENIR CLIENT CORPORATE"
+            }
+        }
+    },
+    "faq_page": {
+        "hero": {
+            "title": "FOIRE AUX QUESTIONS",
+            "breadcrumb": "ACCUEIL / FAQ"
+        },
+        "items": [
+            {
+                "question": "Comment ouvrir un compte chez INVIK SA ?",
+                "answer": "L'ouverture d'un compte est 100% en ligne et ne prend que 10 minutes. Cliquez sur 'Ouvrir un compte', remplissez le formulaire avec vos informations personnelles, téléchargez une pièce d'identité valide, et validez. Vous recevrez un email de confirmation et pourrez accéder à votre espace client immédiatement."
+            },
+            {
+                "question": "Quels sont les frais bancaires ?",
+                "answer": "INVIK SA propose une tarification transparente et compétitive. Le compte courant standard est gratuit sans frais de tenue de compte. Les virements SEPA en zone euro sont gratuits. Les retraits dans la zone euro sont illimités et gratuits. Consultez notre grille tarifaire complète dans votre espace client."
+            },
+            {
+                "question": "Comment fonctionne la sécurité de mon compte ?",
+                "answer": "Votre sécurité est notre priorité absolue. Nous utilisons un chiffrement SSL 256 bits pour toutes les transactions, une authentification à deux facteurs (2FA) obligatoire, une surveillance 24/7 des transactions suspectes, et des notifications instantanées pour chaque opération. Vos données sont stockées dans des datacenters sécurisés certifiés ISO 27001."
+            },
+            {
+                "question": "Puis-je obtenir un crédit immobilier ?",
+                "answer": "Oui, INVIK SA propose des crédits immobiliers avec des taux compétitifs à partir de 1,2% TAEG. Utilisez notre simulateur en ligne pour obtenir une estimation instantanée. Un conseiller dédié vous accompagnera tout au long du processus, de la simulation à la signature électronique du contrat."
+            },
+            {
+                "question": "Comment contacter le service client ?",
+                "answer": "Notre service client est disponible 7j/7 par chat en direct dans votre espace client (réponse en moins de 2 minutes), par email à support@inviksa.com, ou par téléphone au +33 1 23 45 67 89 (du lundi au vendredi, 9h-19h). Pour les urgences (perte/vol de carte), notre ligne est disponible 24h/24."
+            },
+            {
+                "question": "Mes dépôts sont-ils garantis ?",
+                "answer": "Oui, tous les dépôts sont garantis jusqu'à 100 000€ par le Fonds de Garantie des Dépôts et de Résolution (FGDR) conformément à la réglementation européenne. INVIK SA est une banque agréée et supervisée par la Commission de Surveillance du Secteur Financier (CSSF) du Luxembourg."
+            },
+            {
+                "question": "Puis-je utiliser mon compte à l'étranger ?",
+                "answer": "Absolument ! Votre carte INVIK est acceptée dans le monde entier partout où Visa/Mastercard est accepté. Les retraits et paiements en zone euro sont gratuits. Hors zone euro, des frais minimes s'appliquent (consultez notre grille tarifaire). Vous pouvez également gérer votre compte depuis n'importe où via notre application mobile."
+            },
+            {
+                "question": "Comment fonctionne l'application mobile ?",
+                "answer": "L'application INVIK (disponible sur iOS et Android) vous permet de consulter vos comptes en temps réel, effectuer des virements instantanés, bloquer/débloquer votre carte en un clic, déposer des chèques par photo, contacter le support par chat, et recevoir des notifications pour chaque transaction. L'app utilise la biométrie (empreinte/Face ID) pour une sécurité maximale."
+            },
+            {
+                "question": "Quels documents sont nécessaires pour l'ouverture de compte ?",
+                "answer": "Pour ouvrir un compte, vous aurez besoin d'une pièce d'identité valide (carte d'identité, passeport ou titre de séjour), d'un justificatif de domicile de moins de 3 mois (facture, quittance de loyer, avis d'imposition), et d'un selfie pour vérification d'identité. Tous les documents peuvent être téléchargés directement en ligne."
+            },
+            {
+                "question": "Puis-je avoir plusieurs comptes ?",
+                "answer": "Oui, vous pouvez ouvrir plusieurs types de comptes : un compte courant principal, un compte épargne avec taux d'intérêt attractif, un compte devise pour vos transactions internationales, et des comptes projets pour organiser votre budget. Tous sont gérables depuis la même interface et sans frais supplémentaires."
+            }
+        ],
+        "cta": {
+            "title": "Vous n'avez pas trouvé de réponse ?",
+            "text": "Notre équipe d'experts est là pour vous aider. Contactez-nous et nous vous répondrons dans les plus brefs délais.",
+            "buttons": {
+                "open_account": "OUVRIR UN COMPTE",
+                "contact": "NOUS CONTACTER"
+            }
+        }
+    },
+    "services_page": {
+        "hero": {
+            "title": "NOS SERVICES BANCAIRES",
+            "breadcrumb": "ACCUEIL / SERVICES"
+        },
+        "intro": {
+            "subtitle": "VOTRE PARTENAIRE FINANCIER",
+            "title": "Des solutions bancaires complètes pour tous vos projets"
+        },
+        "services_list": [
+            {
+                "id": 1,
+                "title": "Comptes & Cartes Bancaires",
+                "description": "Gérez votre argent au quotidien avec nos comptes courants et cartes premium",
+                "features": [
+                    "Compte courant gratuit sans frais cachés",
+                    "Carte Visa/Mastercard internationale",
+                    "Retraits gratuits illimités en zone euro",
+                    "Application mobile intuitive",
+                    "Virements SEPA instantanés gratuits"
+                ],
+                "cta": "OUVRIR UN COMPTE"
+            },
+            {
+                "id": 2,
+                "title": "Virements Internationaux",
+                "description": "Transférez de l'argent partout dans le monde rapidement et en toute sécurité",
+                "features": [
+                    "Transferts vers plus de 150 pays",
+                    "Taux de change compétitifs en temps réel",
+                    "Frais transparents et réduits",
+                    "Exécution rapide (24-48h)",
+                    "Suivi en temps réel de vos virements"
+                ],
+                "cta": "FAIRE UN VIREMENT"
+            },
+            {
+                "id": 3,
+                "title": "Solutions Professionnelles",
+                "description": "Des outils bancaires puissants pour développer votre entreprise",
+                "features": [
+                    "Compte professionnel dédié",
+                    "Gestion multi-utilisateurs",
+                    "Cartes corporate pour vos équipes",
+                    "Outils de comptabilité intégrés",
+                    "Financement et lignes de crédit"
+                ],
+                "cta": "DÉCOUVRIR"
+            },
+            {
+                "id": 4,
+                "title": "Épargne & Investissements",
+                "description": "Faites fructifier votre argent avec nos solutions d'épargne et d'investissement",
+                "features": [
+                    "Livrets d'épargne rémunérés",
+                    "Accès aux marchés financiers",
+                    "Portefeuilles diversifiés",
+                    "Conseils personnalisés",
+                    "Gestion pilotée disponible"
+                ],
+                "cta": "COMMENCER À ÉPARGNER"
+            },
+            {
+                "id": 5,
+                "title": "Crédits & Prêts",
+                "description": "Financez vos projets personnels et professionnels avec nos solutions de crédit",
+                "features": [
+                    "Prêts personnels de 1 000€ à 75 000€",
+                    "Crédits immobiliers jusqu'à 500 000€",
+                    "Taux compétitifs à partir de 1,2% TAEG",
+                    "Réponse de principe en 24h",
+                    "Simulation gratuite en ligne"
+                ],
+                "cta": "SIMULER UN CRÉDIT"
+            },
+            {
+                "id": 6,
+                "title": "Assurances & Protection",
+                "description": "Protégez ce qui compte le plus avec nos solutions d'assurance complètes",
+                "features": [
+                    "Assurance voyage et annulation",
+                    "Protection des moyens de paiement",
+                    "Assurance santé et prévoyance",
+                    "Assurance habitation",
+                    "Garanties décès et invalidité"
+                ],
+                "cta": "EN SAVOIR PLUS"
+            }
+        ],
+        "cta": {
+            "title": "Prêt à commencer ?",
+            "text": "Rejoignez plus de 500 000 clients qui font confiance à INVIK SA pour gérer leurs finances au quotidien.",
+            "button": "OUVRIR UN COMPTE GRATUITEMENT"
+        }
+    },
+    "notifications": {
+        "title": "Notifications",
+        "mark_all_read": "Tout marquer comme lu",
+        "empty": "Aucune notification",
+        "close": "Fermer"
     }
 }

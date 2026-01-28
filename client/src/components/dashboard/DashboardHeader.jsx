@@ -3,10 +3,12 @@ import { useAuth } from '../../contexts/AuthContext';
 import { notificationService } from '../../services/notificationService';
 import NotificationDropdown from './NotificationDropdown';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const DashboardHeader = ({ toggleSidebar }) => {
     const { userData } = useAuth();
     const navigate = useNavigate();
+    const { t } = useTranslation();
     const [notifications, setNotifications] = useState([]);
     const [showNotifications, setShowNotifications] = useState(false);
     const unreadCount = notifications.filter(n => !n.read).length;
@@ -40,7 +42,7 @@ const DashboardHeader = ({ toggleSidebar }) => {
                 </button>
                 <div className="header-search sm-hide">
                     <i className="fas fa-search"></i>
-                    <input type="text" placeholder="Rechercher une transaction..." />
+                    <input type="text" placeholder={t('header.search_placeholder')} />
                 </div>
             </div>
 
@@ -68,7 +70,7 @@ const DashboardHeader = ({ toggleSidebar }) => {
                 <div
                     className="header-profile"
                     onClick={() => navigate('/dashboard/settings')}
-                    title="Paramètres du compte"
+                    title={t('header.profile_title')}
                 >
                     <div className="profile-avatar">
                         {userData?.firstName?.charAt(0) || <i className="fas fa-user"></i>}

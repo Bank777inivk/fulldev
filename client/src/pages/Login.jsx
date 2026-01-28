@@ -42,7 +42,7 @@ const Login = () => {
 
         try {
             await login(email, password);
-            navigate(`/${t('lang', { defaultValue: i18n.language })}/dashboard`);
+            navigate(`/${i18n.language}/dashboard`);
         } catch (err) {
             console.error("Erreur de connexion:", err);
             setError(t('auth.login.error_login'));

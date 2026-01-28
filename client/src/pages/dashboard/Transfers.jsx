@@ -7,11 +7,13 @@ import { transactionService } from '../../services/transactionService';
 import { useNavigate } from 'react-router-dom';
 import { beneficiaryService } from '../../services/beneficiaryService';
 import KycVerificationBanner from '../../components/dashboard/KycVerificationBanner';
+import { useTranslation } from 'react-i18next'; // Import i18n
 
 const Transfers = () => {
     const { currentUser } = useAuth();
     const { wallets, transactions, beneficiaries, loading } = useData();
     const { showToast } = useNotifications();
+    const { t, i18n } = useTranslation(); // Hook initialization
 
     // Filter wallets for display, consistent with Accounts.jsx
     const displayWallets = React.useMemo(() => {
@@ -104,17 +106,17 @@ const Transfers = () => {
         const fromWallet = getWallet(fromAccount);
 
         if (!numAmount || numAmount <= 0) {
-            showToast("Veuillez saisir un montant valide", "error");
+            showToast(t('transfers.errors.invalid_amount'), "error");
             return;
         }
 
         if (fromWallet && numAmount > fromWallet.balance) {
-            showToast("Solde insuffisant pour cette opération", "error");
+            showToast(t('transfers.errors.insufficient_balance'), "error");
             return;
         }
 
         if (numAmount > 50000) {
-            showToast("Le montant maximal par virement est de 50 000 €", "error");
+            showToast(t('transfers.errors.limit_exceeded'), "error");
             return;
         }
 
@@ -122,7 +124,7 @@ const Transfers = () => {
         try {
             if (activeTab === 'internal') {
                 await transactionService.performInternalTransfer(currentUser.uid, fromAccount, toAccount, amount);
-                setSuccess("Transfert interne réussi ! Votre solde a été mis à jour instantanément.");
+                setSuccess(t('transfers.success_messages.internal'));
             } else {
                 // For both INVIK and SEPA, we resolve the beneficiary info first
                 const beneficiary = beneficiaryType === 'saved' ? beneficiaries.find(b => b.id === selectedBeneficiaryId) : null;
@@ -130,10 +132,10 @@ const Transfers = () => {
                 const finalIban = beneficiary ? beneficiary.iban : beneficiaryIban;
                 const finalEmail = beneficiary ? beneficiary.email : beneficiaryEmail;
 
-                if (!finalName || !finalIban) throw new Error("Veuillez vérifier les informations du bénéficiaire");
+                if (!finalName || !finalIban) throw new Error(t('transfers.errors.check_beneficiary'));
 
                 if (activeTab === 'instant') {
-                    if (!transactionService.isInvikIban(finalIban)) throw new Error("Cet IBAN n'appartient pas au réseau INVIK. Utilisez l'onglet 'Virement SEPA'.");
+                    if (!transactionService.isInvikIban(finalIban)) throw new Error(t('transfers.errors.not_invik_iban'));
 
                     const result = await transactionService.performInstantTransfer(currentUser.uid, fromAccount, finalIban, finalName, amount, finalEmail);
 
@@ -146,21 +148,21 @@ const Transfers = () => {
                         });
                     }
 
-                    setSuccess(`Virement instantané vers ${finalName} réussi ! Les fonds ont été transférés immédiatement via le réseau INVIK.`);
+                    setSuccess(t('transfers.success_messages.instant', { name: finalName }));
                 } else {
                     // SEPA Tab logic
                     if (transactionService.isInvikIban(finalIban)) {
                         // Fail-safe: even in external tab, if it's invik, do it instant
                         const result = await transactionService.performInstantTransfer(currentUser.uid, fromAccount, finalIban, finalName, amount, finalEmail);
                         if (result.instant) {
-                            setSuccess(`Virement instantané vers ${finalName} réussi ! Les fonds ont été transférés immédiatement.`);
+                            setSuccess(t('transfers.success_messages.instant', { name: finalName }));
                         } else {
-                            setSuccess("Virement mis en attente pour contrôle de sécurité. Délai habituel SEPA : 24h à 48h.");
+                            setSuccess(t('transfers.success_messages.pending'));
                         }
                     } else {
                         // Validate IBAN before submission
                         if (!validateIban(finalIban)) {
-                            throw new Error("Format IBAN invalide. Veuillez vérifier le numéro saisi.");
+                            throw new Error(t('transfers.errors.invalid_iban'));
                         }
 
                         // Standard External Transfer (Attempt)
@@ -184,9 +186,9 @@ const Transfers = () => {
 
                         // Check for INVIK Bank Code (12345) or instant result
                         if (result.instant || finalIban.replace(/[^a-zA-Z0-9]/g, '').includes('12345')) {
-                            setSuccess(`Virement instantané vers ${finalName} réussi ! Les fonds ont été transférés immédiatement.`);
+                            setSuccess(t('transfers.success_messages.instant', { name: finalName }));
                         } else {
-                            setSuccess("Virement mis en attente pour contrôle de sécurité. Délai habituel SEPA : 24h à 48h.");
+                            setSuccess(t('transfers.success_messages.pending'));
                         }
                     }
                 }
@@ -210,10 +212,20 @@ const Transfers = () => {
     const getWallet = (id) => wallets.find(w => w.id === id);
 
     const AccountCard = ({ wallet, selected, onClick, type = 'source', compact = false }) => {
+        const { t, i18n } = useTranslation();
         if (!wallet) return null;
         const isSelected = selected === wallet.id;
         const bgColor = type === 'source' ? '#fff' : (isSelected ? '#f0f8ff' : '#fff');
         const borderColor = isSelected ? '#003366' : '#eef2f6';
+
+        const currentLocale = i18n.language === 'en' ? 'en-US' : (i18n.language === 'fr' ? 'fr-FR' : i18n.language);
+
+        const config = {
+            main: { label: t('accounts.card.main'), icon: 'fa-wallet', color: '#1565c0', bg: '#e3f2fd' },
+            savings: { label: t('accounts.card.savings'), icon: 'fa-piggy-bank', color: '#2e7d32', bg: '#e8f5e9' },
+            credit: { label: t('accounts.card.credit'), icon: 'fa-hand-holding-usd', color: '#c0392b', bg: '#ffebee' }
+        }[wallet.type] || { label: t('accounts.card.other'), icon: 'fa-university', color: '#666', bg: '#f8f9fa' };
+
         return (
             <div onClick={() => onClick(wallet.id)} style={{
                 padding: compact ? '0.8rem' : '1rem',
@@ -229,21 +241,21 @@ const Transfers = () => {
             }}>
                 <div style={{
                     minWidth: compact ? '35px' : '40px', width: compact ? '35px' : '40px', height: compact ? '35px' : '40px',
-                    borderRadius: '50%', backgroundColor: wallet.type === 'main' ? '#e3f2fd' : '#e8f5e9',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center', color: wallet.type === 'main' ? '#1565c0' : '#2e7d32'
+                    borderRadius: '50%', backgroundColor: config.bg,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', color: config.color
                 }}>
-                    <i className={`fas ${wallet.type === 'main' ? 'fa-wallet' : 'fa-piggy-bank'}`}></i>
+                    <i className={`fas ${config.icon}`}></i>
                 </div>
                 <div style={{ flex: 1 }}>
-                    <div style={{ fontWeight: '600', color: '#333', fontSize: compact ? '0.9rem' : '1rem' }}>{wallet.type === 'main' ? 'Compte Courant' : wallet.type === 'savings' ? 'Compte Épargne' : 'Crédit'}</div>
-                    <div style={{ fontSize: '0.85rem', color: '#666' }}>{wallet.balance.toLocaleString('fr-FR', { style: 'currency', currency: wallet.currency })}</div>
+                    <div style={{ fontWeight: '600', color: '#333', fontSize: compact ? '0.9rem' : '1rem' }}>{config.label}</div>
+                    <div style={{ fontSize: '0.85rem', color: '#666' }}>{wallet.balance.toLocaleString(currentLocale, { style: 'currency', currency: wallet.currency })}</div>
                 </div>
                 {isSelected && <i className="fas fa-check-circle" style={{ color: '#003366', fontSize: '1.2rem' }}></i>}
             </div>
         );
     };
 
-    if (loading && wallets.length === 0) return <div style={{ textAlign: 'center', padding: '4rem' }}>Chargement...</div>;
+    if (loading && wallets.length === 0) return <div style={{ textAlign: 'center', padding: '4rem' }}>{t('loading')}</div>;
 
     // --- MOBILE LAYOUT ---
     // Pagination Logic for History
@@ -262,7 +274,7 @@ const Transfers = () => {
                 >
                     <i className="fas fa-chevron-left"></i>
                 </button>
-                <div style={styles.pageIndicator}>Page {historyPage} sur {totalHistoryPages}</div>
+                <div style={styles.pageIndicator}>{t('transfers.pagination.page', { current: historyPage, total: totalHistoryPages })}</div>
                 <button
                     disabled={historyPage === totalHistoryPages}
                     onClick={() => setHistoryPage(p => p + 1)}
@@ -278,7 +290,7 @@ const Transfers = () => {
         return (
             <KycVerificationBanner>
                 <div style={{ padding: '1rem', paddingBottom: '80px' }}>
-                    <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#003366', marginBottom: '1.5rem' }}>Nouveau Virement</h1>
+                    <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#003366', marginBottom: '1.5rem' }}>{t('transfers.mobile_title')}</h1>
 
                     {/* Mobile Tabs */}
                     <div style={styles.mobileTabs}>
@@ -286,7 +298,7 @@ const Transfers = () => {
                             style={activeTab === 'internal' ? styles.mobileTabActive : styles.mobileTab}
                             onClick={() => { setActiveTab('internal'); setStep(1); }}
                         >
-                            Interne
+                            {t('transfers.tabs.internal')}
                         </button>
                         <button
                             style={activeTab === 'instant' ? { ...styles.mobileTabActive, borderBottom: '3px solid #27ae60', color: '#27ae60' } : styles.mobileTab}
@@ -304,29 +316,29 @@ const Transfers = () => {
                             style={activeTab === 'history' ? styles.mobileTabActive : styles.mobileTab}
                             onClick={() => { setActiveTab('history'); setStep(1); }}
                         >
-                            Suivi
+                            {t('transfers.tabs.history')}
                         </button>
                     </div>
 
                     {success ? (
                         <div style={styles.successState} className="fadeIn">
-                            <div style={styles.successIcon}><i className={`fas ${!success.includes('attente') ? 'fa-check' : 'fa-circle-notch fa-spin'}`}></i></div>
-                            <h2 style={{ fontSize: '1.2rem', textAlign: 'center' }}>{!success.includes('attente') ? 'VIREMENT ENVOYÉ AVEC SUCCÈS' : 'INFORMATION CAPITALE DE INVIK BANK'}</h2>
+                            <div style={styles.successIcon}><i className={`fas ${success !== t('transfers.success_messages.pending') ? 'fa-check' : 'fa-circle-notch fa-spin'}`}></i></div>
+                            <h2 style={{ fontSize: '1.2rem', textAlign: 'center' }}>{success !== t('transfers.success_messages.pending') ? t('transfers.success.title') : t('transfers.success.review_title')}</h2>
                             <p style={{ textAlign: 'center', color: '#666', marginBottom: '1.5rem', fontSize: '0.85rem', lineHeight: '1.4' }}>
                                 {success}
                             </p>
-                            <button style={styles.mobileNextBtn} onClick={() => { setSuccess(''); setStep(1); }}>Nouveau virement</button>
+                            <button style={styles.mobileNextBtn} onClick={() => { setSuccess(''); setStep(1); }}>{t('transfers.success.new_button')}</button>
                         </div>
                     ) : activeTab === 'history' ? (
                         <div className="fadeIn">
-                            <h3 style={styles.mobileSectionTitle}>Historique des virements</h3>
+                            <h3 style={styles.mobileSectionTitle}>{t('transfers.history.title')}</h3>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                                 {paginatedHistory.map(tx => (
                                     <div key={tx.id} style={{ display: 'flex', alignItems: 'center', padding: '15px', backgroundColor: '#fff', borderRadius: '16px', border: '1px solid #eee', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
                                         <div style={{ flex: 1 }}>
                                             <div style={{ fontWeight: '700', fontSize: '1rem', color: '#003366' }}>{tx.amount} {tx.currency || 'EUR'}</div>
                                             <div style={{ fontSize: '0.8rem', color: '#888', marginTop: '4px' }}>
-                                                {new Date(tx.createdAt?.toDate() || tx.createdAt).toLocaleDateString()} - {tx.beneficiaryName || (tx.type === 'transfer_internal' ? 'Virement Interne' : 'Externe')}
+                                                {new Date(tx.createdAt?.toDate() || tx.createdAt).toLocaleDateString()} - {tx.beneficiaryName || (tx.type === 'transfer_internal' ? t('transfers.tabs.internal_desc') : 'Externe')}
                                             </div>
                                         </div>
                                         <span style={{
@@ -341,14 +353,14 @@ const Transfers = () => {
                                             gap: '4px'
                                         }}>
                                             {tx.status === 'in_review' && <i className="fas fa-circle-notch fa-spin"></i>}
-                                            {tx.status === 'pending' ? 'En attente' : (tx.status === 'in_review' ? 'Examen INVIK' : (tx.status === 'rejected' ? 'Refusé' : 'Effectué'))}
+                                            {tx.status === 'pending' ? t('status.pending') : (tx.status === 'in_review' ? t('transactions.review') : (tx.status === 'rejected' ? t('status.rejected') : t('status.completed')))}
                                         </span>
                                     </div>
                                 ))}
                                 {transferHistory.length === 0 && (
                                     <div style={{ textAlign: 'center', padding: '3rem 1rem', color: '#888' }}>
                                         <i className="fas fa-history" style={{ fontSize: '2rem', marginBottom: '1rem', opacity: 0.3 }}></i>
-                                        <p>Aucun virement récent.</p>
+                                        <p>{t('transfers.history.empty')}</p>
                                     </div>
                                 )}
                             </div>
@@ -358,7 +370,7 @@ const Transfers = () => {
                         <div className="fadeIn">
                             {step === 1 && (
                                 <>
-                                    <h3 style={styles.mobileSectionTitle}>1. Compte de départ</h3>
+                                    <h3 style={styles.mobileSectionTitle}>{t('transfers.form.step_source')}</h3>
                                     {displayWallets.map(w => (
                                         <AccountCard key={w.id} wallet={w} selected={fromAccount} onClick={setFromAccount} compact />
                                     ))}
@@ -366,10 +378,10 @@ const Transfers = () => {
 
                                     {activeTab === 'internal' ? (
                                         <>
-                                            <h3 style={styles.mobileSectionTitle}>2. Compte de destination</h3>
+                                            <h3 style={styles.mobileSectionTitle}>{t('transfers.form.step_dest')}</h3>
                                             {displayWallets.length < 2 ? (
                                                 <div style={styles.warningBox}>
-                                                    Vous n'avez qu'un seul compte. Un virement interne nécessite au moins deux comptes.
+                                                    {t('transfers.warnings.single_account_desc')}
                                                 </div>
                                             ) : (
                                                 displayWallets.filter(w => w.id !== fromAccount).map(w => (
@@ -381,12 +393,12 @@ const Transfers = () => {
                                         <>
                                             <div style={{ ...styles.warningBox, backgroundColor: '#e3f2fd', borderColor: '#003366', color: '#003366', marginBottom: '1.5rem', display: 'flex', gap: '10px', alignItems: 'center' }}>
                                                 <i className="fas fa-bolt" style={{ fontSize: '1.2rem' }}></i>
-                                                <span><strong>Virement Instantané INVIK</strong><br />Gratuit et immédiat entre clients de la banque.</span>
+                                                <span><strong>{t('transfers.invik_network.title')}</strong><br />{t('transfers.invik_network.desc')}</span>
                                             </div>
-                                            <h3 style={styles.mobileSectionTitle}>2. Destinataire INVIK</h3>
+                                            <h3 style={styles.mobileSectionTitle}>{t('transfers.form.step_dest_invik')}</h3>
                                             <div style={styles.toggleRow}>
-                                                <button style={beneficiaryType === 'saved' ? styles.toggleBtnActive : styles.toggleBtn} onClick={() => setBeneficiaryType('saved')}>Enregistré</button>
-                                                <button style={beneficiaryType === 'new' ? styles.toggleBtnActive : styles.toggleBtn} onClick={() => setBeneficiaryType('new')}>Nouveau</button>
+                                                <button style={beneficiaryType === 'saved' ? styles.toggleBtnActive : styles.toggleBtn} onClick={() => setBeneficiaryType('saved')}>{t('transfers.beneficiary_type.saved')}</button>
+                                                <button style={beneficiaryType === 'new' ? styles.toggleBtnActive : styles.toggleBtn} onClick={() => setBeneficiaryType('new')}>{t('transfers.beneficiary_type.new')}</button>
                                             </div>
 
                                             {beneficiaryType === 'saved' ? (
@@ -396,7 +408,7 @@ const Transfers = () => {
                                                         value={selectedBeneficiaryId}
                                                         onChange={e => setSelectedBeneficiaryId(e.target.value)}
                                                     >
-                                                        <option value="">Sélectionnez un client INVIK</option>
+                                                        <option value="">{t('transfers.inputs.select_invik')}</option>
                                                         {beneficiaries.filter(b => transactionService.isInvikIban(b.iban)).map(b => (
                                                             <option key={b.id} value={b.id}>{b.name} ({b.iban})</option>
                                                         ))}
@@ -404,22 +416,22 @@ const Transfers = () => {
                                                 </div>
                                             ) : (
                                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                                                    <input style={styles.mobileInput} placeholder="Nom du destinataire" value={beneficiaryName} onChange={e => setBeneficiaryName(e.target.value)} />
-                                                    <input style={styles.mobileInput} placeholder="IBAN INVIK (FR76 12345...)" value={beneficiaryIban} onChange={e => setBeneficiaryIban(e.target.value)} />
-                                                    <input style={styles.mobileInput} placeholder="BIC (optionnel)" value={beneficiaryBic} onChange={e => setBeneficiaryBic(e.target.value)} />
-                                                    <input style={styles.mobileInput} type="email" placeholder="Email (optionnel)" value={beneficiaryEmail} onChange={e => setBeneficiaryEmail(e.target.value)} />
+                                                    <input style={styles.mobileInput} placeholder={t('transfers.inputs.name')} value={beneficiaryName} onChange={e => setBeneficiaryName(e.target.value)} />
+                                                    <input style={styles.mobileInput} placeholder={t('transfers.inputs.iban')} value={beneficiaryIban} onChange={e => setBeneficiaryIban(e.target.value)} />
+                                                    <input style={styles.mobileInput} placeholder={t('transfers.inputs.bic')} value={beneficiaryBic} onChange={e => setBeneficiaryBic(e.target.value)} />
+                                                    <input style={styles.mobileInput} type="email" placeholder={t('transfers.inputs.email')} value={beneficiaryEmail} onChange={e => setBeneficiaryEmail(e.target.value)} />
                                                     <label style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.9rem', color: '#666', marginTop: '5px' }}>
-                                                        <input type="checkbox" checked={saveBeneficiary} onChange={e => setSaveBeneficiary(e.target.checked)} /> Enregistrer ce bénéficiaire
+                                                        <input type="checkbox" checked={saveBeneficiary} onChange={e => setSaveBeneficiary(e.target.checked)} /> {t('transfers.inputs.save_invik')}
                                                     </label>
                                                 </div>
                                             )}
                                         </>
                                     ) : (
                                         <>
-                                            <h3 style={styles.mobileSectionTitle}>2. Bénéficiaire</h3>
+                                            <h3 style={styles.mobileSectionTitle}>{t('transfers.form.step_dest_beneficiary')}</h3>
                                             <div style={styles.toggleRow}>
-                                                <button style={beneficiaryType === 'saved' ? styles.toggleBtnActive : styles.toggleBtn} onClick={() => setBeneficiaryType('saved')}>Enregistré</button>
-                                                <button style={beneficiaryType === 'new' ? styles.toggleBtnActive : styles.toggleBtn} onClick={() => setBeneficiaryType('new')}>Nouveau</button>
+                                                <button style={beneficiaryType === 'saved' ? styles.toggleBtnActive : styles.toggleBtn} onClick={() => setBeneficiaryType('saved')}>{t('transfers.beneficiary_type.saved')}</button>
+                                                <button style={beneficiaryType === 'new' ? styles.toggleBtnActive : styles.toggleBtn} onClick={() => setBeneficiaryType('new')}>{t('transfers.beneficiary_type.new')}</button>
                                             </div>
 
                                             {beneficiaryType === 'saved' ? (
@@ -429,7 +441,7 @@ const Transfers = () => {
                                                         value={selectedBeneficiaryId}
                                                         onChange={e => setSelectedBeneficiaryId(e.target.value)}
                                                     >
-                                                        <option value="">Sélectionnez un bénéficiaire</option>
+                                                        <option value="">{t('transfers.inputs.select_beneficiary')}</option>
                                                         {beneficiaries.map(b => (
                                                             <option key={b.id} value={b.id}>
                                                                 {b.name} ({b.iban.substring(0, 4)}...{b.iban.slice(-4)})
@@ -442,13 +454,13 @@ const Transfers = () => {
                                                 </div>
                                             ) : (
                                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                                                    <input style={styles.mobileInput} placeholder="Nom complet" value={beneficiaryName} onChange={e => setBeneficiaryName(e.target.value)} />
-                                                    <input style={styles.mobileInput} placeholder="IBAN" value={beneficiaryIban} onChange={e => setBeneficiaryIban(e.target.value)} />
-                                                    <input style={styles.mobileInput} placeholder="BIC (optionnel)" value={beneficiaryBic} onChange={e => setBeneficiaryBic(e.target.value)} />
-                                                    <input style={styles.mobileInput} type="email" placeholder="Email (optionnel)" value={beneficiaryEmail} onChange={e => setBeneficiaryEmail(e.target.value)} />
+                                                    <input style={styles.mobileInput} placeholder={t('transfers.inputs.name')} value={beneficiaryName} onChange={e => setBeneficiaryName(e.target.value)} />
+                                                    <input style={styles.mobileInput} placeholder={t('transfers.inputs.iban')} value={beneficiaryIban} onChange={e => setBeneficiaryIban(e.target.value)} />
+                                                    <input style={styles.mobileInput} placeholder={t('transfers.inputs.bic')} value={beneficiaryBic} onChange={e => setBeneficiaryBic(e.target.value)} />
+                                                    <input style={styles.mobileInput} type="email" placeholder={t('transfers.inputs.email')} value={beneficiaryEmail} onChange={e => setBeneficiaryEmail(e.target.value)} />
                                                     <label style={{ display: 'flex', gap: '10px', fontSize: '0.9rem' }}>
                                                         <input type="checkbox" checked={saveBeneficiary} onChange={e => setSaveBeneficiary(e.target.checked)} />
-                                                        Sauvegarder
+                                                        {t('transfers.inputs.save_beneficiary')}
                                                     </label>
                                                 </div>
                                             )}
@@ -459,7 +471,7 @@ const Transfers = () => {
 
                             {step === 2 && (
                                 <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-                                    <h3 style={styles.mobileSectionTitle}>Montant à virer</h3>
+                                    <h3 style={styles.mobileSectionTitle}>{t('transfers.form.step_amount')}</h3>
                                     <input
                                         type="number"
                                         autoFocus
@@ -469,16 +481,16 @@ const Transfers = () => {
                                         placeholder="0"
                                     />
                                     <div style={{ fontSize: '1.2rem', color: '#888' }}>EUR</div>
-                                    <p style={{ marginTop: '1rem', color: '#666' }}>Solde: {getWallet(fromAccount)?.balance.toFixed(2)} €</p>
+                                    <p style={{ marginTop: '1rem', color: '#666' }}>{t('transfers.amount.available')} {getWallet(fromAccount)?.balance.toFixed(2)} €</p>
 
                                     {parseFloat(amount) > getWallet(fromAccount)?.balance && (
                                         <div style={{ color: '#e74c3c', marginTop: '10px', fontSize: '0.85rem' }}>
-                                            <i className="fas fa-exclamation-triangle"></i> Solde insuffisant
+                                            <i className="fas fa-exclamation-triangle"></i> {t('transfers.amount.insufficient_funds')}
                                         </div>
                                     )}
                                     {parseFloat(amount) > 50000 && (
                                         <div style={{ color: '#e74c3c', marginTop: '10px', fontSize: '0.85rem' }}>
-                                            <i className="fas fa-exclamation-circle"></i> Limite maximale de 50 000 € dépassée
+                                            <i className="fas fa-exclamation-circle"></i> {t('transfers.amount.limit_exceeded')}
                                         </div>
                                     )}
                                 </div>
@@ -486,23 +498,23 @@ const Transfers = () => {
 
                             {step === 3 && (
                                 <div style={{ backgroundColor: '#f8f9fa', padding: '1.5rem', borderRadius: '12px' }}>
-                                    <h3 style={styles.mobileSectionTitle}>Destination</h3>
-                                    <div style={styles.summaryRow}><span>De:</span> <strong>{getWallet(fromAccount)?.type === 'main' ? 'Principal' : 'Epargne'}</strong></div>
+                                    <h3 style={styles.mobileSectionTitle}>{t('transfers.steps.validation')}</h3>
+                                    <div style={styles.summaryRow}><span>{t('transfers.review.from')}:</span> <strong>{getWallet(fromAccount)?.type === 'main' ? t('accounts.card.main') : t('accounts.card.savings')}</strong></div>
                                     <div style={styles.summaryRow}>
-                                        <span>Vers:</span>
+                                        <span>{t('transfers.review.to')}:</span>
                                         <strong>
                                             {activeTab === 'internal'
-                                                ? (getWallet(toAccount)?.type === 'main' ? 'Principal' : 'Epargne')
+                                                ? (getWallet(toAccount)?.type === 'main' ? t('accounts.card.main') : t('accounts.card.savings'))
                                                 : (beneficiaryType === 'saved' ? beneficiaries.find(b => b.id === selectedBeneficiaryId)?.name : beneficiaryName)
                                             }
                                         </strong>
                                     </div>
                                     {isInvikTarget && (
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#27ae60', fontSize: '0.85rem', margin: '10px 0', fontWeight: 'bold' }}>
-                                            <i className="fas fa-bolt"></i> Virement instantané vers compte INVIK
+                                            <i className="fas fa-bolt"></i> {t('transfers.review.certified')}
                                         </div>
                                     )}
-                                    <div style={styles.summaryRowBig}><span>Total:</span> <span style={{ color: '#003366' }}>{amount} €</span></div>
+                                    <div style={styles.summaryRowBig}><span>{t('transfers.review.total')}:</span> <span style={{ color: '#003366' }}>{amount} €</span></div>
                                 </div>
                             )}
                         </div>
@@ -512,7 +524,7 @@ const Transfers = () => {
                     {!success && activeTab !== 'history' && (
                         <div style={styles.fixedBottomBar}>
                             {step > 1 && (
-                                <button style={styles.mobileBackBtn} onClick={() => setStep(s => s - 1)}>Retour</button>
+                                <button style={styles.mobileBackBtn} onClick={() => setStep(s => s - 1)}>{t('transfers.buttons.back')}</button>
                             )}
                             <button
                                 style={styles.mobileNextBtn}
@@ -523,7 +535,7 @@ const Transfers = () => {
                                     submitting
                                 }
                             >
-                                {step === 3 ? (submitting ? 'Envoi...' : 'Confirmer') : 'Continuer'}
+                                {step === 3 ? (submitting ? t('transfers.form.sending') : t('transfers.buttons.confirm')) : t('transfers.buttons.next')}
                             </button>
                         </div>
                     )}
@@ -537,61 +549,61 @@ const Transfers = () => {
         <KycVerificationBanner>
             <div style={styles.container}>
                 <header style={styles.header}>
-                    <h1 style={styles.title}>Espace Virements</h1>
-                    <p style={styles.subtitle}>Gérez vos transferts en toute simplicité.</p>
+                    <h1 style={styles.title}>{t('transfers.title')}</h1>
+                    <p style={styles.subtitle}>{t('transfers.subtitle')}</p>
                 </header>
 
                 <div style={styles.mainLayout}>
                     <div style={styles.sidebar}>
                         <button style={{ ...styles.sidebarBtn, ...(activeTab === 'internal' ? styles.sidebarBtnActive : {}) }} onClick={() => { setActiveTab('internal'); setStep(1); }}>
                             <div style={styles.btnIcon}><i className="fas fa-exchange-alt"></i></div>
-                            <div style={styles.btnText}><strong>Mes Comptes</strong><span>Transfert interne</span></div>
+                            <div style={styles.btnText}><strong>{t('transfers.tabs.internal')}</strong><span>{t('transfers.tabs.internal_desc')}</span></div>
                         </button>
                         <button style={{ ...styles.sidebarBtn, ...(activeTab === 'instant' ? { ...styles.sidebarBtnActive, borderLeftColor: '#27ae60' } : {}) }} onClick={() => { setActiveTab('instant'); setStep(1); }}>
                             <div style={{ ...styles.btnIcon, backgroundColor: activeTab === 'instant' ? '#e8f5e9' : '#f8f9fa', color: activeTab === 'instant' ? '#27ae60' : '#666' }}><i className="fas fa-bolt"></i></div>
-                            <div style={styles.btnText}><strong>Virement INVIK</strong><span>Instantané & Gratuit</span></div>
+                            <div style={styles.btnText}><strong>{t('transfers.tabs.invik')}</strong><span>{t('transfers.tabs.invik_desc')}</span></div>
                         </button>
                         <button style={{ ...styles.sidebarBtn, ...(activeTab === 'external' ? styles.sidebarBtnActive : {}) }} onClick={() => { setActiveTab('external'); setStep(1); }}>
                             <div style={styles.btnIcon}><i className="fas fa-university"></i></div>
-                            <div style={styles.btnText}><strong>Virement SEPA</strong><span>Vers une autre banque</span></div>
+                            <div style={styles.btnText}><strong>{t('transfers.tabs.sepa')}</strong><span>{t('transfers.tabs.sepa_desc')}</span></div>
                         </button>
                     </div>
 
                     <div style={styles.contentArea}>
                         {success ? (
                             <div style={styles.successState} className="fadeIn">
-                                <div style={styles.successIcon}><i className={`fas ${!success.includes('attente') ? 'fa-check' : 'fa-circle-notch fa-spin'}`}></i></div>
-                                <h2>{!success.includes('attente') ? 'VIREMENT ENVOYÉ AVEC SUCCÈS' : 'INFORMATION CAPITALE DE INVIK BANK'}</h2>
+                                <div style={styles.successIcon}><i className={`fas ${success !== t('transfers.success_messages.pending') ? 'fa-check' : 'fa-circle-notch fa-spin'}`}></i></div>
+                                <h2>{success !== t('transfers.success_messages.pending') ? t('transfers.success.title') : t('transfers.success.review_title')}</h2>
                                 <p style={{ color: '#666', marginBottom: '2rem', fontSize: '1rem', lineHeight: '1.6', maxWidth: '600px', margin: '0 auto 2rem' }}>
                                     {success}
                                 </p>
-                                <button style={styles.nextBtn} onClick={() => { setSuccess(''); setStep(1); }}>Effectuer un autre virement</button>
+                                <button style={styles.nextBtn} onClick={() => { setSuccess(''); setStep(1); }}>{t('transfers.success.new_button')}</button>
                             </div>
                         ) : (
                             <>
                                 <div style={styles.wizardHeader}>
-                                    <div style={{ ...styles.wizardStep, opacity: step >= 1 ? 1 : 0.5 }}><div style={styles.stepNum}>1</div><span>Comptes</span></div>
+                                    <div style={{ ...styles.wizardStep, opacity: step >= 1 ? 1 : 0.5 }}><div style={styles.stepNum}>1</div><span>{t('transfers.steps.accounts')}</span></div>
                                     <div style={styles.stepLine}></div>
-                                    <div style={{ ...styles.wizardStep, opacity: step >= 2 ? 1 : 0.5 }}><div style={styles.stepNum}>2</div><span>Montant</span></div>
+                                    <div style={{ ...styles.wizardStep, opacity: step >= 2 ? 1 : 0.5 }}><div style={styles.stepNum}>2</div><span>{t('transfers.steps.amount')}</span></div>
                                     <div style={styles.stepLine}></div>
-                                    <div style={{ ...styles.wizardStep, opacity: step >= 3 ? 1 : 0.5 }}><div style={styles.stepNum}>3</div><span>Validation</span></div>
+                                    <div style={{ ...styles.wizardStep, opacity: step >= 3 ? 1 : 0.5 }}><div style={styles.stepNum}>3</div><span>{t('transfers.steps.validation')}</span></div>
                                 </div>
 
                                 <div className="fadeIn">
                                     {step === 1 && (
                                         <>
-                                            <div style={styles.sectionHeader}><i className="fas fa-sign-out-alt" style={{ color: '#e74c3c' }}></i> De quel compte ?</div>
+                                            <div style={styles.sectionHeader}><i className="fas fa-sign-out-alt" style={{ color: '#e74c3c' }}></i> {t('transfers.account_selection.source')}</div>
                                             <div style={styles.accountsGrid}>
                                                 {displayWallets.map(w => <AccountCard key={w.id} wallet={w} selected={fromAccount} onClick={setFromAccount} />)}
                                             </div>
                                             <div style={{ margin: '2rem 0', borderBottom: '1px solid #eee' }}></div>
-                                            <div style={styles.sectionHeader}><i className="fas fa-sign-in-alt" style={{ color: '#27ae60' }}></i> Vers quel bénéficiaire ?</div>
+                                            <div style={styles.sectionHeader}><i className="fas fa-sign-in-alt" style={{ color: '#27ae60' }}></i> {t('transfers.account_selection.dest')}</div>
 
                                             {activeTab === 'internal' ? (
                                                 displayWallets.length < 2 ? (
                                                     <div style={styles.warningBox}>
                                                         <i className="fas fa-exclamation-circle" style={{ fontSize: '1.5rem' }}></i>
-                                                        <div><strong>Virement interne impossible</strong><p style={{ margin: 0, fontSize: '0.9rem' }}>Vous ne possédez qu'un seul compte.</p></div>
+                                                        <div><strong>{t('transfers.warnings.single_account_title')}</strong><p style={{ margin: 0, fontSize: '0.9rem' }}>{t('transfers.warnings.single_account_desc')}</p></div>
                                                     </div>
                                                 ) : (
                                                     <div style={styles.accountsGrid}>
@@ -604,20 +616,20 @@ const Transfers = () => {
                                                         <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
                                                             <i className="fas fa-bolt" style={{ fontSize: '1.8rem' }}></i>
                                                             <div>
-                                                                <strong style={{ fontSize: '1.1rem' }}>RÉSEAU INVIK INSTANTANÉ</strong>
-                                                                <p style={{ margin: '5px 0 0', fontSize: '0.9rem', opacity: 0.9 }}>Transférez des fonds en millisecondes vers n'importe quel client INVIK BANK, sans frais.</p>
+                                                                <strong style={{ fontSize: '1.1rem' }}>{t('transfers.invik_network.title')}</strong>
+                                                                <p style={{ margin: '5px 0 0', fontSize: '0.9rem', opacity: 0.9 }}>{t('transfers.invik_network.desc')}</p>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div style={styles.radioGroup}>
-                                                        <label style={styles.radioLabel}><input type="radio" checked={beneficiaryType === 'saved'} onChange={() => setBeneficiaryType('saved')} /> Client enregistré</label>
-                                                        <label style={styles.radioLabel}><input type="radio" checked={beneficiaryType === 'new'} onChange={() => setBeneficiaryType('new')} /> Nouveau bénéficiaire INVIK</label>
+                                                        <label style={styles.radioLabel}><input type="radio" checked={beneficiaryType === 'saved'} onChange={() => setBeneficiaryType('saved')} /> {t('transfers.beneficiary_type.saved')}</label>
+                                                        <label style={styles.radioLabel}><input type="radio" checked={beneficiaryType === 'new'} onChange={() => setBeneficiaryType('new')} /> {t('transfers.beneficiary_type.new')}</label>
                                                     </div>
                                                     {beneficiaryType === 'saved' ? (
                                                         <div style={styles.inputGroup}>
-                                                            <label>Sélectionner un bénéficiaire INVIK</label>
+                                                            <label>{t('transfers.inputs.select_invik')}</label>
                                                             <select style={{ ...styles.select, borderColor: '#27ae60' }} value={selectedBeneficiaryId} onChange={(e) => setSelectedBeneficiaryId(e.target.value)}>
-                                                                <option value="">-- Choisir un client --</option>
+                                                                <option value="">-- {t('transfers.inputs.select_invik')} --</option>
                                                                 {beneficiaries.filter(b => transactionService.isInvikIban(b.iban)).map(b => (
                                                                     <option key={b.id} value={b.id}>{b.name} ({b.iban})</option>
                                                                 ))}
@@ -625,12 +637,12 @@ const Transfers = () => {
                                                         </div>
                                                     ) : (
                                                         <div className="fadeIn">
-                                                            <div style={styles.inputGroup}><label>Nom complet</label><input style={{ ...styles.input, borderColor: '#27ae60' }} value={beneficiaryName} onChange={e => setBeneficiaryName(e.target.value)} placeholder="Ex: Jean Dupont" /></div>
-                                                            <div style={styles.inputGroup}><label>IBAN INVIK</label><input style={{ ...styles.input, borderColor: '#27ae60' }} value={beneficiaryIban} onChange={e => setBeneficiaryIban(e.target.value)} placeholder="FR76 12345..." /></div>
-                                                            <div style={styles.inputGroup}><label>BIC (optionnel)</label><input style={{ ...styles.input, borderColor: '#27ae60' }} value={beneficiaryBic} onChange={e => setBeneficiaryBic(e.target.value)} placeholder="Ex: INVKFRPP" /></div>
-                                                            <div style={styles.inputGroup}><label>Email (optionnel)</label><input style={{ ...styles.input, borderColor: '#27ae60' }} type="email" value={beneficiaryEmail} onChange={e => setBeneficiaryEmail(e.target.value)} placeholder="Pour notification immédiate" /></div>
+                                                            <div style={styles.inputGroup}><label>{t('transfers.inputs.name')}</label><input style={{ ...styles.input, borderColor: '#27ae60' }} value={beneficiaryName} onChange={e => setBeneficiaryName(e.target.value)} placeholder="Ex: Jean Dupont" /></div>
+                                                            <div style={styles.inputGroup}><label>{t('transfers.inputs.iban')}</label><input style={{ ...styles.input, borderColor: '#27ae60' }} value={beneficiaryIban} onChange={e => setBeneficiaryIban(e.target.value)} placeholder="FR76 12345..." /></div>
+                                                            <div style={styles.inputGroup}><label>{t('transfers.inputs.bic')}</label><input style={{ ...styles.input, borderColor: '#27ae60' }} value={beneficiaryBic} onChange={e => setBeneficiaryBic(e.target.value)} placeholder="Ex: INVKFRPP" /></div>
+                                                            <div style={styles.inputGroup}><label>{t('transfers.inputs.email')}</label><input style={{ ...styles.input, borderColor: '#27ae60' }} type="email" value={beneficiaryEmail} onChange={e => setBeneficiaryEmail(e.target.value)} placeholder="Pour notification immédiate" /></div>
                                                             <label style={{ display: 'flex', gap: '10px', fontSize: '1rem', color: '#1e5e3a', fontWeight: '600', cursor: 'pointer', marginTop: '1rem' }}>
-                                                                <input type="checkbox" style={{ width: '20px', height: '20px' }} checked={saveBeneficiary} onChange={e => setSaveBeneficiary(e.target.checked)} /> Enregistrer ce bénéficiaire INVIK
+                                                                <input type="checkbox" style={{ width: '20px', height: '20px' }} checked={saveBeneficiary} onChange={e => setSaveBeneficiary(e.target.checked)} /> {t('transfers.inputs.save_invik')}
                                                             </label>
                                                         </div>
                                                     )}
@@ -638,40 +650,40 @@ const Transfers = () => {
                                             ) : (
                                                 <div style={styles.beneficiaryForm}>
                                                     <div style={styles.radioGroup}>
-                                                        <label style={styles.radioLabel}><input type="radio" checked={beneficiaryType === 'saved'} onChange={() => setBeneficiaryType('saved')} /> Bénéficiaire enregistré</label>
-                                                        <label style={styles.radioLabel}><input type="radio" checked={beneficiaryType === 'new'} onChange={() => setBeneficiaryType('new')} /> Nouveau bénéficiaire</label>
+                                                        <label style={styles.radioLabel}><input type="radio" checked={beneficiaryType === 'saved'} onChange={() => setBeneficiaryType('saved')} /> {t('transfers.beneficiary_type.saved')}</label>
+                                                        <label style={styles.radioLabel}><input type="radio" checked={beneficiaryType === 'new'} onChange={() => setBeneficiaryType('new')} /> {t('transfers.beneficiary_type.new')}</label>
                                                     </div>
                                                     {beneficiaryType === 'saved' ? (
                                                         <div style={styles.inputGroup}>
-                                                            <label>Sélectionner un bénéficiaire</label>
+                                                            <label>{t('transfers.inputs.select_beneficiary')}</label>
                                                             <select style={styles.select} value={selectedBeneficiaryId} onChange={(e) => setSelectedBeneficiaryId(e.target.value)}>
-                                                                <option value="">-- Choisir --</option>
+                                                                <option value="">-- {t('transfers.buttons.edit')} --</option>
                                                                 {beneficiaries.map(b => <option key={b.id} value={b.id}>{b.name} ({b.iban})</option>)}
                                                             </select>
-                                                            {beneficiaries.length === 0 && <p style={{ fontSize: '0.85rem', color: '#e67e22', marginTop: '5px' }}>Aucun bénéficiaire enregistré.</p>}
+                                                            {beneficiaries.length === 0 && <p style={{ fontSize: '0.85rem', color: '#e67e22', marginTop: '5px' }}>{t('transfers.history.empty')}</p>}
                                                         </div>
                                                     ) : (
                                                         <div className="fadeIn">
-                                                            <div style={styles.inputGroup}><label>Nom complet</label><input style={styles.input} value={beneficiaryName} onChange={e => setBeneficiaryName(e.target.value)} placeholder="Ex: Jean Dupont" /></div>
-                                                            <div style={styles.inputGroup}><label>IBAN</label><input style={styles.input} value={beneficiaryIban} onChange={e => setBeneficiaryIban(e.target.value)} placeholder="Format SEPA" /></div>
-                                                            <div style={styles.inputGroup}><label>BIC (optionnel)</label><input style={styles.input} value={beneficiaryBic} onChange={e => setBeneficiaryBic(e.target.value)} placeholder="Ex: ABCDFRPP" /></div>
-                                                            <div style={styles.inputGroup}><label>Email du destinataire (optionnel)</label><input style={styles.input} type="email" value={beneficiaryEmail} onChange={e => setBeneficiaryEmail(e.target.value)} placeholder="Pour notification immédiate" /></div>
+                                                            <div style={styles.inputGroup}><label>{t('transfers.inputs.name')}</label><input style={styles.input} value={beneficiaryName} onChange={e => setBeneficiaryName(e.target.value)} placeholder="Ex: Jean Dupont" /></div>
+                                                            <div style={styles.inputGroup}><label>{t('transfers.inputs.iban')}</label><input style={styles.input} value={beneficiaryIban} onChange={e => setBeneficiaryIban(e.target.value)} placeholder="Format SEPA" /></div>
+                                                            <div style={styles.inputGroup}><label>{t('transfers.inputs.bic')}</label><input style={styles.input} value={beneficiaryBic} onChange={e => setBeneficiaryBic(e.target.value)} placeholder="Ex: ABCDFRPP" /></div>
+                                                            <div style={styles.inputGroup}><label>{t('transfers.inputs.email')}</label><input style={styles.input} type="email" value={beneficiaryEmail} onChange={e => setBeneficiaryEmail(e.target.value)} placeholder="Pour notification immédiate" /></div>
                                                             <label style={{ display: 'flex', gap: '10px', fontSize: '1rem', color: '#003366', fontWeight: '600', cursor: 'pointer', marginTop: '1rem' }}>
-                                                                <input type="checkbox" style={{ width: '20px', height: '20px' }} checked={saveBeneficiary} onChange={e => setSaveBeneficiary(e.target.checked)} /> Enregistrer ce bénéficiaire pour mes prochains virements
+                                                                <input type="checkbox" style={{ width: '20px', height: '20px' }} checked={saveBeneficiary} onChange={e => setSaveBeneficiary(e.target.checked)} /> {t('transfers.inputs.save_beneficiary')}
                                                             </label>
                                                         </div>
                                                     )}
                                                 </div>
                                             )}
                                             <div style={{ marginTop: '2rem', textAlign: 'right' }}>
-                                                <button style={styles.nextBtn} onClick={() => setStep(2)} disabled={!fromAccount || (activeTab === 'internal' ? !toAccount : (beneficiaryType === 'saved' ? !selectedBeneficiaryId : (!beneficiaryName || !beneficiaryIban)))}>Suivant <i className="fas fa-arrow-right"></i></button>
+                                                <button style={styles.nextBtn} onClick={() => setStep(2)} disabled={!fromAccount || (activeTab === 'internal' ? !toAccount : (beneficiaryType === 'saved' ? !selectedBeneficiaryId : (!beneficiaryName || !beneficiaryIban)))}>{t('transfers.buttons.next')} <i className="fas fa-arrow-right"></i></button>
                                             </div>
                                         </>
                                     )}
 
                                     {step === 2 && (
                                         <div style={{ textAlign: 'center', padding: '2rem 0' }}>
-                                            <h3 style={styles.sectionTitle}>Combien souhaitez-vous virer ?</h3>
+                                            <h3 style={styles.sectionTitle}>{t('transfers.amount.title')}</h3>
                                             <div style={styles.amountContainer}>
                                                 <input
                                                     type="number"
@@ -683,26 +695,26 @@ const Transfers = () => {
                                                 />
                                                 <span style={styles.currencyLabel}>EUR</span>
                                             </div>
-                                            <p style={styles.balanceInfo}>Solde disponible : <strong style={{ color: (parseFloat(amount) > getWallet(fromAccount)?.balance) ? '#e74c3c' : '#27ae60' }}>{getWallet(fromAccount)?.balance.toFixed(2)} EUR</strong></p>
+                                            <p style={styles.balanceInfo}>{t('transfers.amount.available')} <strong style={{ color: (parseFloat(amount) > getWallet(fromAccount)?.balance) ? '#e74c3c' : '#27ae60' }}>{getWallet(fromAccount)?.balance.toFixed(2)} EUR</strong></p>
 
                                             {parseFloat(amount) > getWallet(fromAccount)?.balance && (
                                                 <p style={{ color: '#e74c3c', fontWeight: 'bold', marginTop: '10px' }}>
-                                                    <i className="fas fa-exclamation-triangle"></i> Attention: Ce montant dépasse votre solde disponible. Le virement pourra être rejeté.
+                                                    <i className="fas fa-exclamation-triangle"></i> {t('transfers.amount.insufficient_funds')}
                                                 </p>
                                             )}
 
                                             {parseFloat(amount) > 50000 && (
-                                                <p style={{ color: '#e74c3c', fontWeight: 'bold' }}><i className="fas fa-exclamation-circle"></i> Limite maximale autorisée : 50 000 € par virement</p>
+                                                <p style={{ color: '#e74c3c', fontWeight: 'bold' }}><i className="fas fa-exclamation-circle"></i> {t('transfers.amount.limit_exceeded')}</p>
                                             )}
 
                                             <div style={styles.btnRow}>
-                                                <button style={styles.backBtn} onClick={() => setStep(1)}>Retour</button>
+                                                <button style={styles.backBtn} onClick={() => setStep(1)}>{t('transfers.buttons.back')}</button>
                                                 <button
                                                     style={styles.nextBtn}
                                                     onClick={() => setStep(3)}
                                                     disabled={!amount || amount <= 0 || parseFloat(amount) > getWallet(fromAccount)?.balance || parseFloat(amount) > 50000}
                                                 >
-                                                    Suivant
+                                                    {t('transfers.buttons.next')}
                                                 </button>
                                             </div>
                                         </div>
@@ -710,27 +722,27 @@ const Transfers = () => {
 
                                     {step === 3 && (
                                         <div>
-                                            <h3 style={{ ...styles.sectionTitle, textAlign: 'center' }}>Vérifiez les détails</h3>
+                                            <h3 style={{ ...styles.sectionTitle, textAlign: 'center' }}>{t('transfers.review.title')}</h3>
                                             <div style={styles.summaryCard}>
-                                                <div style={styles.summaryRow}><span style={styles.summaryLabel}>De</span><span style={styles.summaryValue}>{getWallet(fromAccount)?.type === 'main' ? 'Compte Courant' : 'Epargne'}</span></div>
-                                                <div style={styles.summaryRow}><span style={styles.summaryLabel}>Vers</span><span style={styles.summaryValue}>{activeTab === 'internal' ? (getWallet(toAccount)?.type === 'main' ? 'Compte Courant' : 'Epargne') : (beneficiaryType === 'saved' ? beneficiaries.find(b => b.id === selectedBeneficiaryId)?.name : beneficiaryName)}</span></div>
+                                                <div style={styles.summaryRow}><span style={styles.summaryLabel}>{t('transfers.review.from')}</span><span style={styles.summaryValue}>{getWallet(fromAccount)?.type === 'main' ? t('accounts.card.main') : t('accounts.card.savings')}</span></div>
+                                                <div style={styles.summaryRow}><span style={styles.summaryLabel}>{t('transfers.review.to')}</span><span style={styles.summaryValue}>{activeTab === 'internal' ? (getWallet(toAccount)?.type === 'main' ? t('accounts.card.main') : t('accounts.card.savings')) : (beneficiaryType === 'saved' ? beneficiaries.find(b => b.id === selectedBeneficiaryId)?.name : beneficiaryName)}</span></div>
                                                 {isInvikTarget && (
                                                     <div style={{ padding: '12px 16px', backgroundColor: '#e8f5e9', color: '#2e7d32', borderRadius: '12px', fontSize: '0.9rem', marginBottom: '1.5rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '12px', border: '1px solid #c8e6c9' }}>
                                                         <div style={{ width: '30px', height: '30px', borderRadius: '50%', backgroundColor: '#2e7d32', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                                             <i className="fas fa-bolt" style={{ fontSize: '0.8rem' }}></i>
                                                         </div>
                                                         <div>
-                                                            <div style={{ fontSize: '1rem' }}>Virement Instantané Certifié</div>
-                                                            <div style={{ fontWeight: 'normal', fontSize: '0.8rem', opacity: 0.8 }}>Exécution immédiate via le réseau sécurisé INVIK BANK.</div>
+                                                            <div style={{ fontSize: '1rem' }}>{t('transfers.review.certified')}</div>
+                                                            <div style={{ fontWeight: 'normal', fontSize: '0.8rem', opacity: 0.8 }}>{t('transfers.review.certified_desc')}</div>
                                                         </div>
                                                     </div>
                                                 )}
                                                 <div style={styles.summaryDivider}></div>
-                                                <div style={styles.summaryTotal}><span>Montant</span><span>{parseFloat(amount).toFixed(2)} EUR</span></div>
+                                                <div style={styles.summaryTotal}><span>{t('transfers.review.total')}</span><span>{parseFloat(amount).toFixed(2)} EUR</span></div>
                                             </div>
                                             <div style={styles.btnRow}>
-                                                <button style={styles.backBtn} onClick={() => setStep(2)}>Modifier</button>
-                                                <button style={styles.confirmBtn} onClick={handleSubmit} disabled={submitting}>{submitting ? <i className="fas fa-spinner fa-spin"></i> : 'Confirmer'}</button>
+                                                <button style={styles.backBtn} onClick={() => setStep(2)}>{t('transfers.buttons.edit')}</button>
+                                                <button style={styles.confirmBtn} onClick={handleSubmit} disabled={submitting}>{submitting ? <i className="fas fa-spinner fa-spin"></i> : t('transfers.buttons.confirm')}</button>
                                             </div>
                                         </div>
                                     )}
@@ -742,7 +754,7 @@ const Transfers = () => {
                         {!success && (
                             <div style={{ marginTop: '3rem', borderTop: '1px solid #eee', paddingTop: '2rem' }}>
                                 <h3 style={{ fontSize: '1.2rem', color: '#003366', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                    <i className="fas fa-history"></i> Historique des virements récents
+                                    <i className="fas fa-history"></i> {t('transfers.history.title')}
                                 </h3>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                                     {paginatedHistory.map(tx => (
@@ -765,11 +777,11 @@ const Transfers = () => {
                                                 gap: '6px'
                                             }}>
                                                 {tx.status === 'in_review' && <i className="fas fa-circle-notch fa-spin"></i>}
-                                                {tx.status === 'pending' ? 'En attente' : (tx.status === 'in_review' ? 'Examen INVIK' : (tx.status === 'rejected' ? 'Refusé' : 'Terminé'))}
+                                                {tx.status === 'pending' ? t('status.pending') : (tx.status === 'in_review' ? t('transactions.review') : (tx.status === 'rejected' ? t('status.rejected') : t('status.done')))}
                                             </span>
                                         </div>
                                     ))}
-                                    {transferHistory.length === 0 && <p style={{ textAlign: 'center', color: '#888' }}>Vous n'avez pas encore effectué de virements.</p>}
+                                    {transferHistory.length === 0 && <p style={{ textAlign: 'center', color: '#888' }}>{t('transfers.history.empty')}</p>}
                                 </div>
                                 <PaginationControls />
                             </div>

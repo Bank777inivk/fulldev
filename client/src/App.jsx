@@ -115,8 +115,6 @@ function AppRoutes() {
         {/* Auth specific pages might need to be outside or handled carefully, keeping them inside for consistent lang */}
         <Route path="email-verification-pending" element={<EmailVerificationPending />} />
         <Route path="email-verification-success" element={<EmailVerificationSuccess />} />
-        <Route path="auth/action" element={<AuthActionHandler />} />
-
         {/* Dashboard Private Routes - Now under /:lang/dashboard */}
         <Route
           path="dashboard"
@@ -140,6 +138,9 @@ function AppRoutes() {
           <Route path="kyc" element={<KycVerification />} />
         </Route>
       </Route>
+
+      {/* Auth Action Handler - MUST be outside :lang block to catch Firebase redirects */}
+      <Route path="/auth/action" element={<AuthActionHandler />} />
     </Routes>
   );
 }

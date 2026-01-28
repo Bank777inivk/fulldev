@@ -1,7 +1,10 @@
 import React from 'react';
 import { notificationService } from '../../services/notificationService';
+import { useTranslation } from 'react-i18next';
 
 const NotificationDropdown = ({ notifications, onClose }) => {
+    const { t, i18n } = useTranslation();
+
     const handleMarkAsRead = async (id) => {
         try {
             await notificationService.markAsRead(id);
@@ -21,7 +24,8 @@ const NotificationDropdown = ({ notifications, onClose }) => {
     const formatDate = (date) => {
         if (!date) return '';
         const d = date.toDate ? date.toDate() : new Date(date);
-        return d.toLocaleDateString('fr-FR', {
+        const locale = i18n.language === 'en' ? 'en-US' : 'fr-FR';
+        return d.toLocaleDateString(locale, {
             day: '2-digit',
             month: 'short',
             hour: '2-digit',
@@ -32,9 +36,9 @@ const NotificationDropdown = ({ notifications, onClose }) => {
     return (
         <div className="notifications-dropdown-container" onClick={(e) => e.stopPropagation()}>
             <div className="notifications-header">
-                <h3>Notifications</h3>
+                <h3>{t('notifications.title')}</h3>
                 <button onClick={handleMarkAllAsRead} className="mark-all-read">
-                    Tout marquer comme lu
+                    {t('notifications.mark_all_read')}
                 </button>
             </div>
 
@@ -60,13 +64,13 @@ const NotificationDropdown = ({ notifications, onClose }) => {
                 ) : (
                     <div className="no-notifications">
                         <i className="fas fa-bell-slash"></i>
-                        <p>Aucune notification</p>
+                        <p>{t('notifications.empty')}</p>
                     </div>
                 )}
             </div>
 
             <div className="notifications-footer" onClick={onClose}>
-                Fermer
+                {t('notifications.close')}
             </div>
         </div>
     );

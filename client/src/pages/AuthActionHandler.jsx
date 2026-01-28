@@ -10,7 +10,7 @@ import {
 } from 'firebase/auth';
 
 const AuthActionHandler = () => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const [status, setStatus] = useState('processing');
@@ -118,7 +118,7 @@ const AuthActionHandler = () => {
                         <div style={styles.successIcon}>✓</div>
                         <h2 style={styles.title}>{t('auth.action_handler.titles.success')}</h2>
                         <p style={styles.text}>{message}</p>
-                        <button style={styles.button} onClick={() => navigate('/login')}>
+                        <button style={styles.button} onClick={() => navigate(`/${i18n.language}/login`)}>
                             {t('auth.action_handler.buttons.login')}
                         </button>
                     </div>
@@ -129,7 +129,7 @@ const AuthActionHandler = () => {
                         <div style={styles.errorIcon}>✕</div>
                         <h2 style={styles.title}>{t('auth.action_handler.titles.error')}</h2>
                         <p style={styles.text}>{message}</p>
-                        <button style={styles.button} onClick={() => navigate('/login')}>
+                        <button style={styles.button} onClick={() => navigate(`/${i18n.language}/login`)}>
                             {t('auth.action_handler.buttons.back_login')}
                         </button>
                     </div>

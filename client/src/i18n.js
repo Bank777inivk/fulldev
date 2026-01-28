@@ -2,6 +2,7 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import Backend from 'i18next-http-backend';
+import { auth } from './firebase/config';
 
 i18n
     // load translation using http -> see /public/locales
@@ -36,5 +37,13 @@ i18n
         // Supported languages
         supportedLngs: ['fr', 'en', 'es', 'it', 'pt', 'de'],
     });
+
+// Keep Firebase Auth language in sync with i18next
+i18n.on('languageChanged', (lng) => {
+    if (auth) {
+        auth.languageCode = lng;
+        console.log(`Firebase Auth language set to: ${lng}`);
+    }
+});
 
 export default i18n;

@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { supportService } from '../../services/supportService';
+import { useTranslation } from 'react-i18next';
 
 const DashboardSidebar = ({ isOpen, toggleSidebar }) => {
     const { logout, userData, currentUser } = useAuth();
     const [unreadSupport, setUnreadSupport] = useState(0);
     const navigate = useNavigate();
+    const { t, i18n } = useTranslation();
     const isMobile = window.innerWidth < 768;
 
     useEffect(() => {
@@ -20,24 +22,24 @@ const DashboardSidebar = ({ isOpen, toggleSidebar }) => {
     const handleLogout = async () => {
         try {
             await logout();
-            navigate('/login');
+            navigate(`/${i18n.language}/login`);
         } catch (error) {
             console.error("Erreur déconnexion:", error);
         }
     };
 
     const menuItems = [
-        { name: 'Mon Espace Client', path: '/dashboard', icon: 'fas fa-th-large' },
-        { name: 'Mes Comptes', path: '/dashboard/accounts', icon: 'fas fa-wallet' },
-        { name: 'Virements', path: '/dashboard/transfers', icon: 'fas fa-exchange-alt' },
-        { name: 'Bénéficiaires', path: '/dashboard/beneficiaries', icon: 'fas fa-users' },
-        { name: 'Dépôt / Recharger', path: '/dashboard/deposit', icon: 'fas fa-plus-circle' },
-        { name: 'Mes Cartes', path: '/dashboard/cards', icon: 'fas fa-credit-card' },
-        { name: 'Crédits', path: '/dashboard/credits', icon: 'fas fa-hand-holding-usd' },
-        { name: 'Historique', path: '/dashboard/history', icon: 'fas fa-history' },
-        { name: 'Documents / RIB', path: '/dashboard/documents', icon: 'fas fa-file-invoice' },
-        { name: 'Support', path: '/dashboard/support', icon: 'fas fa-headset', badge: unreadSupport },
-        { name: 'Paramètres', path: '/dashboard/settings', icon: 'fas fa-cog' },
+        { name: t('sidebar.nav.dashboard'), path: `/${i18n.language}/dashboard`, icon: 'fas fa-th-large' },
+        { name: t('sidebar.nav.accounts'), path: `/${i18n.language}/dashboard/accounts`, icon: 'fas fa-wallet' },
+        { name: t('sidebar.nav.transfers'), path: `/${i18n.language}/dashboard/transfers`, icon: 'fas fa-exchange-alt' },
+        { name: t('sidebar.nav.beneficiaries'), path: `/${i18n.language}/dashboard/beneficiaries`, icon: 'fas fa-users' },
+        { name: t('sidebar.nav.deposit'), path: `/${i18n.language}/dashboard/deposit`, icon: 'fas fa-plus-circle' },
+        { name: t('sidebar.nav.cards'), path: `/${i18n.language}/dashboard/cards`, icon: 'fas fa-credit-card' },
+        { name: t('sidebar.nav.credits'), path: `/${i18n.language}/dashboard/credits`, icon: 'fas fa-hand-holding-usd' },
+        { name: t('sidebar.nav.history'), path: `/${i18n.language}/dashboard/history`, icon: 'fas fa-history' },
+        { name: t('sidebar.nav.documents'), path: `/${i18n.language}/dashboard/documents`, icon: 'fas fa-file-invoice' },
+        { name: t('sidebar.nav.support'), path: `/${i18n.language}/dashboard/support`, icon: 'fas fa-headset', badge: unreadSupport },
+        { name: t('sidebar.nav.settings'), path: `/${i18n.language}/dashboard/settings`, icon: 'fas fa-cog' },
     ];
 
     return (
@@ -57,7 +59,7 @@ const DashboardSidebar = ({ isOpen, toggleSidebar }) => {
                 </div>
                 <div className="user-info">
                     <span className="user-name">{userData?.firstName} {userData?.lastName}</span>
-                    <span className="user-status">Compte {userData?.accountType || 'Standard'}</span>
+                    <span className="user-status">{t('sidebar.user.account_type', { type: userData?.accountType || 'Standard' })}</span>
                 </div>
             </div>
 
@@ -66,7 +68,7 @@ const DashboardSidebar = ({ isOpen, toggleSidebar }) => {
                     <NavLink
                         key={item.path}
                         to={item.path}
-                        end={item.path === '/dashboard'}
+                        end={item.path === `/${i18n.language}/dashboard`}
                         className={({ isActive }) => isActive ? 'sidebar-link active' : 'sidebar-link'}
                         onClick={() => window.innerWidth < 768 && toggleSidebar()}
                         style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'relative' }}
@@ -100,7 +102,7 @@ const DashboardSidebar = ({ isOpen, toggleSidebar }) => {
             <div className="sidebar-footer">
                 <button onClick={handleLogout} className="sidebar-logout">
                     <i className="fas fa-sign-out-alt"></i>
-                    <span>Déconnexion</span>
+                    <span>{t('sidebar.logout')}</span>
                 </button>
             </div>
         </aside>

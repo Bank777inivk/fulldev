@@ -4,53 +4,61 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useData } from '../../contexts/DataContext';
 import { useNotifications } from '../../contexts/NotificationContext';
 import { kycService } from '../../services/kycService';
+import { useTranslation } from 'react-i18next';
 
 // --- Sub-components extracted to prevent re-mounting on every render ---
 
-const Section = ({ title, icon, subtitle, children, required = true }) => (
-    <section style={styles.section}>
-        <div style={styles.sectionHeader}>
-            <div style={styles.sectionIcon}>
-                <i className={icon}></i>
+const Section = ({ title, icon, subtitle, children, required = true }) => {
+    const { t } = useTranslation();
+    return (
+        <section style={styles.section}>
+            <div style={styles.sectionHeader}>
+                <div style={styles.sectionIcon}>
+                    <i className={icon}></i>
+                </div>
+                <div>
+                    <h2 style={styles.sectionTitle}>
+                        {title} {required && <span style={styles.requiredBadge}>{t('kyc.sections.required')}</span>}
+                    </h2>
+                    <p style={styles.sectionSubtitle}>{subtitle}</p>
+                </div>
             </div>
-            <div>
-                <h2 style={styles.sectionTitle}>
-                    {title} {required && <span style={styles.requiredBadge}>(OBLIGATOIRE)</span>}
-                </h2>
-                <p style={styles.sectionSubtitle}>{subtitle}</p>
+            <div style={styles.sectionContent}>
+                {children}
             </div>
-        </div>
-        <div style={styles.sectionContent}>
-            {children}
-        </div>
-    </section>
-);
+        </section>
+    );
+};
 
-const TypeSelector = ({ id, options, label, value, onChange, disabled }) => (
-    <div style={styles.selectorGroup}>
-        <label style={styles.selectorLabel}>{label}</label>
-        <select
-            value={value}
-            onChange={(e) => onChange(id, e.target.value)}
-            style={styles.select}
-            disabled={disabled}
-        >
-            <option value="">Sélectionner le type de document</option>
-            {options.map(opt => (
-                <option
-                    key={opt.value}
-                    value={opt.value}
-                    disabled={id === 'id2' && opt.value === options.find(o => o.value === value)?.value}
-                >
-                    {opt.label}
-                </option>
-            ))}
-        </select>
-    </div>
-);
+const TypeSelector = ({ id, options, label, value, onChange, disabled }) => {
+    const { t } = useTranslation();
+    return (
+        <div style={styles.selectorGroup}>
+            <label style={styles.selectorLabel}>{label}</label>
+            <select
+                value={value}
+                onChange={(e) => onChange(id, e.target.value)}
+                style={styles.select}
+                disabled={disabled}
+            >
+                <option value="">{t('kyc.labels.select_type')}</option>
+                {options.map(opt => (
+                    <option
+                        key={opt.value}
+                        value={opt.value}
+                        disabled={id === 'id2' && opt.value === options.find(o => o.value === value)?.value}
+                    >
+                        {opt.label}
+                    </option>
+                ))}
+            </select>
+        </div>
+    );
+};
 
 const UploadBox = ({ label, id, icon, description, hint, preview, uploading, onFileChange, guideImage, onViewGuide }) => {
     const isImage = preview && preview.startsWith('data:image');
+    const { t } = useTranslation();
 
     return (
         <div style={styles.uploadCard}>
@@ -65,7 +73,7 @@ const UploadBox = ({ label, id, icon, description, hint, preview, uploading, onF
                     ) : (
                         <div style={styles.filePreview}>
                             <i className="fas fa-file-pdf" style={{ fontSize: '2.5rem', color: '#ef4444' }}></i>
-                            <span style={{ fontSize: '0.75rem', marginTop: '8px', color: '#64748b' }}>Document chargé</span>
+                            <span style={{ fontSize: '0.75rem', marginTop: '8px', color: '#64748b' }}>{t('kyc.labels.loaded')}</span>
                         </div>
                     )
                 ) : (
@@ -87,7 +95,7 @@ const UploadBox = ({ label, id, icon, description, hint, preview, uploading, onF
                     onClick={() => onViewGuide(guideImage)}
                     style={styles.guideBtn}
                 >
-                    <i className="fas fa-eye"></i> Voir un exemple
+                    <i className="fas fa-eye"></i> {t('kyc.labels.example')}
                 </button>
             )}
         </div>
@@ -95,13 +103,14 @@ const UploadBox = ({ label, id, icon, description, hint, preview, uploading, onF
 };
 
 const ImageModal = ({ url, onClose }) => {
+    const { t } = useTranslation();
     if (!url) return null;
     return (
         <div style={styles.modalOverlay} onClick={onClose}>
             <div style={styles.modalContent} onClick={e => e.stopPropagation()}>
                 <button style={styles.closeBtn} onClick={onClose}>×</button>
                 <img src={url} alt="Exemple KYC" style={styles.modalImage} />
-                <p style={styles.modalCaption}>Référence pour un envoi conforme</p>
+                <p style={styles.modalCaption}>{t('kyc.labels.example_ref')}</p>
             </div>
         </div>
     );
@@ -112,6 +121,7 @@ const KycVerification = () => {
     const { kycStatus } = useData();
     const { showToast } = useNotifications();
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     const [docTypes, setDocTypes] = useState({
         id1: '',
@@ -148,19 +158,19 @@ const KycVerification = () => {
 
     useEffect(() => {
         if (kycStatus?.status === 'submitted') {
-            showToast("Vos documents sont déjà en cours d'examen.", "info");
+            showToast(t('kyc.status.submitted'), "info");
             navigate('/dashboard');
         } else if (kycStatus?.status === 'verified') {
-            showToast("Votre compte est déjà vérifié.", "success");
+            showToast(t('kyc.status.verified'), "success");
             navigate('/dashboard');
         }
-    }, [kycStatus?.status, navigate, showToast]);
+    }, [kycStatus?.status, navigate, showToast, t]);
 
     const handleFileChange = (e, type) => {
         const file = e.target.files[0];
         if (file) {
             if (file.size > 5 * 1024 * 1024) {
-                showToast("Le fichier est trop volumineux (max 5Mo)", "error");
+                showToast(t('kyc.messages.file_too_large'), "error");
                 return;
             }
             setFiles(prev => ({ ...prev, [type]: file }));
@@ -191,7 +201,7 @@ const KycVerification = () => {
             if (data.secure_url) {
                 return data.secure_url;
             } else {
-                throw new Error(data.error?.message || "Erreur d'upload");
+                throw new Error(data.error?.message || t('kyc.messages.upload_error'));
             }
         } catch (error) {
             console.error("Cloudinary Error:", error);
@@ -203,7 +213,7 @@ const KycVerification = () => {
         e.preventDefault();
 
         if (!docTypes.id1) {
-            showToast("Veuillez sélectionner un type de document d'identité.", "warning");
+            showToast(t('kyc.messages.select_id_type'), "warning");
             return;
         }
 
@@ -212,7 +222,7 @@ const KycVerification = () => {
         const missingTypes = ['address', 'income'].filter(key => !docTypes[key]);
 
         if (missingFiles.length > 0 || missingTypes.length > 0) {
-            showToast("Veuillez fournir tous les justificatifs obligatoires.", "warning");
+            showToast(t('kyc.messages.missing_files'), "warning");
             return;
         }
 
@@ -249,54 +259,53 @@ const KycVerification = () => {
             });
 
             setProgress(100);
-            showToast("Dossier KYC complet soumis avec succès !", "success");
+            showToast(t('kyc.messages.success'), "success");
             setTimeout(() => navigate('/dashboard'), 2000);
         } catch (error) {
-            showToast("Une erreur est survenue lors de l'envoi : " + error.message, "error");
+            showToast(t('kyc.messages.error') + error.message, "error");
         } finally {
             setUploading(false);
         }
     };
 
     const idOptions = [
-        { value: 'cni', label: 'Carte Nationale d\'Identité (CNI)' },
-        { value: 'passport', label: 'Passeport' },
-        { value: 'driver_license', label: 'Permis de conduire' },
-        { value: 'residence_permit', label: 'Titre de séjour' }
+        { value: 'cni', label: t('kyc.types.id.cni') },
+        { value: 'passport', label: t('kyc.types.id.passport') },
+        { value: 'driver_license', label: t('kyc.types.id.driver') },
+        { value: 'residence_permit', label: t('kyc.types.id.residence') }
     ];
 
     const addressOptions = [
-        { value: 'utility_bill', label: 'Facture d\'électricité / Gaz / Eau' },
-        { value: 'telecom_bill', label: 'Facture Internet / Téléphone fixe' },
-        { value: 'tax_notice', label: 'Avis d\'imposition' },
-        { value: 'insurance_home', label: 'Attestation d\'assurance habitation' },
-        { value: 'rent_receipt', label: 'Quittance de loyer' },
-        { value: 'hosting_cert', label: 'Attestation d\'hébergement + ID hébergeant' }
+        { value: 'utility_bill', label: t('kyc.types.address.utility') },
+        { value: 'telecom_bill', label: t('kyc.types.address.telecom') },
+        { value: 'tax_notice', label: t('kyc.types.address.tax') },
+        { value: 'insurance_home', label: t('kyc.types.address.insurance') },
+        { value: 'rent_receipt', label: t('kyc.types.address.rent') },
+        { value: 'hosting_cert', label: t('kyc.types.address.hosting') }
     ];
 
     const incomeOptions = [
-        { value: 'payslip', label: '3 derniers bulletins de salaire' },
-        { value: 'work_contract', label: 'Contrat de travail' },
-        { value: 'tax_notice_income', label: 'Dernier avis d\'imposition' },
-        { value: 'kbis', label: 'Extrait Kbis (Entrepreneur)' },
-        { value: 'pension', label: 'Relevé de pension (Retraité)' },
-        { value: 'pole_emploi', label: 'Attestation Pôle Emploi' },
-        { value: 'bank_statement', label: 'Relevé bancaire récent' }
+        { value: 'payslip', label: t('kyc.types.income.payslip') },
+        { value: 'work_contract', label: t('kyc.types.income.contract') },
+        { value: 'tax_notice_income', label: t('kyc.types.income.tax') },
+        { value: 'kbis', label: t('kyc.types.income.kbis') },
+        { value: 'pension', label: t('kyc.types.income.pension') },
+        { value: 'pole_emploi', label: t('kyc.types.income.unemployment') },
+        { value: 'bank_statement', label: t('kyc.types.income.statement') }
     ];
 
     return (
         <div style={styles.container}>
             <header style={styles.header}>
-                <h1 style={styles.title}>Vérification d'identité (KYC)</h1>
+                <h1 style={styles.title}>{t('kyc.title')}</h1>
                 <p style={styles.subtitle}>
-                    Pour sécuriser votre compte, veuillez nous transmettre un justificatif d'identité
-                    et les documents complémentaires requis.
+                    {t('kyc.subtitle')}
                 </p>
                 {kycStatus?.status === 'unverified' && (
                     <div style={styles.rejectionNotice}>
                         <i className="fas fa-exclamation-circle" style={{ marginRight: '10px' }}></i>
                         <div style={{ flex: 1 }}>
-                            <strong>Action requise :</strong> {kycStatus.reviewNotes || "Certains documents doivent être renvoyés."}
+                            <strong>{t('kyc.status.action_required')}</strong> {kycStatus.reviewNotes || t('kyc.status.rejection_msg')}
                         </div>
                     </div>
                 )}
@@ -304,13 +313,13 @@ const KycVerification = () => {
 
             <form onSubmit={handleSubmit} style={styles.form}>
                 <Section
-                    title="1. Justificatif d’identité"
+                    title={t('kyc.sections.identity')}
                     icon="fas fa-id-card"
-                    subtitle="Choisissez un premier document valide (CNI, Passeport, etc.)"
+                    subtitle={t('kyc.sections.identity_sub')}
                 >
                     <TypeSelector
                         id="id1"
-                        label="Type de document"
+                        label={t('kyc.labels.type_doc')}
                         options={idOptions}
                         value={docTypes.id1}
                         onChange={handleTypeChange}
@@ -320,9 +329,9 @@ const KycVerification = () => {
                         <div style={styles.grid}>
                             <UploadBox
                                 id="id1Front"
-                                label="Recto / Page principale"
+                                label={t('kyc.labels.front')}
                                 icon="fas fa-id-card"
-                                description="Charger le recto"
+                                description={t('kyc.labels.load_front')}
                                 preview={previews.id1Front}
                                 uploading={uploading}
                                 onFileChange={handleFileChange}
@@ -332,9 +341,9 @@ const KycVerification = () => {
                             {docTypes.id1 !== 'passport' && (
                                 <UploadBox
                                     id="id1Back"
-                                    label="Verso (si applicable)"
+                                    label={t('kyc.labels.back')}
                                     icon="fas fa-id-card"
-                                    description="Charger le verso"
+                                    description={t('kyc.labels.load_back')}
                                     preview={previews.id1Back}
                                     uploading={uploading}
                                     onFileChange={handleFileChange}
@@ -347,27 +356,27 @@ const KycVerification = () => {
 
 
                 <Section
-                    title="2. Vérification biométrique"
+                    title={t('kyc.sections.biometric')}
                     icon="fas fa-user-shield"
-                    subtitle="Photos récentes pour confirmer votre identité."
+                    subtitle={t('kyc.sections.biometric_sub')}
                 >
                     <div style={styles.grid}>
                         <UploadBox
                             id="selfie"
-                            label="Selfie Simple"
+                            label={t('kyc.labels.selfie')}
                             icon="fas fa-camera"
-                            description="Visage dégagé"
-                            hint="Sans filtre ni lunettes"
+                            description={t('kyc.labels.face_clear')}
+                            hint={t('kyc.labels.selfie_hint')}
                             preview={previews.selfie}
                             uploading={uploading}
                             onFileChange={handleFileChange}
                         />
                         <UploadBox
                             id="selfieWithId"
-                            label="Selfie avec document"
+                            label={t('kyc.labels.selfie_id')}
                             icon="fas fa-portrait"
-                            description="Tenez votre pièce d'identité"
-                            hint="Doit être lisible"
+                            description={t('kyc.labels.hold_id')}
+                            hint={t('kyc.labels.selfie_id_hint')}
                             preview={previews.selfieWithId}
                             uploading={uploading}
                             onFileChange={handleFileChange}
@@ -378,13 +387,13 @@ const KycVerification = () => {
                 </Section>
 
                 <Section
-                    title="3. Justificatif de domicile"
+                    title={t('kyc.sections.address')}
                     icon="fas fa-home"
-                    subtitle="Document officiel datant de moins de 3 mois."
+                    subtitle={t('kyc.sections.address_sub')}
                 >
                     <TypeSelector
                         id="address"
-                        label="Type de justificatif"
+                        label={t('kyc.labels.type_doc')}
                         options={addressOptions}
                         value={docTypes.address}
                         onChange={handleTypeChange}
@@ -393,9 +402,9 @@ const KycVerification = () => {
                     {docTypes.address && (
                         <UploadBox
                             id="addressProof"
-                            label="Justificatif de domicile"
+                            label={t('kyc.sections.address')}
                             icon="fas fa-file-invoice"
-                            description="Charger le document"
+                            description={t('kyc.labels.load_doc')}
                             preview={previews.addressProof}
                             uploading={uploading}
                             onFileChange={handleFileChange}
@@ -404,13 +413,13 @@ const KycVerification = () => {
                 </Section>
 
                 <Section
-                    title="4. Justificatifs de revenus"
+                    title={t('kyc.sections.income')}
                     icon="fas fa-briefcase"
-                    subtitle="Selon votre situation (Salarié, Retraité, etc.)."
+                    subtitle={t('kyc.sections.income_sub')}
                 >
                     <TypeSelector
                         id="income"
-                        label="Nature du revenu"
+                        label={t('kyc.labels.type_doc')}
                         options={incomeOptions}
                         value={docTypes.income}
                         onChange={handleTypeChange}
@@ -419,9 +428,9 @@ const KycVerification = () => {
                     {docTypes.income && (
                         <UploadBox
                             id="incomeProof"
-                            label="Justificatif de revenus"
+                            label={t('kyc.sections.income')}
                             icon="fas fa-file-signature"
-                            description="Charger le document"
+                            description={t('kyc.labels.load_doc')}
                             preview={previews.incomeProof}
                             uploading={uploading}
                             onFileChange={handleFileChange}
@@ -430,20 +439,20 @@ const KycVerification = () => {
                 </Section>
 
                 <Section
-                    title="5. Justificatif bancaire"
+                    title={t('kyc.sections.bank')}
                     icon="fas fa-university"
-                    subtitle="Relevé d'Identité Bancaire (RIB / IBAN)."
+                    subtitle={t('kyc.sections.bank_sub')}
                     required={false}
                 >
                     <div style={styles.noticeBox}>
                         <i className="fas fa-info-circle"></i>
-                        <p>Le RIB doit impérativement être au nom du demandeur (<strong>titulaire exclusif</strong>).</p>
+                        <p>{t('kyc.sections.bank_notice')}</p>
                     </div>
                     <UploadBox
                         id="rib"
-                        label="RIB / IBAN"
+                        label={t('kyc.sections.bank')}
                         icon="fas fa-university"
-                        description="Charger votre RIB"
+                        description={t('kyc.labels.load_doc')}
                         preview={previews.rib}
                         uploading={uploading}
                         onFileChange={handleFileChange}
@@ -452,7 +461,7 @@ const KycVerification = () => {
 
                 {uploading && (
                     <div style={styles.progressContainer}>
-                        <div style={styles.progressLabel}>Sécurisation et envoi... {progress}%</div>
+                        <div style={styles.progressLabel}>{t('kyc.labels.securing_sending')} {progress}%</div>
                         <div style={styles.progressBar}>
                             <div style={{ ...styles.progressFill, width: `${progress}%` }}></div>
                         </div>
@@ -463,8 +472,7 @@ const KycVerification = () => {
                     <div style={styles.legalBox}>
                         <i className="fas fa-shield-alt" style={{ color: '#0ea5e9', fontSize: '1.2rem' }}></i>
                         <p style={styles.legalText}>
-                            Les documents fournis sont utilisés exclusivement à des fins de vérification d’identité (KYC), de lutte contre la fraude et de conformité réglementaire.
-                            Ils sont traités de manière sécurisée et confidentielle conformément au RGPD.
+                            {t('kyc.legal')}
                         </p>
                     </div>
 
@@ -474,7 +482,7 @@ const KycVerification = () => {
                             style={{ ...styles.submitBtn, opacity: uploading ? 0.7 : 1 }}
                             disabled={uploading}
                         >
-                            {uploading ? "Envoi sécurisé..." : "Soumettre mon dossier complet"}
+                            {uploading ? t('kyc.labels.sending') : t('kyc.labels.submit_btn')}
                         </button>
                         <button
                             type="button"
@@ -482,7 +490,7 @@ const KycVerification = () => {
                             style={styles.cancelBtn}
                             disabled={uploading}
                         >
-                            Retour
+                            {t('kyc.labels.back_btn')}
                         </button>
                     </div>
                 </div>

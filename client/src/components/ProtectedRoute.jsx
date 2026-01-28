@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
+import { useTranslation } from 'react-i18next';
 
 const ProtectedRoute = ({ children }) => {
     const { currentUser, loading } = useAuth();
+    const { lang } = useParams();
+    const { i18n } = useTranslation();
     const [isAdmin, setIsAdmin] = useState(false);
     const [checkingRole, setCheckingRole] = useState(true);
+
+    const currentLang = lang || i18n.language || 'fr';
 
     useEffect(() => {
         const checkUserRole = async () => {
@@ -44,12 +49,12 @@ const ProtectedRoute = ({ children }) => {
     }
 
     if (!currentUser) {
-        return <Navigate to="/login" />;
+        return <Navigate to={`/${currentLang}/login`} />;
     }
 
     // Skip email verification check for admin users
     if (!isAdmin && !currentUser.emailVerified) {
-        return <Navigate to="/email-verification-pending" />;
+        return <Navigate to={`/${currentLang}/email-verification-pending`} />;
     }
 
     return children;

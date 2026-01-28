@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useData } from '../../contexts/DataContext';
 import { useNotifications } from '../../contexts/NotificationContext';
+import { useTranslation } from 'react-i18next';
 import { ribService } from '../../services/ribService';
 import KycVerificationBanner from '../../components/dashboard/KycVerificationBanner';
 import { jsPDF } from 'jspdf';
@@ -11,6 +12,7 @@ const Documents = () => {
     const { ribs, loading } = useData();
     const { showToast } = useNotifications();
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+    const { t, i18n } = useTranslation();
 
     useEffect(() => {
         const handleResize = () => setIsMobile(window.innerWidth <= 768);
@@ -54,7 +56,7 @@ const Documents = () => {
             doc.text("INVIK S.A.", 50, 25);
             doc.setFontSize(10);
             doc.setFont("helvetica", "normal");
-            doc.text("Banque Digitale Premium", 50, 32);
+            doc.text(t('documents.branding.tagline'), 50, 32);
         } catch (e) {
             doc.setTextColor(255, 255, 255);
             doc.setFontSize(22);
@@ -71,7 +73,8 @@ const Documents = () => {
         // Date
         doc.setFontSize(9);
         doc.setFont("helvetica", "italic");
-        doc.text(`Généré le: ${new Date().toLocaleDateString('fr-FR')} à ${new Date().toLocaleTimeString('fr-FR')}`, 20, 68);
+        const locale = i18n.language === 'en' ? 'en-US' : 'fr-FR';
+        doc.text(`${t('history.columns.date')}: ${new Date().toLocaleDateString(locale)} ${t('common.at')} ${new Date().toLocaleTimeString(locale)}`, 20, 68);
 
         // --- Footer ---
         doc.setDrawColor(240, 240, 240);
@@ -79,9 +82,9 @@ const Documents = () => {
 
         doc.setFontSize(7);
         doc.setTextColor(150, 150, 150);
-        doc.text("Ce document est un acte officiel généré par les services numériques de INVIK S.A.", pageWidth / 2, pageHeight - 22, { align: "center" });
-        doc.text("INVIK S.A. - S.A. de droit luxembourgeois - RCS Luxembourg B 138.554 - Capital 31.000.000 EUR", pageWidth / 2, pageHeight - 17, { align: "center" });
-        doc.text("Siège social : 51, Boulevard Grande-Duchesse Charlotte, L-1331 Luxembourg", pageWidth / 2, pageHeight - 12, { align: "center" });
+        doc.text(t('documents.branding.legal_1'), pageWidth / 2, pageHeight - 22, { align: "center" });
+        doc.text(t('documents.branding.legal_2'), pageWidth / 2, pageHeight - 17, { align: "center" });
+        doc.text(t('documents.branding.legal_3'), pageWidth / 2, pageHeight - 12, { align: "center" });
     };
 
     const handleDownload = async (rib) => {
@@ -89,7 +92,7 @@ const Documents = () => {
             const doc = new jsPDF();
             const pageWidth = doc.internal.pageSize.getWidth();
 
-            await addPdfBranding(doc, "RELEVÉ D'IDENTITÉ BANCAIRE");
+            await addPdfBranding(doc, t('documents.sections.rib'));
 
             // --- Holder Info ---
             doc.setDrawColor(240, 240, 240);
@@ -98,14 +101,14 @@ const Documents = () => {
             doc.setTextColor(100, 100, 100);
             doc.setFontSize(10);
             doc.setFont("helvetica", "bold");
-            doc.text("TITULAIRE DU COMPTE", 20, 85);
+            doc.text(t('documents.rib.holder'), 20, 85);
 
             doc.setTextColor(0, 0, 0);
             doc.setFontSize(12);
             doc.setFont("helvetica", "normal");
-            const fullName = `${userData?.firstName || ''} ${userData?.lastName || ''}`.trim() || rib.holderName || "Client INVIK BANK";
+            const fullName = `${userData?.firstName || ''} ${userData?.lastName || ''}`.trim() || rib.holderName || t('history.types.beneficiary');
             doc.text(fullName, 20, 93);
-            doc.text(userData?.address || "Adresse non renseignée", 20, 100);
+            doc.text(userData?.address || t('settings.profile.not_defined'), 20, 100);
             if (userData?.zipCode || userData?.city) {
                 doc.text(`${userData?.zipCode || ""} ${userData?.city || ""}`, 20, 107);
             }
@@ -114,7 +117,7 @@ const Documents = () => {
             doc.setTextColor(100, 100, 100);
             doc.setFontSize(10);
             doc.setFont("helvetica", "bold");
-            doc.text("ÉTABLISSEMENT BANCAIRE", 120, 85);
+            doc.text(t('documents.rib.bank'), 120, 85);
 
             doc.setTextColor(0, 0, 0);
             doc.setFontSize(12);
@@ -139,10 +142,10 @@ const Documents = () => {
             doc.setFontSize(9);
             doc.setTextColor(100, 100, 100);
             doc.setFont("helvetica", "bold");
-            doc.text("CODE BANQUE", 25, 130);
-            doc.text("CODE GUICHET", 60, 130);
-            doc.text("NUMÉRO DE COMPTE", 95, 130);
-            doc.text("CLÉ", pageWidth - 40, 130);
+            doc.text(t('documents.rib.bank_code').toUpperCase(), 25, 130);
+            doc.text(t('documents.rib.branch_code').toUpperCase(), 60, 130);
+            doc.text(t('documents.rib.account_number').toUpperCase(), 95, 130);
+            doc.text(t('documents.rib.key').toUpperCase(), pageWidth - 40, 130);
 
             doc.setFontSize(11);
             doc.setTextColor(0, 51, 102);
@@ -155,19 +158,19 @@ const Documents = () => {
             doc.setFontSize(11);
             doc.setTextColor(0, 0, 0);
             doc.setFont("helvetica", "bold");
-            doc.text("IBAN :", 25, 160);
-            doc.text("BIC (SWIFT) :", 25, 172);
+            doc.text(`${t('documents.rib.iban')} :`, 25, 160);
+            doc.text(`${t('documents.rib.bic')} :`, 25, 172);
 
             doc.setFont("courier", "bold");
-            doc.text(rib.iban || "Non défini", 55, 160);
+            doc.text(rib.iban || t('documents.rib.not_defined'), 55, 160);
             doc.setFont("helvetica", "normal");
             doc.text(rib.bic || "INVKFR2P", 55, 172);
 
             doc.save(`RIB_INVIK_SA_${rib.accountName.split(' ').join('_')}.pdf`);
-            showToast("RIB généré avec succès !", "success");
+            showToast(t('documents.messages.rib_success'), "success");
         } catch (error) {
             console.error("PDF Generation error:", error);
-            showToast("Erreur lors de la génération du PDF", "error");
+            showToast(t('documents.messages.rib_error'), "error");
         }
     };
 
@@ -175,7 +178,7 @@ const Documents = () => {
         try {
             const doc = new jsPDF();
             const pageWidth = doc.internal.pageSize.getWidth();
-            const fullName = `${userData?.firstName || ''} ${userData?.lastName || ''}`.trim() || "Client INVIK BANK";
+            const fullName = `${userData?.firstName || ''} ${userData?.lastName || ''}`.trim() || t('history.types.beneficiary');
 
             // Pre-load logo to avoid signature errors
             let logoData = null;
@@ -185,70 +188,71 @@ const Documents = () => {
                 console.warn("Could not load logo", e);
             }
 
-            await addPdfBranding(doc, "CONTRAT D'OUVERTURE DE COMPTE PARTICULIER");
+            await addPdfBranding(doc, t('documents.contract.pdf_title'));
 
             // --- Parties ---
             doc.setFontSize(11);
             doc.setFont("helvetica", "bold");
-            doc.text("ENTRE LES SOUSSIGNÉS :", 20, 85);
+            doc.text(t('documents.contract.parties'), 20, 85);
 
             doc.setFont("helvetica", "normal");
-            doc.text("1. L'établissement bancaire INVIK S.A., ci-après dénommé 'La Banque'.", 25, 95);
-            doc.text(`2. M./Mme ${fullName}, ci-après dénommé 'Le Client'.`, 25, 102);
+            doc.text(t('documents.contract.bank_party'), 25, 95);
+            doc.text(t('documents.contract.client_party', { name: fullName }), 25, 102);
             doc.setFontSize(10);
-            doc.text(`Demeurant au : ${userData?.address || "Non renseigné"}, ${userData?.zipCode || ""} ${userData?.city || ""}`, 30, 108);
+            doc.text(t('documents.contract.residing_at', { address: userData?.address || t('documents.rib.not_defined'), zip: userData?.zipCode || "", city: userData?.city || "" }), 30, 108);
 
             // --- Body ---
             doc.setFontSize(11);
             doc.setFont("helvetica", "bold");
-            doc.text("OBJET DU CONTRAT", 20, 125);
+            doc.text(t('documents.contract.object_title'), 20, 125);
             doc.setFont("helvetica", "normal");
             doc.setFontSize(10);
-            const intro = "Le présent contrat a pour objet de définir les conditions générales et particulières d'ouverture et de fonctionnement des comptes ouverts au nom du Client dans les livres de INVIK S.A.";
+            const intro = t('documents.contract.object_text');
             const splitIntro = doc.splitTextToSize(intro, pageWidth - 40);
             doc.text(splitIntro, 20, 135);
 
             doc.setFont("helvetica", "bold");
-            doc.text("CONDITIONS D'UTILISATION", 20, 150);
+            doc.text(t('documents.contract.terms_title'), 20, 150);
             doc.setFont("helvetica", "normal");
             const terms = [
-                "- Le Client bénéficie d'un accès permanent à ses comptes via l'interface digitale sécurisée.",
-                "- La Banque s'engage à assurer la sécurité des fonds et la confidentialité des données conformément au RGPD.",
-                "- Le Client est responsable du maintien de la confidentialité de ses accès bancaires.",
-                "- Les opérations de virement et de paiement sont soumises aux plafonds définis dans les conditions tarifaires."
+                t('documents.contract.terms_1'),
+                t('documents.contract.terms_2'),
+                t('documents.contract.terms_3'),
+                t('documents.contract.terms_4')
             ];
             doc.text(terms, 25, 160);
 
             doc.setFont("helvetica", "bold");
-            doc.text("DURÉE ET RÉSILIATION", 20, 195);
+            doc.text(t('documents.contract.duration_title'), 20, 195);
             doc.setFont("helvetica", "normal");
-            doc.text("Ce contrat est conclu pour une durée indéterminée. Chaque partie peut y mettre fin à tout moment sous réserve d'un préavis de 30 jours, conformément à la réglementation en vigueur.", 20, 205, { maxWidth: pageWidth - 40 });
+            doc.text(t('documents.contract.duration_text'), 20, 205, { maxWidth: pageWidth - 40 });
 
             // --- Signatures ---
             doc.setFont("helvetica", "bold");
-            doc.text("SIGNATURES", 20, 230);
+            doc.text(t('documents.contract.signatures_title'), 20, 230);
 
             doc.setFontSize(9);
-            doc.text("Fait à Luxembourg, le " + new Date().toLocaleDateString('fr-FR'), 20, 238);
+            const localeDate = i18n.language === 'en' ? 'en-US' : 'fr-FR';
+            doc.text(t('documents.contract.made_at', { date: new Date().toLocaleDateString(localeDate) }), 20, 238);
 
             doc.rect(20, 245, 70, 30); // Client Box
-            doc.text("Signature du Client", 25, 250);
+            doc.text(t('documents.contract.client_sig'), 25, 250);
             doc.setFontSize(8);
-            doc.text("(Signature numérique certifiée)", 25, 270);
+            doc.text(t('documents.contract.certified_sig'), 25, 270);
 
             doc.rect(pageWidth - 90, 245, 70, 30); // Bank Box
             doc.setFontSize(9);
-            doc.text("Pour INVIK S.A.", pageWidth - 85, 250);
+            doc.text(t('documents.contract.bank_sig'), pageWidth - 85, 250);
 
             if (logoData) {
                 doc.addImage(logoData, 'PNG', pageWidth - 55, 255, 15, 15);
             }
 
             doc.save(`CONTRAT_INVIK_SA_${fullName.split(' ').join('_')}.pdf`);
-            showToast("Contrat généré avec succès !", "success");
+            showToast(t('documents.messages.contract_success'), "success");
         } catch (error) {
             console.error("Contract Generation error:", error);
-            showToast("Erreur lors de la génération du contrat", "error");
+            showToast(t('documents.messages.contract_error'), "error");
         }
     };
 
@@ -260,32 +264,32 @@ const Documents = () => {
         if (navigator.share) {
             navigator.share({
                 title: `RIB - ${rib.accountName}`,
-                text: `Voici mon RIB pour le compte ${rib.accountName} (IBAN: ${rib.iban})`,
+                text: t('documents.rib.share_msg', { name: rib.accountName, iban: rib.iban }),
                 url: window.location.href // In real app, this would be the PDF URL
             }).catch(console.error);
         } else {
             // Fallback
             navigator.clipboard.writeText(rib.iban);
-            showToast("IBAN copié dans le presse-papier !", "success");
+            showToast(t('documents.messages.iban_copied'), "success");
         }
     };
 
     if (loading && ribs.length === 0) {
-        return <div style={styles.loading}>Chargement...</div>;
+        return <div style={styles.loading}>{t('loading')}</div>;
     }
 
     // --- DESKTOP VIEW ---
     const DesktopView = () => (
         <div style={styles.container}>
             <header style={styles.header}>
-                <h1 style={styles.title}>Mes Documents</h1>
-                <p style={styles.subtitle}>Téléchargez vos relevés d'identité bancaire et attestations officielles.</p>
+                <h1 style={styles.title}>{t('documents.title')}</h1>
+                <p style={styles.subtitle}>{t('documents.subtitle')}</p>
             </header>
 
             <section style={styles.section}>
                 <h2 style={styles.sectionTitle}>
                     <i className="fas fa-university" style={styles.titleIcon}></i>
-                    Relevés d'Identité Bancaire (RIB)
+                    {t('documents.sections.rib')}
                 </h2>
 
                 {ribs.length === 0 ? (
@@ -293,7 +297,7 @@ const Documents = () => {
                         <div style={styles.emptyIconCircle}>
                             <i className="fas fa-file-invoice" style={styles.emptyIcon}></i>
                         </div>
-                        <p>Aucun document disponible.</p>
+                        <p>{t('documents.messages.empty')}</p>
                     </div>
                 ) : (
                     <div style={styles.grid}>
@@ -309,7 +313,7 @@ const Documents = () => {
                                             <h3 style={styles.docTitle}>RIB - {rib.accountName}</h3>
                                             <div style={styles.ribDetails}>
                                                 <div style={styles.detailRow}>
-                                                    <span style={styles.detailLabel}>Titulaire:</span>
+                                                    <span style={styles.detailLabel}>{t('documents.rib.holder')}:</span>
                                                     <span style={styles.detailValue}>{rib.holderName || (userData?.firstName + ' ' + userData?.lastName)}</span>
                                                 </div>
 
@@ -317,19 +321,19 @@ const Documents = () => {
                                                 <div style={styles.ribTableContainer}>
                                                     <div style={styles.ribTable}>
                                                         <div style={styles.ribTableCol}>
-                                                            <span style={styles.ribTableLabel}>Code Banque</span>
+                                                            <span style={styles.ribTableLabel}>{t('documents.rib.bank_code')}</span>
                                                             <span style={styles.ribTableValue}>{rib.bankCode || '12345'}</span>
                                                         </div>
                                                         <div style={styles.ribTableCol}>
-                                                            <span style={styles.ribTableLabel}>Code Guichet</span>
+                                                            <span style={styles.ribTableLabel}>{t('documents.rib.branch_code')}</span>
                                                             <span style={styles.ribTableValue}>{rib.branchCode || '67890'}</span>
                                                         </div>
                                                         <div style={styles.ribTableCol}>
-                                                            <span style={styles.ribTableLabel}>Numéro Compte</span>
+                                                            <span style={styles.ribTableLabel}>{t('documents.rib.account_number')}</span>
                                                             <span style={styles.ribTableValue}>{rib.accountNumber || 'XXXXXXXX'}</span>
                                                         </div>
                                                         <div style={styles.ribTableCol}>
-                                                            <span style={styles.ribTableLabel}>Clé RIB</span>
+                                                            <span style={styles.ribTableLabel}>{t('documents.rib.key')}</span>
                                                             <span style={styles.ribTableValue}>{rib.ribKey || '00'}</span>
                                                         </div>
                                                     </div>
@@ -349,7 +353,7 @@ const Documents = () => {
                                     <div style={styles.actions}>
                                         <button onClick={() => handleDownload(rib)} style={styles.downloadBtn}>
                                             <i className="fas fa-download"></i>
-                                            <span>Télécharger PDF</span>
+                                            <span>{t('documents.rib.download_pdf')}</span>
                                         </button>
                                         <button onClick={handlePrint} style={styles.printBtn} title="Imprimer">
                                             <i className="fas fa-print"></i>
@@ -365,7 +369,7 @@ const Documents = () => {
             <section style={styles.section}>
                 <h2 style={styles.sectionTitle}>
                     <i className="fas fa-file-contract" style={styles.titleIcon}></i>
-                    Attestations & Contrats
+                    {t('documents.sections.contracts')}
                 </h2>
                 <div style={styles.grid}>
                     <div style={styles.card} className="doc-card">
@@ -376,17 +380,17 @@ const Documents = () => {
                                     <i className="fas fa-signature"></i>
                                 </div>
                                 <div style={styles.cardInfo}>
-                                    <h3 style={styles.docTitle}>Contrat d'ouverture</h3>
+                                    <h3 style={styles.docTitle}>{t('documents.contract.title')}</h3>
                                     <p style={styles.docMeta}>
                                         <i className="far fa-clock" style={{ marginRight: '5px' }}></i>
-                                        Signé le {userData?.createdAt?.toDate().toLocaleDateString('fr-FR') || 'N/A'}
+                                        {t('documents.contract.signed_on', { date: userData?.createdAt?.toDate().toLocaleDateString(i18n.language === 'en' ? 'en-US' : 'fr-FR') || 'N/A' })}
                                     </p>
                                 </div>
                             </div>
                             <div style={styles.actions}>
                                 <button onClick={handleDownloadContract} style={styles.downloadBtn}>
                                     <i className="fas fa-file-pdf"></i>
-                                    <span>TÉLÉCHARGER PDF</span>
+                                    <span>{t('documents.contract.download')}</span>
                                 </button>
                             </div>
                         </div>
@@ -400,8 +404,8 @@ const Documents = () => {
     const MobileView = () => (
         <div style={styles.mobileContainer}>
             <div style={styles.mobileHeader}>
-                <h1>Documents</h1>
-                <span style={styles.mobileBadge}>{ribs.length} Dispo.</span>
+                <h1>{t('sidebar.nav.documents')}</h1>
+                <span style={styles.mobileBadge}>{ribs.length} {t('documents.messages.available')}</span>
             </div>
 
             <div style={styles.mobileList}>
@@ -433,8 +437,8 @@ const Documents = () => {
                             <i className="fas fa-signature"></i>
                         </div>
                         <div style={styles.mobileCardInfo}>
-                            <h3>Contrat Client</h3>
-                            <p>Signé le {userData?.createdAt?.toDate().toLocaleDateString('fr-FR') || 'N/A'}</p>
+                            <h3>{t('documents.contract.client_contract')}</h3>
+                            <p>{t('documents.contract.signed_on', { date: userData?.createdAt?.toDate().toLocaleDateString(i18n.language === 'en' ? 'en-US' : 'fr-FR') || 'N/A' })}</p>
                         </div>
                     </div>
                     <div style={styles.mobileCardActions}>

@@ -3,47 +3,88 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useData } from '../contexts/DataContext';
 import KycVerificationBanner from '../components/dashboard/KycVerificationBanner';
+import { useTranslation } from 'react-i18next'; // Import i18n
 
 const Dashboard = () => {
     const { currentUser, userData } = useAuth();
     const { wallets, transactions: allTransactions, loading, kycStatus } = useData();
     const navigate = useNavigate();
+    const { t, i18n } = useTranslation(); // Hook initialization
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth <= 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     const transactions = allTransactions.slice(0, 5);
+
+    const getWalletName = (walletId) => {
+        const wallet = wallets.find(w => w.id === walletId);
+        if (!wallet) return '---';
+        return wallet.type === 'main' ? t('accounts.main') :
+            wallet.type === 'savings' ? t('accounts.savings') :
+                wallet.type === 'credit' ? t('accounts.credit') : t('accounts.card.other');
+    };
+
+    // Function to get translated transaction description
+    const getTransactionDescription = (tx) => {
+        if (tx.type === 'credit' || tx.type === 'deposit') {
+            const method = tx.method || 'card';
+            const methodText = method === 'card' ? t('transactions.by_card') : t('transactions.by_transfer');
+            const targetAcc = getWalletName(tx.toWalletId);
+            return `${t('transactions.deposit')} ${methodText} → ${targetAcc}`;
+        } else {
+            // Transfer
+            const sourceAcc = getWalletName(tx.fromWalletId);
+            const beneficiary = tx.beneficiaryName || (tx.toWalletId ? getWalletName(tx.toWalletId) : '');
+
+            if (beneficiary) {
+                return `${sourceAcc} → ${beneficiary}`;
+            }
+            return `${t('transactions.transfer')} ( ${sourceAcc} )`;
+        }
+    };
 
     const mainAcc = wallets.find(w => w.type === 'main') || { balance: 0, currency: 'EUR', iban: '---' };
     const savingsAcc = wallets.find(w => w.type === 'savings') || { balance: 0, currency: 'EUR' };
     const creditAcc = wallets.find(w => w.type === 'credit') || { balance: 0, currency: 'EUR' };
 
     if (loading && wallets.length === 0) {
-        return <div style={styles.loading}>Préparation de votre espace personnel...</div>;
+        return <div style={styles.loading}>{t('loading')}</div>;
     }
+
+    // Dynamic Locale for formatting
+    const currentLocale = i18n.language === 'en' ? 'en-US' : (i18n.language === 'fr' ? 'fr-FR' : i18n.language);
 
     return (
         <div style={styles.dashboardContainer}>
             <header style={styles.header}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                    <h1 style={{ ...styles.welcome, marginBottom: 0 }}>Bonjour, {userData?.firstName || currentUser?.email} 👋</h1>
+                    <h1 style={{ ...styles.welcome, marginBottom: 0 }}>{t('welcome', { name: userData?.firstName || currentUser?.email })}</h1>
                     <KycVerificationBanner variant="badge" />
                 </div>
-                <p style={styles.date}>{new Date().toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                <p style={styles.date}>{new Date().toLocaleDateString(currentLocale, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
             </header>
 
             <div style={styles.statsGrid} className="stats-grid-mobile">
                 {/* Main Account Card */}
                 <div style={styles.mainCard}>
                     <div style={styles.cardHeader}>
-                        <h3 style={{ ...styles.cardLabel, color: 'rgba(255,255,255,0.8)' }}>Compte Principal</h3>
+                        <h3 style={{ ...styles.cardLabel, color: 'rgba(255,255,255,0.8)' }}>{t('accounts.main')}</h3>
                         <i className="fas fa-wallet" style={{ ...styles.cardIcon, color: 'white' }}></i>
                     </div>
                     <p style={{ ...styles.balance, color: 'white' }} className="balance-mobile">
-                        {mainAcc.balance.toLocaleString('fr-FR', { minimumFractionDigits: 2 })} {mainAcc.currency}
+                        {mainAcc.balance.toLocaleString(currentLocale, { minimumFractionDigits: 2 })} {mainAcc.currency}
                     </p>
                     {kycStatus?.status === 'verified' ? (
-                        <p style={{ ...styles.cardInfo, color: 'rgba(255,255,255,0.6)' }}>IBAN: {mainAcc.iban.substring(0, 15)}...</p>
+                        <p style={{ ...styles.cardInfo, color: 'rgba(255,255,255,0.6)' }}>
+                            {t('history.details.iban_label', { iban: mainAcc.iban.substring(0, 15) })}...
+                        </p>
                     ) : (
                         <p style={{ ...styles.cardInfo, color: 'rgba(255,255,255,0.6)', fontStyle: 'italic', fontSize: '0.8rem' }}>
-                            <i className="fas fa-lock" style={{ marginRight: '5px' }}></i> IBAN masqué (Vérification requise)
+                            <i className="fas fa-lock" style={{ marginRight: '5px' }}></i> {t('accounts.hidden_iban')}
                         </p>
                     )}
                 </div>
@@ -51,88 +92,126 @@ const Dashboard = () => {
                 {/* Savings Card */}
                 <div style={styles.card}>
                     <div style={styles.cardHeader}>
-                        <h3 style={styles.cardLabel}>Épargne</h3>
+                        <h3 style={styles.cardLabel}>{t('accounts.savings')}</h3>
                         <i className="fas fa-piggy-bank" style={{ ...styles.cardIcon, color: '#27ae60' }}></i>
                     </div>
                     <p style={{ ...styles.balance, color: '#27ae60' }} className="balance-mobile">
-                        {savingsAcc.balance.toLocaleString('fr-FR', { minimumFractionDigits: 2 })} {savingsAcc.currency}
+                        {savingsAcc.balance.toLocaleString(currentLocale, { minimumFractionDigits: 2 })} {savingsAcc.currency}
                     </p>
-                    <p style={styles.cardInfo}>Taux: 2.5% / an</p>
+                    <p style={styles.cardInfo}>{t('accounts.rate')}</p>
                 </div>
 
                 {/* Credit Card */}
                 <div style={styles.card}>
                     <div style={styles.cardHeader}>
-                        <h3 style={styles.cardLabel}>Compte Crédit</h3>
+                        <h3 style={styles.cardLabel}>{t('accounts.credit')}</h3>
                         <i className="fas fa-file-invoice-dollar" style={{ ...styles.cardIcon, color: '#e74c3c' }}></i>
                     </div>
                     <p style={{ ...styles.balance, color: '#e74c3c' }} className="balance-mobile">
-                        {creditAcc.balance.toLocaleString('fr-FR', { minimumFractionDigits: 2 })} {creditAcc.currency}
+                        {creditAcc.balance.toLocaleString(currentLocale, { minimumFractionDigits: 2 })} {creditAcc.currency}
                     </p>
-                    <p style={styles.cardInfo}>{creditAcc.balance < 0 ? 'Remboursement en cours' : 'Aucune dette'}</p>
+                    <p style={styles.cardInfo}>{creditAcc.balance < 0 ? t('accounts.repayment') : t('accounts.no_debt')}</p>
                 </div>
             </div>
 
             <div style={styles.mainContent} className="dashboard-grid-stack">
                 <div style={styles.transactionsSection}>
-                    <h2 style={styles.sectionTitle}>Transactions récentes</h2>
+                    <h2 style={styles.sectionTitle}>{t('transactions.title')}</h2>
                     <div style={styles.transactionList}>
                         {transactions.length > 0 ? (
-                            transactions.map(t => (
-                                <div key={t.id} style={styles.transactionItem}>
+                            transactions.map(tx => (
+                                <div key={tx.id} style={styles.transactionItem}>
                                     <div style={styles.transIconBox}>
-                                        <i className={t.type === 'credit' ? 'fas fa-arrow-down' : 'fas fa-arrow-up'}
-                                            style={{ color: t.type === 'credit' ? '#27ae60' : '#e74c3c' }}></i>
+                                        <i className={tx.type === 'credit' ? 'fas fa-arrow-down' : 'fas fa-arrow-up'}
+                                            style={{ color: tx.type === 'credit' ? '#27ae60' : '#e74c3c' }}></i>
                                     </div>
                                     <div style={{ flex: 1 }}>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                            <p style={styles.transName}>{t.description || (t.type === 'credit' ? 'Dépôt' : 'Virement')}</p>
-                                            {t.status === 'in_review' && (
-                                                <span style={{
-                                                    fontSize: '0.65rem',
-                                                    background: '#e0f2fe',
-                                                    color: '#0369a1',
-                                                    padding: '2px 8px',
-                                                    borderRadius: '50px',
-                                                    fontWeight: '700',
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    gap: '4px'
-                                                }}>
-                                                    <i className="fas fa-circle-notch fa-spin"></i> Examen INVIK
-                                                </span>
-                                            )}
+                                        {/* Row 1: Name and Amount */}
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '4px', gap: '8px' }}>
+                                            <p style={{
+                                                ...styles.transName,
+                                                fontSize: isMobile ? '0.82rem' : '0.95rem',
+                                                lineHeight: '1.2'
+                                            }}>
+                                                {getTransactionDescription(tx)}
+                                            </p>
+                                            <p style={{
+                                                ...styles.transAmount,
+                                                color: tx.type === 'credit' ? '#27ae60' : '#333',
+                                                fontSize: isMobile ? '0.85rem' : '1rem',
+                                                whiteSpace: 'nowrap'
+                                            }}>
+                                                {tx.type === 'credit' ? '+' : '-'}{tx.amount.toLocaleString(currentLocale, { minimumFractionDigits: 2 })} {tx.currency}
+                                            </p>
                                         </div>
-                                        <p style={styles.transDate}>{t.createdAt?.toDate().toLocaleDateString('fr-FR')}</p>
+
+                                        {/* Row 2: Date/IBAN and Status */}
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px' }}>
+                                            <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+                                                <p style={{ ...styles.transDate, fontSize: isMobile ? '0.7rem' : '0.8rem' }}>
+                                                    {tx.createdAt?.toDate().toLocaleDateString(currentLocale)}
+                                                </p>
+                                                {tx.beneficiaryIban && (
+                                                    <p style={{ ...styles.transDate, fontSize: '0.6rem', background: '#f8fafc', padding: '1px 4px', borderRadius: '4px', color: '#888' }}>
+                                                        {t('history.details.iban_label', { iban: tx.beneficiaryIban.substring(0, 10) + '...' })}
+                                                    </p>
+                                                )}
+                                            </div>
+
+                                            <span style={{
+                                                fontSize: isMobile ? '0.58rem' : '0.65rem',
+                                                background: tx.status === 'completed' ? '#dcfce7' :
+                                                    tx.status === 'rejected' ? '#fee2e2' :
+                                                        tx.status === 'pending' ? '#fef9c3' : '#e0f2fe',
+                                                color: tx.status === 'completed' ? '#166534' :
+                                                    tx.status === 'rejected' ? '#991b1b' :
+                                                        tx.status === 'pending' ? '#854d0e' : '#0369a1',
+                                                padding: isMobile ? '1px 6px' : '2px 8px',
+                                                borderRadius: '50px',
+                                                fontWeight: '800',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '3px',
+                                                whiteSpace: 'nowrap',
+                                                textTransform: 'uppercase',
+                                                letterSpacing: '0.3px'
+                                            }}>
+                                                {tx.status === 'pending' || tx.status === 'in_review' ? (
+                                                    <i className="fas fa-circle-notch fa-spin" style={{ fontSize: '0.55rem' }}></i>
+                                                ) : tx.status === 'completed' ? (
+                                                    <i className="fas fa-check-circle" style={{ fontSize: '0.55rem' }}></i>
+                                                ) : (
+                                                    <i className="fas fa-times-circle" style={{ fontSize: '0.55rem' }}></i>
+                                                )}
+                                                {t(`status.${tx.status || 'pending'}`)}
+                                            </span>
+                                        </div>
                                     </div>
-                                    <p style={{ ...styles.transAmount, color: t.type === 'credit' ? '#27ae60' : '#333' }}>
-                                        {t.type === 'credit' ? '+' : '-'}{t.amount.toLocaleString('fr-FR', { minimumFractionDigits: 2 })} {t.currency}
-                                    </p>
                                 </div>
                             ))
                         ) : (
                             <div style={styles.emptyState}>
                                 <i className="fas fa-history" style={styles.emptyIcon}></i>
-                                <p style={styles.emptyMsg}>Aucune transaction pour le moment.</p>
+                                <p style={styles.emptyMsg}>{t('transactions.empty')}</p>
                             </div>
                         )}
                     </div>
                 </div>
 
                 <div style={styles.actionsSection}>
-                    <h2 style={styles.sectionTitle}>Actions rapides</h2>
+                    <h2 style={styles.sectionTitle}>{t('actions.title')}</h2>
                     <div style={styles.actionsGrid}>
-                        <button style={styles.actionBtn} onClick={() => navigate('/dashboard/transfers')}>
-                            <i className="fas fa-paper-plane"></i> Effectuer un virement
+                        <button style={styles.actionBtn} onClick={() => navigate(`/${i18n.language}/dashboard/transfers`)}>
+                            <i className="fas fa-paper-plane"></i> {t('actions.transfer')}
                         </button>
-                        <button style={styles.actionBtn} onClick={() => navigate('/dashboard/credits')}>
-                            <i className="fas fa-hand-holding-usd"></i> Demander un crédit
+                        <button style={styles.actionBtn} onClick={() => navigate(`/${i18n.language}/dashboard/credits`)}>
+                            <i className="fas fa-hand-holding-usd"></i> {t('actions.credit')}
                         </button>
-                        <button style={styles.actionBtn} onClick={() => navigate('/dashboard/deposit')}>
-                            <i className="fas fa-plus-circle"></i> Ajouter des fonds
+                        <button style={styles.actionBtn} onClick={() => navigate(`/${i18n.language}/dashboard/deposit`)}>
+                            <i className="fas fa-plus-circle"></i> {t('actions.deposit')}
                         </button>
-                        <button style={styles.actionBtn} onClick={() => navigate('/dashboard/cards')}>
-                            <i className="fas fa-credit-card"></i> Mes cartes
+                        <button style={styles.actionBtn} onClick={() => navigate(`/${i18n.language}/dashboard/cards`)}>
+                            <i className="fas fa-credit-card"></i> {t('actions.cards')}
                         </button>
                     </div>
                 </div>

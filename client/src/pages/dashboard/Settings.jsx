@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 const Settings = () => {
     const { userData, updateUserData, changePassword } = useAuth();
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
     const [status, setStatus] = useState({ type: '', text: '' });
     const [activeTab, setActiveTab] = useState('profile');
+    const { t, i18n } = useTranslation();
 
     const [passwordData, setPasswordData] = useState({ current: '', new: '', confirm: '' });
     const [showNewPassword, setShowNewPassword] = useState(false);
@@ -37,30 +39,30 @@ const Settings = () => {
     const handleSave = async () => {
         try {
             await updateUserData(editData);
-            setStatus({ type: 'success', text: 'Paramètres mis à jour avec succès.' });
+            setStatus({ type: 'success', text: t('settings.messages.success') });
             setTimeout(() => setStatus({ type: '', text: '' }), 5000);
         } catch (err) {
-            setStatus({ type: 'error', text: 'Une erreur est survenue.' });
+            setStatus({ type: 'error', text: t('settings.messages.error') });
         }
     };
 
     const handlePasswordChange = async (e) => {
         e.preventDefault();
         if (passwordData.new !== passwordData.confirm) {
-            setStatus({ type: 'error', text: 'Les mots de passe ne correspondent pas.' });
+            setStatus({ type: 'error', text: t('settings.messages.pwd_mismatch') });
             return;
         }
         if (passwordData.new.length < 8) {
-            setStatus({ type: 'error', text: 'Le mot de passe doit contenir au moins 8 caractères.' });
+            setStatus({ type: 'error', text: t('settings.messages.pwd_short') });
             return;
         }
         try {
             await changePassword(passwordData.new);
-            setStatus({ type: 'success', text: 'Mot de passe mis à jour avec succès.' });
+            setStatus({ type: 'success', text: t('settings.messages.pwd_success') });
             setPasswordData({ current: '', new: '', confirm: '' });
             setTimeout(() => setStatus({ type: '', text: '' }), 5000);
         } catch (err) {
-            setStatus({ type: 'error', text: 'Erreur lors du changement. Veuillez vous reconnecter.' });
+            setStatus({ type: 'error', text: t('settings.messages.pwd_error') });
         }
     };
 
@@ -92,42 +94,42 @@ const Settings = () => {
     if (isMobile) {
         return (
             <div style={{ padding: '1rem', paddingBottom: '3rem' }}>
-                <h1 style={styles.mobileTitle}>Mon Compte</h1>
+                <h1 style={styles.mobileTitle}>{t('settings.tabs.profile')}</h1>
 
                 <div style={styles.mobileTabs}>
-                    <button style={activeTab === 'profile' ? styles.mobileTabActive : styles.mobileTab} onClick={() => setActiveTab('profile')}>Profil</button>
-                    <button style={activeTab === 'security' ? styles.mobileTabActive : styles.mobileTab} onClick={() => setActiveTab('security')}>Sécurité</button>
-                    <button style={activeTab === 'prefs' ? styles.mobileTabActive : styles.mobileTab} onClick={() => setActiveTab('prefs')}>Réglages</button>
+                    <button style={activeTab === 'profile' ? styles.mobileTabActive : styles.mobileTab} onClick={() => setActiveTab('profile')}>{t('settings.tabs.profile')}</button>
+                    <button style={activeTab === 'security' ? styles.mobileTabActive : styles.mobileTab} onClick={() => setActiveTab('security')}>{t('settings.tabs.security')}</button>
+                    <button style={activeTab === 'prefs' ? styles.mobileTabActive : styles.mobileTab} onClick={() => setActiveTab('prefs')}>{t('settings.tabs.prefs')}</button>
                 </div>
 
                 <div className="fadeIn" key={activeTab}>
                     {activeTab === 'profile' && (
                         <div style={styles.mobileGlassCard}>
-                            <div style={styles.mobileSectionHeader}>Dossier Client</div>
+                            <div style={styles.mobileSectionHeader}>{t('settings.profile.client_folder')}</div>
                             <div style={styles.mobileIdBox}>
-                                <div style={{ fontSize: '0.7rem', color: '#64748b', fontWeight: 'bold' }}>IDENTIFIANT DE CONNEXION</div>
+                                <div style={{ fontSize: '0.7rem', color: '#64748b', fontWeight: 'bold' }}>{t('settings.profile.login_id')}</div>
                                 <div style={{ color: '#0f172a', fontWeight: 'bold', wordWrap: 'break-word', overflowWrap: 'break-word', wordBreak: 'break-all' }}>{userData?.email}</div>
                             </div>
-                            {renderInput('Prénom', 'firstName', 'fas fa-user')}
-                            {renderInput('Nom', 'lastName', 'fas fa-id-card')}
-                            {renderInput('Date de naissance', 'dob', 'fas fa-calendar-alt', 'date')}
-                            {renderInput('Lieu de naissance', 'birthPlace', 'fas fa-map-marker-alt')}
-                            {renderInput('Téléphone', 'phone', 'fas fa-phone')}
-                            <div style={{ ...styles.mobileSectionHeader, marginTop: '20px' }}>Localisation</div>
-                            {renderInput('Adresse', 'address', 'fas fa-map-marker-alt')}
+                            {renderInput(t('settings.profile.first_name'), 'firstName', 'fas fa-user')}
+                            {renderInput(t('settings.profile.last_name'), 'lastName', 'fas fa-id-card')}
+                            {renderInput(t('settings.profile.dob'), 'dob', 'fas fa-calendar-alt', 'date')}
+                            {renderInput(t('settings.profile.pob'), 'birthPlace', 'fas fa-map-marker-alt')}
+                            {renderInput(t('settings.profile.phone'), 'phone', 'fas fa-phone')}
+                            <div style={{ ...styles.mobileSectionHeader, marginTop: '20px' }}>{t('settings.profile.location')}</div>
+                            {renderInput(t('settings.profile.address'), 'address', 'fas fa-map-marker-alt')}
                             <div style={{ display: 'flex', gap: '10px' }}>
-                                {renderInput('Ville', 'city', null)}
-                                {renderInput('CP', 'zipCode', null)}
+                                {renderInput(t('settings.profile.city'), 'city', null)}
+                                {renderInput(t('settings.profile.zip'), 'zipCode', null)}
                             </div>
 
-                            <div style={{ ...styles.mobileSectionHeader, marginTop: '30px', borderTop: '1px solid #f1f5f9', paddingTop: '20px' }}>Mon Conseiller Financier</div>
+                            <div style={{ ...styles.mobileSectionHeader, marginTop: '30px', borderTop: '1px solid #f1f5f9', paddingTop: '20px' }}>{t('settings.advisor.title')}</div>
                             <div style={styles.advisorCardMobile}>
                                 <img src={userData?.advisorPhoto || "/advisor.png"} alt="Conseiller" style={styles.advisorAvatarMobile} />
                                 <div style={{ flex: 1 }}>
                                     <div style={{ fontWeight: 'bold', color: '#003366', fontSize: '1.1rem' }}>{userData?.advisorName || 'Thomas Muller'}</div>
-                                    <div style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '4px' }}>{userData?.advisorRole || 'Conseiller Senior Patrimonial'}</div>
+                                    <div style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '4px' }}>{userData?.advisorRole || t('settings.advisor.role')}</div>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.85rem', color: '#16a34a', fontWeight: 'bold' }}>
-                                        <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#22c55e' }}></div> Disponible
+                                        <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#22c55e' }}></div> {t('settings.advisor.available')}
                                     </div>
                                 </div>
                             </div>
@@ -147,13 +149,13 @@ const Settings = () => {
 
                     {activeTab === 'security' && (
                         <div style={styles.mobileGlassCard}>
-                            <div style={styles.mobileSectionHeader}>Sécurité du Mot de Passe</div>
+                            <div style={styles.mobileSectionHeader}>{t('settings.security.password_title')}</div>
                             <p style={{ fontSize: '0.85rem', color: '#64748b', marginBottom: '20px' }}>
-                                Un mot de passe fort protège votre compte bancaire des accès non autorisés.
+                                {t('settings.security.password_desc')}
                             </p>
 
                             <div style={styles.formGroup}>
-                                <label style={styles.label}>Nouveau Mot de Passe</label>
+                                <label style={styles.label}>{t('settings.security.new_password')}</label>
                                 <div style={{ position: 'relative' }}>
                                     <input
                                         type={showNewPassword ? "text" : "password"}
@@ -197,7 +199,7 @@ const Settings = () => {
                             </div>
 
                             <div style={{ ...styles.formGroup, marginTop: '15px' }}>
-                                <label style={styles.label}>Confirmer le Mot de Passe</label>
+                                <label style={styles.label}>{t('settings.security.confirm_password')}</label>
                                 <div style={{ position: 'relative' }}>
                                     <input
                                         type={showConfirmPassword ? "text" : "password"}
@@ -243,16 +245,16 @@ const Settings = () => {
                             )}
 
                             <button style={{ ...styles.mobileSaveBtn, marginTop: '20px' }} onClick={handlePasswordChange}>
-                                Mettre à jour le mot de passe
+                                {t('settings.security.update_pwd_btn')}
                             </button>
 
                             <div style={{ marginTop: '30px', padding: '15px', background: '#f8fafc', borderRadius: '15px' }}>
-                                <div style={{ fontSize: '0.8rem', fontWeight: 'bold', color: '#003366', marginBottom: '10px' }}>CONSEILS DE SÉCURITÉ</div>
+                                <div style={{ fontSize: '0.8rem', fontWeight: 'bold', color: '#003366', marginBottom: '10px' }}>{t('settings.security.security_tips')}</div>
                                 <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '0.75rem', color: '#64748b', lineHeight: '1.6' }}>
-                                    <li>Au moins 8 caractères</li>
-                                    <li>Une majuscule et un chiffre</li>
-                                    <li>Un caractère spécial (!@#$)</li>
-                                    <li>Évitez les informations personnelles</li>
+                                    <li>{t('settings.security.tip_8_chars')}</li>
+                                    <li>{t('settings.security.tip_caps')}</li>
+                                    <li>{t('settings.security.tip_special')}</li>
+                                    <li>{t('settings.security.tip_avoid_personal')}</li>
                                 </ul>
                             </div>
                         </div>
@@ -260,12 +262,13 @@ const Settings = () => {
 
                     {activeTab === 'prefs' && (
                         <div style={styles.mobileGlassCard}>
-                            <div style={styles.mobileSectionHeader}>Personnalisation</div>
+                            <div style={styles.mobileSectionHeader}>{t('settings.preferences.personalization')}</div>
                             <div style={styles.mobileActionRow}>
                                 <div style={styles.mobileActionIcon}><i className="fas fa-language"></i></div>
-                                <div style={{ flex: 1 }}><strong>Langue de l'interface</strong></div>
-                                <select style={styles.mobileSelect} value="Français" disabled>
+                                <div style={{ flex: 1 }}><strong>{t('settings.preferences.lang_label')}</strong></div>
+                                <select style={styles.mobileSelect} value={i18n.language === 'en' ? 'English' : 'Français'} disabled>
                                     <option>Français</option>
+                                    <option>English</option>
                                 </select>
                             </div>
                         </div>
@@ -273,7 +276,7 @@ const Settings = () => {
                 </div>
 
                 {activeTab !== 'security' && (
-                    <button style={styles.mobileSaveBtn} onClick={handleSave}>Enregistrer les réglages</button>
+                    <button style={styles.mobileSaveBtn} onClick={handleSave}>{t('settings.profile.save_btn')}</button>
                 )}
                 {status.text && <p style={{ textAlign: 'center', color: status.type === 'success' ? '#22c55e' : '#ef4444', marginTop: '15px', fontSize: '0.9rem' }}>{status.text}</p>}
             </div>
@@ -283,26 +286,26 @@ const Settings = () => {
     return (
         <div style={styles.container}>
             <header style={styles.header}>
-                <h1 style={styles.title}>Paramètres du Compte</h1>
-                <p style={styles.subtitle}>Consultez et modifiez les informations de votre profil bancaire.</p>
+                <h1 style={styles.title}>{t('settings.title')}</h1>
+                <p style={styles.subtitle}>{t('settings.subtitle')}</p>
             </header>
 
             <div style={styles.premiumCard}>
                 <div style={styles.sidebar}>
                     <button style={activeTab === 'profile' ? styles.sideTabActive : styles.sideTab} onClick={() => setActiveTab('profile')}>
-                        <i className="fas fa-user-circle"></i> Mes Informations
+                        <i className="fas fa-user-circle"></i> {t('settings.tabs.my_info')}
                     </button>
                     <button style={activeTab === 'security' ? styles.sideTabActive : styles.sideTab} onClick={() => setActiveTab('security')}>
-                        <i className="fas fa-shield-alt"></i> Sécurité & Accès
+                        <i className="fas fa-shield-alt"></i> {t('settings.tabs.security_access')}
                     </button>
                     <button style={activeTab === 'prefs' ? styles.sideTabActive : styles.sideTab} onClick={() => setActiveTab('prefs')}>
-                        <i className="fas fa-sliders-h"></i> Préférences
+                        <i className="fas fa-sliders-h"></i> {t('settings.tabs.preferences')}
                     </button>
 
                     <div style={styles.securityIndicator}>
-                        <div style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 'bold', marginBottom: '10px' }}>NIVEAU DE PROTECTION</div>
+                        <div style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 'bold', marginBottom: '10px' }}>{t('settings.security.protection_level')}</div>
                         <div style={styles.securityBar}><div style={{ ...styles.securityFill, width: '75%' }}></div></div>
-                        <div style={{ fontSize: '0.75rem', marginTop: '10px', color: '#475569' }}>Optimal et Vérifié</div>
+                        <div style={{ fontSize: '0.75rem', marginTop: '10px', color: '#475569' }}>{t('settings.security.optimal_verified')}</div>
                     </div>
                 </div>
 
@@ -310,37 +313,36 @@ const Settings = () => {
                     <div className="fadeIn" key={activeTab}>
                         {activeTab === 'profile' && (
                             <>
-                                <h2 style={styles.contentTitle}>Informations Personnelles</h2>
+                                <h2 style={styles.contentTitle}>{t('settings.profile.title')}</h2>
                                 <div style={styles.profileSummary}>
                                     <div>
-                                        <div style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: 'bold' }}>EMAIL DE CONTACT</div>
+                                        <div style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: 'bold' }}>{t('settings.profile.email_contact')}</div>
                                         <div style={{ fontSize: '1.2rem', color: '#003366', fontWeight: 'bold' }}>{userData?.email}</div>
                                     </div>
-                                    <div style={styles.statusChip}>Email Vérifié <i className="fas fa-check-circle"></i></div>
+                                    <div style={styles.statusChip}>{t('settings.profile.email_verified')} <i className="fas fa-check-circle"></i></div>
                                 </div>
                                 <div style={styles.formGrid}>
-                                    {renderInput('Prénom', 'firstName', 'fas fa-user')}
-                                    {renderInput('Nom', 'lastName', 'fas fa-id-card')}
-                                    {renderInput('Téléphone', 'phone', 'fas fa-phone-alt')}
-                                    {renderInput('Nationalité', 'nationality', 'fas fa-flag')}
-                                    {renderInput('Date de naissance', 'dob', 'fas fa-calendar-alt', 'date')}
-                                    {renderInput('Lieu de naissance', 'birthPlace', 'fas fa-map-marker-alt')}
-                                    <div style={{ gridColumn: '1 / -1' }}>{renderInput('Adresse de résidence', 'address', 'fas fa-map-marked-alt')}</div>
-                                    {renderInput('Ville', 'city', null)}
-                                    {renderInput('Ville', 'city', null)}
-                                    {renderInput('Code Postal', 'zipCode', null)}
+                                    {renderInput(t('settings.profile.first_name'), 'firstName', 'fas fa-user')}
+                                    {renderInput(t('settings.profile.last_name'), 'lastName', 'fas fa-id-card')}
+                                    {renderInput(t('settings.profile.phone'), 'phone', 'fas fa-phone-alt')}
+                                    {renderInput(t('settings.profile.nationality'), 'nationality', 'fas fa-flag')}
+                                    {renderInput(t('settings.profile.dob'), 'dob', 'fas fa-calendar-alt', 'date')}
+                                    {renderInput(t('settings.profile.pob'), 'birthPlace', 'fas fa-map-marker-alt')}
+                                    <div style={{ gridColumn: '1 / -1' }}>{renderInput(t('settings.profile.address'), 'address', 'fas fa-map-marked-alt')}</div>
+                                    {renderInput(t('settings.profile.city'), 'city', null)}
+                                    {renderInput(t('settings.profile.zip'), 'zipCode', null)}
                                 </div>
 
                                 <div style={{ marginTop: '4rem', borderTop: '1px solid #f1f5f9', paddingTop: '3rem' }}>
-                                    <h3 style={{ ...styles.label, marginBottom: '2rem', color: '#003366' }}>MON CONSEILLER FINANCIER</h3>
+                                    <h3 style={{ ...styles.label, marginBottom: '2rem', color: '#003366' }}>{t('settings.advisor.title')}</h3>
                                     <div style={styles.advisorCard}>
                                         <div style={styles.advisorInfo}>
                                             <img src={userData?.advisorPhoto || "/advisor.png"} alt={userData?.advisorName || "Thomas Muller"} style={styles.advisorAvatar} />
                                             <div>
                                                 <div style={styles.advisorName}>{userData?.advisorName || 'Thomas Muller'}</div>
-                                                <div style={styles.advisorRole}>{userData?.advisorRole || 'Conseiller Senior en Gestion de Patrimoine'}</div>
+                                                <div style={styles.advisorRole}>{userData?.advisorRole || t('settings.advisor.role')}</div>
                                                 <div style={styles.advisorStatus}>
-                                                    <span style={styles.statusDot}></span> Actuellement disponible
+                                                    <span style={styles.statusDot}></span> {t('settings.advisor.available')}
                                                 </div>
                                             </div>
                                         </div>
@@ -348,14 +350,14 @@ const Settings = () => {
                                             <div style={styles.advisorContactItem}>
                                                 <i className="fas fa-envelope" style={styles.contactIcon}></i>
                                                 <div>
-                                                    <div style={styles.contactLabel}>EMAIL PROFESSIONNEL</div>
+                                                    <div style={styles.contactLabel}>{t('settings.advisor.email_label')}</div>
                                                     <div style={styles.contactValue}>{userData?.advisorEmail || 't.muller@invik-sa.com'}</div>
                                                 </div>
                                             </div>
                                             <div style={styles.advisorContactItem}>
                                                 <i className="fas fa-phone-alt" style={styles.contactIcon}></i>
                                                 <div>
-                                                    <div style={styles.contactLabel}>LIGNE DIRECTE</div>
+                                                    <div style={styles.contactLabel}>{t('settings.advisor.phone_label')}</div>
                                                     <div style={styles.contactValue}>{userData?.advisorPhone || '+33 1 70 95 00 00'}</div>
                                                 </div>
                                             </div>
@@ -367,18 +369,18 @@ const Settings = () => {
 
                         {activeTab === 'security' && (
                             <>
-                                <h2 style={styles.contentTitle}>Sécurité de l'Authentification</h2>
+                                <h2 style={styles.contentTitle}>{t('settings.security.title')}</h2>
                                 <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '3rem' }}>
                                     <div>
                                         <div style={{ background: '#f8fafc', padding: '2.5rem', borderRadius: '30px', border: '1px solid #f1f5f9' }}>
-                                            <h3 style={{ margin: '0 0 1rem', fontSize: '1.2rem', color: '#003366' }}>Modifier votre mot de passe</h3>
+                                            <h3 style={{ margin: '0 0 1rem', fontSize: '1.2rem', color: '#003366' }}>{t('settings.security.update_access_btn')}</h3>
                                             <p style={{ color: '#64748b', fontSize: '0.9rem', marginBottom: '2rem' }}>
-                                                Nous vous recommandons d'utiliser un mot de passe unique que vous n'utilisez sur aucun autre site.
+                                                {t('settings.security.password_desc')}
                                             </p>
 
                                             <form onSubmit={handlePasswordChange}>
                                                 <div style={styles.formGroup}>
-                                                    <label style={styles.label}>Nouveau mot de passe</label>
+                                                    <label style={styles.label}>{t('settings.security.new_password')}</label>
                                                     <div style={{ position: 'relative' }}>
                                                         <input
                                                             type={showNewPassword ? "text" : "password"}
@@ -420,12 +422,12 @@ const Settings = () => {
                                                         }}></div>
                                                     </div>
                                                     <div style={{ fontSize: '0.75rem', marginTop: '5px', color: passStrength < 2 ? '#ef4444' : '#64748b' }}>
-                                                        Force : {passStrength < 2 ? 'Faible' : passStrength < 4 ? 'Moyen' : 'Excellent'}
+                                                        {t('settings.security.strength.label')} {passStrength < 2 ? t('settings.security.strength.weak') : passStrength < 4 ? t('settings.security.strength.medium') : t('settings.security.strength.excellent')}
                                                     </div>
                                                 </div>
 
                                                 <div style={{ ...styles.formGroup, marginTop: '1.5rem' }}>
-                                                    <label style={styles.label}>Confirmer le mot de passe</label>
+                                                    <label style={styles.label}>{t('settings.security.confirm_password')}</label>
                                                     <div style={{ position: 'relative' }}>
                                                         <input
                                                             type={showConfirmPassword ? "text" : "password"}
@@ -472,7 +474,7 @@ const Settings = () => {
                                                 )}
 
                                                 <button type="submit" style={{ ...styles.saveBtn, marginTop: '1rem', width: '100%' }}>
-                                                    Mettre à jour mon accès
+                                                    {t('settings.security.update_access_btn')}
                                                 </button>
                                             </form>
                                         </div>
@@ -482,26 +484,26 @@ const Settings = () => {
                                         <div style={{ ...styles.optionCard, background: 'white' }}>
                                             <div style={styles.optionIcon}><i className="fas fa-history"></i></div>
                                             <div>
-                                                <div style={{ fontWeight: 'bold' }}>Dernière modification</div>
-                                                <div style={{ fontSize: '0.85rem', color: '#64748b' }}>Il y a 14 jours</div>
+                                                <div style={{ fontWeight: 'bold' }}>{t('settings.security.last_mod')}</div>
+                                                <div style={{ fontSize: '0.85rem', color: '#64748b' }}>{t('settings.security.days_ago', { count: 14 })}</div>
                                             </div>
                                         </div>
                                         <div style={{ ...styles.optionCard, background: 'white' }}>
                                             <div style={styles.optionIcon}><i className="fas fa-lock"></i></div>
                                             <div>
-                                                <div style={{ fontWeight: 'bold' }}>Stockage Chiffré</div>
-                                                <div style={{ fontSize: '0.85rem', color: '#64748b' }}>Protégé par AES-256</div>
+                                                <div style={{ fontWeight: 'bold' }}>{t('settings.security.encrypted_storage')}</div>
+                                                <div style={{ fontSize: '0.85rem', color: '#64748b' }}>{t('settings.security.protected_aes')}</div>
                                             </div>
                                         </div>
                                         <div style={{ padding: '2rem', borderRadius: '30px', background: '#00336605', border: '1px dashed #00336620' }}>
                                             <div style={{ fontSize: '0.9rem', fontWeight: 'bold', color: '#003366', marginBottom: '1rem' }}>
-                                                <i className="fas fa-lightbulb" style={{ marginRight: '10px' }}></i> Exigences de sécurité
+                                                <i className="fas fa-lightbulb" style={{ marginRight: '10px' }}></i> {t('settings.security.security_reqs')}
                                             </div>
                                             <ul style={{ margin: 0, paddingLeft: '1.5rem', fontSize: '0.85rem', color: '#64748b', lineHeight: '1.8' }}>
-                                                <li>Minimum 8 caractères de long</li>
-                                                <li>Au moins une lettre majuscule (A-Z)</li>
-                                                <li>Au moins un chiffre (0-9)</li>
-                                                <li>Un caractère spécial (!, @, #, $, etc.)</li>
+                                                <li>{t('settings.security.tip_8_chars')}</li>
+                                                <li>{t('settings.security.tip_caps')}</li>
+                                                <li>{t('settings.security.tip_caps')}</li>
+                                                <li>{t('settings.security.tip_special')}</li>
                                             </ul>
                                         </div>
                                     </div>
@@ -511,15 +513,16 @@ const Settings = () => {
 
                         {activeTab === 'prefs' && (
                             <>
-                                <h2 style={styles.contentTitle}>Préférences de Compte</h2>
+                                <h2 style={styles.contentTitle}>{t('settings.preferences.title')}</h2>
                                 <div style={styles.prefBox}>
                                     <div style={{ ...styles.prefRow, borderBottom: 'none' }}>
                                         <div style={{ flex: 1 }}>
-                                            <div style={{ fontWeight: 'bold' }}>Langue de l'interface</div>
-                                            <div style={{ fontSize: '0.85rem', color: '#64748b' }}>Langue utilisée pour les menus et relevés.</div>
+                                            <div style={{ fontWeight: 'bold' }}>{t('settings.preferences.lang_label')}</div>
+                                            <div style={{ fontSize: '0.85rem', color: '#64748b' }}>{t('settings.preferences.lang_desc')}</div>
                                         </div>
-                                        <select style={styles.select} value="Français" disabled>
+                                        <select style={styles.select} value={i18n.language === 'en' ? 'English' : 'Français'} disabled>
                                             <option>Français</option>
+                                            <option>English</option>
                                         </select>
                                     </div>
                                 </div>
@@ -530,7 +533,7 @@ const Settings = () => {
                     <div style={styles.formFooter}>
                         {activeTab !== 'security' && (
                             <>
-                                <button style={styles.saveBtn} onClick={handleSave}>Mettre à jour les paramètres</button>
+                                <button style={styles.saveBtn} onClick={handleSave}>{t('settings.profile.update_btn')}</button>
                                 {status.text && (
                                     <div style={{ ...styles.alert, background: status.type === 'success' ? '#f0fdf4' : '#fef2f2', color: status.type === 'success' ? '#15803d' : '#b91c1c' }}>
                                         {status.text}

@@ -3,12 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useData } from '../../contexts/DataContext';
 import { useNotifications } from '../../contexts/NotificationContext';
+import { useTranslation } from 'react-i18next';
 
 const KycVerificationBanner = ({ children, variant = 'default', style = {} }) => {
     const { userData } = useAuth();
     const { kycStatus, loading } = useData();
     const { showToast } = useNotifications();
     const navigate = useNavigate();
+    const { t } = useTranslation();
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
     useEffect(() => {
@@ -17,7 +19,7 @@ const KycVerificationBanner = ({ children, variant = 'default', style = {} }) =>
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    if (loading && kycStatus === null) return <div style={{ padding: '50px', textAlign: 'center', color: '#666' }}>Chargement de la vérification...</div>;
+    if (loading && kycStatus === null) return <div style={{ padding: '50px', textAlign: 'center', color: '#666' }}>{t('banner.loading')}</div>;
 
     const status = kycStatus?.status;
     const isVerified = status === 'verified';
@@ -34,9 +36,9 @@ const KycVerificationBanner = ({ children, variant = 'default', style = {} }) =>
 
     const handleVerifyClick = () => {
         if (isVerified) {
-            showToast("Votre identité est vérifiée. Vous avez accès à toutes les fonctionnalités.", "success");
+            showToast(t('banner.toasts.verified'), "success");
         } else if (status === 'submitted') {
-            showToast("Vos documents sont en cours d'analyse. Vous serez notifié dès que la vérification sera terminée.", "info");
+            showToast(t('banner.toasts.submitted'), "info");
         } else {
             navigate('/dashboard/kyc');
         }
@@ -52,25 +54,25 @@ const KycVerificationBanner = ({ children, variant = 'default', style = {} }) =>
         if (isVerified) {
             badgeBg = '#27ae60'; // Green
             badgeIcon = 'fas fa-check-circle';
-            badgeText = 'Compte Vérifié';
+            badgeText = t('banner.status.verified');
             pulseColor = 'transparent';
             animation = 'none';
         } else if (isSubmitted) {
             badgeBg = '#f39c12'; // Orange
             badgeIcon = 'fas fa-clock';
-            badgeText = 'En cours...';
+            badgeText = t('banner.status.submitted');
             pulseColor = 'rgba(243, 156, 18, 0.7)';
             animation = 'pulseBadge 2s infinite';
         } else if (status === 'unverified') {
             badgeBg = '#c0392b'; // Dark Red
             badgeIcon = 'fas fa-exclamation-triangle';
-            badgeText = 'Rejeté (Détails)';
+            badgeText = t('banner.status.rejected');
             pulseColor = 'rgba(192, 57, 43, 0.7)';
             animation = 'pulseBadge 2s infinite';
         } else {
             badgeBg = '#e74c3c'; // Red
             badgeIcon = 'fas fa-shield-alt';
-            badgeText = 'Vérifier Identité';
+            badgeText = t('banner.status.verify_now');
             pulseColor = 'rgba(231, 76, 60, 0.7)';
             animation = 'pulseBadge 2s infinite';
         }
@@ -98,7 +100,7 @@ const KycVerificationBanner = ({ children, variant = 'default', style = {} }) =>
                     }}
                     onClick={handleVerifyClick}
                     className="kyc-badge"
-                    title={isVerified ? "Compte Vérifié" : "Cliquez pour vérifier"}
+                    title={isVerified ? t('banner.status.verified') : t('banner.status.click_to_verify')}
                 >
                     <i className={badgeIcon} style={{ fontSize: isMobile ? '1.2rem' : '1rem' }}></i>
                     {!isMobile && <span>{badgeText}</span>}
@@ -118,14 +120,14 @@ const KycVerificationBanner = ({ children, variant = 'default', style = {} }) =>
                         <i className={isUnverified ? "fas fa-exclamation-circle" : (isSubmitted ? "fas fa-clock" : "fas fa-shield-alt")} style={styles.iconBlocking}></i>
                     </div>
                     <h2 style={{ ...styles.titleBlocking, fontSize: isMobile ? '1.5rem' : '2rem', color: isUnverified ? '#c0392b' : (isSubmitted ? '#f39c12' : '#1a202c') }}>
-                        {isUnverified ? "Validation Refusée" : (isSubmitted ? "Vérification en cours" : "Vérification Requise")}
+                        {isUnverified ? t('banner.blocking.refused') : (isSubmitted ? t('banner.blocking.in_progress') : t('banner.blocking.required'))}
                     </h2>
                     <p style={styles.descriptionBlocking}>
                         {isUnverified
-                            ? (kycStatus?.reviewNotes ? `Motif : ${kycStatus.reviewNotes}` : "Certains documents ne sont pas conformes. Veuillez les soumettre à nouveau.")
+                            ? (kycStatus?.reviewNotes ? `${t('banner.blocking.motif')} ${kycStatus.reviewNotes}` : t('banner.blocking.not_compliant'))
                             : (isSubmitted
-                                ? "Nous analysons vos documents. Cette procédure prend généralement moins de 24h."
-                                : "Pour des raisons de sécurité et de conformité, l'accès à cette fonctionnalité est restreint. Veuillez compléter votre vérification d'identité pour débloquer votre compte.")
+                                ? t('banner.blocking.analyzing')
+                                : t('banner.blocking.restricted'))
                         }
                     </p>
                     <button
@@ -133,11 +135,11 @@ const KycVerificationBanner = ({ children, variant = 'default', style = {} }) =>
                         onClick={handleVerifyClick}
                         disabled={isSubmitted}
                     >
-                        {isSubmitted ? "En attente de validation" : "Commencer la vérification"}
+                        {isSubmitted ? t('banner.blocking.waiting') : t('banner.blocking.start')}
                         {!isSubmitted && <i className="fas fa-arrow-right" style={{ marginLeft: '8px' }}></i>}
                     </button>
                     <div style={styles.secureBadge}>
-                        <i className="fas fa-lock" style={{ marginRight: '8px' }}></i> Données chiffrées & Sécurisées
+                        <i className="fas fa-lock" style={{ marginRight: '8px' }}></i> {t('banner.blocking.secure')}
                     </div>
                 </div>
             </div>
@@ -152,16 +154,16 @@ const KycVerificationBanner = ({ children, variant = 'default', style = {} }) =>
             </div>
             <div style={styles.content}>
                 <h3 style={styles.title}>
-                    {status === 'unverified' ? "Action requise sur votre KYC" : "Vérification d'identité requise"}
+                    {status === 'unverified' ? t('banner.legacy.action_required') : t('banner.legacy.identity_required')}
                 </h3>
                 <p style={styles.description}>
                     {status === 'unverified'
-                        ? (kycStatus?.reviewNotes || "Votre dossier n'a pas pu être validé en l'état.")
-                        : "Pour accéder à toutes les fonctionnalités de votre compte, veuillez compléter votre vérification KYC."
+                        ? (kycStatus?.reviewNotes || t('banner.legacy.not_validated'))
+                        : t('banner.legacy.complete_kyc')
                     }
                 </p>
                 <button style={styles.button} onClick={handleVerifyClick}>
-                    {status === 'unverified' ? "Corriger mon dossier" : "Vérifier mon identité"} <i className="fas fa-arrow-right" style={{ marginLeft: '8px' }}></i>
+                    {status === 'unverified' ? t('banner.legacy.fix_file') : t('banner.legacy.verify_identity')} <i className="fas fa-arrow-right" style={{ marginLeft: '8px' }}></i>
                 </button>
             </div>
         </div>

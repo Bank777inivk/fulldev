@@ -4,6 +4,7 @@ import { useData } from '../../contexts/DataContext';
 import { transactionService } from '../../services/transactionService';
 
 import KycVerificationBanner from '../../components/dashboard/KycVerificationBanner';
+import { useTranslation } from 'react-i18next';
 
 // --- Validation Helpers ---
 const luhnCheck = (val) => {
@@ -59,6 +60,7 @@ const Deposit = () => {
 
     // Responsive
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+    const { t, i18n } = useTranslation();
 
     // Transfer states sync
     useEffect(() => {
@@ -126,7 +128,7 @@ const Deposit = () => {
         setMessage({ type: '', text: '' });
 
         if (!isFormValid) {
-            setMessage({ type: 'error', text: 'Veuillez vérifier les informations de votre carte.' });
+            setMessage({ type: 'error', text: t('deposit.messages.check_card') });
             return;
         }
 
@@ -146,7 +148,7 @@ const Deposit = () => {
 
             setMessage({
                 type: 'success',
-                text: 'Votre demande de rechargement est en cours de traitement. Votre solde sera actualisé sous peu.'
+                text: t('deposit.messages.success')
             });
             setAmount(''); setCardNumber(''); setExpiry(''); setCvc('');
         } catch (err) {
@@ -158,7 +160,7 @@ const Deposit = () => {
 
     const copyToClipboard = (text, label) => {
         navigator.clipboard.writeText(text);
-        setMessage({ type: 'success', text: `${label} copié dans le presse-papier !` });
+        setMessage({ type: 'success', text: t('deposit.bank_details.copy_toast', { label }) });
         setTimeout(() => setMessage({ type: '', text: '' }), 3000);
     };
 
@@ -178,7 +180,7 @@ const Deposit = () => {
                 >
                     <i className="fas fa-chevron-left"></i>
                 </button>
-                <div style={styles.pageIndicator}>Page {currentPage} sur {totalPages}</div>
+                <div style={styles.pageIndicator}>{t('deposit.pagination.page', { current: currentPage, total: totalPages })}</div>
                 <button
                     disabled={currentPage === totalPages}
                     onClick={() => setCurrentPage(p => p + 1)}
@@ -190,14 +192,14 @@ const Deposit = () => {
         );
     };
 
-    if (loading && wallets.length === 0) return <div style={styles.loading}>Chargement...</div>;
+    if (loading && wallets.length === 0) return <div style={styles.loading}>{t('loading')}</div>;
 
     // --- MOBILE LAYOUT ---
     if (isMobile) {
         return (
             <KycVerificationBanner>
                 <div style={{ padding: '1rem', paddingBottom: '90px' }}>
-                    <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#003366', marginBottom: '1.5rem' }}>Rechargement</h1>
+                    <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#003366', marginBottom: '1.5rem' }}>{t('sidebar.nav.deposit')}</h1>
 
                     {/* Mobile Tabs */}
                     <div style={styles.mobileTabs}>
@@ -205,13 +207,13 @@ const Deposit = () => {
                             style={activeMethod === 'card' ? styles.mobileTabActive : styles.mobileTab}
                             onClick={() => setActiveMethod('card')}
                         >
-                            Carte Bancaire
+                            {t('deposit.methods.card.title')}
                         </button>
                         <button
                             style={activeMethod === 'bank_transfer' ? styles.mobileTabActive : styles.mobileTab}
                             onClick={() => setActiveMethod('bank_transfer')}
                         >
-                            Virement
+                            {t('deposit.methods.bank.title')}
                         </button>
                     </div>
 
@@ -223,14 +225,14 @@ const Deposit = () => {
                             border: (message.type === 'success' || hasPendingDeposit) ? '1px solid #ffeeba' : 'none'
                         }}>
                             {(message.type === 'success' || hasPendingDeposit) && <i className="fas fa-clock" style={{ marginRight: '10px' }}></i>}
-                            {message.text || "Un dépôt est actuellement en cours de traitement sur votre compte."}
+                            {message.text || t('deposit.messages.pending_alert')}
                         </div>
                     )}
 
                     {activeMethod === 'card' ? (
                         <div className="fadeIn">
                             <div style={{ marginBottom: '1.5rem', textAlign: 'center' }}>
-                                <label style={styles.label}>Montant</label>
+                                <label style={styles.label}>{t('deposit.form.amount_label')}</label>
                                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', borderBottom: '2px solid #003366', paddingBottom: '5px' }}>
                                     <input
                                         type="number"
@@ -289,7 +291,7 @@ const Deposit = () => {
                             </div>
 
                             <div style={{ marginTop: '15px' }}>
-                                <label style={styles.label}>Code de sécurité (CVC)</label>
+                                <label style={styles.label}>{t('deposit.form.cvc_label')}</label>
                                 <input
                                     style={{
                                         ...styles.mobileInput,
@@ -303,9 +305,9 @@ const Deposit = () => {
                             </div>
 
                             <div style={{ marginTop: '1.5rem' }}>
-                                <label style={styles.label}>Compte à créditer</label>
+                                <label style={styles.label}>{t('deposit.form.target_account')}</label>
                                 <select style={styles.mobileSelect} value={selectedWallet} onChange={(e) => setSelectedWallet(e.target.value)}>
-                                    {wallets.map(w => <option key={w.id} value={w.id}>{w.type === 'main' ? 'Principal' : 'Épargne'} ({w.balance} €)</option>)}
+                                    {wallets.map(w => <option key={w.id} value={w.id}>{w.type === 'main' ? t('accounts.card.main') : t('accounts.card.savings')} ({w.balance} €)</option>)}
                                 </select>
                             </div>
                         </div>
@@ -313,11 +315,11 @@ const Deposit = () => {
                         activeMethod === 'bank_transfer' && (
                             <div className="fadeIn" style={{ padding: '1rem', textAlign: 'center' }}>
                                 <div style={{ background: '#f8f9fa', padding: '20px', borderRadius: '12px', border: '1px solid #eee' }}>
-                                    <div style={{ fontSize: '0.8rem', color: '#888', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '1px' }}>Détails du virement</div>
+                                    <div style={{ fontSize: '0.8rem', color: '#888', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '1px' }}>{t('deposit.bank_details.header')}</div>
 
-                                    <div style={styles.mobileDetailRow}><span>Banque:</span> <strong>INVIK BANK SA</strong></div>
+                                    <div style={styles.mobileDetailRow}><span>{t('deposit.bank_details.bank_name')}:</span> <strong>INVIK BANK SA</strong></div>
                                     <div style={styles.mobileDetailRow}>
-                                        <span>BIC/SWIFT:</span>
+                                        <span>{t('deposit.bank_details.bic')}:</span>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                             <strong>INVKBKFR</strong>
                                             <button style={styles.smallCopyBtn} onClick={() => copyToClipboard('INVKBKFR', 'BIC')}>
@@ -326,7 +328,7 @@ const Deposit = () => {
                                         </div>
                                     </div>
                                     <div style={{ ...styles.mobileDetailRow, border: 'none', marginBottom: '15px' }}>
-                                        <span>IBAN:</span>
+                                        <span>{t('deposit.bank_details.iban')}:</span>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                             <strong style={{ fontSize: '0.95rem' }}>{wallets.find(w => w.id === selectedWallet)?.iban || 'FR76 ...'}</strong>
                                             <button style={styles.smallCopyBtn} onClick={() => copyToClipboard(wallets.find(w => w.id === selectedWallet)?.iban, 'IBAN')}>
@@ -363,19 +365,19 @@ const Deposit = () => {
         <KycVerificationBanner>
             <div style={styles.container}>
                 <header style={styles.header}>
-                    <h1 style={styles.title}>Recharger</h1>
-                    <p style={styles.subtitle}>Alimentez votre compte en toute sécurité.</p>
+                    <h1 style={styles.title}>{t('sidebar.nav.deposit')}</h1>
+                    <p style={styles.subtitle}>{t('deposit.subtitle')}</p>
                 </header>
 
                 <div style={styles.methodsGrid}>
                     <div onClick={() => setActiveMethod('card')} style={{ ...styles.methodCard, ...(activeMethod === 'card' ? styles.activeMethod : {}) }}>
                         <div style={styles.iconCircle}><i className="fas fa-credit-card"></i></div>
-                        <div style={styles.methodInfo}><h3>Carte Bancaire</h3><p>Crédit immédiat</p></div>
+                        <div style={styles.methodInfo}><h3>{t('deposit.methods.card.title')}</h3><p>{t('deposit.methods.card.desc')}</p></div>
                         {activeMethod === 'card' && <i className="fas fa-check-circle" style={styles.checkIcon}></i>}
                     </div>
                     <div onClick={() => setActiveMethod('bank_transfer')} style={{ ...styles.methodCard, ...(activeMethod === 'bank_transfer' ? styles.activeMethod : {}) }}>
                         <div style={styles.iconCircle}><i className="fas fa-university"></i></div>
-                        <div style={styles.methodInfo}><h3>Virement SEPA</h3><p>2-3 jours ouvrés</p></div>
+                        <div style={styles.methodInfo}><h3>{t('deposit.methods.bank.title')}</h3><p>{t('deposit.methods.bank.desc')}</p></div>
                         {activeMethod === 'bank_transfer' && <i className="fas fa-check-circle" style={styles.checkIcon}></i>}
                     </div>
                 </div>
@@ -390,16 +392,16 @@ const Deposit = () => {
                             fontSize: '1.1rem',
                             fontWeight: '600'
                         }}>
-                            <i className={`fas ${(message.type === 'success' || hasPendingDeposit) ? 'fa-hourglass-half' : 'fa-exclamation-triangle'}`}></i> {message.text || "Un dépôt est actuellement en cours de traitement sur votre compte."}
+                            <i className={`fas ${(message.type === 'success' || hasPendingDeposit) ? 'fa-hourglass-half' : 'fa-exclamation-triangle'}`}></i> {message.text || t('deposit.messages.pending_alert')}
                         </div>
                     )}
 
                     {activeMethod === 'card' ? (
                         <form onSubmit={handleCardDeposit}>
                             <div style={styles.amountSection}>
-                                <label style={styles.label}>Montant à créditer</label>
+                                <label style={styles.label}>{t('deposit.form.amount_label')}</label>
                                 <div style={styles.amountInputWrapper}>
-                                    <input type="number" style={styles.amountInput} value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="0.00" min="10" required />
+                                    <input type="number" style={styles.amountInput} value={amount} onChange={(e) => setAmount(e.target.value)} placeholder={t('deposit.form.amount_placeholder')} min="10" required />
                                     <span style={styles.currency}>EUR</span>
                                 </div>
                             </div>
@@ -421,18 +423,18 @@ const Deposit = () => {
                                 />
                                 <div style={styles.cardBottom}>
                                     <div style={{ flex: 1 }}>
-                                        <div style={styles.cardLabel}>TITULAIRE</div>
+                                        <div style={styles.cardLabel}>{t('deposit.form.holder_label')}</div>
                                         <input
                                             type="text"
                                             style={styles.cardInputSmall}
                                             value={cardHolder}
                                             onChange={(e) => setCardHolder(e.target.value.toUpperCase())}
-                                            placeholder="NOM PRENOM"
+                                            placeholder={t('deposit.form.holder_placeholder')}
                                             required
                                         />
                                     </div>
                                     <div style={{ width: '60px' }}>
-                                        <div style={styles.cardLabel}>EXP</div>
+                                        <div style={styles.cardLabel}>{t('deposit.form.expiry_label')}</div>
                                         <input
                                             type="text"
                                             style={{
@@ -451,7 +453,7 @@ const Deposit = () => {
 
                             <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
                                 <div style={{ flex: 1 }}>
-                                    <label style={styles.label}>CVC / CVV</label>
+                                    <label style={styles.label}>{t('deposit.form.cvc_label')}</label>
                                     <input
                                         type="text"
                                         style={{
@@ -466,9 +468,9 @@ const Deposit = () => {
                                     />
                                 </div>
                                 <div style={{ flex: 1 }}>
-                                    <label style={styles.label}>Compte cible</label>
+                                    <label style={styles.label}>{t('deposit.form.target_account')}</label>
                                     <select style={styles.select} value={selectedWallet} onChange={(e) => setSelectedWallet(e.target.value)}>
-                                        {wallets.map(w => <option key={w.id} value={w.id}>{w.type === 'main' ? 'Principal' : 'Épargne'} ({w.balance} {w.currency})</option>)}
+                                        {wallets.map(w => <option key={w.id} value={w.id}>{w.type === 'main' ? t('accounts.card.main') : t('accounts.card.savings')} ({w.balance} {w.currency})</option>)}
                                     </select>
                                 </div>
                             </div>
@@ -484,14 +486,14 @@ const Deposit = () => {
                                 disabled={submitting || !isFormValid}
                             >
                                 {submitting ? <i className="fas fa-spinner fa-spin"></i> : (
-                                    !isAmountValid() ? "Saisissez un montant" :
-                                        !isCardValid() ? "Numéro de carte invalide" :
-                                            !isExpiryValid() ? "Date d'expiration invalide" :
-                                                !isCvcValid() ? "CVC invalide" :
-                                                    `Payer ${amount} EUR`
+                                    !isAmountValid() ? t('deposit.form.enter_amount') :
+                                        !isCardValid() ? t('deposit.form.invalid_card') :
+                                            !isExpiryValid() ? t('deposit.form.invalid_expiry') :
+                                                !isCvcValid() ? t('deposit.form.invalid_cvc') :
+                                                    t('deposit.form.pay', { amount: amount })
                                 )}
                             </button>
-                            <p style={{ textAlign: 'center', fontSize: '0.8rem', color: '#888', marginTop: '1rem' }}><i className="fas fa-lock"></i> Transaction sécurisée SSL</p>
+                            <p style={{ textAlign: 'center', fontSize: '0.8rem', color: '#888', marginTop: '1rem' }}><i className="fas fa-lock"></i> {t('deposit.form.secure_notice')}</p>
                         </form>
                     ) : (
                         <div style={styles.transferInfo}>
@@ -500,15 +502,15 @@ const Deposit = () => {
                             <p style={{ color: '#666', marginBottom: '2rem' }}>Utilisez les coordonnées ci-dessous pour effectuer votre virement depuis votre autre banque.</p>
 
                             <div style={styles.bankDetailRow}>
-                                <span>Bénéficiaire</span>
+                                <span>{t('deposit.bank_details.beneficiary')}</span>
                                 <strong>{currentUser.displayName || 'INVIK CLIENT'}</strong>
                             </div>
                             <div style={styles.bankDetailRow}>
-                                <span>Banque</span>
+                                <span>{t('deposit.bank_details.bank_name')}</span>
                                 <strong>INVIK BANK SA</strong>
                             </div>
                             <div style={styles.bankDetailRow}>
-                                <span>BIC / SWIFT</span>
+                                <span>{t('deposit.bank_details.bic')}</span>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                                     <strong style={{ fontFamily: 'monospace' }}>INVKBKFR</strong>
                                     <button style={styles.copyIconButton} onClick={() => copyToClipboard('INVKBKFR', 'BIC')}>
@@ -517,7 +519,7 @@ const Deposit = () => {
                                 </div>
                             </div>
                             <div style={{ ...styles.bankDetailRow, border: 'none' }}>
-                                <span>IBAN</span>
+                                <span>{t('deposit.bank_details.iban')}</span>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                                     <strong style={{ fontFamily: 'monospace', wordBreak: 'break-all' }}>{wallets.find(w => w.id === selectedWallet)?.iban || '...'}</strong>
                                     <button style={styles.copyIconButton} onClick={() => copyToClipboard(wallets.find(w => w.id === selectedWallet)?.iban, 'IBAN')}>
@@ -525,7 +527,7 @@ const Deposit = () => {
                                     </button>
                                 </div>
                             </div>
-                            <div style={styles.copyTip}>Le délai de traitement est de 24 à 48h ouvrées.</div>
+                            <div style={styles.copyTip}>{t('deposit.bank_details.processing_delay')}</div>
                         </div>
                     )}
                 </div>
@@ -533,14 +535,14 @@ const Deposit = () => {
                 {/* Desktop Mini History for Deposits */}
                 <div style={{ ...styles.contentCard, marginTop: '2rem' }}>
                     <h3 style={{ fontSize: '1.1rem', color: '#003366', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <i className="fas fa-history"></i> Vos rechargements récents
+                        <i className="fas fa-history"></i> {t('deposit.history.title')}
                     </h3>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                         {paginatedHistory.map(tx => (
                             <div key={tx.id} style={{ display: 'flex', alignItems: 'center', padding: '15px', backgroundColor: '#f8fbff', borderRadius: '12px' }}>
                                 <div style={{ flex: 1 }}>
                                     <div style={{ fontWeight: '600', fontSize: '0.95rem' }}>{tx.amount} {tx.currency || 'EUR'}</div>
-                                    <div style={{ fontSize: '0.8rem', color: '#888' }}>{new Date(tx.createdAt?.toDate() || tx.createdAt).toLocaleDateString()} via {tx.method === 'card' ? 'Carte' : 'Virement'}</div>
+                                    <div style={{ fontSize: '0.8rem', color: '#888' }}>{new Date(tx.createdAt?.toDate() || tx.createdAt).toLocaleDateString()} via {tx.method === 'card' ? t('deposit.history.methods.card') : t('deposit.history.methods.transfer')}</div>
                                 </div>
                                 <span style={{
                                     padding: '5px 12px',
@@ -550,11 +552,11 @@ const Deposit = () => {
                                     backgroundColor: tx.status === 'pending' ? '#fff3cd' : (tx.status === 'rejected' ? '#ffebee' : '#e8f5e9'),
                                     color: tx.status === 'pending' ? '#856404' : (tx.status === 'rejected' ? '#c62828' : '#2e7d32')
                                 }}>
-                                    {tx.status === 'pending' ? 'En attente' : (tx.status === 'rejected' ? 'Refusé' : 'Complété')}
+                                    {tx.status === 'pending' ? t('status.pending') : (tx.status === 'rejected' ? t('status.rejected') : t('status.completed'))}
                                 </span>
                             </div>
                         ))}
-                        {depositHistory.length === 0 && <p style={{ textAlign: 'center', color: '#888' }}>Aucun dépôt récent.</p>}
+                        {depositHistory.length === 0 && <p style={{ textAlign: 'center', color: '#888' }}>{t('deposit.history.empty')}</p>}
                     </div>
                     <PaginationControls />
                 </div>

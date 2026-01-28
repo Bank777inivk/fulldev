@@ -7,40 +7,42 @@ import { walletService } from '../../services/walletService'; // Added walletSer
 import { useNotifications } from '../../contexts/NotificationContext';
 import { useNavigate } from 'react-router-dom';
 import KycVerificationBanner from '../../components/dashboard/KycVerificationBanner';
+import { useTranslation } from 'react-i18next';
 
 const ConfirmationModal = ({ isOpen, onClose, onConfirm, details, submitting }) => {
+    const { t } = useTranslation();
     if (!isOpen) return null;
 
     return (
         <div style={styles.modalOverlay}>
             <div style={styles.modalContent} className="fadeInUp">
-                <h3 style={styles.modalTitle}>Confirmer votre demande</h3>
+                <h3 style={styles.modalTitle}>{t('credits.messages.confirm_title')}</h3>
                 <div style={styles.modalBody}>
                     <div style={styles.modalRow}>
-                        <span>Type de projet :</span>
+                        <span>{t('credits.form.project_type')} :</span>
                         <strong>{details.type}</strong>
                     </div>
                     <div style={styles.modalRow}>
-                        <span>Montant :</span>
+                        <span>{t('credits.form.amount')} :</span>
                         <strong>{details.montant.toLocaleString()} €</strong>
                     </div>
                     <div style={styles.modalRow}>
-                        <span>Durée :</span>
-                        <strong>{details.duree} mois</strong>
+                        <span>{t('credits.form.months')} :</span>
+                        <strong>{details.duree} {t('credits.form.months_label')}</strong>
                     </div>
                     <div style={styles.modalRow}>
-                        <span>Mensualité :</span>
+                        <span>{t('credits.form.monthly_payment')} :</span>
                         <strong>{details.mensualite} €</strong>
                     </div>
                     <div style={{ ...styles.modalRow, flexDirection: 'column', alignItems: 'flex-start', gap: '5px' }}>
-                        <span>Description :</span>
+                        <span>{t('credits.form.project_description')} :</span>
                         <p style={styles.modalDesc}>{details.description}</p>
                     </div>
                 </div>
                 <div style={styles.modalActions}>
-                    <button style={styles.cancelBtn} onClick={onClose} disabled={submitting}>Modifier</button>
+                    <button style={styles.cancelBtn} onClick={onClose} disabled={submitting}>{t('common.edit') || 'Modifier'}</button>
                     <button style={styles.confirmBtn} onClick={onConfirm} disabled={submitting}>
-                        {submitting ? <i className="fas fa-spinner fa-spin"></i> : 'Confirmer et Envoyer'}
+                        {submitting ? <i className="fas fa-spinner fa-spin"></i> : t('credits.messages.confirm_button')}
                     </button>
                 </div>
             </div>
@@ -50,15 +52,16 @@ const ConfirmationModal = ({ isOpen, onClose, onConfirm, details, submitting }) 
 
 const Credits = () => {
     const { currentUser } = useAuth();
-    const { loans: history, wallets, loading } = useData(); // Added wallets
+    const { wallets, loans: history, loading } = useData(); // Added wallets
     const { showToast } = useNotifications();
     const navigate = useNavigate();
+    const { t, i18n } = useTranslation();
 
     // Form States
     const [amount, setAmount] = useState(100000);
     const [duration, setDuration] = useState(120); // months
     const [interestRate, setInterestRate] = useState(2.5); // Initial annual rate
-    const [projectType, setProjectType] = useState('Personnel');
+    const [projectType, setProjectType] = useState(t('credits.types.personnel'));
     const [otherType, setOtherType] = useState('');
     const [projectDescription, setProjectDescription] = useState('');
 
@@ -101,7 +104,7 @@ const Credits = () => {
                     console.log("Approved loan found but no credit wallet. Creating one...");
                     try {
                         await walletService.createWallet(currentUser.uid, 'credit', approvedLoan.amount);
-                        showToast("Votre Compte Crédit a été ouvert et les fonds versés.", 'success');
+                        showToast(t('credits.messages.credit_opened'), 'success');
                     } catch (e) {
                         console.error("Failed to auto-create credit wallet", e);
                     }
@@ -114,13 +117,13 @@ const Credits = () => {
 
                     await notificationService.addNotification(
                         currentUser.uid,
-                        'Crédit Approuvé 🎉',
-                        `Votre demande de crédit de ${approvedLoan.amount.toLocaleString()} € a été approuvée. Les fonds sont disponibles.`,
+                        t('credits.messages.credit_available_title'),
+                        t('credits.messages.credit_available_desc', { amount: approvedLoan.amount.toLocaleString() }),
                         'success',
                         { loanId: approvedLoan.id, type: 'credit_approval' }
                     );
 
-                    showToast(`Félicitations ! Votre crédit de ${approvedLoan.amount.toLocaleString()} € est disponible.`, 'success');
+                    showToast(t('credits.messages.congrats', { amount: approvedLoan.amount.toLocaleString() }), 'success');
                 }
             }
         };
@@ -143,12 +146,12 @@ const Credits = () => {
         setMessage({ type: '', text: '' });
 
         if (hasPendingLoan) {
-            setMessage({ type: 'error', text: "Vous avez déjà une demande en cours." });
+            setMessage({ type: 'error', text: t('credits.messages.already_pending') });
             return;
         }
 
         if (projectDescription.length < 10) {
-            setMessage({ type: 'error', text: "Veuillez décrire votre projet (min. 10 caractères)." });
+            setMessage({ type: 'error', text: t('credits.messages.description_short') });
             return;
         }
 
@@ -166,31 +169,31 @@ const Credits = () => {
                 type: projectType === 'Autre' ? otherType : projectType,
                 description: projectDescription
             });
-            setMessage({ type: 'success', text: 'Demande envoyée ! Un conseiller vous contactera.' });
+            setMessage({ type: 'success', text: t('credits.messages.success') });
             setShowConfirmation(false);
             setProjectDescription('');
         } catch (err) {
-            setMessage({ type: 'error', text: 'Erreur lors de la demande.' });
+            setMessage({ type: 'error', text: t('credits.messages.error') });
             setShowConfirmation(false);
         } finally {
             setSubmitting(false);
         }
     };
 
-    if (loading && history.length === 0) return <div style={{ textAlign: 'center', padding: '5rem' }}>Chargement...</div>;
+    if (loading && history.length === 0) return <div style={{ textAlign: 'center', padding: '5rem' }}>{t('loading')}</div>;
 
     const renderLockedOverlay = () => hasPendingLoan && (
         <div style={styles.lockedOverlay}>
             <div style={styles.lockedContent}>
                 <i className="fas fa-file-contract" style={{ fontSize: '3rem', color: '#003366', marginBottom: '1rem' }}></i>
-                <h3 style={{ color: '#003366', marginBottom: '10px' }}>Dossier en cours d'étude</h3>
+                <h3 style={{ color: '#003366', marginBottom: '10px' }}>{t('credits.status.dossier_title')}</h3>
                 <p style={{ color: '#555', marginBottom: '1.5rem' }}>
-                    Nous étudions actuellement votre demande de <strong>{pendingRequest.amount.toLocaleString()} €</strong>.
+                    {t('credits.status.dossier_desc', { amount: pendingRequest.amount.toLocaleString() })}
                     <br /><br />
-                    Vous serez informé de la progression en temps réel par <strong>mail</strong>. Pour toute modification, contactez le support.
+                    {t('credits.status.dossier_notice')}
                 </p>
                 <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
-                    <button onClick={() => navigate('/dashboard/support')} style={{ ...styles.supportLink, border: 'none', cursor: 'pointer', fontSize: '0.9rem' }}>Contacter le support</button>
+                    <button onClick={() => navigate(`/${i18n.language}/dashboard/support`)} style={{ ...styles.supportLink, border: 'none', cursor: 'pointer', fontSize: '0.9rem' }}>{t('credits.support.contact_btn')}</button>
                 </div>
             </div>
         </div>
@@ -198,11 +201,11 @@ const Credits = () => {
 
     const getStatusBadge = (status) => {
         switch (status) {
-            case 'pending': return { label: 'Étude en cours', color: '#e65100', bg: '#fff3e0' };
+            case 'pending': return { label: t('credits.status.pending'), color: '#e65100', bg: '#fff3e0' };
             case 'approved':
             case 'accepted':
-                return { label: 'Approuvé ✅', color: '#2e7d32', bg: '#e8f5e9' };
-            case 'rejected': return { label: 'Refusé', color: '#c62828', bg: '#ffebee' };
+                return { label: t('credits.status.approved'), color: '#2e7d32', bg: '#e8f5e9' };
+            case 'rejected': return { label: t('credits.status.rejected'), color: '#c62828', bg: '#ffebee' };
             default: return { label: status, color: '#555', bg: '#f5f7fa' };
         }
     };
@@ -236,10 +239,10 @@ const Credits = () => {
                     }}>
                         <p style={{ margin: '0 0 10px', fontSize: '0.9rem', color: '#1b5e20', fontWeight: '600', display: 'flex', alignItems: 'center' }}>
                             <i className="fas fa-coins" style={{ marginRight: '8px' }}></i>
-                            Fonds disponibles sur votre espace
+                            {t('credits.support.fonds_avail')}
                         </p>
                         <button
-                            onClick={() => navigate('/dashboard/accounts')}
+                            onClick={() => navigate(`/${i18n.language}/dashboard/accounts`)}
                             style={{
                                 background: '#2e7d32',
                                 color: 'white',
@@ -259,7 +262,7 @@ const Credits = () => {
                                 gap: '8px'
                             }}
                         >
-                            Accéder à mon Crédit
+                            {t('credits.support.access_btn')}
                             <i className="fas fa-arrow-right"></i>
                         </button>
                     </div>
@@ -285,26 +288,26 @@ const Credits = () => {
     const commonFormContent = (
         <>
             <div style={styles.inputGroup}>
-                <label style={styles.label}>Type de projet</label>
+                <label style={styles.label}>{t('credits.form.project_type')}</label>
                 <select
                     style={styles.select}
                     value={projectType}
                     onChange={(e) => setProjectType(e.target.value)}
                     disabled={hasPendingLoan}
                 >
-                    <option value="Personnel">Prêt Personnel</option>
-                    <option value="Immobilier">Crédit Immobilier</option>
-                    <option value="Véhicule">Crédit Véhicule</option>
-                    <option value="Professionnel">Projet Professionnel</option>
-                    <option value="Autre">Autre (Préciser...)</option>
+                    <option value={t('credits.types.personnel')}>{t('credits.types.personnel')}</option>
+                    <option value={t('credits.types.immobilier')}>{t('credits.types.immobilier')}</option>
+                    <option value={t('credits.types.vehicule')}>{t('credits.types.vehicule')}</option>
+                    <option value={t('credits.types.professionnel')}>{t('credits.types.professionnel')}</option>
+                    <option value="Autre">{t('credits.types.autre')}</option>
                 </select>
 
                 {projectType === 'Autre' && (
                     <div style={{ marginTop: '1rem' }}>
-                        <label style={styles.label}>Votre projet spécifique</label>
+                        <label style={styles.label}>{t('credits.form.specific_project')}</label>
                         <input
                             style={styles.select}
-                            placeholder="Décrivez brièvement votre projet..."
+                            placeholder={t('credits.form.specific_project_placeholder')}
                             value={otherType}
                             onChange={(e) => setOtherType(e.target.value)}
                             disabled={hasPendingLoan}
@@ -314,10 +317,10 @@ const Credits = () => {
             </div>
 
             <div style={styles.inputGroup}>
-                <label style={styles.label}>Description du projet (Obligatoire)</label>
+                <label style={styles.label}>{t('credits.form.project_description')}</label>
                 <textarea
                     style={styles.textarea}
-                    placeholder="Détaillez votre projet en quelques lignes (objet, contexte, apport personnel éventuel...)..."
+                    placeholder={t('credits.form.project_description_placeholder')}
                     value={projectDescription}
                     onChange={(e) => setProjectDescription(e.target.value)}
                     rows="3"
@@ -327,7 +330,7 @@ const Credits = () => {
 
             <div style={styles.inputGroup}>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <label style={styles.label}>Montant du prêt</label>
+                    <label style={styles.label}>{t('credits.form.amount')}</label>
                     <span style={styles.valueDisplay}>{amount.toLocaleString()} €</span>
                 </div>
                 <input type="range" min="5000" max="900000" step="5000" value={amount} onChange={(e) => setAmount(Number(e.target.value))} style={styles.range} disabled={hasPendingLoan} />
@@ -335,8 +338,8 @@ const Credits = () => {
 
             <div style={styles.inputGroup}>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <label style={styles.label}>Durée du remboursement</label>
-                    <span style={styles.valueDisplay}>{duration} mois ({Math.floor(duration / 12)} ans)</span>
+                    <label style={styles.label}>{t('credits.form.months')}</label>
+                    <span style={styles.valueDisplay}>{duration} {t('credits.form.months_label')} ({Math.floor(duration / 12)} {t('credits.form.years')})</span>
                 </div>
                 <input type="range" min="12" max="300" step="12" value={duration} onChange={(e) => setDuration(Number(e.target.value))} style={styles.range} disabled={hasPendingLoan} />
             </div>
@@ -355,7 +358,7 @@ const Credits = () => {
         return (
             <KycVerificationBanner>
                 <div style={{ padding: '1rem', position: 'relative' }}>
-                    <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#003366', marginBottom: '1.5rem' }}>Crédits</h1>
+                    <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#003366', marginBottom: '1.5rem' }}>{t('sidebar.nav.credits')}</h1>
 
                     {message.text && !showConfirmation && (
                         <div style={{ ...styles.alert, background: message.type === 'success' ? '#e8f5e9' : '#ffebee', color: message.type === 'success' ? '#2e7d32' : '#c62828', marginBottom: '1rem' }}>
@@ -366,24 +369,24 @@ const Credits = () => {
                     <div style={{ ...styles.mobileCard, position: 'relative', overflow: 'hidden' }}>
                         {hasPendingLoan && renderLockedOverlay()}
 
-                        <h3 style={{ fontSize: '1rem', color: '#003366', marginBottom: '1.5rem' }}>Simulateur</h3>
+                        <h3 style={{ fontSize: '1rem', color: '#003366', marginBottom: '1.5rem' }}>{t('credits.form.simulator_title')}</h3>
 
                         {commonFormContent}
 
                         <div style={styles.mobileResult}>
-                            <div style={{ fontSize: '0.8rem', opacity: 0.8 }}>Mensualité</div>
+                            <div style={{ fontSize: '0.8rem', opacity: 0.8 }}>{t('credits.form.monthly_payment')}</div>
                             <div style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>{calculateMonthly()} €</div>
                         </div>
 
                         <button style={styles.mobileSubmitBtn} onClick={handleInitialSubmit} disabled={submitting || hasPendingLoan}>
-                            {submitting ? 'Envoi...' : 'Demander ce prêt'}
+                            {submitting ? t('credits.form.sending') || '...' : t('credits.form.apply_button')}
                         </button>
                     </div>
 
                     <div style={{ marginTop: '2rem' }}>
-                        <h3 style={{ fontSize: '1rem', color: '#003366', marginBottom: '1rem' }}>Mes demandes</h3>
+                        <h3 style={{ fontSize: '1rem', color: '#003366', marginBottom: '1rem' }}>{t('credits.history.title')}</h3>
                         {history.length === 0 ? (
-                            <p style={{ fontSize: '0.85rem', color: '#888' }}>Aucune demande en cours.</p>
+                            <p style={{ fontSize: '0.85rem', color: '#888' }}>{t('credits.history.empty')}</p>
                         ) : (
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                                 {history.map(loan => (
@@ -418,32 +421,32 @@ const Credits = () => {
         <KycVerificationBanner>
             <div style={styles.container}>
                 <header style={styles.header}>
-                    <h1 style={styles.title}>Crédits & Financements</h1>
-                    <p style={styles.subtitle}>Simulez votre projet et obtenez une réponse en 24h.</p>
+                    <h1 style={styles.title}>{t('credits.title')}</h1>
+                    <p style={styles.subtitle}>{t('credits.subtitle')}</p>
                 </header>
 
                 <div style={styles.grid}>
                     <div style={{ ...styles.card, position: 'relative', overflow: 'hidden' }}>
                         {hasPendingLoan && renderLockedOverlay()}
 
-                        <h2 style={{ color: '#003366', marginBottom: '1.5rem' }}>Votre simulation</h2>
+                        <h2 style={{ color: '#003366', marginBottom: '1.5rem' }}>{t('credits.form.your_simulation')}</h2>
 
                         {commonFormContent}
 
                         <div style={styles.summaryBox}>
-                            <div style={styles.summRow}><span>Taux d'intérêt (TAEG)</span><strong>{interestRate}%</strong></div>
-                            <div style={styles.summRow}><span>Mensualité estimée</span><strong style={{ fontSize: '1.4rem', color: '#003366' }}>{calculateMonthly()} €</strong></div>
+                            <div style={styles.summRow}><span>{t('credits.form.interest_rate')}</span><strong>{interestRate}%</strong></div>
+                            <div style={styles.summRow}><span>{t('credits.form.monthly_payment')} {t('credits.form.monthly_payment_est')}</span><strong style={{ fontSize: '1.4rem', color: '#003366' }}>{calculateMonthly()} €</strong></div>
                             <button style={styles.applyBtn} onClick={handleInitialSubmit} disabled={submitting || hasPendingLoan}>
-                                {submitting ? 'Traitement...' : 'Faire une demande officielle'}
+                                {submitting ? t('credits.form.processing') : t('credits.form.apply_button_official')}
                             </button>
                         </div>
                         {message.text && <div style={{ ...styles.alert, background: message.type === 'success' ? '#e8f5e9' : '#ffebee', color: message.type === 'success' ? '#2e7d32' : '#c62828' }}>{message.text}</div>}
                     </div>
 
                     <div style={styles.historyCard}>
-                        <h2 style={{ color: '#003366', marginBottom: '1.5rem' }}>Suivi des demandes</h2>
+                        <h2 style={{ color: '#003366', marginBottom: '1.5rem' }}>{t('credits.history.tracking')}</h2>
                         {history.length === 0 ? (
-                            <div style={styles.empty}>Vos demandes de crédit apparaîtront ici.</div>
+                            <div style={styles.empty}>{t('credits.history.empty_desktop')}</div>
                         ) : (
                             <div style={styles.loanList}>
                                 {history.map(loan => (
@@ -457,9 +460,9 @@ const Credits = () => {
                         {/* Service Client Banner */}
                         <div style={{ marginTop: '2rem', padding: '1.5rem', background: '#f8fbff', borderRadius: '12px', border: '1px solid #e3f2fd', textAlign: 'center' }}>
                             <i className="fas fa-headset" style={{ fontSize: '2rem', color: '#003366', marginBottom: '1rem' }}></i>
-                            <h4 style={{ margin: '0 0 10px', color: '#003366' }}>Besoin d'un accompagnement ?</h4>
-                            <p style={{ fontSize: '0.9rem', color: '#666', marginBottom: '1rem' }}>Nos conseillers sont disponibles pour étudier votre dossier complexe.</p>
-                            <button onClick={() => navigate('/dashboard/support')} style={{ ...styles.supportLinkOutline, border: '2px solid #003366', cursor: 'pointer', background: 'transparent', fontSize: '0.9rem' }}>Contacter un conseiller</button>
+                            <h4 style={{ margin: '0 0 10px', color: '#003366' }}>{t('credits.support.need_help')}</h4>
+                            <p style={{ fontSize: '0.9rem', color: '#666', marginBottom: '1rem' }}>{t('credits.support.advisors_desc')}</p>
+                            <button onClick={() => navigate(`/${i18n.language}/dashboard/support`)} style={{ ...styles.supportLinkOutline, border: '2px solid #003366', cursor: 'pointer', background: 'transparent', fontSize: '0.9rem' }}>{t('credits.support.contact_advisor')}</button>
                         </div>
                     </div>
                 </div>

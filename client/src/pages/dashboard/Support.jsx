@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNotifications } from '../../contexts/NotificationContext';
 import { supportService } from '../../services/supportService';
+import { useTranslation } from 'react-i18next';
 
 const Support = () => {
     const { currentUser } = useAuth();
@@ -16,29 +17,30 @@ const Support = () => {
     const [formData, setFormData] = useState({ subject: '', message: '', category: 'technical' });
     const [activeFaq, setActiveFaq] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
+    const { t, i18n } = useTranslation();
     const ticketsPerPage = 5;
     const chatEndRef = useRef(null);
 
     const faqData = [
         {
-            q: "Virements non reçus",
-            a: "Un virement SEPA classique prend généralement 1 à 2 jours ouvrables. Si vous attendez un virement international, cela peut prendre jusqu'à 5 jours. Vérifiez que l'IBAN fourni est correct."
+            q: t('support.faq.q1.q'),
+            a: t('support.faq.q1.a')
         },
         {
-            q: "Plafonds de carte",
-            a: "Vous pouvez consulter vos plafonds actuels dans la section 'Cartes'. Pour une augmentation temporaire ou permanente, veuillez contacter votre conseiller via un ticket de support."
+            q: t('support.faq.q2.q'),
+            a: t('support.faq.q2.a')
         },
         {
-            q: "Sécuriser mon compte",
-            a: "Activez toujours l'authentification à deux facteurs (2FA). Ne partagez jamais vos codes reçus par SMS. En cas de doute sur une transaction, bloquez immédiatement votre carte depuis l'application."
+            q: t('support.faq.q3.q'),
+            a: t('support.faq.q3.a')
         },
         {
-            q: "Frais bancaires",
-            a: "Nos tarifs sont transparents. Le compte standard est gratuit. Les frais de tenue de compte pour les comptes premium sont prélevés mensuellement. Consultez notre grille tarifaire dans 'Documents'."
+            q: t('support.faq.q4.q'),
+            a: t('support.faq.q4.a')
         },
         {
-            q: "Mot de passe oublié",
-            a: "Cliquez sur 'Mot de passe oublié' sur la page de connexion. Un lien de réinitialisation vous sera envoyé par email instantanément."
+            q: t('support.faq.q5.q'),
+            a: t('support.faq.q5.a')
         }
     ];
 
@@ -92,10 +94,10 @@ const Support = () => {
 
                 setShowForm(false);
                 setFormData({ subject: '', message: '', category: 'technical' });
-                showToast("Ticket créé avec succès", "success");
+                showToast(t('support.messages.success'), "success");
             }
         } catch (err) {
-            showToast("Erreur lors de l'envoi", "error");
+            showToast(t('support.messages.error'), "error");
         }
     };
 
@@ -107,43 +109,43 @@ const Support = () => {
             await supportService.addMessage(selectedTicket.id, {
                 text: newMessage,
                 sender: 'user',
-                senderName: currentUser.displayName || 'Client'
+                senderName: currentUser.displayName || t('history.types.beneficiary')
             });
             setNewMessage('');
         } catch (error) {
             console.error("Error sending message:", error);
-            showToast("Erreur lors de l'envoi du message", "error");
+            showToast(t('support.messages.msg_error'), "error");
         }
     };
 
-    if (loading) return <div style={{ padding: '2rem', textAlign: 'center' }}>Chargement...</div>;
+    if (loading) return <div style={{ padding: '2rem', textAlign: 'center' }}>{t('dashboard.loading')}</div>;
 
     if (isMobile) {
         return (
             <div style={{ padding: '1rem', height: '100%', display: 'flex', flexDirection: 'column' }}>
                 {!selectedTicket ? (
                     <>
-                        <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#003366', marginBottom: '1.5rem' }}>Assistance & Support</h1>
+                        <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#003366', marginBottom: '1.5rem' }}>{t('support.title')}</h1>
 
                         <div style={styles.mobileQuickActions}>
                             <div style={styles.actionCard} onClick={() => setShowForm(!showForm)}>
                                 <i className="fas fa-plus"></i>
-                                <span>Nouveau ticket</span>
+                                <span>{t('support.tickets.new_btn')}</span>
                             </div>
                         </div>
 
                         {showForm && (
                             <div style={styles.mobileForm}>
-                                <h3 style={{ fontSize: '1rem', marginBottom: '1rem' }}>Nouveau ticket</h3>
-                                <input style={styles.mobileInput} placeholder="Sujet" value={formData.subject} onChange={e => setFormData({ ...formData, subject: e.target.value })} />
-                                <textarea style={{ ...styles.mobileInput, height: '100px' }} placeholder="Votre message..." value={formData.message} onChange={e => setFormData({ ...formData, message: e.target.value })} />
-                                <button style={styles.mobileSubmitBtn} onClick={handleSubmit}>Envoyer le ticket</button>
-                                <button style={{ ...styles.mobileSubmitBtn, background: 'transparent', color: '#666', marginTop: '0.5rem' }} onClick={() => setShowForm(false)}>Annuler</button>
+                                <h3 style={{ fontSize: '1rem', marginBottom: '1rem' }}>{t('support.tickets.new_btn')}</h3>
+                                <input style={styles.mobileInput} placeholder={t('support.tickets.subject_placeholder')} value={formData.subject} onChange={e => setFormData({ ...formData, subject: e.target.value })} />
+                                <textarea style={{ ...styles.mobileInput, height: '100px' }} placeholder={t('support.tickets.message_placeholder')} value={formData.message} onChange={e => setFormData({ ...formData, message: e.target.value })} />
+                                <button style={styles.mobileSubmitBtn} onClick={handleSubmit}>{t('support.tickets.send_btn')}</button>
+                                <button style={{ ...styles.mobileSubmitBtn, background: 'transparent', color: '#666', marginTop: '0.5rem' }} onClick={() => setShowForm(false)}>{t('support.tickets.cancel_btn')}</button>
                             </div>
                         )}
 
                         <div style={{ marginBottom: '2rem', marginTop: '1rem' }}>
-                            <h3 style={{ fontSize: '1rem', marginBottom: '1rem', color: '#003366' }}>FAQ & Aide</h3>
+                            <h3 style={{ fontSize: '1rem', marginBottom: '1rem', color: '#003366' }}>{t('support.faq.title')}</h3>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                                 {faqData.map((faq, idx) => (
                                     <div key={idx} style={{ background: 'white', borderRadius: '12px', border: '1px solid #eee', overflow: 'hidden' }}>
@@ -164,22 +166,22 @@ const Support = () => {
                             </div>
                         </div>
 
-                        <h3 style={{ fontSize: '1rem', marginBottom: '1rem' }}>Mes tickets</h3>
+                        <h3 style={{ fontSize: '1rem', marginBottom: '1rem' }}>{t('support.tickets.title')}</h3>
                         <div style={styles.mobileTicketList}>
                             {tickets.slice((currentPage - 1) * ticketsPerPage, currentPage * ticketsPerPage).map(t => (
                                 <div key={t.id} style={styles.mobileTicketItem} onClick={() => setSelectedTicket(t)}>
                                     <div style={{ flex: 1 }}>
                                         <div style={{ fontWeight: 'bold' }}>{t.subject}</div>
                                         <div style={{ fontSize: '0.75rem', color: '#888' }}>
-                                            {t.createdAt?.toDate().toLocaleDateString()}
+                                            {t.createdAt?.toDate().toLocaleDateString(i18n.language === 'en' ? 'en-US' : 'fr-FR')}
                                         </div>
                                     </div>
                                     <span style={{ ...styles.statusBadge, background: t.status === 'open' ? 'rgba(0, 204, 255, 0.1)' : '#e8f5e9', color: t.status === 'open' ? '#003366' : '#2e7d32' }}>
-                                        {t.status === 'open' ? 'En cours' : 'Résolu'}
+                                        {t.status === 'open' ? t('dashboard.status.pending') : t('dashboard.status.completed')}
                                     </span>
                                 </div>
                             ))}
-                            {tickets.length === 0 && <p style={{ fontSize: '0.85rem', color: '#888', textAlign: 'center' }}>Aucun ticket actif.</p>}
+                            {tickets.length === 0 && <p style={{ fontSize: '0.85rem', color: '#888', textAlign: 'center' }}>{t('support.tickets.empty')}</p>}
 
                             {tickets.length > ticketsPerPage && (
                                 <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '1rem' }}>
@@ -188,17 +190,17 @@ const Support = () => {
                                         onClick={() => setCurrentPage(prev => prev - 1)}
                                         style={{ ...styles.paginationBtn, opacity: currentPage === 1 ? 0.5 : 1 }}
                                     >
-                                        Précédent
+                                        {t('common.prev')}
                                     </button>
                                     <span style={{ alignSelf: 'center', fontSize: '0.9rem', color: '#64748b' }}>
-                                        Page {currentPage} / {Math.ceil(tickets.length / ticketsPerPage)}
+                                        {t('deposit.pagination.page', { current: currentPage, total: Math.ceil(tickets.length / ticketsPerPage) })}
                                     </span>
                                     <button
                                         disabled={currentPage >= Math.ceil(tickets.length / ticketsPerPage)}
                                         onClick={() => setCurrentPage(prev => prev + 1)}
                                         style={{ ...styles.paginationBtn, opacity: currentPage >= Math.ceil(tickets.length / ticketsPerPage) ? 0.5 : 1 }}
                                     >
-                                        Suivant
+                                        {t('common.next')}
                                     </button>
                                 </div>
                             )}
@@ -212,7 +214,7 @@ const Support = () => {
                             </button>
                             <div>
                                 <div style={{ fontWeight: 'bold', fontSize: '1rem' }}>{selectedTicket.subject}</div>
-                                <div style={{ fontSize: '0.75rem', color: '#888' }}>{selectedTicket.status === 'open' ? 'Support en ligne' : 'Ticket résolu'}</div>
+                                <div style={{ fontSize: '0.75rem', color: '#888' }}>{selectedTicket.status === 'open' ? t('support.tickets.status.online') : t('support.tickets.status.resolved_msg')}</div>
                             </div>
                         </div>
 
@@ -241,7 +243,7 @@ const Support = () => {
                             <form style={{ padding: '1rem', background: 'white', borderTop: '1px solid #eee', display: 'flex', gap: '0.5rem' }} onSubmit={handleSendMessage}>
                                 <input
                                     style={{ flex: 1, padding: '0.8rem 1rem', borderRadius: '25px', border: '1px solid #eee', background: '#f8fafc', outline: 'none' }}
-                                    placeholder="Répondre..."
+                                    placeholder={t('support.chat.reply_placeholder')}
                                     value={newMessage}
                                     onChange={(e) => setNewMessage(e.target.value)}
                                 />
@@ -251,7 +253,7 @@ const Support = () => {
                             </form>
                         ) : (
                             <div style={{ padding: '1rem', textAlign: 'center', color: '#64748b', background: 'white', borderTop: '1px solid #eee' }}>
-                                Ce ticket a été marqué comme résolu.
+                                {t('support.chat.resolved_notice')}
                             </div>
                         )}
                     </div>
@@ -263,14 +265,14 @@ const Support = () => {
     return (
         <div style={styles.container}>
             <header style={styles.header}>
-                <h1 style={styles.title}>Assistance & Support</h1>
-                <p style={styles.subtitle}>Consultez l'aide en ligne ou échangez avec un conseiller.</p>
+                <h1 style={styles.title}>{t('support.title')}</h1>
+                <p style={styles.subtitle}>{t('support.subtitle')}</p>
             </header>
 
             <div style={styles.grid}>
                 {/* FAQ & Quick Help */}
                 <div style={styles.faqSection}>
-                    <h2 style={{ color: '#003366', marginBottom: '1.5rem', fontWeight: '800', fontSize: '1.3rem' }}>FAQ & Aide rapide</h2>
+                    <h2 style={{ color: '#003366', marginBottom: '1.5rem', fontWeight: '800', fontSize: '1.3rem' }}>{t('support.faq.title')}</h2>
                     <div style={styles.faqCard}>
                         {faqData.map((faq, idx) => (
                             <div key={idx} style={{
@@ -297,25 +299,25 @@ const Support = () => {
                     {!selectedTicket ? (
                         <>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                                <h2 style={{ color: '#003366', fontSize: '1.3rem', fontWeight: '800' }}>Mes demandes</h2>
-                                <button style={styles.newBtn} onClick={() => setShowForm(!showForm)}>Nouveau ticket</button>
+                                <h2 style={{ color: '#003366', fontSize: '1.3rem', fontWeight: '800' }}>{t('support.tickets.title')}</h2>
+                                <button style={styles.newBtn} onClick={() => setShowForm(!showForm)}>{t('support.tickets.new_btn')}</button>
                             </div>
 
                             {showForm && (
                                 <div style={styles.formCard}>
                                     <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
                                         <select style={{ ...styles.select, flex: 1 }} value={formData.category} onChange={e => setFormData({ ...formData, category: e.target.value })}>
-                                            <option value="technical">Problème technique</option>
-                                            <option value="billing">Question sur les frais</option>
-                                            <option value="cards">Gestion des cartes</option>
-                                            <option value="other">Autre</option>
+                                            <option value="technical">{t('support.tickets.categories.technical')}</option>
+                                            <option value="billing">{t('support.tickets.categories.billing')}</option>
+                                            <option value="cards">{t('support.tickets.categories.cards')}</option>
+                                            <option value="other">{t('support.tickets.categories.other')}</option>
                                         </select>
-                                        <input style={{ ...styles.input, flex: 2 }} placeholder="Sujet" value={formData.subject} onChange={e => setFormData({ ...formData, subject: e.target.value })} />
+                                        <input style={{ ...styles.input, flex: 2 }} placeholder={t('support.tickets.subject_placeholder')} value={formData.subject} onChange={e => setFormData({ ...formData, subject: e.target.value })} />
                                     </div>
-                                    <textarea style={styles.textarea} placeholder="Détaillez votre demande pour un traitement plus rapide..." value={formData.message} onChange={e => setFormData({ ...formData, message: e.target.value })} />
+                                    <textarea style={styles.textarea} placeholder={t('support.tickets.message_placeholder')} value={formData.message} onChange={e => setFormData({ ...formData, message: e.target.value })} />
                                     <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
-                                        <button style={styles.cancelBtn} onClick={() => setShowForm(false)}>Annuler</button>
-                                        <button style={styles.submitBtn} onClick={handleSubmit}>Créer le ticket</button>
+                                        <button style={styles.cancelBtn} onClick={() => setShowForm(false)}>{t('support.tickets.cancel_btn')}</button>
+                                        <button style={styles.submitBtn} onClick={handleSubmit}>{t('support.tickets.create_btn')}</button>
                                     </div>
                                 </div>
                             )}
@@ -326,12 +328,12 @@ const Support = () => {
                                         <div style={{ flex: 1 }}>
                                             <div style={{ fontWeight: 'bold', color: '#003366' }}>{t.subject}</div>
                                             <div style={{ fontSize: '0.8rem', color: '#888' }}>
-                                                Ouvert le {t.createdAt?.toDate().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })}
+                                                {t('common.at')} {t.createdAt?.toDate().toLocaleDateString(i18n.language === 'en' ? 'en-US' : 'fr-FR', { day: 'numeric', month: 'long' })}
                                             </div>
                                         </div>
                                         <div style={{ textAlign: 'right', display: 'flex', alignItems: 'center', gap: '1rem' }}>
                                             <span style={{ ...styles.statusBadge, background: t.status === 'open' ? 'rgba(0, 204, 255, 0.1)' : '#ecfdf5', color: t.status === 'open' ? '#003366' : '#10b981' }}>
-                                                {t.status === 'open' ? 'EN COURS' : 'RÉSOLU'}
+                                                {t.status === 'open' ? t('support.tickets.status.open') : t('support.tickets.status.resolved')}
                                             </span>
                                             <i className="fas fa-chevron-right" style={{ color: '#cbd5e1', fontSize: '0.8rem' }}></i>
                                         </div>
@@ -340,7 +342,7 @@ const Support = () => {
                                 {tickets.length === 0 && !showForm && (
                                     <div style={styles.empty}>
                                         <i className="fas fa-headset" style={{ fontSize: '2rem', marginBottom: '1rem', opacity: 0.2 }}></i>
-                                        <p>Vous n'avez aucun ticket de support actif.</p>
+                                        <p>{t('support.tickets.empty')}</p>
                                     </div>
                                 )}
 
@@ -351,17 +353,17 @@ const Support = () => {
                                             onClick={() => setCurrentPage(prev => prev - 1)}
                                             style={{ ...styles.paginationBtn, opacity: currentPage === 1 ? 0.5 : 1 }}
                                         >
-                                            <i className="fas fa-chevron-left"></i> Précédent
+                                            <i className="fas fa-chevron-left"></i> {t('common.prev')}
                                         </button>
                                         <span style={{ alignSelf: 'center', fontSize: '0.95rem', fontWeight: 'bold', color: '#003366' }}>
-                                            Page {currentPage} sur {Math.ceil(tickets.length / ticketsPerPage)}
+                                            {t('deposit.pagination.page', { current: currentPage, total: Math.ceil(tickets.length / ticketsPerPage) })}
                                         </span>
                                         <button
                                             disabled={currentPage >= Math.ceil(tickets.length / ticketsPerPage)}
                                             onClick={() => setCurrentPage(prev => prev + 1)}
                                             style={{ ...styles.paginationBtn, opacity: currentPage >= Math.ceil(tickets.length / ticketsPerPage) ? 0.5 : 1 }}
                                         >
-                                            Suivant <i className="fas fa-chevron-right"></i>
+                                            {t('common.next')} <i className="fas fa-chevron-right"></i>
                                         </button>
                                     </div>
                                 )}
@@ -376,15 +378,15 @@ const Support = () => {
                                 </button>
                                 <div style={{ flex: 1 }}>
                                     <h3 style={{ margin: 0, fontSize: '1.1rem', color: '#003366' }}>{selectedTicket.subject}</h3>
-                                    <span style={{ fontSize: '0.8rem', color: '#64748b' }}>Statut: {selectedTicket.status === 'open' ? 'En cours' : 'Résolu'}</span>
+                                    <span style={{ fontSize: '0.8rem', color: '#64748b' }}>{t('dashboard.status.status_label')}: {selectedTicket.status === 'open' ? t('dashboard.status.pending') : t('dashboard.status.completed')}</span>
                                 </div>
                                 <span style={{ ...styles.statusBadge, background: selectedTicket.status === 'open' ? 'rgba(0, 204, 255, 0.1)' : '#ecfdf5', color: selectedTicket.status === 'open' ? '#003366' : '#10b981' }}>
-                                    {selectedTicket.status === 'open' ? 'Support INVIK' : 'Clôturé'}
+                                    {selectedTicket.status === 'open' ? t('support.chat.support_name') : t('support.tickets.status.closed')}
                                 </span>
                             </div>
 
                             <div style={styles.messagesContainer} className="no-scrollbar">
-                                {messages.length === 0 && <div style={{ textAlign: 'center', color: '#94a3b8', marginTop: '2rem' }}>Démarrage de la discussion...</div>}
+                                {messages.length === 0 && <div style={{ textAlign: 'center', color: '#94a3b8', marginTop: '2rem' }}>{t('support.chat.starting')}</div>}
                                 {messages.map(m => (
                                     <div key={m.id} style={{
                                         alignSelf: m.sender === 'user' ? 'flex-end' : 'flex-start',
@@ -412,18 +414,18 @@ const Support = () => {
                                 <form style={styles.chatInputArea} onSubmit={handleSendMessage}>
                                     <input
                                         style={styles.chatInput}
-                                        placeholder="Décrivez votre problème ou posez une question..."
+                                        placeholder={t('support.chat.input_placeholder')}
                                         value={newMessage}
                                         onChange={(e) => setNewMessage(e.target.value)}
                                     />
                                     <button type="submit" style={styles.chatSendBtn} disabled={!newMessage.trim()}>
                                         <i className="fas fa-paper-plane" style={{ marginRight: '5px' }}></i>
-                                        Envoyer
+                                        {t('support.chat.send')}
                                     </button>
                                 </form>
                             ) : (
                                 <div style={{ padding: '1.5rem', textAlign: 'center', color: '#64748b', background: '#f8fafc', borderTop: '1px solid #eee' }}>
-                                    Ce ticket a été marqué comme résolu. Si vous avez une autre question, merci d'ouvrir un nouveau ticket.
+                                    {t('support.chat.resolved_notice')}
                                 </div>
                             )}
                         </div>

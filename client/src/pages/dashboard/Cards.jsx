@@ -4,11 +4,13 @@ import { useData } from '../../contexts/DataContext';
 import { useNotifications } from '../../contexts/NotificationContext';
 import { cardService } from '../../services/cardService';
 import KycVerificationBanner from '../../components/dashboard/KycVerificationBanner';
+import { useTranslation } from 'react-i18next';
 
 const Cards = () => {
     const { currentUser } = useAuth();
     const { cards, cardRequests, loading } = useData();
     const { showToast } = useNotifications();
+    const { t } = useTranslation();
     const [showNumbers, setShowNumbers] = useState({});
     const [flippedCards, setFlippedCards] = useState({});
     const [requesting, setRequesting] = useState(false);
@@ -45,10 +47,10 @@ const Cards = () => {
                 cardType: 'Black Edition',
                 deliveryAddress: 'Adresse associée au compte' // Simplified for now
             });
-            showToast("Votre demande de carte physique a été envoyée avec succès !", "success");
+            showToast(t('cards.messages.order_success'), "success");
         } catch (error) {
             console.error("Error ordering card:", error);
-            showToast("Une erreur est survenue lors de la commande.", "error");
+            showToast(t('cards.messages.order_error'), "error");
         } finally {
             setRequesting(false);
         }
@@ -57,10 +59,10 @@ const Cards = () => {
     const handleToggleBlock = async (cardId, currentStatus) => {
         try {
             const newStatus = await cardService.toggleCardStatus(cardId, currentStatus);
-            showToast(newStatus === 'blocked' ? "Votre carte a été bloquée." : "Votre carte a été débloquée.", newStatus === 'blocked' ? "warning" : "success");
+            showToast(newStatus === 'blocked' ? t('cards.messages.blocked') : t('cards.messages.unblocked'), newStatus === 'blocked' ? "warning" : "success");
         } catch (error) {
             console.error("Error toggling block:", error);
-            showToast("Une erreur est survenue.", "error");
+            showToast(t('common.error'), "error");
         }
     };
 
@@ -78,33 +80,33 @@ const Cards = () => {
                 alias: tempAlias
             });
             setShowOptionsModal(false);
-            showToast("Paramètres de la carte mis à jour !", "success");
+            showToast(t('cards.messages.options_saved'), "success");
         } catch (error) {
             console.error("Error saving options:", error);
-            showToast("Erreur lors de la mise à jour.", "error");
+            showToast(t('common.error'), "error");
         }
     };
 
     const handleDeleteCard = async (cardId) => {
-        if (!window.confirm("Voulez-vous vraiment supprimer définitivement cette carte de votre espace ? Cette action est irréversible.")) return;
+        if (!window.confirm(t('cards.messages.delete_confirm'))) return;
         try {
             await cardService.deleteCard(cardId);
-            showToast("Carte supprimée avec succès.", "success");
+            showToast(t('cards.messages.delete_success'), "success");
         } catch (error) {
             console.error("Error deleting card:", error);
-            showToast("Erreur lors de la suppression.", "error");
+            showToast(t('common.error'), "error");
         }
     };
 
 
     const handleDeleteRequest = async (requestId) => {
-        if (!window.confirm("Annuler et supprimer cette demande de carte ?")) return;
+        if (!window.confirm(t('cards.messages.request_cancel_confirm'))) return;
         try {
             await cardService.deleteCardRequest(requestId);
-            showToast("Demande annulée.", "success");
+            showToast(t('cards.messages.request_cancelled'), "success");
         } catch (error) {
             console.error("Error deleting request:", error);
-            showToast("Erreur lors de l'annulation.", "error");
+            showToast(t('common.error'), "error");
         }
     };
 
@@ -114,7 +116,7 @@ const Cards = () => {
         return `•••• •••• •••• ${number.slice(-4)}`;
     };
 
-    if (loading && cards.length === 0) return <div style={{ textAlign: 'center', padding: '5rem' }}>Chargement...</div>;
+    if (loading && cards.length === 0) return <div style={{ textAlign: 'center', padding: '5rem' }}>{t('common.loading')}</div>;
 
     const renderCard = (card, mobile = false) => {
         const isFlipped = flippedCards[card.id];
@@ -137,7 +139,7 @@ const Cards = () => {
                                 <span style={styles.bankName}>BanK</span>
                                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                                     {card.alias && <span style={{ fontSize: '0.7rem', opacity: 0.8, background: 'rgba(255,255,255,0.2)', padding: '2px 8px', borderRadius: '10px', marginBottom: '4px' }}>{card.alias}</span>}
-                                    <span style={{ fontSize: '0.6rem', opacity: 0.6, letterSpacing: '1px' }}>{card.type === 'virtual' ? 'VIRTUAL CARD' : 'PHYSICAL CARD'}</span>
+                                    <span style={{ fontSize: '0.6rem', opacity: 0.6, letterSpacing: '1px' }}>{card.type === 'virtual' ? t('cards.details.virtual_uppercase') : t('cards.details.physical_uppercase')}</span>
                                 </div>
                                 <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="Visa" style={styles.cardBrand} />
                             </div>
@@ -146,8 +148,8 @@ const Cards = () => {
                                 {formatCardNumber(card.cardNumber, showNumbers[card.id])}
                             </div>
                             <div style={styles.cardBottom}>
-                                <div style={styles.cardHolder}><span style={styles.label}>TITULAIRE</span><span style={styles.value}>{currentUser.displayName || 'CLIENT'}</span></div>
-                                <div style={styles.cardExpiry}><span style={styles.label}>EXPIRE FIN</span><span style={styles.value}>{card.expiryDate}</span></div>
+                                <div style={styles.cardHolder}><span style={styles.label}>{t('cards.details.holder') || 'TITULAIRE'}</span><span style={styles.value}>{currentUser.displayName || 'CLIENT'}</span></div>
+                                <div style={styles.cardExpiry}><span style={styles.label}>{t('cards.details.expiry') || 'EXPIRE FIN'}</span><span style={styles.value}>{card.expiryDate}</span></div>
                             </div>
                         </div>
                     </div>
@@ -157,13 +159,13 @@ const Cards = () => {
                         <div style={styles.magneticStrip}></div>
                         <div style={styles.signatureArea}>
                             <div style={styles.cvvBox}>
-                                <span style={{ fontSize: '0.6rem', color: '#888', marginRight: '10px' }}>CVV</span>
+                                <span style={{ fontSize: '0.6rem', color: '#888', marginRight: '10px' }}>{t('cards.details.cvv')}</span>
                                 <strong>{card.cvv || '***'}</strong>
                             </div>
                         </div>
                         <div style={{ padding: '20px', color: 'white', fontSize: '0.7rem', opacity: 0.8 }}>
-                            <p>Cette carte est la propriété de INVIK BANK SA. En cas de perte, veuillez la bloquer immédiatement depuis l'application.</p>
-                            <p style={{ marginTop: '10px' }}>Support: +33 1 00 00 00 00</p>
+                            <p>{t('cards.details.property_notice')}</p>
+                            <p style={{ marginTop: '10px' }}>{t('cards.details.support')}: +33 1 00 00 00 00</p>
                         </div>
                     </div>
                 </div>
@@ -176,12 +178,12 @@ const Cards = () => {
         return (
             <KycVerificationBanner>
                 <div style={{ padding: '1rem' }}>
-                    <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#003366', marginBottom: '1.5rem' }}>Mes Cartes</h1>
+                    <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#003366', marginBottom: '1.5rem' }}>{t('cards.title')}</h1>
                     {cards.length === 0 ? (
                         <div style={{ textAlign: 'center', padding: '3rem', background: 'white', borderRadius: '16px' }}>
-                            <p style={{ color: '#666' }}>Aucune carte active.</p>
+                            <p style={{ color: '#666' }}>{t('cards.empty.desc')}</p>
                             <button style={styles.mobileOrderBtn} onClick={handleOrderPhysicalCard} disabled={requesting}>
-                                {requesting ? <i className="fas fa-spinner fa-spin"></i> : 'Commander'}
+                                {requesting ? <i className="fas fa-spinner fa-spin"></i> : t('cards.empty.button')}
                             </button>
                         </div>
                     ) : (
@@ -192,11 +194,11 @@ const Cards = () => {
                                     <div style={styles.mobileActions}>
                                         <button onClick={(e) => toggleNumber(card.id, e)} style={styles.mobileActionBtn}>
                                             <i className={`fas ${showNumbers[card.id] ? 'fa-eye-slash' : 'fa-eye'}`}></i>
-                                            <span>{showNumbers[card.id] ? 'Cacher' : 'Numéro'}</span>
+                                            <span>{showNumbers[card.id] ? t('cards.actions.hide_number') : t('cards.actions.show_number')}</span>
                                         </button>
                                         <button style={styles.mobileActionBtn} onClick={(e) => { e.stopPropagation(); toggleFlip(card.id); }}>
                                             <i className="fas fa-sync"></i>
-                                            <span>Tourner</span>
+                                            <span>{t('cards.actions.flip')}</span>
                                         </button>
                                         <button
                                             style={{ ...styles.mobileActionBtn, color: card.status === 'active' ? '#e74c3c' : (card.status === 'inactive' ? '#64748b' : '#2ecc71') }}
@@ -204,23 +206,23 @@ const Cards = () => {
                                             disabled={card.status === 'inactive'}
                                         >
                                             <i className={card.status === 'active' ? 'fas fa-lock' : 'fas fa-lock-open'}></i>
-                                            <span>{card.status === 'active' ? 'Bloquer' : (card.status === 'inactive' ? 'Désactivée' : 'Activer')}</span>
+                                            <span>{card.status === 'active' ? t('cards.actions.block') : (card.status === 'inactive' ? t('cards.actions.disabled') : t('cards.actions.activate'))}</span>
                                         </button>
                                         <button style={styles.mobileActionBtn} onClick={(e) => { e.stopPropagation(); handleShowOptions(card); }}>
                                             <i className="fas fa-cog"></i>
-                                            <span>Options</span>
+                                            <span>{t('cards.actions.options')}</span>
                                         </button>
                                         <button style={{ ...styles.mobileActionBtn, color: '#e74c3c' }} onClick={(e) => { e.stopPropagation(); handleDeleteCard(card.id); }}>
                                             <i className="fas fa-trash"></i>
-                                            <span>Suppr.</span>
+                                            <span>{t('cards.actions.delete')}</span>
                                         </button>
                                     </div>
                                     <div style={{ marginTop: '1.5rem', background: 'white', borderRadius: '16px', padding: '15px', border: '1px solid #eee' }}>
-                                        <h4 style={{ fontSize: '0.9rem', color: '#003366', marginBottom: '10px' }}>Détails de la carte</h4>
-                                        <div style={styles.mobileDetailRow}><span>Statut:</span> <strong style={{ color: card.status === 'active' ? '#2ecc71' : (card.status === 'inactive' ? '#64748b' : '#e74c3c') }}>{card.status === 'active' ? 'Activée' : (card.status === 'inactive' ? 'Désactivée' : 'Bloquée')}</strong></div>
-                                        <div style={styles.mobileDetailRow}><span>Type:</span> <strong>{card.type === 'virtual' ? 'Virtuelle' : (card.type === 'physical' || card.type === 'physical_premium') ? 'Physique' : card.type}</strong></div>
-                                        <div style={styles.mobileDetailRow}><span>Plafond:</span> <strong>{card.limit?.toLocaleString('fr-FR')} {card.currency === 'EUR' ? '€' : card.currency || '€'}</strong></div>
-                                        <div style={{ ...styles.mobileDetailRow, border: 'none' }}><span>Mise à jour:</span> <strong>{card.lastModified?.toDate ? card.lastModified.toDate().toLocaleDateString() : 'Récemment'}</strong></div>
+                                        <h4 style={{ fontSize: '0.9rem', color: '#003366', marginBottom: '10px' }}>{t('cards.details.title')}</h4>
+                                        <div style={styles.mobileDetailRow}><span>{t('cards.details.status')}</span> <strong style={{ color: card.status === 'active' ? '#2ecc71' : (card.status === 'inactive' ? '#64748b' : '#e74c3c') }}>{card.status === 'active' ? t('cards.details.active') : (card.status === 'inactive' ? t('cards.details.inactive') : t('cards.details.blocked'))}</strong></div>
+                                        <div style={styles.mobileDetailRow}><span>{t('cards.details.type')}</span> <strong>{card.type === 'virtual' ? t('cards.details.virtual') : t('cards.details.physical')}</strong></div>
+                                        <div style={styles.mobileDetailRow}><span>{t('cards.details.limit')}</span> <strong>{card.limit?.toLocaleString(i18n.language === 'en' ? 'en-US' : 'fr-FR')} {card.currency || '€'}</strong></div>
+                                        <div style={{ ...styles.mobileDetailRow, border: 'none' }}><span>{t('cards.details.updated')}</span> <strong>{card.lastModified?.toDate ? card.lastModified.toDate().toLocaleDateString(i18n.language === 'en' ? 'en-US' : 'fr-FR') : t('cards.details.recently')}</strong></div>
                                     </div>
                                 </div>
                             ))}
@@ -229,9 +231,9 @@ const Cards = () => {
                             <div style={{ ...styles.orderCard, marginTop: '2rem' }}>
                                 <div style={styles.orderHeader}>
                                     <i className="fas fa-box-open" style={styles.orderIcon}></i>
-                                    <h3 style={{ margin: 0, fontSize: '1.1rem' }}>Demander une carte physique</h3>
+                                    <h3 style={{ margin: 0, fontSize: '1.1rem' }}>{t('cards.physical_order.mobile_title')}</h3>
                                 </div>
-                                <p style={styles.orderDesc}>Recevez votre carte exclusive INVIK chez vous sous 3 à 5 jours ouvrés.</p>
+                                <p style={styles.orderDesc}>{t('cards.physical_order.desc')}</p>
 
                                 <div style={styles.physicalPreview}>
                                     <div style={{ ...styles.physicalMockup, width: '180px', height: '110px' }}>
@@ -243,13 +245,13 @@ const Cards = () => {
 
                                 <ul style={styles.featuresList}>
                                     <li style={{ fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '8px', color: '#475569' }}>
-                                        <i className="fas fa-check" style={{ color: '#27ae60' }}></i> Retraits gratuits
+                                        <i className="fas fa-check" style={{ color: '#27ae60' }}></i> {t('cards.physical_order.features.withdrawals')}
                                     </li>
                                     <li style={{ fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '8px', color: '#475569', marginTop: '8px' }}>
-                                        <i className="fas fa-check" style={{ color: '#27ae60' }}></i> Paiement sans contact
+                                        <i className="fas fa-check" style={{ color: '#27ae60' }}></i> {t('cards.physical_order.features.contactless')}
                                     </li>
                                     <li style={{ fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '8px', color: '#475569', marginTop: '8px' }}>
-                                        <i className="fas fa-check" style={{ color: '#27ae60' }}></i> Noir Mat Premium
+                                        <i className="fas fa-check" style={{ color: '#27ae60' }}></i> {t('cards.physical_order.features.design')}
                                     </li>
                                 </ul>
 
@@ -266,25 +268,25 @@ const Cards = () => {
                                 >
                                     {requesting ? <i className="fas fa-spinner fa-spin"></i> :
                                         cardRequest ? (
-                                            cardRequest.status === 'pending' ? 'Demande en cours' :
-                                                cardRequest.status === 'delivered' ? 'Carte reçue ✅' :
-                                                    'Carte expédiée'
+                                            cardRequest.status === 'pending' ? t('cards.physical_order.status.pending') :
+                                                cardRequest.status === 'delivered' ? t('cards.physical_order.status.delivered') :
+                                                    t('cards.physical_order.status.shipped')
                                         ) :
-                                            'Commander maintenant'}
+                                            t('cards.physical_order.button.order_now')}
                                 </button>
 
                                 {rejectedRequest && !cardRequest && (
                                     <div style={{ marginTop: '1rem', padding: '10px', background: '#fff5f5', borderRadius: '8px', border: '1px solid #feb2b2', fontSize: '0.8rem', color: '#c53030' }}>
-                                        <i className="fas fa-exclamation-circle"></i> Demande précédente rejetée : {rejectedRequest.reviewNotes || "Document non conforme"}
+                                        <i className="fas fa-exclamation-circle"></i> {t('cards.physical_order.status.rejected')} {rejectedRequest.reviewNotes || t('cards.physical_order.status.default_reject_reason')}
                                     </div>
                                 )}
 
                                 <p style={{ ...styles.orderPricing, marginBottom: 0, marginTop: '8px' }}>
                                     {cardRequest ?
-                                        (cardRequest.status === 'pending' ? 'Nous traitons votre demande' :
-                                            cardRequest.status === 'delivered' ? 'Votre carte est arrivée ! Profitez bien de votre nouvelle expérience ! 🎁✨' :
-                                                'Votre carte est en route ! 🚀') :
-                                        'Gratuit • Inclus dans votre offre'
+                                        (cardRequest.status === 'pending' ? t('cards.physical_order.status.pending') :
+                                            cardRequest.status === 'delivered' ? t('cards.physical_order.status.delivered') :
+                                                t('cards.physical_order.status.shipped')) :
+                                        t('cards.physical_order.status.free')
                                     }
                                 </p>
                                 {cardRequest && (
@@ -292,15 +294,15 @@ const Cards = () => {
                                         onClick={() => handleDeleteRequest(cardRequest.id)}
                                         style={{ background: 'none', border: 'none', color: '#e74c3c', fontSize: '0.75rem', marginTop: '10px', cursor: 'pointer', textDecoration: 'underline' }}
                                     >
-                                        Annuler la demande
+                                        {t('cards.physical_order.button.cancel')}
                                     </button>
                                 )}
                             </div>
 
                             <div style={{ ...styles.virtualPromo, marginTop: '1.5rem', marginBottom: '80px' }}>
-                                <h3 style={{ fontSize: '1rem', margin: '0 0 5px 0' }}>Carte virtuelle ?</h3>
-                                <p style={{ fontSize: '0.8rem', margin: 0 }}>Créez une carte instantanément pour vos achats en ligne.</p>
-                                <button style={styles.secondaryOrderBtn}>Créer maintenant</button>
+                                <h3 style={{ fontSize: '1rem', margin: '0 0 5px 0' }}>{t('cards.virtual_promo.title')}</h3>
+                                <p style={{ fontSize: '0.8rem', margin: 0 }}>{t('cards.virtual_promo.desc')}</p>
+                                <button style={styles.secondaryOrderBtn}>{t('cards.virtual_promo.button')}</button>
                             </div>
                         </div>
                     )}
@@ -310,19 +312,19 @@ const Cards = () => {
                         <div style={styles.modalOverlay} onClick={() => setShowOptionsModal(false)}>
                             <div style={styles.modalContent} onClick={e => e.stopPropagation()}>
                                 <div style={styles.modalHeader}>
-                                    <h3 style={{ margin: 0, color: '#003366' }}>Options de la carte</h3>
+                                    <h3 style={{ margin: 0, color: '#003366' }}>{t('cards.options_modal.title')}</h3>
                                     <button style={styles.modalClose} onClick={() => setShowOptionsModal(false)}>&times;</button>
                                 </div>
                                 <div style={styles.modalBody}>
                                     <div style={styles.inputGroup}>
-                                        <label style={{ fontSize: '0.85rem', color: '#64748b', fontWeight: 'bold' }}>ALIAS</label>
+                                        <label style={{ fontSize: '0.85rem', color: '#64748b', fontWeight: 'bold' }}>{t('cards.options_modal.alias_label')}</label>
                                         <input style={styles.modalInput} value={tempAlias} onChange={e => setTempAlias(e.target.value)} />
                                     </div>
                                     <div style={styles.inputGroup}>
-                                        <label style={{ fontSize: '0.85rem', color: '#64748b', fontWeight: 'bold' }}>PLAFOND (€)</label>
+                                        <label style={{ fontSize: '0.85rem', color: '#64748b', fontWeight: 'bold' }}>{t('cards.options_modal.limit_label')}</label>
                                         <input type="number" style={styles.modalInput} value={tempLimit} onChange={e => setTempLimit(e.target.value)} />
                                     </div>
-                                    <button style={styles.saveBtn} onClick={handleSaveOptions}>Enregistrer</button>
+                                    <button style={styles.saveBtn} onClick={handleSaveOptions}>{t('cards.options_modal.save')}</button>
                                 </div>
                             </div>
                         </div>
@@ -337,23 +339,23 @@ const Cards = () => {
         <KycVerificationBanner>
             <div style={styles.container}>
                 <header style={styles.header}>
-                    <h1 style={styles.title}>Mes Cartes</h1>
-                    <p style={styles.subtitle}>Gérez vos cartes physiques et virtuelles.</p>
+                    <h1 style={styles.title}>{t('cards.title')}</h1>
+                    <p style={styles.subtitle}>{t('cards.subtitle')}</p>
                 </header>
                 {cards.length === 0 ? (
                     <div style={styles.emptyState}>
                         <div style={styles.emptyIconCircle}><i className="fas fa-credit-card" style={styles.emptyIcon}></i></div>
-                        <h2>Aucune carte active</h2>
-                        <p>Vous n'avez pas encore de carte associée à votre compte.</p>
+                        <h2>{t('cards.empty.title')}</h2>
+                        <p>{t('cards.empty.desc')}</p>
                         <button style={styles.orderBtn} onClick={handleOrderPhysicalCard} disabled={requesting}>
-                            {requesting ? <i className="fas fa-spinner fa-spin"></i> : 'Commander une carte'}
+                            {requesting ? <i className="fas fa-spinner fa-spin"></i> : t('cards.empty.button')}
                         </button>
                     </div>
                 ) : (
                     <div style={styles.desktopGrid}>
                         {/* LEFT COLUMN: LIST OF CARDS */}
                         <div style={styles.cardsListColumn}>
-                            <h2 style={styles.sectionTitle}>Vos Cartes Actives ({cards.length})</h2>
+                            <h2 style={styles.sectionTitle}>{t('cards.list_title', { count: cards.length })}</h2>
                             <div style={styles.cardsGrid}>
                                 {cards.map(card => (
                                     <div key={card.id} style={styles.cardWrapper}>
@@ -361,9 +363,9 @@ const Cards = () => {
                                         <div style={styles.controls}>
                                             <div style={styles.statusBadge}>
                                                 <span style={{ ...styles.dot, backgroundColor: card.status === 'active' ? '#2ecc71' : (card.status === 'inactive' ? '#64748b' : '#e74c3c') }}></span>
-                                                {card.status === 'active' ? 'Active' : (card.status === 'inactive' ? 'Désactivée' : 'Bloquée')}
+                                                {card.status === 'active' ? t('cards.details.active') : (card.status === 'inactive' ? t('cards.details.inactive') : t('cards.details.blocked'))}
                                             </div>
-                                            <button onClick={(e) => toggleNumber(card.id, e)} style={styles.controlBtn}><i className={`fas ${showNumbers[card.id] ? 'fa-eye-slash' : 'fa-eye'}`}></i> {showNumbers[card.id] ? 'Masquer' : 'Voir le numéro'}</button>
+                                            <button onClick={(e) => toggleNumber(card.id, e)} style={styles.controlBtn}><i className={`fas ${showNumbers[card.id] ? 'fa-eye-slash' : 'fa-eye'}`}></i> {showNumbers[card.id] ? t('cards.actions.hide_number') : t('cards.actions.show_number')}</button>
                                             <div style={styles.actionsGrid}>
                                                 <button
                                                     style={{ ...styles.actionBtn, color: card.status === 'active' ? '#e74c3c' : (card.status === 'inactive' ? '#64748b' : '#2ecc71'), opacity: card.status === 'inactive' ? 0.6 : 1 }}
@@ -371,13 +373,13 @@ const Cards = () => {
                                                     disabled={card.status === 'inactive'}
                                                 >
                                                     <i className={card.status === 'active' ? 'fas fa-lock' : 'fas fa-lock-open'}></i>
-                                                    <span>{card.status === 'active' ? 'Bloquer' : (card.status === 'inactive' ? 'Désactivée' : 'Activer')}</span>
+                                                    <span>{card.status === 'active' ? t('cards.actions.block') : (card.status === 'inactive' ? t('cards.actions.disabled') : t('cards.actions.activate'))}</span>
                                                 </button>
-                                                <button style={styles.actionBtn} onClick={() => handleShowOptions(card)}><i className="fas fa-cog"></i><span>Options</span></button>
-                                                <button style={styles.actionBtn} onClick={() => toggleFlip(card.id)}><i className="fas fa-sync"></i><span>Tourner</span></button>
+                                                <button style={styles.actionBtn} onClick={() => handleShowOptions(card)}><i className="fas fa-cog"></i><span>{t('cards.actions.options')}</span></button>
+                                                <button style={styles.actionBtn} onClick={() => toggleFlip(card.id)}><i className="fas fa-sync"></i><span>{t('cards.actions.flip')}</span></button>
                                                 <button style={{ ...styles.actionBtn, color: '#e74c3c' }} onClick={() => handleDeleteCard(card.id)}>
                                                     <i className="fas fa-trash"></i>
-                                                    <span>Suppr.</span>
+                                                    <span>{t('cards.actions.delete')}</span>
                                                 </button>
                                             </div>
                                         </div>
@@ -391,9 +393,9 @@ const Cards = () => {
                             <div style={styles.orderCard}>
                                 <div style={styles.orderHeader}>
                                     <i className="fas fa-box-open" style={styles.orderIcon}></i>
-                                    <h3>Carte Physique</h3>
+                                    <h3>{t('cards.physical_order.title')}</h3>
                                 </div>
-                                <p style={styles.orderDesc}>Recevez votre carte exclusive INVIK chez vous sous 3 à 5 jours ouvrés.</p>
+                                <p style={styles.orderDesc}>{t('cards.physical_order.desc')}</p>
 
                                 <div style={styles.physicalPreview}>
                                     <div style={styles.physicalMockup}>
@@ -404,9 +406,9 @@ const Cards = () => {
                                 </div>
 
                                 <ul style={styles.featuresList}>
-                                    <li><i className="fas fa-check"></i> Retraits gratuits partout</li>
-                                    <li><i className="fas fa-check"></i> Paiement sans contact</li>
-                                    <li><i className="fas fa-check"></i> Design Noir Mat Premium</li>
+                                    <li><i className="fas fa-check"></i> {t('cards.physical_order.features.withdrawals')}</li>
+                                    <li><i className="fas fa-check"></i> {t('cards.physical_order.features.contactless')}</li>
+                                    <li><i className="fas fa-check"></i> {t('cards.physical_order.features.design')}</li>
                                 </ul>
 
                                 <button
@@ -421,34 +423,34 @@ const Cards = () => {
                                 >
                                     {requesting ? <i className="fas fa-spinner fa-spin"></i> :
                                         cardRequest ? (
-                                            cardRequest.status === 'pending' ? 'Demande en cours' :
-                                                cardRequest.status === 'delivered' ? 'Carte reçue ✅' :
-                                                    'Carte expédiée'
+                                            cardRequest.status === 'pending' ? t('cards.physical_order.status.pending') :
+                                                cardRequest.status === 'delivered' ? t('cards.physical_order.status.delivered') :
+                                                    t('cards.physical_order.status.shipped')
                                         ) :
-                                            'Commander maintenant'}
+                                            t('cards.physical_order.button.order_now')}
                                 </button>
 
                                 {rejectedRequest && !cardRequest && (
                                     <div style={{ marginTop: '1rem', padding: '12px', background: '#fff5f5', borderRadius: '12px', border: '1px solid #feb2b2', fontSize: '0.85rem', color: '#c53030', textAlign: 'left' }}>
                                         <i className="fas fa-exclamation-triangle" style={{ marginRight: '8px' }}></i>
-                                        <strong>Dernière demande rejetée :</strong> {rejectedRequest.reviewNotes || "Veuillez vérifier vos informations."}
+                                        <strong>{t('cards.physical_order.status.rejected')}</strong> {rejectedRequest.reviewNotes || t('cards.physical_order.status.default_reject_reason')}
                                     </div>
                                 )}
 
                                 <p style={styles.orderPricing}>
                                     {cardRequest ?
-                                        (cardRequest.status === 'pending' ? 'Votre demande est en cours de traitement' :
-                                            cardRequest.status === 'delivered' ? 'Félicitations ! Votre carte est arrivée. Profitez bien de vos nouveaux avantages ! 🎁✨' :
-                                                'Votre carte est en route ! 🚀 Elle arrivera sous 3 à 5 jours.') :
-                                        'Gratuit • Inclus dans votre offre'
+                                        (cardRequest.status === 'pending' ? t('cards.physical_order.status.pending') :
+                                            cardRequest.status === 'delivered' ? t('cards.physical_order.status.delivered') :
+                                                t('cards.physical_order.status.shipped')) :
+                                        t('cards.physical_order.status.free')
                                     }
                                 </p>
                             </div>
 
                             <div style={styles.virtualPromo}>
-                                <h3>Besoin d'une carte virtuelle ?</h3>
-                                <p>Créez une carte instantanément pour vos achats en ligne sécurisés.</p>
-                                <button style={styles.secondaryOrderBtn}>Créer une carte virtuelle</button>
+                                <h3>{t('cards.virtual_promo.title')}</h3>
+                                <p>{t('cards.virtual_promo.desc')}</p>
+                                <button style={styles.secondaryOrderBtn}>{t('cards.virtual_promo.button')}</button>
                             </div>
                         </div>
                     </div>
@@ -459,33 +461,33 @@ const Cards = () => {
                     <div style={styles.modalOverlay} onClick={() => setShowOptionsModal(false)}>
                         <div style={styles.modalContent} onClick={e => e.stopPropagation()}>
                             <div style={styles.modalHeader}>
-                                <h3 style={{ margin: 0, color: '#003366' }}>Options de la carte</h3>
+                                <h3 style={{ margin: 0, color: '#003366' }}>{t('cards.options_modal.title')}</h3>
                                 <button style={styles.modalClose} onClick={() => setShowOptionsModal(false)}>&times;</button>
                             </div>
 
                             <div style={styles.modalBody}>
                                 <div style={styles.inputGroup}>
-                                    <label style={{ fontSize: '0.85rem', color: '#64748b', fontWeight: 'bold' }}>NOM DE LA CARTE (ALIAS)</label>
+                                    <label style={{ fontSize: '0.85rem', color: '#64748b', fontWeight: 'bold' }}>{t('cards.options_modal.alias_label')}</label>
                                     <input
                                         style={styles.modalInput}
                                         value={tempAlias}
                                         onChange={e => setTempAlias(e.target.value)}
-                                        placeholder="Ex: Achats Amazon, Perso..."
+                                        placeholder={t('cards.options_modal.alias_placeholder')}
                                     />
                                 </div>
                                 <div style={styles.inputGroup}>
-                                    <label style={{ fontSize: '0.85rem', color: '#64748b', fontWeight: 'bold' }}>PLAFOND MENSUEL (€)</label>
+                                    <label style={{ fontSize: '0.85rem', color: '#64748b', fontWeight: 'bold' }}>{t('cards.options_modal.limit_label')}</label>
                                     <input
                                         type="number"
                                         style={styles.modalInput}
                                         value={tempLimit}
                                         onChange={e => setTempLimit(e.target.value)}
                                     />
-                                    <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Le plafond par défaut est de 2 000 €.</span>
+                                    <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>{t('cards.options_modal.limit_help')}</span>
                                 </div>
 
                                 <button style={styles.saveBtn} onClick={handleSaveOptions}>
-                                    Enregistrer les modifications
+                                    {t('cards.options_modal.save')}
                                 </button>
                             </div>
                         </div>

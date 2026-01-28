@@ -7,13 +7,15 @@ import { walletService } from '../../services/walletService';
 import { cardService } from '../../services/cardService';
 import { ribService } from '../../services/ribService';
 import KycVerificationBanner from '../../components/dashboard/KycVerificationBanner';
+import { useTranslation } from 'react-i18next';
 
 const RibModal = ({ isOpen, onClose, rib, wallet, showToast }) => {
+    const { t } = useTranslation();
     if (!isOpen || !rib) return null;
 
     const copyToClipboard = (text, label) => {
         navigator.clipboard.writeText(text);
-        if (showToast) showToast(`${label} copié dans le presse-papiers !`, 'success');
+        if (showToast) showToast(t('accounts.rib_modal.copy_toast', { label }), 'success');
     };
 
     return (
@@ -45,17 +47,17 @@ const RibModal = ({ isOpen, onClose, rib, wallet, showToast }) => {
                     }}>
                         <i className="fas fa-file-invoice"></i>
                     </div>
-                    <h2 style={{ fontSize: '1.1rem', fontWeight: '800', margin: 0, color: '#0f172a' }}>RIB / IBAN</h2>
-                    <p style={{ color: '#64748b', fontSize: '0.75rem', margin: '2px 0 0' }}>Coordonnées Officielles</p>
+                    <h2 style={{ fontSize: '1.1rem', fontWeight: '800', margin: 0, color: '#0f172a' }}>{t('accounts.rib_modal.title')}</h2>
+                    <p style={{ color: '#64748b', fontSize: '0.75rem', margin: '2px 0 0' }}>{t('accounts.rib_modal.subtitle')}</p>
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                     {[
-                        { label: 'Titulaire', value: rib.holderName },
-                        { label: 'IBAN', value: rib.iban },
-                        { label: 'BIC / SWIFT', value: rib.bic },
-                        { label: 'Banque', value: 'INVIK BANK' },
-                        { label: 'Type', value: rib.accountName }
+                        { label: t('accounts.rib_modal.labels.holder'), value: rib.holderName },
+                        { label: t('accounts.rib_modal.labels.iban'), value: rib.iban },
+                        { label: t('accounts.rib_modal.labels.bic'), value: rib.bic },
+                        { label: t('accounts.rib_modal.labels.bank'), value: 'INVIK BANK' },
+                        { label: t('accounts.rib_modal.labels.type'), value: rib.accountName }
                     ].map((item, idx) => (
                         <div key={idx} style={{
                             padding: '8px 12px', background: '#f8fafc', borderRadius: '12px',
@@ -87,7 +89,7 @@ const RibModal = ({ isOpen, onClose, rib, wallet, showToast }) => {
                     background: '#003366', color: 'white', fontWeight: '800', fontSize: '0.9rem',
                     marginTop: '1rem', cursor: 'pointer', transition: 'transform 0.2s'
                 }}>
-                    Fermer
+                    {t('accounts.rib_modal.close')}
                 </button>
             </div>
         </div>
@@ -95,16 +97,19 @@ const RibModal = ({ isOpen, onClose, rib, wallet, showToast }) => {
 };
 
 const AccountCard = ({ wallet, isLoading, onRibClick, navigate }) => {
+    const { t, i18n } = useTranslation();
     if (isLoading || !wallet) return (
         <div style={{ background: '#f8f9fa', borderRadius: '16px', height: '240px', animation: 'pulse 1.5s infinite' }}></div>
     );
 
     const config = {
-        main: { label: 'Compte Courant', icon: 'fa-wallet', color: '#003366' },
-        savings: { label: 'Compte Épargne', icon: 'fa-piggy-bank', color: '#27ae60' },
-        credit: { label: 'Compte Crédit', icon: 'fa-hand-holding-usd', color: '#c0392b' },
-        currency: { label: 'Compte Devise', icon: 'fa-globe', color: '#f39c12' }
-    }[wallet.type] || { label: 'Autre Compte', icon: 'fa-university', color: '#7f8c8d' };
+        main: { label: t('accounts.card.main'), icon: 'fa-wallet', color: '#003366' },
+        savings: { label: t('accounts.card.savings'), icon: 'fa-piggy-bank', color: '#27ae60' },
+        credit: { label: t('accounts.card.credit'), icon: 'fa-hand-holding-usd', color: '#c0392b' },
+        currency: { label: t('accounts.card.currency'), icon: 'fa-globe', color: '#f39c12' }
+    }[wallet.type] || { label: t('accounts.card.other'), icon: 'fa-university', color: '#7f8c8d' };
+
+    const currentLocale = i18n.language === 'en' ? 'en-US' : (i18n.language === 'fr' ? 'fr-FR' : i18n.language);
 
     return (
         <div style={{
@@ -145,7 +150,7 @@ const AccountCard = ({ wallet, isLoading, onRibClick, navigate }) => {
                     color: wallet.type === 'main' ? 'white' : (wallet.type === 'credit' ? '#e11d48' : '#003366'),
                     margin: '0 0 0.5rem'
                 }}>
-                    {wallet.balance.toLocaleString('fr-FR', { minimumFractionDigits: 2 })} <span style={{ fontSize: '1rem', fontWeight: '500', color: wallet.type === 'main' ? 'rgba(255,255,255,0.7)' : '#94a3b8' }}>{wallet.currency}</span>
+                    {wallet.balance.toLocaleString(currentLocale, { minimumFractionDigits: 2 })} <span style={{ fontSize: '1rem', fontWeight: '500', color: wallet.type === 'main' ? 'rgba(255,255,255,0.7)' : '#94a3b8' }}>{wallet.currency}</span>
                 </div>
                 <div style={{ fontSize: '0.85rem', color: wallet.type === 'main' ? 'rgba(255,255,255,0.6)' : '#94a3b8', fontFamily: 'monospace', opacity: 0.8 }}>
                     {wallet.iban}
@@ -158,22 +163,22 @@ const AccountCard = ({ wallet, isLoading, onRibClick, navigate }) => {
                 paddingTop: '1.25rem', borderTop: wallet.type === 'main' ? '1px solid rgba(255,255,255,0.1)' : '1px solid #f1f5f9'
             }}>
                 <button
-                    onClick={() => navigate('/dashboard/transfers')}
+                    onClick={() => navigate(`/${i18n.language}/dashboard/transfers`)}
                     style={{ flex: 1, padding: '10px', borderRadius: '12px', border: 'none', background: wallet.type === 'main' ? 'rgba(255,255,255,0.1)' : '#f1f5f9', color: wallet.type === 'main' ? 'white' : '#003366', fontWeight: '700', fontSize: '0.8rem', cursor: 'pointer' }}
                 >
-                    <i className="fas fa-paper-plane" style={{ marginRight: '6px' }}></i> Virer
+                    <i className="fas fa-paper-plane" style={{ marginRight: '6px' }}></i> {t('accounts.card.actions.transfer')}
                 </button>
                 <button
-                    onClick={() => navigate('/dashboard/deposit')}
+                    onClick={() => navigate(`/${i18n.language}/dashboard/deposit`)}
                     style={{ flex: 1, padding: '10px', borderRadius: '12px', border: 'none', background: wallet.type === 'main' ? 'rgba(255,255,255,0.1)' : '#f1f5f9', color: wallet.type === 'main' ? 'white' : '#003366', fontWeight: '700', fontSize: '0.8rem', cursor: 'pointer' }}
                 >
-                    <i className="fas fa-plus" style={{ marginRight: '6px' }}></i> Déposer
+                    <i className="fas fa-plus" style={{ marginRight: '6px' }}></i> {t('accounts.card.actions.deposit')}
                 </button>
                 <button
                     onClick={onRibClick}
                     style={{ flex: 1, padding: '10px', borderRadius: '12px', border: 'none', background: wallet.type === 'main' ? 'white' : '#003366', color: wallet.type === 'main' ? '#003366' : 'white', fontWeight: '700', fontSize: '0.8rem', cursor: 'pointer' }}
                 >
-                    <i className="fas fa-file-invoice" style={{ marginRight: '6px' }}></i> RIB
+                    <i className="fas fa-file-invoice" style={{ marginRight: '6px' }}></i> {t('accounts.card.actions.rib')}
                 </button>
             </div>
         </div>
@@ -185,6 +190,7 @@ const Accounts = () => {
     const { wallets, accountRequests, ribs, loading } = useData();
     const { showToast } = useNotifications();
     const navigate = useNavigate();
+    const { t, i18n } = useTranslation();
 
     const [selectedRib, setSelectedRib] = useState(null);
     const [isRibModalOpen, setIsRibModalOpen] = useState(false);
@@ -221,9 +227,9 @@ const Accounts = () => {
     // Logic: available account types (one per category rule)
     const availableTypes = React.useMemo(() => {
         const types = [
-            { value: 'savings', label: 'Compte Épargne' },
-            { value: 'credit', label: 'Compte Crédit' },
-            { value: 'currency', label: 'Compte Devise' }
+            { value: 'savings', label: t('accounts.card.savings') },
+            { value: 'credit', label: t('accounts.card.credit') },
+            { value: 'currency', label: t('accounts.card.currency') }
         ];
         return types.filter(t => {
             const hasWallet = wallets.some(w => w.type === t.value);
@@ -241,11 +247,11 @@ const Accounts = () => {
                 type: requestType,
                 details: requestDetails
             });
-            showToast("Votre demande a été envoyée avec succès.", 'success');
+            showToast(t('accounts.request_modal.success'), 'success');
             setShowRequestModal(false);
             setRequestDetails('');
         } catch (error) {
-            showToast("Erreur lors de l'envoi de la demande.", 'error');
+            showToast(t('accounts.request_modal.error'), 'error');
         }
     };
 
@@ -297,8 +303,8 @@ const Accounts = () => {
             <div style={styles.container}>
                 {!isMobile && (
                     <div style={styles.header}>
-                        <h1 style={styles.title}>Mes Comptes</h1>
-                        <p style={styles.subtitle}>Gérez vos portefeuilles et consultez vos coordonnées bancaires.</p>
+                        <h1 style={styles.title}>{t('accounts.title')}</h1>
+                        <p style={styles.subtitle}>{t('accounts.subtitle')}</p>
                     </div>
                 )}
 
@@ -327,18 +333,18 @@ const Accounts = () => {
                             <div style={{ width: '50px', height: '50px', borderRadius: '50%', background: '#f0f4f8', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
                                 <i className="fas fa-plus" style={{ fontSize: '1.5rem', color: '#003366' }}></i>
                             </div>
-                            <h3 style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>Ouvrir un compte</h3>
-                            <p style={{ fontSize: '0.9rem' }}>Compte Épargne, Crédit ou Devise</p>
+                            <h3 style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>{t('accounts.request_modal.button')}</h3>
+                            <p style={{ fontSize: '0.9rem' }}>{t('accounts.request_modal.subtitle')}</p>
                         </div>
                     )}
                 </div>
 
                 {showRequestModal && (
-                    <div style={styles.modalOverlay}>
-                        <div style={styles.modal}>
-                            <h2 style={{ marginBottom: '1.5rem', color: '#003366' }}>Ouvrir un nouveau compte</h2>
+                    <div style={styles.modalOverlay} onClick={() => setShowRequestModal(false)}>
+                        <div style={styles.modal} onClick={e => e.stopPropagation()}>
+                            <h2 style={{ marginBottom: '1.5rem', color: '#003366' }}>{t('accounts.request_modal.title')}</h2>
                             <div style={{ marginBottom: '1rem' }}>
-                                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>Type de compte</label>
+                                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>{t('accounts.request_modal.type_label')}</label>
                                 <select
                                     style={{ width: '100%', padding: '0.5rem', borderRadius: '8px', border: '1px solid #ddd' }}
                                     value={requestType}
@@ -350,17 +356,17 @@ const Accounts = () => {
                                 </select>
                             </div>
                             <div style={{ marginBottom: '1rem' }}>
-                                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>Message (optionnel)</label>
+                                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>{t('accounts.request_modal.message_label')}</label>
                                 <textarea
                                     style={{ width: '100%', padding: '0.5rem', borderRadius: '8px', border: '1px solid #ddd', minHeight: '100px' }}
                                     value={requestDetails}
                                     onChange={e => setRequestDetails(e.target.value)}
-                                    placeholder="Dites-nous en plus..."
+                                    placeholder={t('accounts.request_modal.placeholder')}
                                 />
                             </div>
                             <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
-                                <button style={{ flex: 1, padding: '0.85rem', background: '#f8fafc', border: '1px solid #e2e8f0', color: '#64748b', borderRadius: '12px', cursor: 'pointer', fontWeight: '700' }} onClick={() => setShowRequestModal(false)}>Annuler</button>
-                                <button style={{ flex: 1, padding: '0.85rem', background: '#003366', color: 'white', border: 'none', borderRadius: '12px', cursor: 'pointer', fontWeight: '700' }} onClick={handleRequestSubmit}>Confirmer</button>
+                                <button style={{ flex: 1, padding: '0.85rem', background: '#f8fafc', border: '1px solid #e2e8f0', color: '#64748b', borderRadius: '12px', cursor: 'pointer', fontWeight: '700' }} onClick={() => setShowRequestModal(false)}>{t('accounts.request_modal.cancel')}</button>
+                                <button style={{ flex: 1, padding: '0.85rem', background: '#003366', color: 'white', border: 'none', borderRadius: '12px', cursor: 'pointer', fontWeight: '700' }} onClick={handleRequestSubmit}>{t('accounts.request_modal.confirm')}</button>
                             </div>
                         </div>
                     </div>
