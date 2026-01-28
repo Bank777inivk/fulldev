@@ -42,8 +42,11 @@ const Navbar = () => {
                     </Link>
                 </div>
 
-                {/* Mobile Actions (Login Icon + Hamburger) */}
-                <div className="nav-mobile-actions">
+                {/* Mobile Actions (Login Icon + Lang + Hamburger) */}
+                <div className="nav-mobile-actions" style={styles.mobileActions}>
+                    <div className="mobile-lang-selector">
+                        <LanguageSelector />
+                    </div>
                     <Link to={getPath('/login')} className="nav-mobile-user" onClick={closeMenu}>
                         <i className="fas fa-user-circle"></i>
                     </Link>
@@ -60,10 +63,6 @@ const Navbar = () => {
                     <NavLink to={getPath('/faq')} onClick={closeMenu} className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>{t('navbar.faq')}</NavLink>
                     <NavLink to={getPath('/contact')} onClick={closeMenu} className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>{t('navbar.contact')}</NavLink>
 
-                    {/* Language Selector */}
-                    <div className="desktop-only">
-                        <LanguageSelector />
-                    </div>
 
                     {currentUser ? (
                         <>
@@ -73,6 +72,11 @@ const Navbar = () => {
                     ) : (
                         <Link to={getPath('/login')} onClick={closeMenu} className="nav-button" style={styles.button}>{t('navbar.login')} / {t('navbar.register')}</Link>
                     )}
+
+                    {/* Language Selector Desktop (Far Right) */}
+                    <div className="desktop-only">
+                        <LanguageSelector />
+                    </div>
                 </div>
             </div>
         </nav>
@@ -122,6 +126,10 @@ const styles = {
     },
     toggle: {
         display: 'none', // Hidden on desktop
+    },
+    mobileActions: {
+        alignItems: 'center',
+        gap: '15px',
     }
 };
 
