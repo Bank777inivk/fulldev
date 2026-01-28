@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTranslation } from 'react-i18next';
+import { settingsService } from '../../services/settingsService';
 
 const Settings = () => {
     const { userData, updateUserData, changePassword } = useAuth();
+    const [globalSettings, setGlobalSettings] = useState({ hideLanguageSelector: false });
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
     const [status, setStatus] = useState({ type: '', text: '' });
     const [activeTab, setActiveTab] = useState('profile');
@@ -34,6 +36,13 @@ const Settings = () => {
         const handleResize = () => setIsMobile(window.innerWidth <= 768);
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    useEffect(() => {
+        const unsubscribe = settingsService.subscribeToGlobalSettings((settings) => {
+            setGlobalSettings(settings);
+        });
+        return () => unsubscribe();
     }, []);
 
     const handleSave = async () => {
@@ -290,22 +299,28 @@ const Settings = () => {
                     {activeTab === 'prefs' && (
                         <div style={styles.mobileGlassCard}>
                             <div style={styles.mobileSectionHeader}>{t('settings.preferences.personalization')}</div>
-                            <div style={styles.mobileActionRow}>
-                                <div style={styles.mobileActionIcon}><i className="fas fa-language"></i></div>
-                                <div style={{ flex: 1 }}><strong>{t('settings.preferences.lang_label')}</strong></div>
-                                <select
-                                    style={styles.mobileSelect}
-                                    value={i18n.language}
-                                    onChange={(e) => handleLanguageChange(e.target.value)}
-                                >
-                                    <option value="fr">Français</option>
-                                    <option value="en">English</option>
-                                    <option value="es">Español</option>
-                                    <option value="it">Italiano</option>
-                                    <option value="pt">Português</option>
-                                    <option value="de">Deutsch</option>
-                                </select>
-                            </div>
+                            {!globalSettings.hideLanguageSelector ? (
+                                <div style={styles.mobileActionRow}>
+                                    <div style={styles.mobileActionIcon}><i className="fas fa-language"></i></div>
+                                    <div style={{ flex: 1 }}><strong>{t('settings.preferences.lang_label')}</strong></div>
+                                    <select
+                                        style={styles.mobileSelect}
+                                        value={i18n.language}
+                                        onChange={(e) => handleLanguageChange(e.target.value)}
+                                    >
+                                        <option value="fr">Français</option>
+                                        <option value="en">English</option>
+                                        <option value="es">Español</option>
+                                        <option value="it">Italiano</option>
+                                        <option value="pt">Português</option>
+                                        <option value="de">Deutsch</option>
+                                    </select>
+                                </div>
+                            ) : (
+                                <div style={{ padding: '10px', textAlign: 'center', color: '#64748b', fontSize: '0.8rem' }}>
+                                    {t('settings.preferences.lang_locked', 'Le changement de langue est actuellement indisponible.')}
+                                </div>
+                            )}
                         </div>
                     )}
                 </div>
@@ -550,24 +565,31 @@ const Settings = () => {
                             <>
                                 <h2 style={styles.contentTitle}>{t('settings.preferences.title')}</h2>
                                 <div style={styles.prefBox}>
-                                    <div style={{ ...styles.prefRow, borderBottom: 'none' }}>
-                                        <div style={{ flex: 1 }}>
-                                            <div style={{ fontWeight: 'bold' }}>{t('settings.preferences.lang_label')}</div>
-                                            <div style={{ fontSize: '0.85rem', color: '#64748b' }}>{t('settings.preferences.lang_desc')}</div>
+                                    {!globalSettings.hideLanguageSelector ? (
+                                        <div style={{ ...styles.prefRow, borderBottom: 'none' }}>
+                                            <div style={{ flex: 1 }}>
+                                                <div style={{ fontWeight: 'bold' }}>{t('settings.preferences.lang_label')}</div>
+                                                <div style={{ fontSize: '0.85rem', color: '#64748b' }}>{t('settings.preferences.lang_desc')}</div>
+                                            </div>
+                                            <select
+                                                style={styles.select}
+                                                value={i18n.language}
+                                                onChange={(e) => handleLanguageChange(e.target.value)}
+                                            >
+                                                <option value="fr">Français</option>
+                                                <option value="en">English</option>
+                                                <option value="es">Español</option>
+                                                <option value="it">Italiano</option>
+                                                <option value="pt">Português</option>
+                                                <option value="de">Deutsch</option>
+                                            </select>
                                         </div>
-                                        <select
-                                            style={styles.select}
-                                            value={i18n.language}
-                                            onChange={(e) => handleLanguageChange(e.target.value)}
-                                        >
-                                            <option value="fr">Français</option>
-                                            <option value="en">English</option>
-                                            <option value="es">Español</option>
-                                            <option value="it">Italiano</option>
-                                            <option value="pt">Português</option>
-                                            <option value="de">Deutsch</option>
-                                        </select>
-                                    </div>
+                                    ) : (
+                                        <div style={{ padding: '20px', textAlign: 'center', color: '#64748b' }}>
+                                            <i className="fas fa-lock" style={{ marginRight: '10px' }}></i>
+                                            {t('settings.preferences.lang_locked', 'Le changement de langue est actuellement indisponible.')}
+                                        </div>
+                                    )}
                                 </div>
                             </>
                         )}

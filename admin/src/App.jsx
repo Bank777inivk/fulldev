@@ -19,6 +19,7 @@ import ContactMessages from './pages/ContactMessages';
 import SupportTickets from './pages/SupportTickets';
 import ManageAdmins from './pages/ManageAdmins';
 import AdminProfile from './pages/AdminProfile';
+import SystemSettings from './pages/SystemSettings';
 import './App.css';
 
 function App() {
@@ -45,6 +46,7 @@ function App() {
             <Route path="messages" element={<ContactMessages />} />
             <Route path="support" element={<SupportTickets />} />
             <Route path="manage-admins" element={<ManageAdmins />} />
+            <Route path="system-settings" element={<SystemSettings />} />
             <Route path="profile" element={<AdminProfile />} />
             <Route path="transactions/user/:userId" element={<ManageTransactions />} />
           </Route>

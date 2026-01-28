@@ -115,5 +115,11 @@ service cloud.firestore {
           get(/databases/$(database)/documents/support_tickets/$(ticketId)).data.userId == request.auth.uid;
       }
     }
+
+    // System Settings (Public Read)
+    match /settings/{settingId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
   }
 }

@@ -1,16 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import LanguageSelector from './LanguageSelector';
+import { settingsService } from '../services/settingsService';
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [globalSettings, setGlobalSettings] = useState({ hideLanguageSelector: false });
     const { currentUser, logout } = useAuth();
     const navigate = useNavigate();
 
     const { t, i18n } = useTranslation();
     const currentLang = i18n.language;
+
+    useEffect(() => {
+        const unsubscribe = settingsService.subscribeToGlobalSettings((settings) => {
+            setGlobalSettings(settings);
+        });
+        return () => unsubscribe();
+    }, []);
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
@@ -44,9 +53,11 @@ const Navbar = () => {
 
                 {/* Mobile Actions (Login Icon + Lang + Hamburger) */}
                 <div className="nav-mobile-actions" style={styles.mobileActions}>
-                    <div className="mobile-lang-selector">
-                        <LanguageSelector />
-                    </div>
+                    {!globalSettings.hideLanguageSelector && (
+                        <div className="mobile-lang-selector">
+                            <LanguageSelector />
+                        </div>
+                    )}
                     <Link to={getPath('/login')} className="nav-mobile-user" onClick={closeMenu}>
                         <i className="fas fa-user-circle"></i>
                     </Link>
@@ -74,9 +85,11 @@ const Navbar = () => {
                     )}
 
                     {/* Language Selector Desktop (Far Right) */}
-                    <div className="desktop-only">
-                        <LanguageSelector />
-                    </div>
+                    {!globalSettings.hideLanguageSelector && (
+                        <div className="desktop-only">
+                            <LanguageSelector />
+                        </div>
+                    )}
                 </div>
             </div>
         </nav>

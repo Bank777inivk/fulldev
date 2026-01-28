@@ -14,6 +14,7 @@ import {
     onSnapshot,
     deleteDoc,
     addDoc,
+    setDoc,
     runTransaction,
     serverTimestamp
 } from 'firebase/firestore';
@@ -710,6 +711,29 @@ export const adminService = {
             const requests = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             callback(requests);
         });
+    },
+
+    // --- System Settings ---
+    async getSystemSettings() {
+        const docRef = doc(db, 'settings', 'global');
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            return docSnap.data();
+        } else {
+            // Default settings if none exist
+            return {
+                hideLanguageSelector: false,
+                updatedAt: serverTimestamp()
+            };
+        }
+    },
+
+    async updateSystemSettings(data) {
+        const docRef = doc(db, 'settings', 'global');
+        await setDoc(docRef, {
+            ...data,
+            updatedAt: serverTimestamp()
+        }, { merge: true });
     },
 
     approveAccountRequest: async (requestId, userId, type, currency = 'EUR') => {

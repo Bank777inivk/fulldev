@@ -76,7 +76,10 @@ const AdminLayout = () => {
         { path: '/prospects', icon: 'fas fa-user-tie', label: 'Prospects (Leads)', badge: newLeads || null },
         { path: '/support', icon: 'fas fa-headset', label: 'Tickets Support', badge: openTickets || null },
         { path: '/messages', icon: 'fas fa-comment-alt', label: 'Messages Contact', badge: newMessages || null },
-        ...(isSuperAdmin ? [{ path: '/manage-admins', icon: 'fas fa-user-shield', label: 'Gestion Admins' }] : []),
+        ...(isSuperAdmin ? [
+            { path: '/manage-admins', icon: 'fas fa-user-shield', label: 'Gestion Admins' },
+            { path: '/system-settings', icon: 'fas fa-cog', label: 'Paramètres Système' }
+        ] : []),
         { path: '/profile', icon: 'fas fa-user-circle', label: 'Mon Profil' },
     ];
 
