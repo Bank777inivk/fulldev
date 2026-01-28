@@ -31,6 +31,7 @@ i18n
         // Detection options
         detection: {
             order: ['queryString', 'cookie', 'localStorage', 'navigator', 'htmlTag', 'path', 'subdomain'],
+            lookupQuerystring: 'lang',
             caches: ['localStorage', 'cookie'],
         },
 

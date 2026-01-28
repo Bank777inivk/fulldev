@@ -24,6 +24,12 @@ const AuthActionHandler = () => {
     const oobCode = searchParams.get('oobCode');
 
     useEffect(() => {
+        // Force language sync if lang parameter is present
+        const langParam = searchParams.get('lang');
+        if (langParam && i18n.language !== langParam) {
+            i18n.changeLanguage(langParam);
+        }
+
         if (!mode || !oobCode) {
             setStatus('error');
             setMessage(t('auth.action_handler.invalid_link'));
