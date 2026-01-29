@@ -665,16 +665,103 @@ export const adminService = {
     },
 
     updateLoanStatus: async (loanId, status, reviewNotes = '') => {
-        await updateDoc(doc(db, 'loans', loanId), {
-            status,
-            reviewNotes,
-            reviewedAt: new Date(),
-            updatedAt: new Date()
-        });
+        try {
+            await runTransaction(db, async (transaction) => {
+                const loanRef = doc(db, 'loans', loanId);
+                const loanSnap = await transaction.get(loanRef);
 
-        // Trigger Email Notification
-        if (status === 'approved' || status === 'rejected') {
-            try {
+                if (!loanSnap.exists()) throw new Error("Prêt non trouvé");
+
+                const loanData = loanSnap.data();
+                const userId = loanData.userId;
+                const oldStatus = loanData.status;
+
+                // 1. Update Loan Status
+                transaction.update(loanRef, {
+                    status,
+                    reviewNotes,
+                    reviewedAt: serverTimestamp(),
+                    updatedAt: serverTimestamp()
+                });
+
+                // 2. If Approved (and wasn't already), credit the account
+                if (status === 'approved' && oldStatus !== 'approved') {
+                    const amount = parseFloat(loanData.amount) || 0;
+                    const currency = loanData.currency || '€';
+
+                    // Find Credit Wallet
+                    const walletsQuery = query(collection(db, 'wallets'), where('userId', '==', userId), where('type', '==', 'credit'));
+                    const walletsSnap = await getDocs(walletsQuery);
+
+                    let walletRef;
+                    let currentWalletBalance = 0;
+
+                    if (!walletsSnap.empty) {
+                        walletRef = doc(db, 'wallets', walletsSnap.docs[0].id);
+                        const walletDoc = await transaction.get(walletRef);
+                        currentWalletBalance = walletDoc.data().balance || 0;
+
+                        transaction.update(walletRef, {
+                            balance: currentWalletBalance + amount,
+                            updatedAt: serverTimestamp()
+                        });
+                    } else {
+                        // Create new credit wallet if it doesn't exist
+                        walletRef = doc(collection(db, 'wallets'));
+                        transaction.set(walletRef, {
+                            userId,
+                            type: 'credit',
+                            currency,
+                            balance: amount,
+                            iban: generateAdminIBAN('credit', userId),
+                            bic: 'INVKFR2P',
+                            status: 'active',
+                            createdAt: serverTimestamp(),
+                            updatedAt: serverTimestamp()
+                        });
+                    }
+
+                    // Update User Global Balance
+                    const userRef = doc(db, 'users', userId);
+                    const userSnap = await transaction.get(userRef);
+                    if (userSnap.exists()) {
+                        const currentGlobal = userSnap.data().balance || 0;
+                        transaction.update(userRef, {
+                            balance: currentGlobal + amount,
+                            updatedAt: serverTimestamp()
+                        });
+                    }
+
+                    // Create Transaction Record (Audit)
+                    const txRef = doc(collection(db, 'transactions'));
+                    transaction.set(txRef, {
+                        userId,
+                        walletId: walletRef.id,
+                        type: 'credit',
+                        amount: amount,
+                        currency,
+                        status: 'completed',
+                        description: `Déblocage de prêt: ${loanData.type || 'Standard'}`,
+                        createdAt: serverTimestamp(),
+                        updatedAt: serverTimestamp()
+                    });
+
+                    // Create Notification for client
+                    const notifRef = doc(collection(db, 'notifications'));
+                    transaction.set(notifRef, {
+                        userId,
+                        title: '💰 Prêt Crédité',
+                        message: `Votre prêt de ${amount.toLocaleString()} ${currency} a été approuvé et les fonds sont désormais disponibles sur votre compte.`,
+                        type: 'loan_approval',
+                        loanId: loanId,
+                        read: false,
+                        createdAt: serverTimestamp()
+                    });
+                }
+            });
+
+            // Trigger Email Notification (outside transaction but after success)
+            if (status === 'approved' || status === 'rejected') {
                 const loanSnap = await getDoc(doc(db, 'loans', loanId));
                 if (loanSnap.exists()) {
                     const loanData = loanSnap.data();
@@ -689,9 +776,10 @@ export const adminService = {
                         }
                     }
                 }
-            } catch (err) {
-                console.warn("Failed to send loan status email:", err);
             }
+        } catch (error) {
+            console.error('Error in updateLoanStatus:', error);
+            throw error;
         }
     },
 

@@ -150,7 +150,7 @@ const AccountCard = ({ wallet, isLoading, onRibClick, navigate }) => {
                     color: wallet.type === 'main' ? 'white' : (wallet.type === 'credit' ? '#e11d48' : '#003366'),
                     margin: '0 0 0.5rem'
                 }}>
-                    {wallet.balance.toLocaleString(currentLocale, { minimumFractionDigits: 2 })} <span style={{ fontSize: '1rem', fontWeight: '500', color: wallet.type === 'main' ? 'rgba(255,255,255,0.7)' : '#94a3b8' }}>{wallet.currency}</span>
+                    {(wallet.balance || 0).toLocaleString(currentLocale, { minimumFractionDigits: 2 })} <span style={{ fontSize: '1rem', fontWeight: '500', color: wallet.type === 'main' ? 'rgba(255,255,255,0.7)' : '#94a3b8' }}>{wallet.currency}</span>
                 </div>
                 <div style={{ fontSize: '0.85rem', color: wallet.type === 'main' ? 'rgba(255,255,255,0.6)' : '#94a3b8', fontFamily: 'monospace', opacity: 0.8 }}>
                     {wallet.iban}

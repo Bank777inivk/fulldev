@@ -248,7 +248,7 @@ const Transfers = () => {
                 </div>
                 <div style={{ flex: 1 }}>
                     <div style={{ fontWeight: '600', color: '#333', fontSize: compact ? '0.9rem' : '1rem' }}>{config.label}</div>
-                    <div style={{ fontSize: '0.85rem', color: '#666' }}>{wallet.balance.toLocaleString(currentLocale, { style: 'currency', currency: wallet.currency })}</div>
+                    <div style={{ fontSize: '0.85rem', color: '#666' }}>{(wallet.balance || 0).toLocaleString(currentLocale, { style: 'currency', currency: wallet.currency })}</div>
                 </div>
                 {isSelected && <i className="fas fa-check-circle" style={{ color: '#003366', fontSize: '1.2rem' }}></i>}
             </div>

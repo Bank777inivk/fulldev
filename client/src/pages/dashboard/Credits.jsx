@@ -24,7 +24,7 @@ const ConfirmationModal = ({ isOpen, onClose, onConfirm, details, submitting }) 
                     </div>
                     <div style={styles.modalRow}>
                         <span>{t('credits.form.amount')} :</span>
-                        <strong>{details.montant.toLocaleString()} €</strong>
+                        <strong>{(details.montant || 0).toLocaleString()} €</strong>
                     </div>
                     <div style={styles.modalRow}>
                         <span>{t('credits.form.months')} :</span>
@@ -91,46 +91,10 @@ const Credits = () => {
         setInterestRate(rate);
     }, [amount]);
 
-    // Check Approval & Create Wallet Logic
+    // Check Approval - Remboursement and other effects can go here
     useEffect(() => {
-        const checkAndNotify = async () => {
-            if (!currentUser) return;
-            const approvedLoan = history.find(l => l.status === 'approved' || l.status === 'accepted');
-
-            if (approvedLoan) {
-                // 1. Auto-Create Credit Wallet if missing
-                const creditWallet = wallets.find(w => w.type === 'credit');
-                if (!creditWallet) {
-                    console.log("Approved loan found but no credit wallet. Creating one...");
-                    try {
-                        await walletService.createWallet(currentUser.uid, 'credit', approvedLoan.amount);
-                        showToast(t('credits.messages.credit_opened'), 'success');
-                    } catch (e) {
-                        console.error("Failed to auto-create credit wallet", e);
-                    }
-                }
-
-                // 2. Notification Logic
-                const alreadyNotified = await notificationService.checkNotificationExists(currentUser.uid, 'loanId', approvedLoan.id);
-                if (!alreadyNotified) {
-                    console.log("New approved loan detected, sending notification...");
-
-                    await notificationService.addNotification(
-                        currentUser.uid,
-                        t('credits.messages.credit_available_title'),
-                        t('credits.messages.credit_available_desc', { amount: approvedLoan.amount.toLocaleString() }),
-                        'success',
-                        { loanId: approvedLoan.id, type: 'credit_approval' }
-                    );
-
-                    showToast(t('credits.messages.congrats', { amount: approvedLoan.amount.toLocaleString() }), 'success');
-                }
-            }
-        };
-
-        if (!loading && history.length > 0) {
-            checkAndNotify();
-        }
+        // This logic is now handled by the Admin Service during approval
+        // to ensure atomic updates and audit logs.
     }, [history, wallets, loading, currentUser, showToast]);
 
     const calculateMonthly = () => {
@@ -220,7 +184,7 @@ const Credits = () => {
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                         <div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                                <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#003366' }}>{loan.amount.toLocaleString()} €</span>
+                                <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#003366' }}>{(loan.amount || 0).toLocaleString()} €</span>
                                 <i className="fas fa-check-circle" style={{ color: '#2e7d32', fontSize: '1.2rem' }} title="Approuvé"></i>
                             </div>
                             <div style={{ fontSize: '0.85rem', color: '#666' }}>
@@ -331,7 +295,7 @@ const Credits = () => {
             <div style={styles.inputGroup}>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <label style={styles.label}>{t('credits.form.amount')}</label>
-                    <span style={styles.valueDisplay}>{amount.toLocaleString()} €</span>
+                    <span style={styles.valueDisplay}>{(amount || 0).toLocaleString()} €</span>
                 </div>
                 <input type="range" min="5000" max="900000" step="5000" value={amount} onChange={(e) => setAmount(Number(e.target.value))} style={styles.range} disabled={hasPendingLoan} />
             </div>
