@@ -1165,23 +1165,151 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
 `
             }
         },
+        accountCredited: {
+            fr: {
+                subject: "Confirmation de crédit - INVIK BANK",
+                html: (data) => `
+<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0;">
+                    <div style="background: #003366; padding: 30px 20px; text-align: center; color: white;">
+                        <h2 style="margin: 0; font-size: 20px;">Compte Crédité</h2>
+                    </div>
+                    <div style="padding: 40px; color: #1e293b;">
+                        <p>Bonjour ${data.name},</p>
+                        <p>Nous vous confirmons que votre compte a été crédité suite à un virement interne ou un ajustement manuel.</p>
+                        <div style="background: #f8fafc; padding: 20px; border-radius: 12px; margin: 20px 0;">
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <tr><td style="color: #64748b; padding-bottom: 10px;">Montant</td><td style="text-align: right; font-weight: 700; color: #10b981;">+${(Number(data.amount) || 0).toLocaleString('fr-FR')} ${data.currency}</td></tr>
+                                <tr><td style="color: #64748b;">Nouveau solde</td><td style="text-align: right; font-weight: 700;">${(Number(data.newBalance) || 0).toLocaleString('fr-FR')} ${data.currency}</td></tr>
+                            </table>
+                        </div>
+                        <p>Ces fonds sont immédiatement disponibles sur votre compte INVIK BANK.</p>
+                    </div>
+                </div>
+`
+            },
+            en: {
+                subject: "Credit Confirmation - INVIK BANK",
+                html: (data) => `
+<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0;">
+                    <div style="background: #003366; padding: 30px 20px; text-align: center; color: white;">
+                        <h2 style="margin: 0; font-size: 20px;">Account Credited</h2>
+                    </div>
+                    <div style="padding: 40px; color: #1e293b;">
+                        <p>Hello ${data.name},</p>
+                        <p>We confirm that your account has been credited following an internal transfer or manual adjustment.</p>
+                        <div style="background: #f8fafc; padding: 20px; border-radius: 12px; margin: 20px 0;">
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <tr><td style="color: #64748b; padding-bottom: 10px;">Amount</td><td style="text-align: right; font-weight: 700; color: #10b981;">+${(Number(data.amount) || 0).toLocaleString('en-US')} ${data.currency}</td></tr>
+                                <tr><td style="color: #64748b;">New Balance</td><td style="text-align: right; font-weight: 700;">${(Number(data.newBalance) || 0).toLocaleString('en-US')} ${data.currency}</td></tr>
+                            </table>
+                        </div>
+                        <p>These funds are immediately available in your INVIK BANK account.</p>
+                    </div>
+                </div>
+`
+            },
+            es: {
+                subject: "Confirmación de crédito - INVIK BANK",
+                html: (data) => `
+<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0;">
+                    <div style="background: #003366; padding: 30px 20px; text-align: center; color: white;">
+                        <h2 style="margin: 0; font-size: 20px;">Cuenta Acreditada</h2>
+                    </div>
+                    <div style="padding: 40px; color: #1e293b;">
+                        <p>Hola ${data.name},</p>
+                        <p>Le confirmamos que su cuenta ha sido acreditada tras una transferencia interna o un ajuste manual.</p>
+                        <div style="background: #f8fafc; padding: 20px; border-radius: 12px; margin: 20px 0;">
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <tr><td style="color: #64748b; padding-bottom: 10px;">Monto</td><td style="text-align: right; font-weight: 700; color: #10b981;">+${(Number(data.amount) || 0).toLocaleString('es-ES')} ${data.currency}</td></tr>
+                                <tr><td style="color: #64748b;">Nuevo saldo</td><td style="text-align: right; font-weight: 700;">${(Number(data.newBalance) || 0).toLocaleString('es-ES')} ${data.currency}</td></tr>
+                            </table>
+                        </div>
+                        <p>Estos fondos están disponibles de inmediato en su cuenta de INVIK BANK.</p>
+                    </div>
+                </div>
+`
+            },
+            pt: {
+                subject: "Confirmação de crédito - INVIK BANK",
+                html: (data) => `
+<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0;">
+                    <div style="background: #003366; padding: 30px 20px; text-align: center; color: white;">
+                        <h2 style="margin: 0; font-size: 20px;">Conta Creditada</h2>
+                    </div>
+                    <div style="padding: 40px; color: #1e293b;">
+                        <p>Olá ${data.name},</p>
+                        <p>Confirmamos que a sua conta foi creditada na sequência de uma transferência interna ou ajuste manual.</p>
+                        <div style="background: #f8fafc; padding: 20px; border-radius: 12px; margin: 20px 0;">
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <tr><td style="color: #64748b; padding-bottom: 10px;">Montante</td><td style="text-align: right; font-weight: 700; color: #10b981;">+${(Number(data.amount) || 0).toLocaleString('pt-PT')} ${data.currency}</td></tr>
+                                <tr><td style="color: #64748b;">Novo saldo</td><td style="text-align: right; font-weight: 700;">${(Number(data.newBalance) || 0).toLocaleString('pt-PT')} ${data.currency}</td></tr>
+                            </table>
+                        </div>
+                        <p>Estes fundos estão imediatamente disponíveis na sua conta INVIK BANK.</p>
+                    </div>
+                </div>
+`
+            },
+            it: {
+                subject: "Conferma di credito - INVIK BANK",
+                html: (data) => `
+<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0;">
+                    <div style="background: #003366; padding: 30px 20px; text-align: center; color: white;">
+                        <h2 style="margin: 0; font-size: 20px;">Conto Accreditato</h2>
+                    </div>
+                    <div style="padding: 40px; color: #1e293b;">
+                        <p>Buongiorno ${data.name},</p>
+                        <p>Le confermiamo che il suo conto è stato accreditato a seguito di un bonifico interno o di una rettifica manuale.</p>
+                        <div style="background: #f8fafc; padding: 20px; border-radius: 12px; margin: 20px 0;">
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <tr><td style="color: #64748b; padding-bottom: 10px;">Importo</td><td style="text-align: right; font-weight: 700; color: #10b981;">+${(Number(data.amount) || 0).toLocaleString('it-IT')} ${data.currency}</td></tr>
+                                <tr><td style="color: #64748b;">Nuovo saldo</td><td style="text-align: right; font-weight: 700;">${(Number(data.newBalance) || 0).toLocaleString('it-IT')} ${data.currency}</td></tr>
+                            </table>
+                        </div>
+                        <p>Questi fundi sono immediatamente disponibili sul suo conto INVIK BANK.</p>
+                    </div>
+                </div>
+`
+            },
+            de: {
+                subject: "Gutschriftbestätigung - INVIK BANK",
+                html: (data) => `
+<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0;">
+                    <div style="background: #003366; padding: 30px 20px; text-align: center; color: white;">
+                        <h2 style="margin: 0; font-size: 20px;">Konto Gutgeschrieben</h2>
+                    </div>
+                    <div style="padding: 40px; color: #1e293b;">
+                        <p>Guten Tag ${data.name},</p>
+                        <p>Wir bestätigen, dass Ihrem Konto nach einer internen Umbuchung oder einer manuellen Anpassung ein Betrag gutgeschrieben wurde.</p>
+                        <div style="background: #f8fafc; padding: 20px; border-radius: 12px; margin: 20px 0;">
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <tr><td style="color: #64748b; padding-bottom: 10px;">Betrag</td><td style="text-align: right; font-weight: 700; color: #10b981;">+${(Number(data.amount) || 0).toLocaleString('de-DE')} ${data.currency}</td></tr>
+                                <tr><td style="color: #64748b;">Neuer Kontostand</td><td style="text-align: right; font-weight: 700;">${(Number(data.newBalance) || 0).toLocaleString('de-DE')} ${data.currency}</td></tr>
+                            </table>
+                        </div>
+                        <p>Dieses Guthaben ist ab sofort auf Ihrem INVIK BANK Konto verfügbar.</p>
+                    </div>
+                </div>
+`
+            }
+        },
         supportResponse: {
             fr: {
                 subject: "Nouvelle réponse de votre conseiller - INVIK BANK",
                 html: (data) => `
 <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0;">
                     <div style="background: #003366; padding: 30px 20px; text-align: center; color: white;">
-                            <h2 style="margin: 0; font-size: 20px;">Réponse de votre conseiller</h2>
-                        </div>
+                        <h2 style="margin: 0; font-size: 20px;">Réponse de votre conseiller</h2>
+                    </div>
                     <div style="padding: 40px; color: #1e293b;">
-                            <p>Bonjour ${data.name},</p>
-                            <p>Un conseiller de l'équipe support a répondu à votre demande concernant : <strong>"${data.subject}"</strong>.</p>
-                            <p>Vous pouvez consulter la réponse et poursuivre la discussion directement depuis votre messagerie sécurisée.</p>
+                        <p>Bonjour ${data.name},</p>
+                        <p>Un conseiller de l'équipe support a répondu à votre demande concernant : <strong>"${data.subject}"</strong>.</p>
+                        <p>Vous pouvez consulter la réponse et poursuivre la discussion directement depuis votre messagerie sécurisée.</p>
                         <div style="text-align: center; margin: 35px 0;">
-                                <a href="https://www.inviksa.com/support" style="display: inline-block; background: #003366; color: white; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: 800;">Voir ma messagerie</a>
-                            </div>
+                            <a href="https://www.inviksa.com/support" style="display: inline-block; background: #003366; color: white; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: 800;">Voir ma messagerie</a>
                         </div>
                     </div>
+                </div>
 `
             },
             en: {
@@ -1189,17 +1317,17 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                 html: (data) => `
 <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0;">
                     <div style="background: #003366; padding: 30px 20px; text-align: center; color: white;">
-                            <h2 style="margin: 0; font-size: 20px;">Advisor's response</h2>
-                        </div>
+                        <h2 style="margin: 0; font-size: 20px;">Advisor's response</h2>
+                    </div>
                     <div style="padding: 40px; color: #1e293b;">
-                            <p>Hello ${data.name},</p>
-                            <p>An advisor from the support team has responded to your request regarding: <strong>"${data.subject}"</strong>.</p>
-                            <p>You can view the response and continue the discussion directly from your secure messaging center.</p>
+                        <p>Hello ${data.name},</p>
+                        <p>An advisor from the support team has responded to your request regarding: <strong>"${data.subject}"</strong>.</p>
+                        <p>You can view the response and continue the discussion directly from your secure messaging center.</p>
                         <div style="text-align: center; margin: 35px 0;">
-                                <a href="https://www.inviksa.com/support" style="display: inline-block; background: #003366; color: white; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: 800;">Go to my messages</a>
-                            </div>
+                            <a href="https://www.inviksa.com/support" style="display: inline-block; background: #003366; color: white; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: 800;">Go to my messages</a>
                         </div>
                     </div>
+                </div>
 `
             },
             es: {
@@ -1207,17 +1335,17 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                 html: (data) => `
 <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0;">
                     <div style="background: #003366; padding: 30px 20px; text-align: center; color: white;">
-                            <h2 style="margin: 0; font-size: 20px;">Respuesta de su asesor</h2>
-                        </div>
+                        <h2 style="margin: 0; font-size: 20px;">Respuesta de su asesor</h2>
+                    </div>
                     <div style="padding: 40px; color: #1e293b;">
-                            <p>Hola ${data.name},</p>
-                            <p>Un asesor del equipo de soporte ha respondido a su solicitud sobre: <strong>"${data.subject}"</strong>.</p>
-                            <p>Puede consultar la respuesta y continuar la discusión directamente desde su centro de mensajes seguro.</p>
+                        <p>Hola ${data.name},</p>
+                        <p>Un asesor del equipo de soporte ha respondido a su solicitud sobre: <strong>"${data.subject}"</strong>.</p>
+                        <p>Puede consultar la respuesta y continuar la discusión directamente desde su centro de mensajes seguro.</p>
                         <div style="text-align: center; margin: 35px 0;">
-                                <a href="https://www.inviksa.com/support" style="display: inline-block; background: #003366; color: white; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: 800;">Ver mis mensajes</a>
-                            </div>
+                            <a href="https://www.inviksa.com/support" style="display: inline-block; background: #003366; color: white; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: 800;">Ver mis mensajes</a>
                         </div>
                     </div>
+                </div>
 `
             },
             pt: {
@@ -1225,17 +1353,17 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                 html: (data) => `
 <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0;">
                     <div style="background: #003366; padding: 30px 20px; text-align: center; color: white;">
-                            <h2 style="margin: 0; font-size: 20px;">Resposta do seu consultor</h2>
-                        </div>
+                        <h2 style="margin: 0; font-size: 20px;">Resposta do seu consultor</h2>
+                    </div>
                     <div style="padding: 40px; color: #1e293b;">
-                            <p>Olá ${data.name},</p>
-                            <p>Um consultor da equipa de suporte respondeu ao seu pedido relativo a: <strong>"${data.subject}"</strong>.</p>
-                            <p>Pode consultar a resposta e continuar a discussão diretamente através da sua central de mensagens segura.</p>
+                        <p>Olá ${data.name},</p>
+                        <p>Um consultor da equipa de suporte respondeu ao seu pedido relativo a: <strong>"${data.subject}"</strong>.</p>
+                        <p>Pode consultar a resposta e continuar a discussão diretamente através da sua central de mensagens segura.</p>
                         <div style="text-align: center; margin: 35px 0;">
-                                <a href="https://www.inviksa.com/support" style="display: inline-block; background: #003366; color: white; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: 800;">Ver mensagens</a>
-                            </div>
+                            <a href="https://www.inviksa.com/support" style="display: inline-block; background: #003366; color: white; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: 800;">Ver mensagens</a>
                         </div>
                     </div>
+                </div>
 `
             },
             it: {
@@ -1243,17 +1371,17 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                 html: (data) => `
 <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0;">
                     <div style="background: #003366; padding: 30px 20px; text-align: center; color: white;">
-                            <h2 style="margin: 0; font-size: 20px;">Risposta del consulente</h2>
-                        </div>
+                        <h2 style="margin: 0; font-size: 20px;">Risposta del consulente</h2>
+                    </div>
                     <div style="padding: 40px; color: #1e293b;">
-                            <p>Buongiorno ${data.name},</p>
-                            <p>Un consulente del team di supporto ha risposto alla vostra richiesta riguardante: <strong>"${data.subject}"</strong>.</p>
-                            <p>Potete visualizzare la risposta e continuare la discussione direttamente dal vostro centro messaggi sicuro.</p>
+                        <p>Buongiorno ${data.name},</p>
+                        <p>Un consulente del team di supporto ha risposto alla vostra richiesta riguardante: <strong>"${data.subject}"</strong>.</p>
+                        <p>Potete visualizzare la risposta e continuare la discussione direttamente dal vostro centro messaggi sicuro.</p>
                         <div style="text-align: center; margin: 35px 0;">
-                                <a href="https://www.inviksa.com/support" style="display: inline-block; background: #003366; color: white; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: 800;">Vai ai messaggi</a>
-                            </div>
+                            <a href="https://www.inviksa.com/support" style="display: inline-block; background: #003366; color: white; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: 800;">Vai ai messaggi</a>
                         </div>
                     </div>
+                </div>
 `
             },
             de: {
@@ -1261,17 +1389,17 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                 html: (data) => `
 <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0;">
                     <div style="background: #003366; padding: 30px 20px; text-align: center; color: white;">
-                            <h2 style="margin: 0; font-size: 20px;">Antwort Ihres Beraters</h2>
-                        </div>
+                        <h2 style="margin: 0; font-size: 20px;">Antwort Ihres Beraters</h2>
+                    </div>
                     <div style="padding: 40px; color: #1e293b;">
-                            <p>Guten Tag ${data.name},</p>
-                            <p>Ein Berater des Support-Teams hat auf Ihre Anfrage zu folgendem Thema geantwortet: <strong>"${data.subject}"</strong>.</p>
-                            <p>Sie können die Antwort einsehen und das Gespräch direkt über Ihr sicheres Nachrichtencenter fortsetzen.</p>
+                        <p>Guten Tag ${data.name},</p>
+                        <p>Ein Berater des Support-Teams hat auf Ihre Anfrage zu folgendem Thema geantwortet: <strong>"${data.subject}"</strong>.</p>
+                        <p>Sie können die Antwort einsehen und das Gespräch direkt über Ihr sicheres Nachrichtencenter fortsetzen.</p>
                         <div style="text-align: center; margin: 35px 0;">
-                                <a href="https://www.inviksa.com/support" style="display: inline-block; background: #003366; color: white; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: 800;">Zu meinen Nachrichten</a>
-                            </div>
+                            <a href="https://www.inviksa.com/support" style="display: inline-block; background: #003366; color: white; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: 800;">Zu meinen Nachrichten</a>
                         </div>
                     </div>
+                </div>
 `
             }
         },
@@ -1365,6 +1493,12 @@ export const adminEmailService = {
     // --- SUPPORT TEMPLATE ---
     sendSupportResponseEmail: async (toEmail, name, subject, lang = 'en') => {
         const template = getEmailTemplate('supportResponse', lang, { name, subject });
+        return adminEmailService.triggerEmail(toEmail, template.subject, template.html);
+    },
+
+    // --- DEPOSIT TEMPLATE ---
+    sendDepositEmail: async (toEmail, name, amount, currency, newBalance, lang = 'en') => {
+        const template = getEmailTemplate('accountCredited', lang, { name, amount, currency, newBalance });
         return adminEmailService.triggerEmail(toEmail, template.subject, template.html);
     }
 };

@@ -24,37 +24,85 @@ const NOTIF_STRINGS = {
         loanApprovedTitle: '💰 Prêt Crédité',
         loanApprovedMsg: (amount, currency) => `Votre prêt de ${amount.toLocaleString('fr-FR')} ${currency} a été approuvé et les fonds sont désormais disponibles sur votre compte.`,
         loanRejectedTitle: '❌ Prêt Refusé',
-        loanRejectedMsg: `Votre demande de financement n'a pas pu être approuvée pour le moment. Consultez vos e-mails pour plus de détails.`
+        loanRejectedMsg: `Votre demande de financement n'a pas pu être approuvée pour le moment. Consultez vos e-mails pour plus de détails.`,
+        depositTitle: '💰 Nouveau dépôt reçu',
+        depositMsg: (amount, currency, newBalance) => `Votre compte INVIK BANK a été crédité d'un montant de ${amount.toLocaleString('fr-FR', { style: 'currency', currency: currency })}. Cette opération a été effectuée avec succès. Nous vous remercions de votre confiance.\n\nNouveau solde : ${newBalance.toLocaleString('fr-FR', { style: 'currency', currency: currency })}`,
+        txValidatedTitle: '✅ Opération validée',
+        txValidatedMsg: (amount, currency) => `Votre opération de ${amount.toLocaleString('fr-FR', { style: 'currency', currency: currency })} a été finalisée.`,
+        txInReviewTitle: '🔍 Virement en examen',
+        txInReviewMsg: (amount, currency) => `Votre virement de ${amount.toLocaleString('fr-FR', { style: 'currency', currency: currency })} est actuellement en examen pour contrôle de sécurité. Vous serez notifié dès la levée des restrictions par nos services.`,
+        txStatusUpdatedTitle: '⚠️ Statut mis à jour',
+        txStatusUpdatedMsg: (amount, currency, status) => `Le statut de votre opération de ${amount.toLocaleString('fr-FR', { style: 'currency', currency: currency })} a été modifiée par un administrateur (${status}). Votre solde a été ajusté en conséquence.`
     },
     en: {
         loanApprovedTitle: '💰 Loan Credited',
-        loanApprovedMsg: (amount, currency) => `Your loan of ${amount.toLocaleString('en-US')} ${currency} has been approved and the funds are now available in your account.`,
+        loanApprovedMsg: (amount, currency) => `Your loan of ${amount.toLocaleString('en-US', { style: 'currency', currency: currency })} has been approved and the funds are now available in your account.`,
         loanRejectedTitle: '❌ Loan Rejected',
-        loanRejectedMsg: `Your financing request could not be approved at this time. Check your emails for more details.`
+        loanRejectedMsg: `Your financing request could not be approved at this time. Check your emails for more details.`,
+        depositTitle: '💰 New deposit received',
+        depositMsg: (amount, currency, newBalance) => `Your INVIK BANK account has been credited with an amount of ${amount.toLocaleString('en-US', { style: 'currency', currency: currency })}. This operation was carried out successfully. We thank you for your confidence.\n\nNew balance: ${newBalance.toLocaleString('en-US', { style: 'currency', currency: currency })}`,
+        txValidatedTitle: '✅ Operation validated',
+        txValidatedMsg: (amount, currency) => `Your operation of ${amount.toLocaleString('en-US', { style: 'currency', currency: currency })} has been finalized.`,
+        txInReviewTitle: '🔍 Transfer under review',
+        txInReviewMsg: (amount, currency) => `Your transfer of ${amount.toLocaleString('en-US', { style: 'currency', currency: currency })} is currently under review for security check. You will be notified as soon as the restrictions are lifted by our services.`,
+        txStatusUpdatedTitle: '⚠️ Status updated',
+        txStatusUpdatedMsg: (amount, currency, status) => `The status of your operation of ${amount.toLocaleString('en-US', { style: 'currency', currency: currency })} has been modified by an administrator (${status}). Your balance has been adjusted accordingly.`
     },
     es: {
         loanApprovedTitle: '💰 Préstamo Acreditado',
-        loanApprovedMsg: (amount, currency) => `Su préstamo de ${amount.toLocaleString('es-ES')} ${currency} ha sido aprobado y los fondos ya están disponibles en su cuenta.`,
+        loanApprovedMsg: (amount, currency) => `Su préstamo de ${amount.toLocaleString('es-ES', { style: 'currency', currency: currency })} ha sido aprobado y los fondos ya están disponibles en su cuenta.`,
         loanRejectedTitle: '❌ Préstamo Rechazado',
-        loanRejectedMsg: `Su solicitud de financiación no ha podido ser aprobada en este momento. Consulte su correo electrónico para más detalles.`
+        loanRejectedMsg: `Su solicitud de financiación no ha podido ser aprobada en este momento. Consulte su correo electrónico para más detalles.`,
+        depositTitle: '💰 Nuevo depósito recibido',
+        depositMsg: (amount, currency, newBalance) => `Su cuenta de INVIK BANK ha sido acreditada con un monto de ${amount.toLocaleString('es-ES', { style: 'currency', currency: currency })}. Esta operación se ha realizado con éxito. Le agradecemos su confianza.\n\nNuevo saldo: ${newBalance.toLocaleString('es-ES', { style: 'currency', currency: currency })}`,
+        txValidatedTitle: '✅ Operación validada',
+        txValidatedMsg: (amount, currency) => `Su operación de ${amount.toLocaleString('es-ES', { style: 'currency', currency: currency })} ha sido finalizada.`,
+        txInReviewTitle: '🔍 Transferencia en revisión',
+        txInReviewMsg: (amount, currency) => `Su transferencia de ${amount.toLocaleString('es-ES', { style: 'currency', currency: currency })} se encuentra actualmente en revisión por control de seguridad. Se le notificará tan pronto como nuestros servicios levanten las restricciones.`,
+        txStatusUpdatedTitle: '⚠️ Estado actualizado',
+        txStatusUpdatedMsg: (amount, currency, status) => `El estado de su operación de ${amount.toLocaleString('es-ES', { style: 'currency', currency: currency })} ha sido modificado por un administrador (${status}). Su saldo ha sido ajustado en consecuencia.`
     },
     pt: {
         loanApprovedTitle: '💰 Empréstimo Creditado',
-        loanApprovedMsg: (amount, currency) => `Seu empréstimo de ${amount.toLocaleString('pt-PT')} ${currency} foi aprovado e os fundos já estão disponíveis em sua conta.`,
+        loanApprovedMsg: (amount, currency) => `Seu empréstimo de ${amount.toLocaleString('pt-PT', { style: 'currency', currency: currency })} foi aprovado e os fundos já estão disponíveis em sua conta.`,
         loanRejectedTitle: '❌ Empréstimo Rejeitado',
-        loanRejectedMsg: `O seu pedido de financiamento não pôde ser aprovado neste momento. Verifique o seu e-mail para mais detalhes.`
+        loanRejectedMsg: `O seu pedido de financiamento não pôde ser aprovado neste momento. Verifique o seu e-mail para mais detalhes.`,
+        depositTitle: '💰 Novo depósito recebido',
+        depositMsg: (amount, currency, newBalance) => `A sua conta INVIK BANK foi creditada com um montante de ${amount.toLocaleString('pt-PT', { style: 'currency', currency: currency })}. Esta operação foi realizada com sucesso. Agradecemos a sua confiança.\n\nNovo saldo: ${newBalance.toLocaleString('pt-PT', { style: 'currency', currency: currency })}`,
+        txValidatedTitle: '✅ Operação validada',
+        txValidatedMsg: (amount, currency) => `A sua operação de ${amount.toLocaleString('pt-PT', { style: 'currency', currency: currency })} foi finalizada.`,
+        txInReviewTitle: '🔍 Transferência em análise',
+        txInReviewMsg: (amount, currency) => `A sua transferência de ${amount.toLocaleString('pt-PT', { style: 'currency', currency: currency })} está atualmente em análise para verificação de segurança. Será notificado assim que as restrições forem levantadas pelos nossos serviços.`,
+        txStatusUpdatedTitle: '⚠️ Status atualizado',
+        txStatusUpdatedMsg: (amount, currency, status) => `O status da sua operação de ${amount.toLocaleString('pt-PT', { style: 'currency', currency: currency })} foi alterado por um administrador (${status}). O seu saldo foi ajustado em conformidade.`
     },
     it: {
         loanApprovedTitle: '💰 Prestito Accreditato',
-        loanApprovedMsg: (amount, currency) => `Il tuo prestito di ${amount.toLocaleString('it-IT')} ${currency} è stato approvato e i fondi sono ora disponibili sul tuo conto.`,
+        loanApprovedMsg: (amount, currency) => `Il tuo prestito di ${amount.toLocaleString('it-IT', { style: 'currency', currency: currency })} è stato approvato e i fondi sono ora disponibili sul tuo conto.`,
         loanRejectedTitle: '❌ Prestito Rifiutato',
-        loanRejectedMsg: `La vostra richiesta di finanziamento non ha potuto essere approvata in questo momento. Consultate le vostre e-mail per maggiori dettagli.`
+        loanRejectedMsg: `La vostra richiesta di finanziamento non ha potuto essere approvata in questo momento. Consultate le vostre e-mail per maggiori dettagli.`,
+        depositTitle: '💰 Nuovo deposito ricevuto',
+        depositMsg: (amount, currency, newBalance) => `Il tuo conto INVIK BANK è stato accreditato con un importo di ${amount.toLocaleString('it-IT', { style: 'currency', currency: currency })}. Questa operazione è stata eseguita con successo. Vi ringraziamo per la fiducia.\n\nNuovo saldo: ${newBalance.toLocaleString('it-IT', { style: 'currency', currency: currency })}`,
+        txValidatedTitle: '✅ Operazione convalidata',
+        txValidatedMsg: (amount, currency) => `La vostra operazione di ${amount.toLocaleString('it-IT', { style: 'currency', currency: currency })} è stata finalizzata.`,
+        txInReviewTitle: '🔍 Bonifico in esame',
+        txInReviewMsg: (amount, currency) => `Il vostro bonifico di ${amount.toLocaleString('it-IT', { style: 'currency', currency: currency })} è attualmente oggetto di revisione per motivi di sicurezza. Verrete avvisati non appena le restrizioni saranno rimosse dai nostri servizi.`,
+        txStatusUpdatedTitle: '⚠️ Stato aggiornato',
+        txStatusUpdatedMsg: (amount, currency, status) => `Lo stato della vostra operazione di ${amount.toLocaleString('it-IT', { style: 'currency', currency: currency })} è stato modificato da un amministratore (${status}). Il vostro saldo è stato adeguato di conseguenza.`
     },
     de: {
         loanApprovedTitle: '💰 Kredit Gutgeschrieben',
-        loanApprovedMsg: (amount, currency) => `Ihr Kredit über ${amount.toLocaleString('de-DE')} ${currency} wurde genehmigt und das Guthaben ist nun auf Ihrem Konto verfügbar.`,
+        loanApprovedMsg: (amount, currency) => `Ihr Kredit über ${amount.toLocaleString('de-DE', { style: 'currency', currency: currency })} wurde genehmigt und das Guthaben ist nun auf Ihrem Konto verfügbar.`,
         loanRejectedTitle: '❌ Kredit Abgelehnt',
-        loanRejectedMsg: `Ihr Finanzierungsantrag konnte zum jetzigen Zeitpunkt nicht genehmigt werden. Weitere Einzelheiten finden Sie in Ihren E-Mails.`
+        loanRejectedMsg: `Ihr Finanzierungsantrag konnte zum jetzigen Zeitpunkt nicht genehmigt werden. Weitere Einzelheiten finden Sie in Ihren E-Mails.`,
+        depositTitle: '💰 Neue Einzahlung erhalten',
+        depositMsg: (amount, currency, newBalance) => `Ihrem INVIK BANK Konto wurde ein Betrag von ${amount.toLocaleString('de-DE', { style: 'currency', currency: currency })} gutgeschrieben. Dieser Vorgang wurde erfolgreich durchgeführt. Wir danken Ihnen für Ihr Vertrauen.\n\nNeuer Kontostand: ${newBalance.toLocaleString('de-DE', { style: 'currency', currency: currency })}`,
+        txValidatedTitle: '✅ Vorgang bestätigt',
+        txValidatedMsg: (amount, currency) => `Ihr Vorgang über ${amount.toLocaleString('de-DE', { style: 'currency', currency: currency })} wurde abgeschlossen.`,
+        txInReviewTitle: '🔍 Überweisung in Prüfung',
+        txInReviewMsg: (amount, currency) => `Ihre Überweisung über ${amount.toLocaleString('de-DE', { style: 'currency', currency: currency })} wird derzeit einer Sicherheitsprüfung unterzogen. Sie werden benachrichtigt, sobald die Einschränkungen durch unsere Dienste aufgehoben werden.`,
+        txStatusUpdatedTitle: '⚠️ Status aktualisiert',
+        txStatusUpdatedMsg: (amount, currency, status) => `Der Status Ihres Vorgangs über ${amount.toLocaleString('de-DE', { style: 'currency', currency: currency })} wurde von einem Administrator geändert (${status}). Ihr Kontostand wurde entsprechend angepasst.`
     }
 };
 
@@ -265,14 +313,19 @@ export const adminService = {
                     }
 
                     // Notification for state change
-                    const notifTitle = status === 'completed' ? '✅ Opération validée' :
-                        status === 'in_review' ? '🔍 Virement en examen' : '⚠️ Statut mis à jour';
+                    const userSnapData = userSnap?.exists() ? userSnap.data() : { language: 'en' };
+                    const userLang = userSnapData.language || 'en';
+                    const strings = getLocalizedNotif(userLang);
+                    const txCurrency = txData.currency === '€' ? 'EUR' : (txData.currency || 'EUR');
+
+                    const notifTitle = status === 'completed' ? strings.txValidatedTitle :
+                        status === 'in_review' ? strings.txInReviewTitle : strings.txStatusUpdatedTitle;
 
                     const notifMessage = status === 'completed'
-                        ? `Votre opération de ${amount.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })} a été finalisée.`
+                        ? strings.txValidatedMsg(amount, txCurrency)
                         : status === 'in_review'
-                            ? `Votre virement de ${amount.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })} est actuellement en examen pour contrôle de sécurité. Vous serez notifié dès la levée des restrictions par nos services.`
-                            : `Le statut de votre opération de ${amount.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })} a été modifiée par un administrateur (${status}). Votre solde a été ajusté en conséquence.`;
+                            ? strings.txInReviewMsg(amount, txCurrency)
+                            : strings.txStatusUpdatedMsg(amount, txCurrency, status);
 
                     const notifRef = doc(collection(db, 'notifications'));
                     transaction.set(notifRef, {
@@ -285,12 +338,17 @@ export const adminService = {
                     });
                 } else if (status === 'in_review') {
                     // Even if no balance delta, we still want to notify for in_review
+                    const userSnapData = userSnap?.exists() ? userSnap.data() : { language: 'en' };
+                    const userLang = userSnapData.language || 'en';
+                    const strings = getLocalizedNotif(userLang);
+                    const txCurrency = txData.currency === '€' ? 'EUR' : (txData.currency || 'EUR');
+
                     const amount = parseFloat(txData.amount) || 0;
                     const notifRef = doc(collection(db, 'notifications'));
                     transaction.set(notifRef, {
                         userId,
-                        title: '🔍 Virement en examen',
-                        message: `Votre virement de ${amount.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })} est actuellement en examen pour contrôle de sécurité. Vous serez notifié dès la levée des restrictions par nos services.`,
+                        title: strings.txInReviewTitle,
+                        message: strings.txInReviewMsg(amount, txCurrency),
                         type: 'security',
                         read: false,
                         createdAt: serverTimestamp()
@@ -624,17 +682,48 @@ export const adminService = {
 
                 // 4. Create Notification for the client
                 if (amount > 0) {
+                    const toWalletData = toWalletDoc.data();
+                    const txCurrency = toWalletData.currency === '€' ? 'EUR' : (toWalletData.currency || 'EUR');
+
+                    const userSnapData = userSnap?.exists() ? userSnap.data() : { language: 'en' };
+                    const strings = getLocalizedNotif(userSnapData.language);
+
                     const notifRef = doc(collection(db, 'notifications'));
                     transaction.set(notifRef, {
                         userId,
-                        title: '💰 Nouveau dépôt reçu',
-                        message: `Votre compte INVIK BANK a été crédité d'un montant de ${amount.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}. Cette opération a été effectuée avec succès. Nous vous remercions de votre confiance.\n\nNouveau solde : ${Number(newBalance).toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}`,
+                        title: strings.depositTitle,
+                        message: strings.depositMsg(amount, txCurrency, newBalance),
                         type: 'deposit',
                         read: false,
                         createdAt: serverTimestamp()
                     });
                 }
             });
+
+            // Post-transaction Email Notification for Admin Deposit
+            if (amount > 0) {
+                try {
+                    const userSnap = await getDoc(doc(db, 'users', userId));
+                    const walletSnap = await getDoc(doc(db, 'wallets', walletId));
+                    if (userSnap.exists() && walletSnap.exists()) {
+                        const userData = userSnap.data();
+                        const walletData = walletSnap.data();
+                        const txCurrency = walletData.currency === '€' ? 'EUR' : (walletData.currency || 'EUR');
+
+                        await adminEmailService.sendDepositEmail(
+                            userData.email,
+                            userData.firstName || 'Client',
+                            amount,
+                            txCurrency,
+                            newBalance,
+                            userData.language || 'en'
+                        );
+                    }
+                } catch (emailErr) {
+                    console.warn("Failed to send admin deposit email:", emailErr);
+                }
+            }
+
             return { success: true };
         } catch (error) {
             console.error('Error in createAdminDeposit:', error);
