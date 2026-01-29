@@ -168,7 +168,7 @@ const Credits = () => {
                 taux: interestRate,
                 type: projectType === 'Autre' ? otherType : projectType,
                 description: projectDescription
-            });
+            }, i18n.language);
             setMessage({ type: 'success', text: t('credits.messages.success') });
             setShowConfirmation(false);
             setProjectDescription('');

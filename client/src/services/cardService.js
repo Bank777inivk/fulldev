@@ -61,7 +61,7 @@ export const cardService = {
         }
     },
 
-    requestPhysicalCard: async (userId, cardData) => {
+    requestPhysicalCard: async (userId, cardData, currentLang) => {
         try {
             const requestData = {
                 userId,
@@ -84,7 +84,7 @@ export const cardService = {
                         `${userData.firstName} ${userData.lastName}`,
                         cardData.cardType || 'Black Edition',
                         cardData.deliveryAddress || 'Adresse enregistrée',
-                        userData.language || 'fr'
+                        currentLang || userData.language || 'fr'
                     );
 
                     // Admin notification

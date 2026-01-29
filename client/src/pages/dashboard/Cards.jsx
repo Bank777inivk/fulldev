@@ -46,7 +46,7 @@ const Cards = () => {
             await cardService.requestPhysicalCard(currentUser.uid, {
                 cardType: 'Black Edition',
                 deliveryAddress: t('cards.physical_order.default_address_label')
-            });
+            }, i18n.language);
             showToast(t('cards.messages.order_success'), "success");
         } catch (error) {
             console.error("Error ordering card:", error);

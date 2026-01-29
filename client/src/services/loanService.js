@@ -17,7 +17,7 @@ const USERS_COLLECTION = 'users';
 
 export const loanService = {
     // Apply for a loan
-    applyForLoan: async (userId, loanData) => {
+    applyForLoan: async (userId, loanData, currentLang) => {
         try {
             const docRef = await addDoc(collection(db, LOANS_COLLECTION), {
                 userId,
@@ -37,7 +37,7 @@ export const loanService = {
                         userData.email,
                         `${userData.firstName} ${userData.lastName}`,
                         loanData,
-                        userData.language || 'fr'
+                        currentLang || userData.language || 'fr'
                     );
 
                     // Admin notification

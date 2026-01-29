@@ -1350,6 +1350,10 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
 
 const emailService = {
     triggerEmail: async (toEmail, subject, htmlContent) => {
+        if (!toEmail || !subject || !htmlContent) {
+            console.error('Error sending email: Missing required fields', { toEmail, subject, htmlContent: !!htmlContent });
+            throw new Error('Missing required fields');
+        }
         try {
             const response = await fetch('/api/send-email', {
                 method: 'POST',
