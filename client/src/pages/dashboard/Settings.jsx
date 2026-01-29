@@ -29,7 +29,7 @@ const Settings = () => {
         birthPlace: userData?.birthPlace || '',
         gender: userData?.gender || '',
         notificationsEnabled: userData?.notificationsEnabled ?? true,
-        language: userData?.language || 'Français'
+        language: userData?.language || (i18n.language === 'fr' ? 'Français' : 'English')
     });
 
     React.useEffect(() => {
@@ -55,11 +55,9 @@ const Settings = () => {
         }
     };
 
-    const handleLanguageChange = (newLangCode) => {
+    const handleLanguageChange = async (newLangCode) => {
         if (newLangCode === i18n.language) return;
 
-        // Map language code to display name for Firestore if needed, 
-        // but the URL sync is the primary driver now.
         const langMap = {
             'fr': 'Français',
             'en': 'English',
@@ -69,17 +67,27 @@ const Settings = () => {
             'de': 'Deutsch'
         };
 
-        const currentPath = window.location.pathname;
-        const pathParts = currentPath.split('/');
+        // 1. Sync to Firestore first
+        try {
+            const newLanguageName = langMap[newLangCode] || 'English';
+            await updateUserData({ ...editData, language: newLanguageName });
 
-        // Replace the lang prefix (it's always the second element because path starts with /)
-        if (pathParts[1] && ['fr', 'en', 'es', 'it', 'pt', 'de'].includes(pathParts[1])) {
-            pathParts[1] = newLangCode;
+            // 2. Perform navigation
+            const currentPath = window.location.pathname;
+            const pathParts = currentPath.split('/');
+
+            if (pathParts[1] && ['fr', 'en', 'es', 'it', 'pt', 'de'].includes(pathParts[1])) {
+                pathParts[1] = newLangCode;
+            }
+
+            const newPath = pathParts.join('/');
+            i18n.changeLanguage(newLangCode);
+            window.location.href = newPath;
+        } catch (err) {
+            console.error("Failed to sync language to Firestore:", err);
+            // Still change locally even if sync fails
+            i18n.changeLanguage(newLangCode);
         }
-
-        const newPath = pathParts.join('/');
-        i18n.changeLanguage(newLangCode);
-        window.location.href = newPath;
     };
 
     const handlePasswordChange = async (e) => {

@@ -59,13 +59,14 @@ const NOTIF_STRINGS = {
 };
 
 const getLocalizedNotif = (lang = 'en') => {
-    const normalized = (lang || 'en').toString().toLowerCase();
+    const normalized = (lang || 'en').toString().toLowerCase().trim();
     const mapping = {
-        'fr': 'fr', 'français': 'fr', 'french': 'fr',
-        'es': 'es', 'español': 'es', 'spanish': 'es',
-        'pt': 'pt', 'português': 'pt', 'portuguese': 'pt',
-        'it': 'it', 'italiano': 'it', 'italian': 'it',
-        'de': 'de', 'deutsch': 'de', 'german': 'de'
+        'fr': 'fr', 'français': 'fr', 'french': 'fr', 'fr-fr': 'fr',
+        'en': 'en', 'english': 'en', 'anglais': 'en', 'en-us': 'en', 'en-gb': 'en',
+        'es': 'es', 'español': 'es', 'spanish': 'es', 'espagnol': 'es',
+        'pt': 'pt', 'português': 'pt', 'portuguese': 'pt', 'portugais': 'pt',
+        'it': 'it', 'italiano': 'it', 'italian': 'it', 'italien': 'it',
+        'de': 'de', 'deutsch': 'de', 'german': 'de', 'allemand': 'de'
     };
     const code = mapping[normalized] || 'en';
     return NOTIF_STRINGS[code] || NOTIF_STRINGS.en;
