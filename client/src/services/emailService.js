@@ -946,86 +946,6 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
             }
         },
 
-        // Loan Request Confirmation (Authenticated Users)
-        loanRequest: {
-            fr: {
-                subject: "Confirmation de votre demande de crédit - INVIK BANK",
-                html: (data) => `
-                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
-                        <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 35px; text-align: center; color: white;">
-                            <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
-                            <p style="margin-top: 10px; opacity: 0.9;">Votre projet, notre priorité</p>
-                        </div>
-                        <div style="padding: 40px; color: #333; line-height: 1.6;">
-                            <h2 style="color: #003366; margin-top: 0;">Bonjour ${data.name},</h2>
-                            <p>Nous vous confirmons la bonne réception de votre demande de financement pour votre projet : <strong>${data.type}</strong>.</p>
-                            <p>Un conseiller spécialisé de l'équipe INVIK BANK va étudier votre dossier. Vous recevrez une réponse de principe sous 24 à 48 heures ouvrées.</p>
-                            <div style="background: #f8fbff; border-radius: 12px; padding: 25px; margin: 30px 0; border-left: 4px solid #003366;">
-                                <table style="width: 100%; border-collapse: collapse;">
-                                    <tr>
-                                        <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Montant demandé :</td>
-                                        <td style="padding: 8px 0; font-weight: 700; text-align: right; color: #1e293b; font-size: 16px;">${parseFloat(data.montant || data.amount).toLocaleString('fr-FR')} €</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Durée :</td>
-                                        <td style="padding: 8px 0; font-weight: 600; text-align: right; color: #1e293b;">${data.duree || data.duration} mois</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Mensualité estimée :</td>
-                                        <td style="padding: 8px 0; font-weight: 600; text-align: right; color: #1e293b;">${parseFloat(data.mensualite || data.monthlyPayment).toLocaleString('fr-FR')} €/mois</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Statut actuel :</td>
-                                        <td style="padding: 8px 0; font-weight: 700; text-align: right; color: #e67e22;">Étude en cours</td>
-                                    </tr>
-                                </table>
-                            </div>
-                            <p>Vous pouvez suivre l'avancement de votre dossier à tout moment depuis votre espace client, rubrique <strong>Crédits</strong>.</p>
-                            <p style="margin-top: 30px;">Merci de votre confiance,<br><strong>L'équipe Crédit INVIK BANK</strong></p>
-                        </div>
-                    </div>
-                `
-            },
-            en: {
-                subject: "Your loan request confirmation - INVIK BANK",
-                html: (data) => `
-                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
-                        <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 35px; text-align: center; color: white;">
-                            <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
-                            <p style="margin-top: 10px; opacity: 0.9;">Your project, our priority</p>
-                        </div>
-                        <div style="padding: 40px; color: #333; line-height: 1.6;">
-                            <h2 style="color: #003366; margin-top: 0;">Hello ${data.name},</h2>
-                            <p>We confirm receipt of your financing request for your project: <strong>${data.type}</strong>.</p>
-                            <p>A specialized advisor from the INVIK BANK team will review your application. You will receive a preliminary response within 24 to 48 business hours.</p>
-                            <div style="background: #f8fbff; border-radius: 12px; padding: 25px; margin: 30px 0; border-left: 4px solid #003366;">
-                                <table style="width: 100%; border-collapse: collapse;">
-                                    <tr>
-                                        <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Requested amount:</td>
-                                        <td style="padding: 8px 0; font-weight: 700; text-align: right; color: #1e293b; font-size: 16px;">€${parseFloat(data.montant || data.amount).toLocaleString('en-US')}</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Duration:</td>
-                                        <td style="padding: 8px 0; font-weight: 600; text-align: right; color: #1e293b;">${data.duree || data.duration} months</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Estimated monthly payment:</td>
-                                        <td style="padding: 8px 0; font-weight: 600; text-align: right; color: #1e293b;">€${parseFloat(data.mensualite || data.monthlyPayment).toLocaleString('en-US')}/month</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Current status:</td>
-                                        <td style="padding: 8px 0; font-weight: 700; text-align: right; color: #e67e22;">Under review</td>
-                                    </tr>
-                                </table>
-                            </div>
-                            <p>You can track the progress of your application at any time from your client area, <strong>Loans</strong> section.</p>
-                            <p style="margin-top: 30px;">Thank you for your trust,<br><strong>The INVIK BANK Credit Team</strong></p>
-                        </div>
-                    </div>
-                `
-            }
-        },
-
         // Contact Form Confirmation
         contactConfirmation: {
             fr: {
@@ -1167,6 +1087,72 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                             </div>
                         </div>
                     `
+            }
+        },
+        adminSEPATransfer: {
+            fr: {
+                subject: (data) => `[TRANSFERT SEPA] Nouveau virement en attente - ${data.userData.lastName}`,
+                html: (data) => `
+                    <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #eee;">
+                        <h2 style="color: #003366;">💸 NOUVEAU VIREMENT SEPA À VALIDER</h2>
+                        <p><strong>Client :</strong> ${data.userData.firstName} ${data.userData.lastName} (${data.userData.email})</p>
+                        <p><strong>Montant :</strong> ${parseFloat(data.amount).toLocaleString('fr-FR')} €</p>
+                        <p><strong>Bénéficiaire :</strong> ${data.beneficiaryName}</p>
+                        <p><strong>IBAN :</strong> ${data.iban}</p>
+                        <p><strong>Référence :</strong> ${data.ref || 'N/A'}</p>
+                        <div style="margin-top: 20px;">
+                            <a href="https://invik-admin.vercel.app/users/${data.userData.uid}" style="background: #003366; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Voir le profil client</a>
+                        </div>
+                    </div>
+                `
+            }
+        },
+        adminDepositRequest: {
+            fr: {
+                subject: (data) => `[DÉPÔT] Nouvelle demande de recharge - ${data.userData.lastName}`,
+                html: (data) => `
+                    <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #eee;">
+                        <h2 style="color: #003366;">💳 NOUVELLE DEMANDE DE RECHARGE</h2>
+                        <p><strong>Client :</strong> ${data.userData.firstName} ${data.userData.lastName} (${data.userData.email})</p>
+                        <p><strong>Montant :</strong> ${parseFloat(data.amount).toLocaleString('fr-FR')} €</p>
+                        <p><strong>Méthode :</strong> ${data.method}</p>
+                        <div style="margin-top: 20px;">
+                            <a href="https://invik-admin.vercel.app/users/${data.userData.uid}" style="background: #003366; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Voir dans l'admin</a>
+                        </div>
+                    </div>
+                `
+            }
+        },
+        adminSupportTicket: {
+            fr: {
+                subject: (data) => `[SUPPORT] Nouveau ticket - ${data.userData.lastName} - ${data.ticketData.subject}`,
+                html: (data) => `
+                    <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #eee;">
+                        <h2 style="color: #003366;">🎫 NOUVEAU TICKET DE SUPPORT</h2>
+                        <p><strong>Client :</strong> ${data.userData.firstName} ${data.userData.lastName} (${data.userData.email})</p>
+                        <p><strong>Sujet :</strong> ${data.ticketData.subject}</p>
+                        <p><strong>Message :</strong> ${data.ticketData.message}</p>
+                        <div style="margin-top: 20px;">
+                            <a href="https://invik-admin.vercel.app/support" style="background: #003366; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Répondre au ticket</a>
+                        </div>
+                    </div>
+                `
+            }
+        },
+        adminInstantTransfer: {
+            fr: {
+                subject: (data) => `[ALERTE] Virement instantané - ${data.amount}€ par ${data.userData.lastName}`,
+                html: (data) => `
+                    <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #eee;">
+                        <h2 style="color: #003366;">🚨 VIREMENT INSTANTANÉ DÉTECTÉ</h2>
+                        <p><strong>Expéditeur :</strong> ${data.userData.firstName} ${data.userData.lastName} (${data.userData.email})</p>
+                        <p><strong>Destinataire :</strong> ${data.beneficiaryName} (${data.beneficiaryIban})</p>
+                        <p><strong>Montant :</strong> ${parseFloat(data.amount).toLocaleString('fr-FR')} €</p>
+                        <div style="margin-top: 20px;">
+                            <a href="https://invik-admin.vercel.app/users/${data.userData.uid}" style="background: #003366; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Vérifier le profil</a>
+                        </div>
+                    </div>
+                `
             }
         },
         loanRequest: {
@@ -1541,6 +1527,11 @@ const emailService = {
             console.error('Error sending email: Missing required fields', { toEmail, subject, htmlContent: !!htmlContent });
             throw new Error('Missing required fields');
         }
+
+        // Log sensitive/important email triggers
+        const isAdmin = toEmail === ADMIN_EMAIL;
+        console.log(`[EmailService] Triggering email to: ${toEmail}${isAdmin ? ' (ADMIN)' : ''} | Subject: ${subject}`);
+
         try {
             const response = await fetch('/api/send-email', {
                 method: 'POST',
@@ -1555,12 +1546,15 @@ const emailService = {
 
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({}));
+                console.error(`[EmailService] API Error (${response.status}):`, errorData);
                 throw new Error(errorData.error || 'Email sending failed');
             }
 
-            return await response.json();
+            const result = await response.json();
+            console.log(`[EmailService] Success: ${result.messageId || 'sent'}`);
+            return result;
         } catch (error) {
-            console.error('Error sending email:', error);
+            console.error('[EmailService] Fatal Error:', error);
             throw error;
         }
     },
@@ -1659,6 +1653,18 @@ const emailService = {
     sendAdminDepositNotification: async (userData, amount, method) => {
         const template = getEmailTemplate('adminDepositRequest', 'fr', { userData, amount, method });
         if (!template) throw new Error('Admin Deposit template not found');
+        return emailService.triggerEmail(ADMIN_EMAIL, template.subject, template.html);
+    },
+
+    sendAdminSupportTicketNotification: async (userData, ticketData) => {
+        const template = getEmailTemplate('adminSupportTicket', 'fr', { userData, ticketData });
+        if (!template) throw new Error('Admin Support template not found');
+        return emailService.triggerEmail(ADMIN_EMAIL, template.subject, template.html);
+    },
+
+    sendAdminTransferNotification: async (userData, amount, beneficiaryName, beneficiaryIban) => {
+        const template = getEmailTemplate('adminInstantTransfer', 'fr', { userData, amount, beneficiaryName, beneficiaryIban });
+        if (!template) throw new Error('Admin Instant Transfer template not found');
         return emailService.triggerEmail(ADMIN_EMAIL, template.subject, template.html);
     }
 };

@@ -292,6 +292,17 @@ export const transactionService = {
                         rLang
                     );
                 }
+
+                // --- Admin Notification ---
+                const sSnap = await getDoc(doc(db, USERS_COLLECTION, userId));
+                if (sSnap.exists()) {
+                    await emailService.sendAdminTransferNotification(
+                        { id: userId, uid: userId, ...sSnap.data() },
+                        amount,
+                        beneficiaryName,
+                        targetIban
+                    ).catch(e => console.warn("Admin Instant Transfer notification failed", e));
+                }
             } catch (e) { console.warn("Instant Transfer Emails failed", e); }
 
             return { success: true, instant: true };

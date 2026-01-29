@@ -18,7 +18,7 @@ export const supportService = {
     // Create a support ticket
     createTicket: async (userId, ticketData) => {
         try {
-            const docRef = await addDoc(collection(db, TICKETS_COLLECTION), {
+            const ticketDoc = {
                 userId,
                 ...ticketData,
                 status: 'open',
@@ -26,7 +26,29 @@ export const supportService = {
                 updatedAt: serverTimestamp(),
                 clientHasUnread: false,
                 adminHasUnread: true
-            });
+            };
+            const docRef = await addDoc(collection(db, TICKETS_COLLECTION), ticketDoc);
+
+            // Admin Notification
+            try {
+                const userSnapshot = await getDocs(query(collection(db, 'users'), where('uid', '==', userId)));
+                let userData = { id: userId, uid: userId };
+                if (!userSnapshot.empty) {
+                    userData = { ...userData, ...userSnapshot.docs[0].data() };
+                } else {
+                    // try by doc id
+                    const userDoc = await (await import('firebase/firestore')).getDoc((await import('firebase/firestore')).doc(db, 'users', userId));
+                    if (userDoc.exists()) {
+                        userData = { ...userData, ...userDoc.data() };
+                    }
+                }
+
+                const { default: emailService } = await import('./emailService');
+                await emailService.sendAdminSupportTicketNotification(userData, ticketData);
+            } catch (e) {
+                console.warn("Admin support notification failed", e);
+            }
+
             return { id: docRef.id, success: true };
         } catch (error) {
             console.error("Support ticket creation error:", error);

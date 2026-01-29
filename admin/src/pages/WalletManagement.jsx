@@ -136,7 +136,10 @@ const WalletManagement = () => {
                                     <div style={{ marginBottom: '1.2rem' }}>
                                         <span style={styles.balanceLabel}>SOLDE</span>
                                         <div style={{ fontSize: '1.6rem', fontWeight: '800', color: '#003366' }}>
-                                            {wallet.balance?.toLocaleString('fr-FR', { style: 'currency', currency: wallet.currency || 'EUR' })}
+                                            {wallet.balance?.toLocaleString('fr-FR', {
+                                                style: 'currency',
+                                                currency: (wallet.currency === '€' ? 'EUR' : (wallet.currency || 'EUR'))
+                                            })}
                                         </div>
                                     </div>
 
@@ -243,7 +246,10 @@ const WalletManagement = () => {
                                     <div style={styles.balanceSection}>
                                         <span style={styles.balanceLabel}>SOLDE ACTUEL</span>
                                         <div style={styles.balanceValue}>
-                                            {wallet.balance?.toLocaleString('fr-FR', { style: 'currency', currency: wallet.currency || 'EUR' })}
+                                            {wallet.balance?.toLocaleString('fr-FR', {
+                                                style: 'currency',
+                                                currency: (wallet.currency === '€' ? 'EUR' : (wallet.currency || 'EUR'))
+                                            })}
                                         </div>
                                     </div>
                                     <div style={styles.ribSection}>
