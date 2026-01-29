@@ -1482,6 +1482,7 @@
             "title": "Cartão Físico",
             "mobile_title": "Pedir cartão físico",
             "desc": "Receba o seu cartão exclusivo INVIK em sua casa no prazo de 3 a 5 dias úteis.",
+            "default_address_label": "Endereço vinculado à conta",
             "features": {
                 "withdrawals": "Levantamentos gratuitos em qualquer lugar",
                 "contactless": "Pagamento contactless",

@@ -1482,6 +1482,7 @@
             "title": "Tarjeta Física",
             "mobile_title": "Solicitar tarjeta física",
             "desc": "Reciba su tarjeta exclusiva INVIK en su domicilio en un plazo de 3 a 5 días hábiles.",
+            "default_address_label": "Dirección vinculada a la cuenta",
             "features": {
                 "withdrawals": "Retiradas gratuitas en cualquier lugar",
                 "contactless": "Pago sin contacto",

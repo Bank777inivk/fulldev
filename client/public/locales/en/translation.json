@@ -1473,6 +1473,7 @@
             "title": "Physical Card",
             "mobile_title": "Request a physical card",
             "desc": "Receive your exclusive INVIK card at home within 3 to 5 business days.",
+            "default_address_label": "Address linked to the account",
             "features": {
                 "withdrawals": "Free withdrawals everywhere",
                 "contactless": "Contactless payment",

@@ -1482,6 +1482,7 @@
             "title": "Carta Fisica",
             "mobile_title": "Richiedi una carta fisica",
             "desc": "Ricevi la tua esclusiva carta INVIK a casa tua entro 3-5 giorni lavorativi.",
+            "default_address_label": "Indirizzo collegato all'account",
             "features": {
                 "withdrawals": "Prelievi gratuiti ovunque",
                 "contactless": "Pagamento contactless",
