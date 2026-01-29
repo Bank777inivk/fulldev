@@ -258,7 +258,7 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                             <p style="font-size: 16px;">Votre demande de financement a été approuvée par notre comité de crédit.</p>
                             <div style="background: #f0fdf4; border-radius: 12px; padding: 30px; text-align: center; margin: 25px 0; border: 1px solid #dcfce7;">
                                 <span style="display: block; color: #065f46; font-size: 14px; font-weight: 700; text-transform: uppercase;">Montant débloqué</span>
-                                <span style="display: block; color: #059669; font-size: 36px; font-weight: 900;">${data.amount.toLocaleString('fr-FR')} ${data.currency}</span>
+                                <span style="display: block; color: #059669; font-size: 36px; font-weight: 900;">${(Number(data.amount) || 0).toLocaleString('fr-FR')} ${data.currency}</span>
                             </div>
                             <p style="font-size: 16px;">Les fonds seront visibles sur votre compte principal sous un délai de 24h à 48h ouvrés.</p>
                             <div style="text-align: center; margin: 35px 0;">
@@ -280,7 +280,7 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                             <p style="font-size: 16px;">Your financing request has been approved by our credit committee.</p>
                             <div style="background: #f0fdf4; border-radius: 12px; padding: 30px; text-align: center; margin: 25px 0; border: 1px solid #dcfce7;">
                                 <span style="display: block; color: #065f46; font-size: 14px; font-weight: 700; text-transform: uppercase;">Unlocked amount</span>
-                                <span style="display: block; color: #059669; font-size: 36px; font-weight: 900;">${data.amount.toLocaleString('en-US')} ${data.currency}</span>
+                                <span style="display: block; color: #059669; font-size: 36px; font-weight: 900;">${(Number(data.amount) || 0).toLocaleString('en-US')} ${data.currency}</span>
                             </div>
                             <p style="font-size: 16px;">The funds will be visible on your main account within 24 to 48 business hours.</p>
                             <div style="text-align: center; margin: 35px 0;">
@@ -378,7 +378,7 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                             <p>Votre virement vers l'extérieur a été validé et transmis au réseau bancaire international.</p>
                             <div style="background: #f8fafc; padding: 20px; border-radius: 12px; margin: 20px 0;">
                                 <table style="width: 100%; border-collapse: collapse;">
-                                    <tr><td style="color: #64748b; padding-bottom: 10px;">Montant</td><td style="text-align: right; font-weight: 700;">${data.amount} ${data.currency}</td></tr>
+                                    <tr><td style="color: #64748b; padding-bottom: 10px;">Montant</td><td style="text-align: right; font-weight: 700;">${(Number(data.amount) || 0).toLocaleString('fr-FR')} ${data.currency}</td></tr>
                                     <tr><td style="color: #64748b;">Description</td><td style="text-align: right; font-weight: 700;">${data.description}</td></tr>
                                 </table>
                             </div>
@@ -399,7 +399,7 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                             <p>Your external transfer has been validated and transmitted to the international banking network.</p>
                             <div style="background: #f8fafc; padding: 20px; border-radius: 12px; margin: 20px 0;">
                                 <table style="width: 100%; border-collapse: collapse;">
-                                    <tr><td style="color: #64748b; padding-bottom: 10px;">Amount</td><td style="text-align: right; font-weight: 700;">${data.amount} ${data.currency}</td></tr>
+                                    <tr><td style="color: #64748b; padding-bottom: 10px;">Amount</td><td style="text-align: right; font-weight: 700;">${(Number(data.amount) || 0).toLocaleString('en-US')} ${data.currency}</td></tr>
                                     <tr><td style="color: #64748b;">Description</td><td style="text-align: right; font-weight: 700;">${data.description}</td></tr>
                                 </table>
                             </div>
@@ -419,7 +419,7 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                         </div>
                         <div style="padding: 40px; color: #1e293b;">
                             <p>Bonjour ${data.name},</p>
-                            <p>Dans le cadre de nos procédures de sécurité habituelles, votre virement de **${data.amount} ${data.currency}** est actuellement en cours de vérification approfondie.</p>
+                            <p>Dans le cadre de nos procédures de sécurité habituelles, votre virement de **${(Number(data.amount) || 0).toLocaleString('fr-FR')} ${data.currency}** est actuellement en cours de vérification approfondie.</p>
                             <p style="background: #fffbeb; border: 1px solid #fef3c7; padding: 15px; border-radius: 8px; color: #92400e; font-size: 14px;">
                                 <strong>Pourquoi ?</strong> Cette étape permet de protéger votre compte contre toute activité inhabituelle. Un conseiller INVIK BANK peut vous contacter si des informations complémentaires sont nécessaires.
                             </p>
@@ -437,7 +437,7 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                         </div>
                         <div style="padding: 40px; color: #1e293b;">
                             <p>Hello ${data.name},</p>
-                            <p>As part of our standard security procedures, your transfer of **${data.amount} ${data.currency}** is currently undergoing an in-depth review.</p>
+                            <p>As part of our standard security procedures, your transfer of **${(Number(data.amount) || 0).toLocaleString('en-US')} ${data.currency}** is currently undergoing an in-depth review.</p>
                             <p style="background: #fffbeb; border: 1px solid #fef3c7; padding: 15px; border-radius: 8px; color: #92400e; font-size: 14px;">
                                 <strong>Why?</strong> This step helps protect your account from any unusual activity. An INVIK BANK advisor may contact you if additional information is needed.
                             </p>
@@ -457,7 +457,7 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                         </div>
                         <div style="padding: 40px; color: #1e293b;">
                             <p>Bonjour ${data.name},</p>
-                            <p>Votre demande de virement de **${data.amount} ${data.currency}** a été refusée par notre département de sécurité.</p>
+                            <p>Votre demande de virement de **${(Number(data.amount) || 0).toLocaleString('fr-FR')} ${data.currency}** a été refusée par notre département de sécurité.</p>
                             <div style="background: #fef2f2; padding: 15px; border-radius: 8px; color: #991b1b; margin: 20px 0;">
                                 <strong>Motif :</strong> ${data.reason || "Alerte de sécurité ou informations destinataire invalides."}
                             </div>
@@ -475,7 +475,7 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                         </div>
                         <div style="padding: 40px; color: #1e293b;">
                             <p>Hello ${data.name},</p>
-                            <p>Your transfer request of **${data.amount} ${data.currency}** was rejected by our security department.</p>
+                            <p>Your transfer request of **${(Number(data.amount) || 0).toLocaleString('en-US')} ${data.currency}** was rejected by our security department.</p>
                             <div style="background: #fef2f2; padding: 15px; border-radius: 8px; color: #991b1b; margin: 20px 0;">
                                 <strong>Reason:</strong> ${data.reason || "Security alert or invalid recipient information."}
                             </div>
