@@ -73,6 +73,7 @@ const UserDetails = () => {
     const [cards, setCards] = useState([]);
     const [beneficiaries, setBeneficiaries] = useState([]);
     const [notifications, setNotifications] = useState([]);
+    const [wallets, setWallets] = useState([]);
     const [kycData, setKycData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
@@ -91,18 +92,20 @@ const UserDetails = () => {
             if (!id) return;
             try {
                 setLoading(true);
-                const [userData, userTransactions, userKYC, userCards, userBeneficiaries] = await Promise.all([
+                const [userData, userTransactions, userKYC, userCards, userBeneficiaries, userWallets] = await Promise.all([
                     adminService.getUser(id),
                     adminService.getUserTransactions(id),
                     adminService.getUserKYC(id),
                     adminService.getUserCards(id),
-                    adminService.getUserBeneficiaries(id)
+                    adminService.getUserBeneficiaries(id),
+                    adminService.getUserWallets(id)
                 ]);
                 setUser(userData);
                 setTransactions(userTransactions);
                 setKycData(userKYC);
                 setCards(userCards);
                 setBeneficiaries(userBeneficiaries);
+                setWallets(userWallets);
             } catch (error) {
                 console.error('Error loading user details:', error);
             } finally {
@@ -252,6 +255,80 @@ const UserDetails = () => {
         } catch (error) {
             console.error('Error deleting user:', error);
             alert('Erreur lors de la suppression : ' + error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleUpdateBalance = async (wallet) => {
+        const amountStr = window.prompt(`Saisissez le montant du dépôt pour ce portefeuille (${wallet.currency}) :`, "100");
+        if (!amountStr) return;
+        const amount = parseFloat(amountStr);
+        if (isNaN(amount) || amount === 0) {
+            alert("Montant invalide");
+            return;
+        }
+
+        try {
+            setLoading(true);
+            const newBalance = (wallet.balance || 0) + amount;
+            await adminService.createAdminDeposit(user.id, wallet.id, amount, newBalance);
+
+            // Refresh wallets and user balance locally
+            setWallets(prev => prev.map(w => w.id === wallet.id ? { ...w, balance: newBalance } : w));
+            setUser(prev => ({ ...prev, balance: (prev.balance || 0) + amount }));
+
+            alert(`Succès! Nouveau solde: ${newBalance.toFixed(2)} ${wallet.currency}`);
+        } catch (error) {
+            console.error("Error updating balance:", error);
+            alert("Erreur lors de la mise à jour du solde");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleEditWalletRIB = async (wallet) => {
+        const newIban = window.prompt("Nouvel IBAN :", wallet.iban || "");
+        if (newIban === null) return;
+        const newBic = window.prompt("Nouveau BIC :", wallet.bic || "");
+        if (newBic === null) return;
+        const newHolder = window.prompt("Titulaire du compte :", wallet.holderName || `${user.firstName} ${user.lastName}`);
+        if (newHolder === null) return;
+
+        try {
+            setLoading(true);
+            await adminService.updateWalletDetails(wallet.id, {
+                iban: newIban,
+                bic: newBic,
+                holderName: newHolder
+            });
+
+            setWallets(prev => prev.map(w => w.id === wallet.id ? {
+                ...w,
+                iban: newIban,
+                bic: newBic,
+                holderName: newHolder
+            } : w));
+
+            alert("Informations RIB mises à jour avec synchronisation réussie.");
+        } catch (error) {
+            console.error("Error updating RIB:", error);
+            alert("Erreur lors de la mise à jour du RIB");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleDeleteWallet = async (walletId) => {
+        if (!window.confirm("Voulez-vous vraiment supprimer ce portefeuille ?")) return;
+        try {
+            setLoading(true);
+            await adminService.deleteWallet(walletId);
+            setWallets(prev => prev.filter(w => w.id !== walletId));
+            alert("Portefeuille supprimé");
+        } catch (error) {
+            console.error("Error deleting wallet:", error);
+            alert("Erreur lors de la suppression");
         } finally {
             setLoading(false);
         }
@@ -435,6 +512,50 @@ const UserDetails = () => {
                 </div>
             </div>
 
+            <div style={{ background: 'white', borderRadius: '28px', padding: '1.2rem', border: '1px solid #f1f5f9', marginBottom: '1.2rem' }}>
+                <h3 style={{ fontSize: '1rem', fontWeight: '800', color: '#003366', marginBottom: '1.2rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <i className="fas fa-wallet" style={{ opacity: 0.3 }}></i> Gestion des Portefeuilles
+                </h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                    {wallets.length > 0 ? (
+                        wallets.map(w => (
+                            <div key={w.id} style={{ padding: '1rem', background: '#f8fafc', borderRadius: '20px', border: '1px solid #f1f5f9' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                                    <span style={{ fontWeight: '800', color: '#003366', fontSize: '0.9rem' }}>{w.label || 'Compte Courant'}</span>
+                                    <span style={{ fontWeight: '800', color: '#059669', fontSize: '1rem' }}>{(w.balance || 0).toFixed(2)} {w.currency}</span>
+                                </div>
+                                <div style={{ fontSize: '0.75rem', color: '#64748b', fontFamily: 'monospace', marginBottom: '12px', lineHeight: '1.4' }}>
+                                    IBAN: {w.iban}<br />
+                                    BIC: {w.bic}
+                                </div>
+                                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                                    <button
+                                        onClick={() => handleUpdateBalance(w)}
+                                        style={{ flex: 1, padding: '8px', borderRadius: '12px', border: 'none', background: '#dcfce7', color: '#166534', fontWeight: 'bold', fontSize: '0.7rem' }}
+                                    >
+                                        CRÉDITER
+                                    </button>
+                                    <button
+                                        onClick={() => handleEditWalletRIB(w)}
+                                        style={{ flex: 1, padding: '8px', borderRadius: '12px', border: 'none', background: '#f1f5f9', color: '#475569', fontWeight: 'bold', fontSize: '0.7rem' }}
+                                    >
+                                        MODIFIER RIB
+                                    </button>
+                                    <button
+                                        onClick={() => handleDeleteWallet(w.id)}
+                                        style={{ width: '40px', padding: '8px', borderRadius: '12px', border: 'none', background: '#fee2e2', color: '#991b1b' }}
+                                    >
+                                        <i className="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        ))
+                    ) : (
+                        <p style={{ textAlign: 'center', color: '#64748b', fontSize: '0.9rem' }}>Aucun portefeuille</p>
+                    )}
+                </div>
+            </div>
+
             {/* Transactions Section */}
             <div style={{ background: 'white', borderRadius: '28px', padding: '1.2rem', border: '1px solid #f1f5f9', marginBottom: '1.2rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.2rem' }}>
@@ -607,6 +728,48 @@ const UserDetails = () => {
                             ))
                         ) : (
                             <p style={styles.emptyText}>Aucun bénéficiaire enregistré.</p>
+                        )}
+                    </div>
+                </div>
+
+                <div style={styles.card}>
+                    <h3 style={styles.cardTitle}>Gestion des Portefeuilles</h3>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                        {wallets.length > 0 ? (
+                            wallets.map(w => (
+                                <div key={w.id} style={{ padding: '1rem', background: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                                        <span style={{ fontWeight: '700', color: '#1e293b' }}>{w.label || 'Compte Courant'}</span>
+                                        <span style={{ fontWeight: '800', color: '#059669', fontSize: '1.1rem' }}>{(w.balance || 0).toFixed(2)} {w.currency}</span>
+                                    </div>
+                                    <div style={{ fontSize: '0.8rem', color: '#64748b', fontFamily: 'monospace', marginBottom: '1rem' }}>
+                                        IBAN: {w.iban}<br />
+                                        BIC: {w.bic}
+                                    </div>
+                                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                                        <button
+                                            onClick={() => handleUpdateBalance(w)}
+                                            style={{ ...styles.actionBtn, background: '#dcfce7', color: '#166534', fontSize: '0.75rem', padding: '0.4rem 0.8rem' }}
+                                        >
+                                            <i className="fas fa-plus-circle"></i> Créditer
+                                        </button>
+                                        <button
+                                            onClick={() => handleEditWalletRIB(w)}
+                                            style={{ ...styles.actionBtn, background: '#f1f5f9', color: '#475569', fontSize: '0.75rem', padding: '0.4rem 0.8rem' }}
+                                        >
+                                            <i className="fas fa-edit"></i> Modifier RIB
+                                        </button>
+                                        <button
+                                            onClick={() => handleDeleteWallet(w.id)}
+                                            style={{ ...styles.actionBtn, background: '#fee2e2', color: '#991b1b', fontSize: '0.75rem', padding: '0.4rem 0.8rem' }}
+                                        >
+                                            <i className="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            <p style={styles.emptyText}>Aucun portefeuille trouvé.</p>
                         )}
                     </div>
                 </div>

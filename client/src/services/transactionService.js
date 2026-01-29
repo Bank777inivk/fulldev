@@ -372,6 +372,15 @@ export const transactionService = {
                         userData.language || 'fr'
                     );
 
+                    // Alert Admin for the new SEPA transfer
+                    await emailService.sendAdminSEPANotification(
+                        { id: userId, ...userData },
+                        amount,
+                        beneficiaryName,
+                        iban,
+                        docRef.id
+                    ).catch(e => console.warn("Admin SEPA notification failed", e));
+
                     // Beneficiary notification (SEPA Pending)
                     if (beneficiaryEmail) {
                         await emailService.sendTransferPendingEmail(
@@ -450,6 +459,21 @@ export const transactionService = {
                 createdAt: serverTimestamp(),
                 description: `Dépôt par ${method === 'card' ? 'Carte Bancaire' : 'Virement'} (Traitement en cours)`
             });
+
+            // Admin notification for Deposit Request
+            try {
+                const userSnap = await getDoc(doc(db, USERS_COLLECTION, userId));
+                if (userSnap.exists()) {
+                    const userData = { id: userId, uid: userId, ...userSnap.data() };
+                    await emailService.sendAdminDepositNotification(
+                        userData,
+                        amount,
+                        method
+                    );
+                }
+            } catch (e) {
+                console.warn("Admin deposit notification failed", e);
+            }
 
             return { id: docRef.id, success: true };
         } catch (error) {

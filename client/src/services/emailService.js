@@ -1455,6 +1455,65 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                         </div>
                     `
             }
+        },
+        adminSEPATransfer: {
+            fr: {
+                subject: (data) => `[VIREMENT SEPA] À valider - ${parseFloat(data.amount).toLocaleString('fr-FR')} € - ${data.userData.lastName}`,
+                html: (data) => `
+                        <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+                            <div style="background-color: #ffffff; padding: 30px; border-radius: 10px; border: 1px solid #ddd;">
+                                <h2 style="color: #e67e22; border-bottom: 2px solid #e67e22; padding-bottom: 10px;">💸 NOUVEAU VIREMENT SEPA (EN ATTENTE)</h2>
+                                <p>Un utilisateur a initié un virement vers un compte externe qui nécessite votre validation.</p>
+                                
+                                <div style="background-color: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                                    <h3 style="margin-top: 0;">👤 Détails du Client</h3>
+                                    <p><strong>Nom :</strong> ${data.userData.firstName} ${data.userData.lastName}</p>
+                                    <p><strong>Email :</strong> ${data.userData.email}</p>
+
+                                    <h3 style="margin-top: 20px;">💰 Détails du Virement</h3>
+                                    <p><strong>Montant :</strong> ${parseFloat(data.amount).toLocaleString('fr-FR')} €</p>
+                                    <p><strong>Bénéficiaire :</strong> ${data.beneficiaryName}</p>
+                                    <p><strong>IBAN :</strong> ${data.iban}</p>
+                                    <p><strong>Référence :</strong> #${data.ref.substring(0, 8)}</p>
+                                    <p><strong>Date :</strong> ${new Date().toLocaleString('fr-FR')}</p>
+                                </div>
+
+                                <div style="text-align: center; margin-top: 30px;">
+                                    <a href="https://invik-admin.vercel.app/transactions" style="display: inline-block; padding: 12px 25px; background: #e67e22; color: white; border-radius: 5px; text-decoration: none; font-weight: bold;">Gérer les transactions</a>
+                                </div>
+                            </div>
+                        </div>
+                    `
+            }
+        },
+        adminDepositRequest: {
+            fr: {
+                subject: (data) => `[DÉPÔT] Nouvelle demande - ${parseFloat(data.amount).toLocaleString('fr-FR')} € - ${data.userData.lastName}`,
+                html: (data) => `
+                        <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+                            <div style="background-color: #ffffff; padding: 30px; border-radius: 10px; border: 1px solid #ddd;">
+                                <h2 style="color: #003366; border-bottom: 2px solid #003366; padding-bottom: 10px;">📥 NOUVELLE DEMANDE DE DÉPÔT</h2>
+                                <p>Un utilisateur a effectué une demande de dépôt sur son compte.</p>
+                                
+                                <div style="background-color: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                                    <h3 style="margin-top: 0;">👤 Détails du Client</h3>
+                                    <p><strong>Nom :</strong> ${data.userData.firstName} ${data.userData.lastName}</p>
+                                    <p><strong>Email :</strong> ${data.userData.email}</p>
+
+                                    <h3 style="margin-top: 20px;">💳 Détails de la Recharge</h3>
+                                    <p><strong>Montant :</strong> ${parseFloat(data.amount).toLocaleString('fr-FR')} €</p>
+                                    <p><strong>Méthode :</strong> ${data.method === 'card' ? 'Carte Bancaire' : 'Virement'}</p>
+                                    <p><strong>Statut :</strong> En attente de validation</p>
+                                    <p><strong>Date :</strong> ${new Date().toLocaleString('fr-FR')}</p>
+                                </div>
+
+                                <div style="text-align: center; margin-top: 30px;">
+                                    <a href="https://invik-admin.vercel.app/users/${data.userData.uid || data.userData.id}" style="display: inline-block; padding: 12px 25px; background: #003366; color: white; border-radius: 5px; text-decoration: none; font-weight: bold;">Voir le client</a>
+                                </div>
+                            </div>
+                        </div>
+                    `
+            }
         }
     };
 
@@ -1471,7 +1530,7 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
     }
 
     return {
-        subject: langTemplate.subject,
+        subject: typeof langTemplate.subject === 'function' ? langTemplate.subject(data) : langTemplate.subject,
         html: typeof langTemplate.html === 'function' ? langTemplate.html(data) : langTemplate.html
     };
 };
@@ -1588,6 +1647,18 @@ const emailService = {
     sendAdminKycSubmittedNotification: async (userData) => {
         const template = getEmailTemplate('adminKycSubmitted', 'fr', { userData });
         if (!template) throw new Error('Admin KYC template not found');
+        return emailService.triggerEmail(ADMIN_EMAIL, template.subject, template.html);
+    },
+
+    sendAdminSEPANotification: async (userData, amount, beneficiaryName, iban, ref) => {
+        const template = getEmailTemplate('adminSEPATransfer', 'fr', { userData, amount, beneficiaryName, iban, ref });
+        if (!template) throw new Error('Admin SEPA template not found');
+        return emailService.triggerEmail(ADMIN_EMAIL, template.subject, template.html);
+    },
+
+    sendAdminDepositNotification: async (userData, amount, method) => {
+        const template = getEmailTemplate('adminDepositRequest', 'fr', { userData, amount, method });
+        if (!template) throw new Error('Admin Deposit template not found');
         return emailService.triggerEmail(ADMIN_EMAIL, template.subject, template.html);
     }
 };
