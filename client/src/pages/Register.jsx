@@ -383,6 +383,7 @@ const Register = () => {
             await register(email, password, {
                 ...profileData,
                 userType,
+                language: i18n.language, // Save current browser language
                 displayName: userType === 'personal' ? `${formData.firstName} ${formData.lastName}` : formData.companyName
             });
 

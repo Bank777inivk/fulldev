@@ -8,15 +8,21 @@ const ADMIN_EMAIL_API_URL = '/api/send-email';
  * @returns {object} { subject, html }
  */
 const getEmailTemplate = (templateName, lang = 'fr', data) => {
-    // Map full names to codes if necessary (e.g. "Français" -> "fr")
-    const langCode = (lang && lang.length > 2) ? {
-        'Français': 'fr',
-        'English': 'en',
-        'Español': 'es',
-        'Italiano': 'it',
-        'Português': 'pt',
-        'Deutsch': 'de'
-    }[lang] || 'fr' : lang || 'fr';
+    // Robust mapping for language names and codes
+    const normalizedLang = (lang || 'fr').toString().trim().toLowerCase();
+
+    const mapping = {
+        'fr': 'fr', 'français': 'fr', 'french': 'fr', 'fr-fr': 'fr',
+        'en': 'en', 'english': 'en', 'anglais': 'en', 'en-us': 'en', 'en-gb': 'en',
+        'es': 'es', 'español': 'es', 'spanish': 'es', 'espagnol': 'es',
+        'it': 'it', 'italiano': 'it', 'italian': 'it', 'italien': 'it',
+        'pt': 'pt', 'português': 'pt', 'portuguese': 'pt', 'portugais': 'pt',
+        'de': 'de', 'deutsch': 'de', 'german': 'de', 'allemand': 'de'
+    };
+
+    const langCode = mapping[normalizedLang] || 'en'; // Default to 'en' instead of 'fr' as a more global fallback
+
+    console.log(`[AdminEmailService] Template: ${templateName}, Input Lang: "${lang}", Resolved Code: ${langCode}`);
 
     const templates = {
         kycSuccess: {
