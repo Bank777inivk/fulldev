@@ -174,9 +174,9 @@ export const adminService = {
                         const name = userData.firstName || 'Client';
                         if (status === 'approved') {
                             await adminEmailService.sendCardShippedEmail(userData.email, name, reqData.cardType || 'Black Edition', userData.language || 'en');
+                        } else if (status === 'delivered') {
+                            await adminEmailService.sendCardDeliveredEmail(userData.email, name, reqData.cardType || 'Black Edition', userData.language || 'en');
                         }
-                        // 'delivered' is often followed by manual activation in this UI, 
-                        // so we can wait for activation or send a delivery confirmation.
                     }
                 }
             } catch (err) {
@@ -494,6 +494,44 @@ export const adminService = {
             const transactions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             callback(transactions);
         });
+    },
+
+    // Real-time listener for specific user notifications
+    subscribeToUserNotifications: (userId, callback) => {
+        const q = query(
+            collection(db, 'notifications'),
+            where('userId', '==', userId),
+            orderBy('createdAt', 'desc')
+        );
+        return onSnapshot(q, (snapshot) => {
+            const notifications = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            callback(notifications);
+        });
+    },
+
+    // Get user notifications
+    getUserNotifications: async (userId) => {
+        const q = query(
+            collection(db, 'notifications'),
+            where('userId', '==', userId),
+            orderBy('createdAt', 'desc')
+        );
+        const snapshot = await getDocs(q);
+        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    },
+
+    // Delete a single notification
+    deleteNotification: async (notifId) => {
+        await deleteDoc(doc(db, 'notifications', notifId));
+    },
+
+    // Reset all notifications for a user (batch delete)
+    resetUserNotifications: async (userId) => {
+        const q = query(collection(db, 'notifications'), where('userId', '==', userId));
+        const snapshot = await getDocs(q);
+
+        const deletePromises = snapshot.docs.map(doc => deleteDoc(doc.ref));
+        await Promise.all(deletePromises);
     },
 
     // Real-time listeners

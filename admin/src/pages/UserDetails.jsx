@@ -72,6 +72,7 @@ const UserDetails = () => {
     const [transactions, setTransactions] = useState([]);
     const [cards, setCards] = useState([]);
     const [beneficiaries, setBeneficiaries] = useState([]);
+    const [notifications, setNotifications] = useState([]);
     const [kycData, setKycData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
@@ -110,6 +111,13 @@ const UserDetails = () => {
         };
 
         loadUserData();
+
+        // Subscribe to real-time notification updates
+        const unsubscribeNotifs = adminService.subscribeToUserNotifications(id, (notifs) => {
+            setNotifications(notifs);
+        });
+
+        return () => unsubscribeNotifs();
     }, [id]);
 
     useEffect(() => {
@@ -194,6 +202,56 @@ const UserDetails = () => {
         } catch (error) {
             console.error('Error updating card:', error);
             alert('Erreur lors de la mise à jour de la carte');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleDeleteNotification = async (notifId) => {
+        if (!window.confirm('Supprimer cette notification ?')) return;
+        try {
+            await adminService.deleteNotification(notifId);
+        } catch (error) {
+            console.error('Error deleting notification:', error);
+            alert('Erreur lors de la suppression');
+        }
+    };
+
+    const handleResetNotifications = async () => {
+        if (!window.confirm('Voulez-vous supprimer TOUTES les notifications de cet utilisateur ?')) return;
+        try {
+            setLoading(true);
+            await adminService.resetUserNotifications(user.id);
+            alert('Notifications réinitialisées');
+        } catch (error) {
+            console.error('Error resetting notifications:', error);
+            alert('Erreur lors de la réinitialisation');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleDeleteUser = async () => {
+        if (!window.confirm('ATTENTION: Cette action est IRREVERSIBLE. Voulez-vous vraiment supprimer définitivement cet utilisateur et TOUTES ses données ?')) return;
+
+        const confirmEmail = window.prompt(`Pour confirmer, veuillez saisir l'adresse email de l'utilisateur (${user.email}) :`);
+        if (confirmEmail !== user.email) {
+            alert('Email incorrect. Suppression annulée.');
+            return;
+        }
+
+        try {
+            setLoading(true);
+            const result = await adminService.deleteUserFull(user.id);
+            if (result.warning) {
+                alert(result.warning);
+            } else {
+                alert('Utilisateur supprimé avec succès');
+            }
+            navigate('/users');
+        } catch (error) {
+            console.error('Error deleting user:', error);
+            alert('Erreur lors de la suppression : ' + error.message);
         } finally {
             setLoading(false);
         }
@@ -670,6 +728,59 @@ const UserDetails = () => {
                             </div>
                         </div>
                     )}
+                </div>
+
+                <div style={styles.card}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                        <h3 style={styles.cardTitle}>Dernières Notifications</h3>
+                        <button
+                            onClick={handleResetNotifications}
+                            style={{ ...styles.linkBtn, color: '#ef4444' }}
+                        >
+                            <i className="fas fa-broom"></i> Tout supprimer
+                        </button>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                        {notifications.length > 0 ? (
+                            notifications.slice(0, 10).map(notif => (
+                                <div key={notif.id} style={{ padding: '0.8rem', background: '#f8fafc', borderRadius: '12px', border: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                                    <div style={{ flex: 1 }}>
+                                        <div style={{ fontWeight: '700', color: '#1e293b', fontSize: '0.85rem', marginBottom: '2px' }}>{notif.title}</div>
+                                        <div style={{ fontSize: '0.8rem', color: '#64748b', lineHeight: '1.4' }}>{notif.message}</div>
+                                        <div style={{ fontSize: '0.7rem', color: '#94a3b8', marginTop: '4px' }}>{formatDate(notif.createdAt)}</div>
+                                    </div>
+                                    <button
+                                        onClick={() => handleDeleteNotification(notif.id)}
+                                        style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', padding: '4px' }}
+                                    >
+                                        <i className="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            ))
+                        ) : (
+                            <p style={styles.emptyText}>Aucune notification.</p>
+                        )}
+                    </div>
+                </div>
+
+                <div style={{ ...styles.card, border: '1px solid #fee2e2', background: '#fffafb' }}>
+                    <h3 style={{ ...styles.cardTitle, color: '#991b1b' }}>Zone de Danger</h3>
+                    <p style={{ color: '#666', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
+                        Actions irréversibles concernant le compte de cet utilisateur.
+                    </p>
+                    <button
+                        onClick={handleDeleteUser}
+                        style={{
+                            ...styles.actionBtn,
+                            background: '#ef4444',
+                            color: 'white',
+                            width: '100%',
+                            justifyContent: 'center',
+                            padding: '1rem'
+                        }}
+                    >
+                        <i className="fas fa-user-slash"></i> Supprimer définitivement le compte client
+                    </button>
                 </div>
             </div>
         </div>

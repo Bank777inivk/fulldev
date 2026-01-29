@@ -683,6 +683,140 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
 `
             }
         },
+        cardDelivered: {
+            fr: {
+                subject: "Votre carte INVIK BANK a été livrée !",
+                html: (data) => `
+<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0;">
+                    <div style="background: #0ea5e9; padding: 40px 20px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 26px; font-weight: 800; letter-spacing: 2px;">CONFIRMÉE LIVRÉE</h1>
+                        </div>
+                    <div style="padding: 40px; color: #1e293b; line-height: 1.6;">
+                            <h2 style="color: #0ea5e9; margin-top: 0;">Bonne nouvelle, ${data.name}</h2>
+                            <p style="font-size: 16px;">Nous avons le plaisir de vous confirmer que votre carte **${data.cardType}** a été livrée à votre adresse.</p>
+                        <div style="text-align: center; padding: 30px; background: #f0f9ff; border-radius: 16px; margin: 25px 0; border: 1px solid #e0f2fe;">
+                                <i class="fas fa-check-circle" style="font-size: 40px; color: #0ea5e9; margin-bottom: 15px;"></i>
+                                <p style="margin: 0; font-weight: 700; color: #0ea5e9;">Disponible dans votre boîte aux lettres</p>
+                            </div>
+                            <p style="font-size: 16px;">Pour votre sécurité, votre carte est actuellement **inactive**. Vous pouvez l'activer en quelques clics depuis votre espace client.</p>
+                        <div style="text-align: center; margin-top: 30px;">
+                                <a href="https://www.inviksa.com/dashboard" style="display: inline-block; background: #0ea5e9; color: white; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: 800;">Activer ma carte</a>
+                            </div>
+                        </div>
+                    </div>
+`
+            },
+            en: {
+                subject: "Your INVIK BANK card has been delivered!",
+                html: (data) => `
+<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0;">
+                    <div style="background: #0ea5e9; padding: 40px 20px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 26px; font-weight: 800; letter-spacing: 2px;">CONFIRMED DELIVERED</h1>
+                        </div>
+                    <div style="padding: 40px; color: #1e293b; line-height: 1.6;">
+                            <h2 style="color: #0ea5e9; margin-top: 0;">Good news, ${data.name}</h2>
+                            <p style="font-size: 16px;">We are pleased to confirm that your **${data.cardType}** card has been delivered to your address.</p>
+                        <div style="text-align: center; padding: 30px; background: #f0f9ff; border-radius: 16px; margin: 25px 0; border: 1px solid #e0f2fe;">
+                                <i class="fas fa-check-circle" style="font-size: 40px; color: #0ea5e9; margin-bottom: 15px;"></i>
+                                <p style="margin: 0; font-weight: 700; color: #0ea5e9;">Available in your mailbox</p>
+                            </div>
+                            <p style="font-size: 16px;">For your security, your card is currently **inactive**. You can activate it in a few clicks from your customer area.</p>
+                        <div style="text-align: center; margin-top: 30px;">
+                                <a href="https://www.inviksa.com/dashboard" style="display: inline-block; background: #0ea5e9; color: white; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: 800;">Activate my card</a>
+                            </div>
+                        </div>
+                    </div>
+`
+            },
+            es: {
+                subject: "¡Su tarjeta INVIK BANK ha sido entregada!",
+                html: (data) => `
+<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0;">
+                    <div style="background: #0ea5e9; padding: 40px 20px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 26px; font-weight: 800; letter-spacing: 2px;">ENTREGA CONFIRMADA</h1>
+                        </div>
+                    <div style="padding: 40px; color: #1e293b; line-height: 1.6;">
+                            <h2 style="color: #0ea5e9; margin-top: 0;">Buenas noticias, ${data.name}</h2>
+                            <p style="font-size: 16px;">Nos complace confirmar que su tarjeta **${data.cardType}** ha sido entregada en su dirección.</p>
+                        <div style="text-align: center; padding: 30px; background: #f0f9ff; border-radius: 16px; margin: 25px 0; border: 1px solid #e0f2fe;">
+                                <i class="fas fa-check-circle" style="font-size: 40px; color: #0ea5e9; margin-bottom: 15px;"></i>
+                                <p style="margin: 0; font-weight: 700; color: #0ea5e9;">Disponible en su buzón</p>
+                            </div>
+                            <p style="font-size: 16px;">Por seguridad, su tarjeta está actualmente **inactiva**. Puede activarla en unos pocos clics desde su área de cliente.</p>
+                        <div style="text-align: center; margin-top: 30px;">
+                                <a href="https://www.inviksa.com/dashboard" style="display: inline-block; background: #0ea5e9; color: white; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: 800;">Activar mi tarjeta</a>
+                            </div>
+                        </div>
+                    </div>
+`
+            },
+            pt: {
+                subject: "Seu cartão INVIK BANK foi entregue!",
+                html: (data) => `
+<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0;">
+                    <div style="background: #0ea5e9; padding: 40px 20px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 26px; font-weight: 800; letter-spacing: 2px;">ENTREGA CONFIRMADA</h1>
+                        </div>
+                    <div style="padding: 40px; color: #1e293b; line-height: 1.6;">
+                            <h2 style="color: #0ea5e9; margin-top: 0;">Boas notícias, ${data.name}</h2>
+                            <p style="font-size: 16px;">Temos o prazer de confirmar que o seu cartão **${data.cardType}** foi entregue na sua morada.</p>
+                        <div style="text-align: center; padding: 30px; background: #f0f9ff; border-radius: 16px; margin: 25px 0; border: 1px solid #e0f2fe;">
+                                <i class="fas fa-check-circle" style="font-size: 40px; color: #0ea5e9; margin-bottom: 15px;"></i>
+                                <p style="margin: 0; font-weight: 700; color: #0ea5e9;">Disponível na sua caixa de correio</p>
+                            </div>
+                            <p style="font-size: 16px;">Para sua segurança, o seu cartão está atualmente **inativo**. Pode ativá-lo em poucos cliques a partir da sua área de cliente.</p>
+                        <div style="text-align: center; margin-top: 30px;">
+                                <a href="https://www.inviksa.com/dashboard" style="display: inline-block; background: #0ea5e9; color: white; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: 800;">Ativar o meu cartão</a>
+                            </div>
+                        </div>
+                    </div>
+`
+            },
+            it: {
+                subject: "La vostra carta INVIK BANK è stata consegnata!",
+                html: (data) => `
+<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0;">
+                    <div style="background: #0ea5e9; padding: 40px 20px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 26px; font-weight: 800; letter-spacing: 2px;">CONSEGNA CONFERMATA</h1>
+                        </div>
+                    <div style="padding: 40px; color: #1e293b; line-height: 1.6;">
+                            <h2 style="color: #0ea5e9; margin-top: 0;">Buone notizie, ${data.name}</h2>
+                            <p style="font-size: 16px;">Siamo lieti di confermarvi che la vostra carta **${data.cardType}** è stata consegnata al vostro indirizzo.</p>
+                        <div style="text-align: center; padding: 30px; background: #f0f9ff; border-radius: 16px; margin: 25px 0; border: 1px solid #e0f2fe;">
+                                <i class="fas fa-check-circle" style="font-size: 40px; color: #0ea5e9; margin-bottom: 15px;"></i>
+                                <p style="margin: 0; font-weight: 700; color: #0ea5e9;">Disponibile nella vostra cassetta postale</p>
+                            </div>
+                            <p style="font-size: 16px;">Per la vostra sicurezza, la carta è attualmente **inattiva**. Potete attivarla in pochi clic dal vostro spazio clienti.</p>
+                        <div style="text-align: center; margin-top: 30px;">
+                                <a href="https://www.inviksa.com/dashboard" style="display: inline-block; background: #0ea5e9; color: white; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: 800;">Attiva la mia carta</a>
+                            </div>
+                        </div>
+                    </div>
+`
+            },
+            de: {
+                subject: "Ihre INVIK BANK Karte wurde zugestellt!",
+                html: (data) => `
+<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0;">
+                    <div style="background: #0ea5e9; padding: 40px 20px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 26px; font-weight: 800; letter-spacing: 2px;">ZUSTELLUNG BESTÄTIGT</h1>
+                        </div>
+                    <div style="padding: 40px; color: #1e293b; line-height: 1.6;">
+                            <h2 style="color: #0ea5e9; margin-top: 0;">Gute Nachrichten, ${data.name}</h2>
+                            <p style="font-size: 16px;">Wir freuen uns, Ihnen bestätigen zu können, dass Ihre **${data.cardType}** Karte an Ihre Adresse zugestellt wurde.</p>
+                        <div style="text-align: center; padding: 30px; background: #f0f9ff; border-radius: 16px; margin: 25px 0; border: 1px solid #e0f2fe;">
+                                <i class="fas fa-check-circle" style="font-size: 40px; color: #0ea5e9; margin-bottom: 15px;"></i>
+                                <p style="margin: 0; font-weight: 700; color: #0ea5e9;">In Ihrem Briefkasten verfügbar</p>
+                            </div>
+                            <p style="font-size: 16px;">Zu Ihrer Sicherheit ist Ihre Karte derzeit **inaktiv**. Sie können sie mit wenigen Klicks über Ihren Kundenbereich aktivieren.</p>
+                        <div style="text-align: center; margin-top: 30px;">
+                                <a href="https://www.inviksa.com/dashboard" style="display: inline-block; background: #0ea5e9; color: white; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: 800;">Meine Karte aktivieren</a>
+                            </div>
+                        </div>
+                    </div>
+`
+            }
+        },
         transactionValidated: {
             fr: {
                 subject: "Confirmation de virement sortant - INVIK BANK",
@@ -1204,6 +1338,11 @@ export const adminEmailService = {
     // --- CARD TEMPLATES ---
     sendCardShippedEmail: async (toEmail, name, cardType, lang = 'en') => {
         const template = getEmailTemplate('cardShipped', lang, { name, cardType });
+        return adminEmailService.triggerEmail(toEmail, template.subject, template.html);
+    },
+
+    sendCardDeliveredEmail: async (toEmail, name, cardType, lang = 'en') => {
+        const template = getEmailTemplate('cardDelivered', lang, { name, cardType });
         return adminEmailService.triggerEmail(toEmail, template.subject, template.html);
     },
 
