@@ -686,7 +686,7 @@ export const adminService = {
 
                 // 2. If Approved (and wasn't already), credit the account
                 if (status === 'approved' && oldStatus !== 'approved') {
-                    const amount = parseFloat(loanData.amount) || 0;
+                    const amount = parseFloat(loanData.amount || loanData.montant || 0);
                     const currency = loanData.currency || '€';
 
                     // Find Credit Wallet
@@ -769,10 +769,14 @@ export const adminService = {
                     if (userSnap.exists()) {
                         const userData = userSnap.data();
                         const name = userData.firstName || 'Client';
+                        const amount = parseFloat(loanData.amount || loanData.montant || 0);
+                        const currency = loanData.currency || '€';
+                        const language = userData.language || 'en';
+
                         if (status === 'approved') {
-                            await adminEmailService.sendLoanApprovedEmail(userData.email, name, loanData.amount, loanData.currency || '€', userData.language || 'fr');
+                            await adminEmailService.sendLoanApprovedEmail(userData.email, name, amount, currency, language);
                         } else {
-                            await adminEmailService.sendLoanRejectedEmail(userData.email, name, reviewNotes, userData.language || 'fr');
+                            await adminEmailService.sendLoanRejectedEmail(userData.email, name, reviewNotes, language);
                         }
                     }
                 }

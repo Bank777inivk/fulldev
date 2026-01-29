@@ -7,9 +7,9 @@ const ADMIN_EMAIL_API_URL = '/api/send-email';
  * @param {object} data - Data to populate the template
  * @returns {object} { subject, html }
  */
-const getEmailTemplate = (templateName, lang = 'fr', data) => {
+const getEmailTemplate = (templateName, lang = 'en', data) => {
     // Robust mapping for language names and codes
-    const normalizedLang = (lang || 'fr').toString().trim().toLowerCase();
+    const normalizedLang = (lang || 'en').toString().trim().toLowerCase();
 
     const mapping = {
         'fr': 'fr', 'français': 'fr', 'french': 'fr', 'fr-fr': 'fr',
@@ -1180,51 +1180,51 @@ export const adminEmailService = {
     },
 
     // --- KYC TEMPLATES ---
-    sendKYCSuccessEmail: async (toEmail, name, lang = 'fr') => {
+    sendKYCSuccessEmail: async (toEmail, name, lang = 'en') => {
         const template = getEmailTemplate('kycSuccess', lang, { name });
         return adminEmailService.triggerEmail(toEmail, template.subject, template.html);
     },
 
-    sendKYCRejectionEmail: async (toEmail, name, reason, lang = 'fr') => {
+    sendKYCRejectionEmail: async (toEmail, name, reason, lang = 'en') => {
         const template = getEmailTemplate('kycRejection', lang, { name, reason });
         return adminEmailService.triggerEmail(toEmail, template.subject, template.html);
     },
 
     // --- LOAN TEMPLATES ---
-    sendLoanApprovedEmail: async (toEmail, name, amount, currency, lang = 'fr') => {
+    sendLoanApprovedEmail: async (toEmail, name, amount, currency, lang = 'en') => {
         const template = getEmailTemplate('loanApproved', lang, { name, amount, currency });
         return adminEmailService.triggerEmail(toEmail, template.subject, template.html);
     },
 
-    sendLoanRejectedEmail: async (toEmail, name, reason, lang = 'fr') => {
+    sendLoanRejectedEmail: async (toEmail, name, reason, lang = 'en') => {
         const template = getEmailTemplate('loanRejected', lang, { name, reason });
         return adminEmailService.triggerEmail(toEmail, template.subject, template.html);
     },
 
     // --- CARD TEMPLATES ---
-    sendCardShippedEmail: async (toEmail, name, cardType, lang = 'fr') => {
+    sendCardShippedEmail: async (toEmail, name, cardType, lang = 'en') => {
         const template = getEmailTemplate('cardShipped', lang, { name, cardType });
         return adminEmailService.triggerEmail(toEmail, template.subject, template.html);
     },
 
     // --- TRANSACTION TEMPLATES ---
-    sendTransactionValidatedEmail: async (toEmail, name, amount, currency, description, lang = 'fr') => {
+    sendTransactionValidatedEmail: async (toEmail, name, amount, currency, description, lang = 'en') => {
         const template = getEmailTemplate('transactionValidated', lang, { name, amount, currency, description });
         return adminEmailService.triggerEmail(toEmail, template.subject, template.html);
     },
 
-    sendTransactionInReviewEmail: async (toEmail, name, amount, currency, description, lang = 'fr') => {
+    sendTransactionInReviewEmail: async (toEmail, name, amount, currency, description, lang = 'en') => {
         const template = getEmailTemplate('transactionInReview', lang, { name, amount, currency, description });
         return adminEmailService.triggerEmail(toEmail, template.subject, template.html);
     },
 
-    sendTransactionRejectedEmail: async (toEmail, name, amount, currency, reason, lang = 'fr') => {
+    sendTransactionRejectedEmail: async (toEmail, name, amount, currency, reason, lang = 'en') => {
         const template = getEmailTemplate('transactionRejected', lang, { name, amount, currency, reason });
         return adminEmailService.triggerEmail(toEmail, template.subject, template.html);
     },
 
     // --- SUPPORT TEMPLATE ---
-    sendSupportResponseEmail: async (toEmail, name, subject, lang = 'fr') => {
+    sendSupportResponseEmail: async (toEmail, name, subject, lang = 'en') => {
         const template = getEmailTemplate('supportResponse', lang, { name, subject });
         return adminEmailService.triggerEmail(toEmail, template.subject, template.html);
     }
