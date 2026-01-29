@@ -19,7 +19,10 @@ const KycVerificationBanner = ({ children, variant = 'default', style = {} }) =>
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    if (loading && kycStatus === null) return <div style={{ padding: '50px', textAlign: 'center', color: '#666' }}>{t('banner.loading')}</div>;
+    // Show loading state while data is being fetched to prevent flash of blocking screen
+    if (loading || kycStatus === null || kycStatus === undefined) {
+        return <div style={{ padding: '50px', textAlign: 'center', color: '#666' }}>{t('banner.loading')}</div>;
+    }
 
     const status = kycStatus?.status;
     const isVerified = status === 'verified';

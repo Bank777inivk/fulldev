@@ -501,13 +501,14 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                         </div>
                     </div>
                 `
-            },
+            }
+        },
 
-            // KYC Verification Reminder
-            verificationReminder: {
-                fr: {
-                    subject: "Action requise : Vérifiez votre identité - INVIK BANK",
-                    html: (data) => `
+        // KYC Verification Reminder
+        verificationReminder: {
+            fr: {
+                subject: "Action requise : Vérifiez votre identité - INVIK BANK",
+                html: (data) => `
                     <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
                         <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 35px; text-align: center; color: white;">
                             <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
@@ -528,10 +529,10 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                         </div>
                     </div>
                 `
-                },
-                en: {
-                    subject: "Action required: Verify your identity - INVIK BANK",
-                    html: (data) => `
+            },
+            en: {
+                subject: "Action required: Verify your identity - INVIK BANK",
+                html: (data) => `
                     <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
                         <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 35px; text-align: center; color: white;">
                             <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
@@ -552,14 +553,14 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                         </div>
                     </div>
                 `
-                }
-            },
+            }
+        },
 
-            // KYC Verification In Progress
-            verificationInProgress: {
-                fr: {
-                    subject: "Nous avons reçu votre dossier de vérification - INVIK BANK",
-                    html: (data) => `
+        // KYC Verification In Progress
+        verificationInProgress: {
+            fr: {
+                subject: "Nous avons reçu votre dossier de vérification - INVIK BANK",
+                html: (data) => `
                     <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
                         <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 35px; text-align: center; color: white;">
                             <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
@@ -577,10 +578,10 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                         </div>
                     </div>
                 `
-                },
-                en: {
-                    subject: "We received your verification documents - INVIK BANK",
-                    html: (data) => `
+            },
+            en: {
+                subject: "We received your verification documents - INVIK BANK",
+                html: (data) => `
                     <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
                         <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 35px; text-align: center; color: white;">
                             <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
@@ -598,14 +599,14 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                         </div>
                     </div>
                 `
-                }
-            },
+            }
+        },
 
-            // SEPA Transfer Initiated (Sender)
-            transferInitiated: {
-                fr: {
-                    subject: "Virement SEPA en cours de traitement - INVIK BANK",
-                    html: (data) => `
+        // SEPA Transfer Initiated (Sender)
+        transferInitiated: {
+            fr: {
+                subject: "Virement SEPA en cours de traitement - INVIK BANK",
+                html: (data) => `
                     <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
                         <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 30px; text-align: center; color: white;">
                             <h1 style="margin: 0; font-size: 24px; letter-spacing: 1px;">INVIK BANK</h1>
@@ -639,10 +640,10 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                         </div>
                     </div>
                 `
-                },
-                en: {
-                    subject: "SEPA Transfer Processing - INVIK BANK",
-                    html: (data) => `
+            },
+            en: {
+                subject: "SEPA Transfer Processing - INVIK BANK",
+                html: (data) => `
                     <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
                         <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 30px; text-align: center; color: white;">
                             <h1 style="margin: 0; font-size: 24px; letter-spacing: 1px;">INVIK BANK</h1>
@@ -676,14 +677,14 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                         </div>
                     </div>
                 `
-                }
-            },
+            }
+        },
 
-            // SEPA Transfer Pending (Recipient)
-            transferPending: {
-                fr: {
-                    subject: "Un virement est en attente - INVIK BANK",
-                    html: (data) => `
+        // SEPA Transfer Pending (Recipient)
+        transferPending: {
+            fr: {
+                subject: "Un virement est en attente - INVIK BANK",
+                html: (data) => `
                     <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
                         <div style="background: linear-gradient(135deg, #f39c12 0%, #f1c40f 100%); padding: 30px; text-align: center; color: white;">
                             <h1 style="margin: 0; font-size: 24px; letter-spacing: 1px;">INVIK BANK</h1>
@@ -713,10 +714,10 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                         </div>
                     </div>
                 `
-                },
-                en: {
-                    subject: "Incoming transfer - INVIK BANK",
-                    html: (data) => `
+            },
+            en: {
+                subject: "Incoming transfer - INVIK BANK",
+                html: (data) => `
                     <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
                         <div style="background: linear-gradient(135deg, #f39c12 0%, #f1c40f 100%); padding: 30px; text-align: center; color: white;">
                             <h1 style="margin: 0; font-size: 24px; letter-spacing: 1px;">INVIK BANK</h1>
@@ -746,14 +747,14 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                         </div>
                     </div>
                 `
-                }
-            },
+            }
+        },
 
-            // Card Order Confirmation
-            cardOrder: {
-                fr: {
-                    subject: "Confirmation de commande de carte - INVIK BANK",
-                    html: (data) => `
+        // Card Order Confirmation
+        cardOrder: {
+            fr: {
+                subject: "Confirmation de commande de carte - INVIK BANK",
+                html: (data) => `
                     <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
                         <div style="background: linear-gradient(135deg, #2c3e50 0%, #000000 100%); padding: 35px; text-align: center; color: white;">
                             <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
@@ -782,10 +783,10 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                         </div>
                     </div>
                 `
-                },
-                en: {
-                    subject: "Card Order Confirmation - INVIK BANK",
-                    html: (data) => `
+            },
+            en: {
+                subject: "Card Order Confirmation - INVIK BANK",
+                html: (data) => `
                     <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
                         <div style="background: linear-gradient(135deg, #2c3e50 0%, #000000 100%); padding: 35px; text-align: center; color: white;">
                             <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
@@ -814,14 +815,14 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                         </div>
                     </div>
                 `
-                }
-            },
+            }
+        },
 
-            // Loan Request Confirmation (Authenticated Users)
-            loanRequest: {
-                fr: {
-                    subject: "Confirmation de votre demande de crédit - INVIK BANK",
-                    html: (data) => `
+        // Loan Request Confirmation (Authenticated Users)
+        loanRequest: {
+            fr: {
+                subject: "Confirmation de votre demande de crédit - INVIK BANK",
+                html: (data) => `
                     <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
                         <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 35px; text-align: center; color: white;">
                             <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
@@ -856,10 +857,10 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                         </div>
                     </div>
                 `
-                },
-                en: {
-                    subject: "Your loan request confirmation - INVIK BANK",
-                    html: (data) => `
+            },
+            en: {
+                subject: "Your loan request confirmation - INVIK BANK",
+                html: (data) => `
                     <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
                         <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 35px; text-align: center; color: white;">
                             <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
@@ -894,14 +895,14 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                         </div>
                     </div>
                 `
-                }
-            },
+            }
+        },
 
-            // Contact Form Confirmation
-            contactConfirmation: {
-                fr: {
-                    subject: "Nous avons bien reçu votre message - INVIK BANK",
-                    html: (data) => `
+        // Contact Form Confirmation
+        contactConfirmation: {
+            fr: {
+                subject: "Nous avons bien reçu votre message - INVIK BANK",
+                html: (data) => `
                     <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
                         <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 30px; text-align: center; color: white;">
                             <h1 style="margin: 0; font-size: 24px; letter-spacing: 1px;">INVIK BANK</h1>
@@ -923,10 +924,10 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                         </div>
                     </div>
                 `
-                },
-                en: {
-                    subject: "We received your message - INVIK BANK",
-                    html: (data) => `
+            },
+            en: {
+                subject: "We received your message - INVIK BANK",
+                html: (data) => `
                     <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
                         <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 30px; text-align: center; color: white;">
                             <h1 style="margin: 0; font-size: 24px; letter-spacing: 1px;">INVIK BANK</h1>
@@ -948,14 +949,14 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                         </div>
                     </div>
                 `
-                }
-            },
+            }
+        },
 
-            // Admin Notifications
-            adminPublicLead: {
-                fr: {
-                    subject: (data) => `[LEAD COMPLET] Nouvelle demande crédit - ${data.nom || data.email}`,
-                    html: (data) => `
+        // Admin Notifications
+        adminPublicLead: {
+            fr: {
+                subject: (data) => `[LEAD COMPLET] Nouvelle demande crédit - ${data.nom || data.email}`,
+                html: (data) => `
                         <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
                             <div style="background-color: #ffffff; padding: 30px; border-radius: 10px; border: 1px solid #ddd;">
                                 <h2 style="color: #003366; border-bottom: 2px solid #003366; padding-bottom: 10px;">🌟 NOUVEAU LEAD CRÉDIT (COMPLET)</h2>
@@ -1004,12 +1005,12 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                             </div>
                         </div>
                     `
-                }
-            },
-            adminCardOrder: {
-                fr: {
-                    subject: (data) => `[CARTE] Nouvelle commande - ${data.userData.lastName}`,
-                    html: (data) => `
+            }
+        },
+        adminCardOrder: {
+            fr: {
+                subject: (data) => `[CARTE] Nouvelle commande - ${data.userData.lastName}`,
+                html: (data) => `
                         <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #eee;">
                             <h2 style="color: #003366;">💳 NOUVELLE COMMANDE DE CARTE</h2>
                             <p><strong>Client :</strong> ${data.userData.firstName} ${data.userData.lastName} (${data.userData.email})</p>
@@ -1020,12 +1021,12 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                             </div>
                         </div>
                     `
-                }
-            },
-            adminLoanRequest: {
-                fr: {
-                    subject: (data) => `[CRÉDIT] Nouvelle demande - ${data.userData.lastName}`,
-                    html: (data) => `
+            }
+        },
+        adminLoanRequest: {
+            fr: {
+                subject: (data) => `[CRÉDIT] Nouvelle demande - ${data.userData.lastName}`,
+                html: (data) => `
                         <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #eee;">
                             <h2 style="color: #003366;">🏦 NOUVELLE DEMANDE DE CRÉDIT</h2>
                             <p><strong>Client :</strong> ${data.userData.firstName} ${data.userData.lastName} (${data.userData.email})</p>
@@ -1038,12 +1039,12 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                             </div>
                         </div>
                     `
-                }
-            },
-            loanRequest: {
-                fr: {
-                    subject: "Confirmation de votre demande de crédit - INVIK BANK",
-                    html: (data) => `
+            }
+        },
+        loanRequest: {
+            fr: {
+                subject: "Confirmation de votre demande de crédit - INVIK BANK",
+                html: (data) => `
                         <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
                             <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 35px; text-align: center; color: white;">
                                 <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
@@ -1085,10 +1086,10 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                             </div>
                         </div>
                     `
-                },
-                en: {
-                    subject: "Loan Request Confirmation - INVIK BANK",
-                    html: (data) => `
+            },
+            en: {
+                subject: "Loan Request Confirmation - INVIK BANK",
+                html: (data) => `
                         <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
                             <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 35px; text-align: center; color: white;">
                                 <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
@@ -1130,10 +1131,10 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                             </div>
                         </div>
                     `
-                },
-                de: {
-                    subject: "Kreditanfrage Bestätigung - INVIK BANK",
-                    html: (data) => `
+            },
+            de: {
+                subject: "Kreditanfrage Bestätigung - INVIK BANK",
+                html: (data) => `
                         <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
                             <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 35px; text-align: center; color: white;">
                                 <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
@@ -1175,10 +1176,10 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                             </div>
                         </div>
                     `
-                },
-                es: {
-                    subject: "Confirmación de solicitud de crédito - INVIK BANK",
-                    html: (data) => `
+            },
+            es: {
+                subject: "Confirmación de solicitud de crédito - INVIK BANK",
+                html: (data) => `
                         <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
                             <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 35px; text-align: center; color: white;">
                                 <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
@@ -1220,10 +1221,10 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                             </div>
                         </div>
                     `
-                },
-                it: {
-                    subject: "Conferma richiesta di credito - INVIK BANK",
-                    html: (data) => `
+            },
+            it: {
+                subject: "Conferma richiesta di credito - INVIK BANK",
+                html: (data) => `
                         <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
                             <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 35px; text-align: center; color: white;">
                                 <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
@@ -1265,10 +1266,10 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                             </div>
                         </div>
                     `
-                },
-                pt: {
-                    subject: "Confirmação de pedido de crédito - INVIK BANK",
-                    html: (data) => `
+            },
+            pt: {
+                subject: "Confirmação de pedido de crédito - INVIK BANK",
+                html: (data) => `
                         <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
                             <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 35px; text-align: center; color: white;">
                                 <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
@@ -1310,12 +1311,12 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                             </div>
                         </div>
                     `
-                }
-            },
-            adminKycSubmitted: {
-                fr: {
-                    subject: (data) => `[URGENT KYC] Nouveau dossier soumis - ${data.userData.lastName || data.userData.email}`,
-                    html: (data) => `
+            }
+        },
+        adminKycSubmitted: {
+            fr: {
+                subject: (data) => `[URGENT KYC] Nouveau dossier soumis - ${data.userData.lastName || data.userData.email}`,
+                html: (data) => `
                         <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #eee;">
                             <h2 style="color: #27ae60;">📄 NOUVEAU DOSSIER KYC SOUMIS</h2>
                             <p><strong>Client :</strong> ${data.userData.firstName || ''} ${data.userData.lastName || ''} (${data.userData.email})</p>
@@ -1325,7 +1326,6 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                             </div>
                         </div>
                     `
-                }
             }
         }
     };
