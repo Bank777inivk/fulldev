@@ -45,6 +45,27 @@ const Settings = () => {
         return () => unsubscribe();
     }, []);
 
+    // Sync userData to local editData state when it loads
+    useEffect(() => {
+        if (userData) {
+            setEditData({
+                firstName: userData.firstName || '',
+                lastName: userData.lastName || '',
+                phone: userData.phone || '',
+                address: userData.address || '',
+                city: userData.city || '',
+                zipCode: userData.zipCode || '',
+                countryOfResidence: userData.countryOfResidence || '',
+                nationality: userData.nationality || '',
+                dob: userData.dob || '',
+                birthPlace: userData.birthPlace || '',
+                gender: userData.gender || '',
+                notificationsEnabled: userData.notificationsEnabled ?? true,
+                language: userData.language || (i18n.language === 'fr' ? 'Français' : 'English')
+            });
+        }
+    }, [userData, i18n.language]);
+
     const handleSave = async () => {
         try {
             await updateUserData(editData);
@@ -56,8 +77,6 @@ const Settings = () => {
     };
 
     const handleLanguageChange = async (newLangCode) => {
-        if (newLangCode === i18n.language) return;
-
         const langMap = {
             'fr': 'Français',
             'en': 'English',
@@ -67,26 +86,39 @@ const Settings = () => {
             'de': 'Deutsch'
         };
 
-        // 1. Sync to Firestore first
+        const newLanguageName = langMap[newLangCode] || 'English';
+
         try {
-            const newLanguageName = langMap[newLangCode] || 'English';
-            await updateUserData({ ...editData, language: newLanguageName });
-
-            // 2. Perform navigation
-            const currentPath = window.location.pathname;
-            const pathParts = currentPath.split('/');
-
-            if (pathParts[1] && ['fr', 'en', 'es', 'it', 'pt', 'de'].includes(pathParts[1])) {
-                pathParts[1] = newLangCode;
+            // 1. Always update Firestore if the stored language name differs from selection
+            // This fixes cases where Firestore is "Français" but UI is already in another language
+            if (userData?.language !== newLanguageName) {
+                await updateUserData({ language: newLanguageName });
+                console.log(`Synchronisation de la langue vers Firestore : ${newLanguageName}`);
             }
 
-            const newPath = pathParts.join('/');
-            i18n.changeLanguage(newLangCode);
-            window.location.href = newPath;
+            // 2. Navigation / UI Update
+            // We only need to reload/change language if the code is actually different
+            if (newLangCode !== i18n.language) {
+                const currentPath = window.location.pathname;
+                const pathParts = currentPath.split('/');
+
+                if (pathParts[1] && ['fr', 'en', 'es', 'it', 'pt', 'de'].includes(pathParts[1])) {
+                    pathParts[1] = newLangCode;
+                }
+
+                const newPath = pathParts.join('/');
+                i18n.changeLanguage(newLangCode);
+                window.location.href = newPath;
+            } else {
+                // If code is same but we updated Firestore, maybe just show a success message
+                setStatus({ type: 'success', text: t('settings.messages.success') });
+                setTimeout(() => setStatus({ type: '', text: '' }), 5000);
+            }
         } catch (err) {
-            console.error("Failed to sync language to Firestore:", err);
-            // Still change locally even if sync fails
-            i18n.changeLanguage(newLangCode);
+            console.error("Erreur lors de la synchronisation de la langue :", err);
+            if (newLangCode !== i18n.language) {
+                i18n.changeLanguage(newLangCode);
+            }
         }
     };
 
