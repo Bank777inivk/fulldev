@@ -188,7 +188,7 @@ const Credits = () => {
                 <i className="fas fa-file-contract" style={{ fontSize: '3rem', color: '#003366', marginBottom: '1rem' }}></i>
                 <h3 style={{ color: '#003366', marginBottom: '10px' }}>{t('credits.status.dossier_title')}</h3>
                 <p style={{ color: '#555', marginBottom: '1.5rem' }}>
-                    {t('credits.status.dossier_desc', { amount: pendingRequest.amount.toLocaleString() })}
+                    {t('credits.status.dossier_desc', { amount: (pendingRequest?.amount || 0).toLocaleString() })}
                     <br /><br />
                     {t('credits.status.dossier_notice')}
                 </p>
@@ -273,8 +273,8 @@ const Credits = () => {
         return (
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
                 <div style={{ flex: 1 }}>
-                    <div style={{ fontWeight: 'bold' }}>{loan.amount.toLocaleString()} €</div>
-                    <div style={{ fontSize: '0.8rem', color: '#888' }}>{loan.type} • {loan.duration} mois</div>
+                    <div style={{ fontWeight: 'bold' }}>{(loan?.amount || 0).toLocaleString()} €</div>
+                    <div style={{ fontSize: '0.8rem', color: '#888' }}>{loan?.type || 'N/A'} • {loan?.duration || 0} mois</div>
                 </div>
                 <div style={{ textAlign: 'right' }}>
                     <div style={{ fontSize: '0.75rem', display: 'inline-block', padding: '4px 12px', borderRadius: '50px', backgroundColor: badge.bg, fontWeight: 'bold', color: badge.color }}>

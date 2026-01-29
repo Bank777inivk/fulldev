@@ -1447,6 +1447,9 @@
             "step_amount": "Betrag",
             "sending": "Wird gesendet..."
         },
+        "beneficiaries": {
+            "empty": "Kein Empfänger gespeichert."
+        },
         "pagination": {
             "page": "Seite {{current}} von {{total}}"
         }
@@ -1722,56 +1725,6 @@
         "rejected": "Abgelehnt",
         "in_review": "In Prüfung"
     },
-    "beneficiaries": {
-        "title": "Empfänger",
-        "subtitle": "Verwalten Sie Ihre Überweisungsempfänger.",
-        "stats": {
-            "total": "{{count}} Empfänger",
-            "active": "Aktive Empfänger",
-            "invik": "{{count}} Sofort"
-        },
-        "search_placeholder": "Empfänger suchen...",
-        "empty": {
-            "title": "Keine Empfänger",
-            "subtitle": "Fügen Sie Ihren ersten Empfänger hinzu.",
-            "search_no_results": "Keine Ergebnisse für Ihre Suche.",
-            "search_try_again": "Versuchen Sie es mit einem anderen Namen oder IBAN."
-        },
-        "form": {
-            "add_title": "Empfänger hinzufügen",
-            "new_title": "Neuer Empfänger",
-            "name_label": "VOLLSTÄNDIGER NAME",
-            "name_placeholder": "Z.B. Max Mustermann",
-            "iban_label": "IBAN",
-            "iban_placeholder": "DE ...",
-            "bic_label": "BIC (OPTIONAL)",
-            "bic_placeholder": "Optional",
-            "email_label": "E-MAIL (OPTIONAL)",
-            "email_placeholder": "Optional",
-            "confirm_submit": "Hinzufügen",
-            "validation": {
-                "iban_invalid": "IBAN-Format ungültig",
-                "iban_valid": "IBAN gültig"
-            }
-        },
-        "card": {
-            "actions": {
-                "transfer": "Überweisen"
-            }
-        },
-        "toasts": {
-            "add_success": "Empfänger erfolgreich hinzugefügt!",
-            "add_error": "Fehler beim Hinzufügen des Empfängers.",
-            "delete_success": "Empfänger gelöscht.",
-            "delete_error": "Fehler beim Löschen des Empfängers."
-        },
-        "confirm_delete": {
-            "title": "Empfänger löschen",
-            "message": "Möchten Sie diesen Empfänger wirklich löschen?",
-            "confirm": "Löschen",
-            "cancel": "Abbrechen"
-        }
-    },
     "settings": {
         "title": "Kontoeinstellungen",
         "subtitle": "Anzeigen und Ändern Ihres Bankprofils.",
@@ -1785,14 +1738,17 @@
         },
         "profile": {
             "title": "Persönliche Informationen",
-            "email_verified": "Email verifiziert",
+            "client_folder": "Kundenakte",
+            "login_id": "Anmelde-ID",
             "email_contact": "KONTAKT-E-MAIL",
+            "email_verified": "Email verifiziert",
             "first_name": "Vorname",
             "last_name": "Nachname",
             "dob": "Geburtsdatum",
             "pob": "Geburtsort",
             "phone": "Telefon",
             "nationality": "Nationalität",
+            "location": "Standort",
             "address": "Adresse",
             "city": "Stadt",
             "zip": "Postleitzahl",
@@ -1801,6 +1757,8 @@
         },
         "security": {
             "title": "Authentifizierungssicherheit",
+            "protection_level": "SCHUTZNIVEAU",
+            "optimal_verified": "Optimal und Verifiziert",
             "password_title": "Passwortsicherheit",
             "password_desc": "Ein starkes Passwort schützt Ihr Bankkonto vor unbefugtem Zugriff.",
             "new_password": "Neues Passwort",
@@ -1811,11 +1769,13 @@
             "days_ago": "Vor {{count}} Tagen",
             "encrypted_storage": "Verschlüsselte Speicherung",
             "protected_aes": "Geschützt durch AES-256",
+            "security_tips": "SICHERHEITSTIPPS",
             "security_reqs": "Sicherheitsanforderungen",
             "tip_8_chars": "Mindestens 8 Zeichen",
             "tip_caps": "Ein Großbuchstabe",
             "tip_numbers": "Eine Zahl",
             "tip_special": "Ein Sonderzeichen (!@#$)",
+            "tip_avoid_personal": "Vermeiden Sie persönliche Informationen",
             "strength": {
                 "label": "Stärke:",
                 "weak": "Schwach",
@@ -2069,5 +2029,65 @@
         "close": "Schließen"
     },
     "welcome": "Willkommen bei der INVIK BANK",
-    "loading": "Ihr persönlicher Bereich wird vorbereitet..."
+    "loading": "Ihr persönlicher Bereich wird vorbereitet...",
+    "dashboard": {
+        "loading": "Dashboard wird geladen..."
+    },
+    "common": {
+        "edit": "Bearbeiten",
+        "client": "Kunde",
+        "loading": "Laden...",
+        "error": "Ein Fehler ist aufgetreten",
+        "beneficiary_empty": "Kein Empfänger gespeichert."
+    },
+    "beneficiaries": {
+        "title": "Empfänger",
+        "subtitle": "Verwalten Sie Ihre Überweisungsempfänger.",
+        "stats": {
+            "total": "{{count}} Empfänger",
+            "invik": "{{count}} Sofort"
+        },
+        "empty": {
+            "title": "Keine Empfänger",
+            "subtitle": "Fügen Sie Ihren ersten Empfänger hinzu, um Überweisungen zu starten.",
+            "search_no_results": "Keine Ergebnisse für Ihre Suche.",
+            "search_try_again": "Versuchen Sie es mit einem anderen Namen oder einer anderen IBAN."
+        },
+        "card": {
+            "iban_prefix": "IBAN",
+            "bic_prefix": "BIC",
+            "email_prefix": "E-Mail",
+            "actions": {
+                "transfer": "Überweisen",
+                "quick_transfer": "Schnellüberweisung",
+                "delete": "Löschen"
+            }
+        },
+        "form": {
+            "add_title": "Empfänger hinzufügen",
+            "new_title": "Neuer Empfänger",
+            "name_label": "VOLLSTÄNDIGER NAME",
+            "name_placeholder": "Z.B. Max Mustermann",
+            "iban_label": "IBAN",
+            "iban_placeholder": "DE... oder FR...",
+            "bic_label": "BIC (OPTIONAL)",
+            "bic_placeholder": "Optional",
+            "email_label": "E-MAIL (OPTIONAL)",
+            "email_placeholder": "Optional",
+            "submit": "Empfänger hinzufügen",
+            "confirm_submit": "Hinzufügen bestätigen",
+            "validation": {
+                "iban_invalid": "Ungültiges IBAN-Format",
+                "iban_valid": "IBAN gültig"
+            }
+        },
+        "search_placeholder": "Empfänger suchen...",
+        "toasts": {
+            "add_success": "Empfänger erfolgreich hinzugefügt!",
+            "add_error": "Fehler beim Hinzufügen des Empfängers.",
+            "delete_success": "Empfänger gelöscht.",
+            "delete_error": "Fehler beim Löschen des Empfängers."
+        },
+        "confirm_delete": "Möchten Sie diesen Empfänger wirklich löschen?"
+    }
 }

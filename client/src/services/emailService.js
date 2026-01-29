@@ -501,11 +501,835 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                         </div>
                     </div>
                 `
+            },
+
+            // KYC Verification Reminder
+            verificationReminder: {
+                fr: {
+                    subject: "Action requise : Vérifiez votre identité - INVIK BANK",
+                    html: (data) => `
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                        <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 35px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
+                            <p style="margin-top: 10px; opacity: 0.9;">Rappel de vérification</p>
+                        </div>
+                        <div style="padding: 40px; color: #333; line-height: 1.6;">
+                            <h2 style="color: #003366; margin-top: 0;">Bonjour ${data.name},</h2>
+                            <p>Votre compte INVIK BANK a été créé avec succès, mais votre identité n'est pas encore vérifiée.</p>
+                            <p>Pour accéder à l'ensemble de vos services bancaires et activer votre IBAN, vous devez nous transmettre vos justificatifs d'identité.</p>
+                            <div style="background: #fff8f1; border-radius: 12px; padding: 25px; margin: 30px 0; border: 1px solid #ffe8cc; text-align: center;">
+                                <p style="margin: 0; font-weight: 600; color: #d35400;">La vérification ne prend que quelques minutes.</p>
+                            </div>
+                            <div style="text-align: center; margin: 35px 0;">
+                                <a href="https://www.inviksa.com/verification" style="display: inline-block; padding: 15px 40px; background: #003366; color: white; border-radius: 50px; text-decoration: none; font-weight: 800; font-size: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">Vérifier mon identité</a>
+                            </div>
+                            <p style="font-size: 14px; color: #666;">Si vous avez déjà soumis vos documents, merci de ne pas tenir compte de ce message. Notre équipe est en train de les examiner.</p>
+                            <p style="margin-top: 30px;">À très bientôt,<br><strong>L'équipe INVIK BANK</strong></p>
+                        </div>
+                    </div>
+                `
+                },
+                en: {
+                    subject: "Action required: Verify your identity - INVIK BANK",
+                    html: (data) => `
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                        <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 35px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
+                            <p style="margin-top: 10px; opacity: 0.9;">Verification Reminder</p>
+                        </div>
+                        <div style="padding: 40px; color: #333; line-height: 1.6;">
+                            <h2 style="color: #003366; margin-top: 0;">Hello ${data.name},</h2>
+                            <p>Your INVIK BANK account has been successfully created, but your identity is not yet verified.</p>
+                            <p>To access all banking services and activate your IBAN, you must submit your identity documents.</p>
+                            <div style="background: #fff8f1; border-radius: 12px; padding: 25px; margin: 30px 0; border: 1px solid #ffe8cc; text-align: center;">
+                                <p style="margin: 0; font-weight: 600; color: #d35400;">Verification takes only a few minutes.</p>
+                            </div>
+                            <div style="text-align: center; margin: 35px 0;">
+                                <a href="https://www.inviksa.com/verification" style="display: inline-block; padding: 15px 40px; background: #003366; color: white; border-radius: 50px; text-decoration: none; font-weight: 800;font-size: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">Verify my identity</a>
+                            </div>
+                            <p style="font-size: 14px; color: #666;">If you have already submitted your documents, please disregard this message. Our team is reviewing them.</p>
+                            <p style="margin-top: 30px;">See you soon,<br><strong>The INVIK BANK Team</strong></p>
+                        </div>
+                    </div>
+                `
+                }
+            },
+
+            // KYC Verification In Progress
+            verificationInProgress: {
+                fr: {
+                    subject: "Nous avons reçu votre dossier de vérification - INVIK BANK",
+                    html: (data) => `
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                        <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 35px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
+                            <p style="margin-top: 10px; opacity: 0.9;">Dossier reçu</p>
+                        </div>
+                        <div style="padding: 40px; color: #333; line-height: 1.6;">
+                            <h2 style="color: #003366; margin-top: 0;">Merci ${data.name},</h2>
+                            <p>Nous avons bien reçu vos documents de vérification d'identité.</p>
+                            <p>Notre équipe de conformité procède actuellement à l'examen de votre dossier. Ce processus prend généralement moins de 24 heures.</p>
+                            <div style="background: #f0f7ff; border-radius: 12px; padding: 25px; margin: 30px 0; border-left: 4px solid #3b82f6;">
+                                <p style="margin: 0; font-weight: 600; color: #1e40af;">Statut actuel : Examen en cours</p>
+                            </div>
+                            <p>Vous recevrez un email dès que votre compte sera activé. En attendant, vous pouvez naviguer sur votre espace client et préparer vos futurs projets.</p>
+                            <p style="margin-top: 30px;">Merci de votre patience,<br><strong>L'équipe Conformité INVIK BANK</strong></p>
+                        </div>
+                    </div>
+                `
+                },
+                en: {
+                    subject: "We received your verification documents - INVIK BANK",
+                    html: (data) => `
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                        <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 35px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
+                            <p style="margin-top: 10px; opacity: 0.9;">Documents Received</p>
+                        </div>
+                        <div style="padding: 40px; color: #333; line-height: 1.6;">
+                            <h2 style="color: #003366; margin-top: 0;">Thank you ${data.name},</h2>
+                            <p>We have successfully received your identity verification documents.</p>
+                            <p>Our compliance team is currently reviewing your file. This process typically takes less than 24 hours.</p>
+                            <div style="background: #f0f7ff; border-radius: 12px; padding: 25px; margin: 30px 0; border-left: 4px solid #3b82f6;">
+                                <p style="margin: 0; font-weight: 600; color: #1e40af;">Current status: Under review</p>
+                            </div>
+                            <p>You will receive an email as soon as your account is activated. In the meantime, you can browse your client area and plan your future projects.</p>
+                            <p style="margin-top: 30px;">Thank you for your patience,<br><strong>The INVIK BANK Compliance Team</strong></p>
+                        </div>
+                    </div>
+                `
+                }
+            },
+
+            // SEPA Transfer Initiated (Sender)
+            transferInitiated: {
+                fr: {
+                    subject: "Virement SEPA en cours de traitement - INVIK BANK",
+                    html: (data) => `
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                        <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 30px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 24px; letter-spacing: 1px;">INVIK BANK</h1>
+                            <p style="margin-top: 10px; opacity: 0.8;">Virement SEPA initié</p>
+                        </div>
+                        <div style="padding: 40px; color: #333; line-height: 1.6;">
+                            <h2 style="color: #003366; margin-top: 0;">Bonjour ${data.name},</h2>
+                            <p>Votre demande de virement vers un compte externe a été enregistrée et est en cours de traitement par nos services.</p>
+                            <div style="background: #f8fbff; border-radius: 8px; padding: 20px; margin: 25px 0; border-left: 4px solid #f39c12;">
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #666;">Montant :</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right;">${parseFloat(data.amount).toFixed(2)} €</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #666;">Bénéficiaire :</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right;">${data.beneficiary}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #666;">Statut :</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right; color: #f39c12;">En attente de validation</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #666;">Référence :</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right; color: #888;">#${data.ref?.substring(0, 8)}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <p>Conformément aux délais interbancaires SEPA, les fonds seront transférés après validation de notre service de sécurité (habituellement sous 24h à 48h ouvrées).</p>
+                            <p style="margin-top: 30px;">Merci de votre confiance,<br><strong>L'équipe INVIK BANK</strong></p>
+                        </div>
+                    </div>
+                `
+                },
+                en: {
+                    subject: "SEPA Transfer Processing - INVIK BANK",
+                    html: (data) => `
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                        <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 30px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 24px; letter-spacing: 1px;">INVIK BANK</h1>
+                            <p style="margin-top: 10px; opacity: 0.8;">SEPA Transfer Initiated</p>
+                        </div>
+                        <div style="padding: 40px; color: #333; line-height: 1.6;">
+                            <h2 style="color: #003366; margin-top: 0;">Hello ${data.name},</h2>
+                            <p>Your transfer request to an external account has been registered and is being processed by our services.</p>
+                            <div style="background: #f8fbff; border-radius: 8px; padding: 20px; margin: 25px 0; border-left: 4px solid #f39c12;">
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #666;">Amount:</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right;">€${parseFloat(data.amount).toFixed(2)}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #666;">Beneficiary:</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right;">${data.beneficiary}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #666;">Status:</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right; color: #f39c12;">Pending validation</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #666;">Reference:</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right; color: #888;">#${data.ref?.substring(0, 8)}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <p>According to SEPA interbank processing times, funds will be transferred after validation by our security service (usually within 24-48 business hours).</p>
+                            <p style="margin-top: 30px;">Thank you for your trust,<br><strong>The INVIK BANK Team</strong></p>
+                        </div>
+                    </div>
+                `
+                }
+            },
+
+            // SEPA Transfer Pending (Recipient)
+            transferPending: {
+                fr: {
+                    subject: "Un virement est en attente - INVIK BANK",
+                    html: (data) => `
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                        <div style="background: linear-gradient(135deg, #f39c12 0%, #f1c40f 100%); padding: 30px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 24px; letter-spacing: 1px;">INVIK BANK</h1>
+                            <p style="margin-top: 10px; opacity: 0.9;">Information de virement</p>
+                        </div>
+                        <div style="padding: 40px; color: #333; line-height: 1.6;">
+                            <h2 style="color: #003366; margin-top: 0;">Bonjour ${data.name},</h2>
+                            <p>Ceci est un message pour vous informer qu'un virement de la part de <strong>${data.sender}</strong> est actuellement en cours de traitement vers votre compte.</p>
+                            <div style="background: #fff9eb; border-radius: 8px; padding: 20px; margin: 25px 0; border-left: 4px solid #f39c12;">
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #666;">Montant attendu :</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right; color: #e67e22; font-size: 18px;">${parseFloat(data.amount).toFixed(2)} €</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #666;">Expéditeur :</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right;">${data.sender}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #666;">Statut actuel :</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right; color: #f39c12;">Virement SEPA en cours</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <p>Les fonds seront crédités sur votre compte dès réception de la validation finale du réseau SEPA (habituellement sous 24h à 48h).</p>
+                            <p style="margin-top: 30px;">Merci de votre confiance,<br><strong>L'équipe INVIK BANK</strong></p>
+                        </div>
+                    </div>
+                `
+                },
+                en: {
+                    subject: "Incoming transfer - INVIK BANK",
+                    html: (data) => `
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                        <div style="background: linear-gradient(135deg, #f39c12 0%, #f1c40f 100%); padding: 30px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 24px; letter-spacing: 1px;">INVIK BANK</h1>
+                            <p style="margin-top: 10px; opacity: 0.9;">Transfer Information</p>
+                        </div>
+                        <div style="padding: 40px; color: #333; line-height: 1.6;">
+                            <h2 style="color: #003366; margin-top: 0;">Hello ${data.name},</h2>
+                            <p>This is to inform you that a transfer from <strong>${data.sender}</strong> is currently being processed to your account.</p>
+                            <div style="background: #fff9eb; border-radius: 8px; padding: 20px; margin: 25px 0; border-left: 4px solid #f39c12;">
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #666;">Expected amount:</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right; color: #e67e22; font-size: 18px;">€${parseFloat(data.amount).toFixed(2)}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #666;">Sender:</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right;">${data.sender}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #666;">Current status:</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right; color: #f39c12;">SEPA transfer in progress</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <p>Funds will be credited to your account upon final validation from the SEPA network (usually within 24-48 hours).</p>
+                            <p style="margin-top: 30px;">Thank you for your trust,<br><strong>The INVIK BANK Team</strong></p>
+                        </div>
+                    </div>
+                `
+                }
+            },
+
+            // Card Order Confirmation
+            cardOrder: {
+                fr: {
+                    subject: "Confirmation de commande de carte - INVIK BANK",
+                    html: (data) => `
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                        <div style="background: linear-gradient(135deg, #2c3e50 0%, #000000 100%); padding: 35px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
+                            <p style="margin-top: 10px; opacity: 0.9; font-style: italic;">L'élégance à votre portée</p>
+                        </div>
+                        <div style="padding: 40px; color: #333; line-height: 1.6;">
+                            <h2 style="color: #003366; margin-top: 0;">Bonjour ${data.name},</h2>
+                            <p>Nous avons bien reçu votre commande pour votre nouvelle carte <strong>INVIK ${data.cardType}</strong>.</p>
+                            <p>Nos équipes préparent actuellement l'expédition de votre précieux sésame. Vous recevrez une notification dès que votre colis aura été confié à notre transporteur.</p>
+                            <div style="background: #f8fafc; border-radius: 12px; padding: 25px; margin: 30px 0; border: 1px solid #e2e8f0;">
+                                <div style="margin-bottom: 20px;">
+                                    <span style="display: block; font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: bold; letter-spacing: 1px;">Modèle commandé</span>
+                                    <span style="font-size: 18px; color: #1e293b; font-weight: 700;">INVIK BLACK EDITION</span>
+                                </div>
+                                <div style="margin-bottom: 20px;">
+                                    <span style="display: block; font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: bold; letter-spacing: 1px;">Adresse de livraison</span>
+                                    <span style="font-size: 15px; color: #1e293b;">${data.deliveryAddress}</span>
+                                </div>
+                                <div>
+                                    <span style="display: block; font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: bold; letter-spacing: 1px;">Délai estimé</span>
+                                    <span style="font-size: 15px; color: #27ae60; font-weight: 600;">3 à 5 jours ouvrés</span>
+                                </div>
+                            </div>
+                            <p>En attendant, vous pouvez commencer à utiliser vos services bancaires directement depuis votre application mobile.</p>
+                            <p style="margin-top: 30px;">Merci de votre confiance,<br><strong>L'équipe INVIK BANK</strong></p>
+                        </div>
+                    </div>
+                `
+                },
+                en: {
+                    subject: "Card Order Confirmation - INVIK BANK",
+                    html: (data) => `
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                        <div style="background: linear-gradient(135deg, #2c3e50 0%, #000000 100%); padding: 35px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
+                            <p style="margin-top: 10px; opacity: 0.9; font-style: italic;">Elegance at your fingertips</p>
+                        </div>
+                        <div style="padding: 40px; color: #333; line-height: 1.6;">
+                            <h2 style="color: #003366; margin-top: 0;">Hello ${data.name},</h2>
+                            <p>We have received your order for your new <strong>INVIK ${data.cardType}</strong> card.</p>
+                            <p>Our teams are currently preparing the shipment of your precious card. You will receive a notification once your package has been handed over to our carrier.</p>
+                            <div style="background: #f8fafc; border-radius: 12px; padding: 25px; margin: 30px 0; border: 1px solid #e2e8f0;">
+                                <div style="margin-bottom: 20px;">
+                                    <span style="display: block; font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: bold; letter-spacing: 1px;">Ordered model</span>
+                                    <span style="font-size: 18px; color: #1e293b; font-weight: 700;">INVIK BLACK EDITION</span>
+                                </div>
+                                <div style="margin-bottom: 20px;">
+                                    <span style="display: block; font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: bold; letter-spacing: 1px;">Delivery address</span>
+                                    <span style="font-size: 15px; color: #1e293b;">${data.deliveryAddress}</span>
+                                </div>
+                                <div>
+                                    <span style="display: block; font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: bold; letter-spacing: 1px;">Estimated delivery</span>
+                                    <span style="font-size: 15px; color: #27ae60; font-weight: 600;">3 to 5 business days</span>
+                                </div>
+                            </div>
+                            <p>In the meantime, you can start using your banking services directly from your mobile app.</p>
+                            <p style="margin-top: 30px;">Thank you for your trust,<br><strong>The INVIK BANK Team</strong></p>
+                        </div>
+                    </div>
+                `
+                }
+            },
+
+            // Loan Request Confirmation (Authenticated Users)
+            loanRequest: {
+                fr: {
+                    subject: "Confirmation de votre demande de crédit - INVIK BANK",
+                    html: (data) => `
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                        <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 35px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
+                            <p style="margin-top: 10px; opacity: 0.9;">Votre projet, notre priorité</p>
+                        </div>
+                        <div style="padding: 40px; color: #333; line-height: 1.6;">
+                            <h2 style="color: #003366; margin-top: 0;">Bonjour ${data.name},</h2>
+                            <p>Nous vous confirmons la bonne réception de votre demande de financement pour votre projet : <strong>${data.type}</strong>.</p>
+                            <p>Un conseiller spécialisé de l'équipe INVIK BANK va étudier votre dossier. Vous recevrez une réponse de principe sous 24 à 48 heures ouvrées.</p>
+                            <div style="background: #f8fbff; border-radius: 12px; padding: 25px; margin: 30px 0; border-left: 4px solid #003366;">
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <tr>
+                                        <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Montant demandé :</td>
+                                        <td style="padding: 8px 0; font-weight: 700; text-align: right; color: #1e293b; font-size: 16px;">${parseFloat(data.montant || data.amount).toLocaleString('fr-FR')} €</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Durée :</td>
+                                        <td style="padding: 8px 0; font-weight: 600; text-align: right; color: #1e293b;">${data.duree || data.duration} mois</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Mensualité estimée :</td>
+                                        <td style="padding: 8px 0; font-weight: 600; text-align: right; color: #1e293b;">${parseFloat(data.mensualite || data.monthlyPayment).toLocaleString('fr-FR')} €/mois</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Statut actuel :</td>
+                                        <td style="padding: 8px 0; font-weight: 700; text-align: right; color: #e67e22;">Étude en cours</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <p>Vous pouvez suivre l'avancement de votre dossier à tout moment depuis votre espace client, rubrique <strong>Crédits</strong>.</p>
+                            <p style="margin-top: 30px;">Merci de votre confiance,<br><strong>L'équipe Crédit INVIK BANK</strong></p>
+                        </div>
+                    </div>
+                `
+                },
+                en: {
+                    subject: "Your loan request confirmation - INVIK BANK",
+                    html: (data) => `
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                        <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 35px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
+                            <p style="margin-top: 10px; opacity: 0.9;">Your project, our priority</p>
+                        </div>
+                        <div style="padding: 40px; color: #333; line-height: 1.6;">
+                            <h2 style="color: #003366; margin-top: 0;">Hello ${data.name},</h2>
+                            <p>We confirm receipt of your financing request for your project: <strong>${data.type}</strong>.</p>
+                            <p>A specialized advisor from the INVIK BANK team will review your application. You will receive a preliminary response within 24 to 48 business hours.</p>
+                            <div style="background: #f8fbff; border-radius: 12px; padding: 25px; margin: 30px 0; border-left: 4px solid #003366;">
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <tr>
+                                        <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Requested amount:</td>
+                                        <td style="padding: 8px 0; font-weight: 700; text-align: right; color: #1e293b; font-size: 16px;">€${parseFloat(data.montant || data.amount).toLocaleString('en-US')}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Duration:</td>
+                                        <td style="padding: 8px 0; font-weight: 600; text-align: right; color: #1e293b;">${data.duree || data.duration} months</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Estimated monthly payment:</td>
+                                        <td style="padding: 8px 0; font-weight: 600; text-align: right; color: #1e293b;">€${parseFloat(data.mensualite || data.monthlyPayment).toLocaleString('en-US')}/month</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Current status:</td>
+                                        <td style="padding: 8px 0; font-weight: 700; text-align: right; color: #e67e22;">Under review</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <p>You can track the progress of your application at any time from your client area, <strong>Loans</strong> section.</p>
+                            <p style="margin-top: 30px;">Thank you for your trust,<br><strong>The INVIK BANK Credit Team</strong></p>
+                        </div>
+                    </div>
+                `
+                }
+            },
+
+            // Contact Form Confirmation
+            contactConfirmation: {
+                fr: {
+                    subject: "Nous avons bien reçu votre message - INVIK BANK",
+                    html: (data) => `
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                        <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 30px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 24px; letter-spacing: 1px;">INVIK BANK</h1>
+                            <p style="margin-top: 10px; opacity: 0.8;">Message reçu</p>
+                        </div>
+                        <div style="padding: 40px; color: #333; line-height: 1.6;">
+                            <h2 style="color: #003366; margin-top: 0;">Bonjour ${data.name},</h2>
+                            <p>Nous avons bien reçu votre message via notre formulaire de contact.</p>
+                            <p>Notre équipe vous répondra dans les plus brefs délais, généralement sous 24 heures ouvrées.</p>
+                            <div style="background: #f8fbff; border-radius: 8px; padding: 20px; margin: 25px 0; border-left: 4px solid #003366;">
+                                <p style="margin: 0; font-size: 14px; color: #666;"><strong>Votre demande concerne :</strong> ${data.subject || 'Demande générale'}</p>
+                            </div>
+                            <p>Si votre demande est urgente, vous pouvez également nous joindre :</p>
+                            <ul style="color: #666;">
+                                <li>Par email : <a href="mailto:contact@inviksa.com" style="color: #003366;">contact@inviksa.com</a></li>
+                                <li>Par téléphone : +33 1 XX XX XX XX</li>
+                            </ul>
+                            <p style="margin-top: 30px;">Merci de votre confiance,<br><strong>L'équipe INVIK BANK</strong></p>
+                        </div>
+                    </div>
+                `
+                },
+                en: {
+                    subject: "We received your message - INVIK BANK",
+                    html: (data) => `
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                        <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 30px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 24px; letter-spacing: 1px;">INVIK BANK</h1>
+                            <p style="margin-top: 10px; opacity: 0.8;">Message received</p>
+                        </div>
+                        <div style="padding: 40px; color: #333; line-height: 1.6;">
+                            <h2 style="color: #003366; margin-top: 0;">Hello ${data.name},</h2>
+                            <p>We have received your message via our contact form.</p>
+                            <p>Our team will respond as soon as possible, typically within 24 business hours.</p>
+                            <div style="background: #f8fbff; border-radius: 8px; padding: 20px; margin: 25px 0; border-left: 4px solid #003366;">
+                                <p style="margin: 0; font-size: 14px; color: #666;"><strong>Your request concerns:</strong> ${data.subject || 'General inquiry'}</p>
+                            </div>
+                            <p>If your request is urgent, you can also reach us:</p>
+                            <ul style="color: #666;">
+                                <li>By email: <a href="mailto:contact@inviksa.com" style="color: #003366;">contact@inviksa.com</a></li>
+                                <li>By phone: +33 1 XX XX XX XX</li>
+                            </ul>
+                            <p style="margin-top: 30px;">Thank you for your trust,<br><strong>The INVIK BANK Team</strong></p>
+                        </div>
+                    </div>
+                `
+                }
+            },
+
+            // Admin Notifications
+            adminPublicLead: {
+                fr: {
+                    subject: (data) => `[LEAD COMPLET] Nouvelle demande crédit - ${data.nom || data.email}`,
+                    html: (data) => `
+                        <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+                            <div style="background-color: #ffffff; padding: 30px; border-radius: 10px; border: 1px solid #ddd;">
+                                <h2 style="color: #003366; border-bottom: 2px solid #003366; padding-bottom: 10px;">🌟 NOUVEAU LEAD CRÉDIT (COMPLET)</h2>
+                                <p>Un utilisateur a complété le formulaire de demande de crédit.</p>
+                                <div style="background-color: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                                    <h3 style="color: #003366; border-bottom: 1px solid #eee; padding-bottom: 5px;">📊 Projet de Financement</h3>
+                                    <p><strong>Type :</strong> ${data.typeCredit || 'Simulation'}</p>
+                                    <p><strong>Montant :</strong> ${parseFloat(data.montant).toLocaleString('fr-FR')} €</p>
+                                    <p><strong>Durée :</strong> ${data.duree} mois</p>
+                                    <p><strong>Taux (TAEG) :</strong> ${data.taux || data.interestRate}%</p>
+                                    <p><strong>Mensualité :</strong> ${parseFloat(data.mensualite || data.monthlyPayment).toLocaleString('fr-FR')} €</p>
+                                    <p><strong>Objet :</strong> ${data.objet || 'Non renseigné'}</p>
+                                    <p><strong>Score auto :</strong> <span style="font-weight: bold; color: ${data.score === 'GREEN' ? '#27ae60' : data.score === 'RED' ? '#c0392b' : '#f39c12'}">${data.score || 'N/A'}</span></p>
+
+                                    <h3 style="color: #003366; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 20px;">👤 Identité & Contact</h3>
+                                    <p><strong>Nom complet :</strong> ${data.civilite || ''} ${data.prenom || ''} ${data.nom || 'Prospect'}</p>
+                                    <p><strong>Email :</strong> ${data.email}</p>
+                                    <p><strong>Téléphone :</strong> ${data.telephone || 'Non renseigné'}</p>
+                                    <p><strong>Naissance :</strong> ${data.dateNaissance || 'N/A'} (${data.lieuNaissance || 'N/A'})</p>
+                                    <p><strong>Nationalité :</strong> ${data.nationalite || 'N/A'}</p>
+                                    <p><strong>Pièce d'identité :</strong> ${data.typePieceIdentite?.toUpperCase() || 'N/A'} (Exp: ${data.dateExpPiece || 'N/A'})</p>
+
+                                    <h3 style="color: #003366; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 20px;">🏠 Adresse & Logement</h3>
+                                    <p><strong>Adresse :</strong> ${data.adresseRue || 'N/A'}, ${data.adresseCodePostal || ''} ${data.adresseVille || ''} (${data.adressePays || ''})</p>
+                                    <p><strong>Situation :</strong> ${data.typeLogement || 'N/A'} (Depuis ${data.ancienneteAdresse || 0} mois)</p>
+                                    <p><strong>Situation matrimoniale :</strong> ${data.situationMatrimoniale || 'N/A'} (${data.nbEnfants || 0} enfants)</p>
+
+                                    <h3 style="color: #003366; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 20px;">💼 Situation Professionnelle</h3>
+                                    <p><strong>Statut :</strong> ${data.statutPro?.toUpperCase() || 'N/A'} (${data.typeContrat || 'N/A'})</p>
+                                    <p><strong>Employeur :</strong> ${data.nomEmployeur || 'N/A'} (${data.secteurActivite || 'N/A'})</p>
+                                    <p><strong>Poste :</strong> ${data.posteOccupe || 'N/A'} (Ancienneté: ${data.anciennetePro || 0} mois)</p>
+                                    <p><strong>Revenus :</strong> ${parseFloat(data.revenusMensuels || 0).toLocaleString('fr-FR')} €/mois (+ ${parseFloat(data.autresRevenus || 0).toLocaleString('fr-FR')} € autres)</p>
+
+                                    <h3 style="color: #003366; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 20px;">💰 Situation Financière</h3>
+                                    <p><strong>Charges mensuelles :</strong> ${parseFloat(data.chargesMensuelles || 0).toLocaleString('fr-FR')} € (dont loyer: ${data.loyer || 0} €)</p>
+                                    <p><strong>Autres crédits :</strong> ${parseFloat(data.autresCredits || 0).toLocaleString('fr-FR')} €</p>
+                                    <p><strong>Pensions :</strong> ${parseFloat(data.pensions || 0).toLocaleString('fr-FR')} €</p>
+                                    <p><strong>Incident bancaire :</strong> <span style="color: ${data.incidentBancaire === 'oui' ? '#e74c3c' : '#27ae60'}">${data.incidentBancaire?.toUpperCase() || 'NON'}</span> ${data.incidentDetail ? `(${data.incidentDetail})` : ''}</p>
+
+                                    <h3 style="color: #003366; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 20px;">🏦 Informations Bancaires</h3>
+                                    <p><strong>Banque actuelle :</strong> ${data.banqueActuelle || 'N/A'} ${data.autreBanqueNom ? `(${data.autreBanqueNom})` : ''}</p>
+                                    <p><strong>IBAN :</strong> ${data.iban || 'Non communiqué'}</p>
+                                    <p><strong>Ancienneté compte :</strong> ${data.ancienneteCompte || 0} mois</p>
+                                </div>
+                                <p style="color: #666; font-size: 12px;">Dossier complet visible dans la section "Leads" de votre panneau d'administration.</p>
+                            </div>
+                        </div>
+                    `
+                }
+            },
+            adminCardOrder: {
+                fr: {
+                    subject: (data) => `[CARTE] Nouvelle commande - ${data.userData.lastName}`,
+                    html: (data) => `
+                        <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #eee;">
+                            <h2 style="color: #003366;">💳 NOUVELLE COMMANDE DE CARTE</h2>
+                            <p><strong>Client :</strong> ${data.userData.firstName} ${data.userData.lastName} (${data.userData.email})</p>
+                            <p><strong>Type de carte :</strong> ${data.cardType}</p>
+                            <p><strong>Adresse de livraison :</strong> ${data.address}</p>
+                            <div style="margin-top: 20px;">
+                                <a href="https://invik-admin.vercel.app/users/${data.userData.uid}" style="background: #003366; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Voir le profil client</a>
+                            </div>
+                        </div>
+                    `
+                }
+            },
+            adminLoanRequest: {
+                fr: {
+                    subject: (data) => `[CRÉDIT] Nouvelle demande - ${data.userData.lastName}`,
+                    html: (data) => `
+                        <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #eee;">
+                            <h2 style="color: #003366;">🏦 NOUVELLE DEMANDE DE CRÉDIT</h2>
+                            <p><strong>Client :</strong> ${data.userData.firstName} ${data.userData.lastName} (${data.userData.email})</p>
+                            <p><strong>Projet :</strong> ${data.loanData.type}</p>
+                            <p><strong>Montant :</strong> ${parseFloat(data.loanData.amount || data.loanData.montant).toLocaleString('fr-FR')} €</p>
+                            <p><strong>Durée :</strong> ${data.loanData.duration || data.loanData.duree} mois</p>
+                            <p><strong>Mensualité :</strong> ${parseFloat(data.loanData.monthlyPayment || data.loanData.mensualite).toLocaleString('fr-FR')} €/mois</p>
+                            <div style="margin-top: 20px;">
+                                <a href="https://invik-admin.vercel.app/users/${data.userData.id || data.userData.uid}" style="background: #003366; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Voir le dossier</a>
+                            </div>
+                        </div>
+                    `
+                }
+            },
+            loanRequest: {
+                fr: {
+                    subject: "Confirmation de votre demande de crédit - INVIK BANK",
+                    html: (data) => `
+                        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                            <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 35px; text-align: center; color: white;">
+                                <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
+                                <p style="margin-top: 10px; opacity: 0.9;">Votre projet, notre priorité</p>
+                            </div>
+                            <div style="padding: 40px; color: #333; line-height: 1.6;">
+                                <h2 style="color: #003366; margin-top: 0;">Bonjour ${data.name},</h2>
+                                <p>Nous vous confirmons la bonne réception de votre demande de financement pour votre projet : <strong>${data.type}</strong>.</p>
+                                <p>Un conseiller spécialisé de l'équipe INVIK BANK va étudier votre dossier. Vous recevrez une réponse de principe sous 24 à 48 heures ouvrées.</p>
+                                <div style="background: #f8fbff; border-radius: 12px; padding: 25px; margin: 30px 0; border-left: 4px solid #003366;">
+                                    <table style="width: 100%; border-collapse: collapse;">
+                                        <tr>
+                                            <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Montant demandé :</td>
+                                            <td style="padding: 8px 0; font-weight: 700; text-align: right; color: #1e293b; font-size: 16px;">${parseFloat(data.montant || data.amount).toLocaleString('fr-FR')} €</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Durée :</td>
+                                            <td style="padding: 8px 0; font-weight: 600; text-align: right; color: #1e293b;">${data.duree || data.duration} mois</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Mensualité estimée :</td>
+                                            <td style="padding: 8px 0; font-weight: 600; text-align: right; color: #1e293b;">${parseFloat(data.mensualite || data.monthlyPayment).toLocaleString('fr-FR')} €/mois</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Statut actuel :</td>
+                                            <td style="padding: 8px 0; font-weight: 700; text-align: right; color: #e67e22;">Étude en cours</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <p>Vous pouvez suivre l'avancement de votre dossier à tout moment depuis votre espace client, rubrique <strong>Crédits</strong>.</p>
+                                <div style="text-align: center; margin: 35px 0;">
+                                    <a href="https://www.inviksa.com/dashboard" style="display: inline-block; padding: 12px 30px; background: #003366; color: white; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 15px;">Accéder à mon espace</a>
+                                </div>
+                                <p>Merci de votre confiance,<br><strong>L'équipe Crédit INVIK BANK</strong></p>
+                            </div>
+                            <div style="background: #f4f7f6; padding: 25px; text-align: center; font-size: 11px; color: #999; border-top: 1px solid #eee;">
+                                <p style="margin: 0;">Un crédit vous engage et doit être remboursé. Vérifiez vos capacités de remboursement avant de vous engager.</p>
+                                <p style="margin: 10px 0 0;">Ce message est automatique, merci de ne pas y répondre.</p>
+                            </div>
+                        </div>
+                    `
+                },
+                en: {
+                    subject: "Loan Request Confirmation - INVIK BANK",
+                    html: (data) => `
+                        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                            <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 35px; text-align: center; color: white;">
+                                <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
+                                <p style="margin-top: 10px; opacity: 0.9;">Your project, our priority</p>
+                            </div>
+                            <div style="padding: 40px; color: #333; line-height: 1.6;">
+                                <h2 style="color: #003366; margin-top: 0;">Hello ${data.name},</h2>
+                                <p>We confirm receipt of your loan request for your project: <strong>${data.type}</strong>.</p>
+                                <p>A specialized advisor from INVIK BANK will review your application. You will receive a preliminary response within 24 to 48 business hours.</p>
+                                <div style="background: #f8fbff; border-radius: 12px; padding: 25px; margin: 30px 0; border-left: 4px solid #003366;">
+                                    <table style="width: 100%; border-collapse: collapse;">
+                                        <tr>
+                                            <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Requested amount:</td>
+                                            <td style="padding: 8px 0; font-weight: 700; text-align: right; color: #1e293b; font-size: 16px;">€${parseFloat(data.montant || data.amount).toLocaleString('en-US')}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Duration:</td>
+                                            <td style="padding: 8px 0; font-weight: 600; text-align: right; color: #1e293b;">${data.duree || data.duration} months</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Estimated monthly payment:</td>
+                                            <td style="padding: 8px 0; font-weight: 600; text-align: right; color: #1e293b;">€${parseFloat(data.mensualite || data.monthlyPayment).toLocaleString('en-US')}/month</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Current status:</td>
+                                            <td style="padding: 8px 0; font-weight: 700; text-align: right; color: #e67e22;">Under review</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <p>You can track your application progress at any time from your client area, <strong>Credits</strong> section.</p>
+                                <div style="text-align: center; margin: 35px 0;">
+                                    <a href="https://www.inviksa.com/dashboard" style="display: inline-block; padding: 12px 30px; background: #003366; color: white; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 15px;">Access my account</a>
+                                </div>
+                                <p>Thank you for your trust,<br><strong>INVIK BANK Credit Team</strong></p>
+                            </div>
+                            <div style="background: #f4f7f6; padding: 25px; text-align: center; font-size: 11px; color: #999; border-top: 1px solid #eee;">
+                                <p style="margin: 0;">A loan is a commitment and must be repaid. Check your repayment capacity before committing.</p>
+                                <p style="margin: 10px 0 0;">This is an automated message, please do not reply.</p>
+                            </div>
+                        </div>
+                    `
+                },
+                de: {
+                    subject: "Kreditanfrage Bestätigung - INVIK BANK",
+                    html: (data) => `
+                        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                            <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 35px; text-align: center; color: white;">
+                                <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
+                                <p style="margin-top: 10px; opacity: 0.9;">Ihr Projekt, unsere Priorität</p>
+                            </div>
+                            <div style="padding: 40px; color: #333; line-height: 1.6;">
+                                <h2 style="color: #003366; margin-top: 0;">Hallo ${data.name},</h2>
+                                <p>Wir bestätigen den Eingang Ihrer Kreditanfrage für Ihr Projekt: <strong>${data.type}</strong>.</p>
+                                <p>Ein spezialisierter Berater von INVIK BANK wird Ihren Antrag prüfen. Sie erhalten innerhalb von 24 bis 48 Werktagen eine vorläufige Antwort.</p>
+                                <div style="background: #f8fbff; border-radius: 12px; padding: 25px; margin: 30px 0; border-left: 4px solid #003366;">
+                                    <table style="width: 100%; border-collapse: collapse;">
+                                        <tr>
+                                            <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Beantragte Summe:</td>
+                                            <td style="padding: 8px 0; font-weight: 700; text-align: right; color: #1e293b; font-size: 16px;">${parseFloat(data.montant || data.amount).toLocaleString('de-DE')} €</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Laufzeit:</td>
+                                            <td style="padding: 8px 0; font-weight: 600; text-align: right; color: #1e293b;">${data.duree || data.duration} Monate</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Geschätzte monatliche Rate:</td>
+                                            <td style="padding: 8px 0; font-weight: 600; text-align: right; color: #1e293b;">${parseFloat(data.mensualite || data.monthlyPayment).toLocaleString('de-DE')} €/Monat</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Aktueller Status:</td>
+                                            <td style="padding: 8px 0; font-weight: 700; text-align: right; color: #e67e22;">In Bearbeitung</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <p>Sie können den Fortschritt Ihres Antrags jederzeit in Ihrem Kundenbereich im Abschnitt <strong>Kredite</strong> verfolgen.</p>
+                                <div style="text-align: center; margin: 35px 0;">
+                                    <a href="https://www.inviksa.com/dashboard" style="display: inline-block; padding: 12px 30px; background: #003366; color: white; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 15px;">Zu meinem Konto</a>
+                                </div>
+                                <p>Vielen Dank für Ihr Vertrauen,<br><strong>INVIK BANK Kreditteam</strong></p>
+                            </div>
+                            <div style="background: #f4f7f6; padding: 25px; text-align: center; font-size: 11px; color: #999; border-top: 1px solid #eee;">
+                                <p style="margin: 0;">Ein Kredit ist eine Verpflichtung und muss zurückgezahlt werden. Prüfen Sie Ihre Rückzahlungsfähigkeit, bevor Sie sich verpflichten.</p>
+                                <p style="margin: 10px 0 0;">Dies ist eine automatische Nachricht, bitte antworten Sie nicht.</p>
+                            </div>
+                        </div>
+                    `
+                },
+                es: {
+                    subject: "Confirmación de solicitud de crédito - INVIK BANK",
+                    html: (data) => `
+                        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                            <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 35px; text-align: center; color: white;">
+                                <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
+                                <p style="margin-top: 10px; opacity: 0.9;">Su proyecto, nuestra prioridad</p>
+                            </div>
+                            <div style="padding: 40px; color: #333; line-height: 1.6;">
+                                <h2 style="color: #003366; margin-top: 0;">Hola ${data.name},</h2>
+                                <p>Confirmamos la recepción de su solicitud de financiación para su proyecto: <strong>${data.type}</strong>.</p>
+                                <p>Un asesor especializado del equipo INVIK BANK revisará su solicitud. Recibirá una respuesta preliminar en 24 a 48 horas hábiles.</p>
+                                <div style="background: #f8fbff; border-radius: 12px; padding: 25px; margin: 30px 0; border-left: 4px solid #003366;">
+                                    <table style="width: 100%; border-collapse: collapse;">
+                                        <tr>
+                                            <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Monto solicitado:</td>
+                                            <td style="padding: 8px 0; font-weight: 700; text-align: right; color: #1e293b; font-size: 16px;">${parseFloat(data.montant || data.amount).toLocaleString('es-ES')} €</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Duración:</td>
+                                            <td style="padding: 8px 0; font-weight: 600; text-align: right; color: #1e293b;">${data.duree || data.duration} meses</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Cuota mensual estimada:</td>
+                                            <td style="padding: 8px 0; font-weight: 600; text-align: right; color: #1e293b;">${parseFloat(data.mensualite || data.monthlyPayment).toLocaleString('es-ES')} €/mes</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Estado actual:</td>
+                                            <td style="padding: 8px 0; font-weight: 700; text-align: right; color: #e67e22;">En revisión</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <p>Puede seguir el progreso de su solicitud en cualquier momento desde su área de cliente, sección <strong>Créditos</strong>.</p>
+                                <div style="text-align: center; margin: 35px 0;">
+                                    <a href="https://www.inviksa.com/dashboard" style="display: inline-block; padding: 12px 30px; background: #003366; color: white; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 15px;">Acceder a mi cuenta</a>
+                                </div>
+                                <p>Gracias por su confianza,<br><strong>Equipo de Crédito INVIK BANK</strong></p>
+                            </div>
+                            <div style="background: #f4f7f6; padding: 25px; text-align: center; font-size: 11px; color: #999; border-top: 1px solid #eee;">
+                                <p style="margin: 0;">Un crédito es un compromiso y debe ser reembolsado. Verifique su capacidad de pago antes de comprometerse.</p>
+                                <p style="margin: 10px 0 0;">Este es un mensaje automático, por favor no responda.</p>
+                            </div>
+                        </div>
+                    `
+                },
+                it: {
+                    subject: "Conferma richiesta di credito - INVIK BANK",
+                    html: (data) => `
+                        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                            <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 35px; text-align: center; color: white;">
+                                <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
+                                <p style="margin-top: 10px; opacity: 0.9;">Il tuo progetto, la nostra priorità</p>
+                            </div>
+                            <div style="padding: 40px; color: #333; line-height: 1.6;">
+                                <h2 style="color: #003366; margin-top: 0;">Buongiorno ${data.name},</h2>
+                                <p>Confermiamo la ricezione della tua richiesta di finanziamento per il tuo progetto: <strong>${data.type}</strong>.</p>
+                                <p>Un consulente specializzato del team INVIK BANK esaminerà la tua domanda. Riceverai una risposta preliminare entro 24-48 ore lavorative.</p>
+                                <div style="background: #f8fbff; border-radius: 12px; padding: 25px; margin: 30px 0; border-left: 4px solid #003366;">
+                                    <table style="width: 100%; border-collapse: collapse;">
+                                        <tr>
+                                            <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Importo richiesto:</td>
+                                            <td style="padding: 8px 0; font-weight: 700; text-align: right; color: #1e293b; font-size: 16px;">${parseFloat(data.montant || data.amount).toLocaleString('it-IT')} €</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Durata:</td>
+                                            <td style="padding: 8px 0; font-weight: 600; text-align: right; color: #1e293b;">${data.duree || data.duration} mesi</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Rata mensile stimata:</td>
+                                            <td style="padding: 8px 0; font-weight: 600; text-align: right; color: #1e293b;">${parseFloat(data.mensualite || data.monthlyPayment).toLocaleString('it-IT')} €/mese</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Stato attuale:</td>
+                                            <td style="padding: 8px 0; font-weight: 700; text-align: right; color: #e67e22;">In revisione</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <p>Puoi seguire l'avanzamento della tua domanda in qualsiasi momento dalla tua area clienti, sezione <strong>Crediti</strong>.</p>
+                                <div style="text-align: center; margin: 35px 0;">
+                                    <a href="https://www.inviksa.com/dashboard" style="display: inline-block; padding: 12px 30px; background: #003366; color: white; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 15px;">Accedi al mio account</a>
+                                </div>
+                                <p>Grazie per la tua fiducia,<br><strong>Team Crediti INVIK BANK</strong></p>
+                            </div>
+                            <div style="background: #f4f7f6; padding: 25px; text-align: center; font-size: 11px; color: #999; border-top: 1px solid #eee;">
+                                <p style="margin: 0;">Un credito è un impegno e deve essere rimborsato. Verifica la tua capacità di rimborso prima di impegnarti.</p>
+                                <p style="margin: 10px 0 0;">Questo è un messaggio automatico, si prega di non rispondere.</p>
+                            </div>
+                        </div>
+                    `
+                },
+                pt: {
+                    subject: "Confirmação de pedido de crédito - INVIK BANK",
+                    html: (data) => `
+                        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                            <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 35px; text-align: center; color: white;">
+                                <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
+                                <p style="margin-top: 10px; opacity: 0.9;">Seu projeto, nossa prioridade</p>
+                            </div>
+                            <div style="padding: 40px; color: #333; line-height: 1.6;">
+                                <h2 style="color: #003366; margin-top: 0;">Olá ${data.name},</h2>
+                                <p>Confirmamos o recebimento do seu pedido de financiamento para o seu projeto: <strong>${data.type}</strong>.</p>
+                                <p>Um consultor especializado da equipe INVIK BANK analisará seu pedido. Você receberá uma resposta preliminar em 24 a 48 horas úteis.</p>
+                                <div style="background: #f8fbff; border-radius: 12px; padding: 25px; margin: 30px 0; border-left: 4px solid #003366;">
+                                    <table style="width: 100%; border-collapse: collapse;">
+                                        <tr>
+                                            <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Valor solicitado:</td>
+                                            <td style="padding: 8px 0; font-weight: 700; text-align: right; color: #1e293b; font-size: 16px;">${parseFloat(data.montant || data.amount).toLocaleString('pt-PT')} €</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Duração:</td>
+                                            <td style="padding: 8px 0; font-weight: 600; text-align: right; color: #1e293b;">${data.duree || data.duration} meses</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Prestação mensal estimada:</td>
+                                            <td style="padding: 8px 0; font-weight: 600; text-align: right; color: #1e293b;">${parseFloat(data.mensualite || data.monthlyPayment).toLocaleString('pt-PT')} €/mês</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Estado atual:</td>
+                                            <td style="padding: 8px 0; font-weight: 700; text-align: right; color: #e67e22;">Em análise</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <p>Pode acompanhar o progresso do seu pedido a qualquer momento na sua área de cliente, secção <strong>Créditos</strong>.</p>
+                                <div style="text-align: center; margin: 35px 0;">
+                                    <a href="https://www.inviksa.com/dashboard" style="display: inline-block; padding: 12px 30px; background: #003366; color: white; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 15px;">Aceder à minha conta</a>
+                                </div>
+                                <p>Obrigado pela sua confiança,<br><strong>Equipa de Crédito INVIK BANK</strong></p>
+                            </div>
+                            <div style="background: #f4f7f6; padding: 25px; text-align: center; font-size: 11px; color: #999; border-top: 1px solid #eee;">
+                                <p style="margin: 0;">Um crédito é um compromisso e deve ser reembolsado. Verifique a sua capacidade de reembolso antes de se comprometer.</p>
+                                <p style="margin: 10px 0 0;">Esta é uma mensagem automática, por favor não responda.</p>
+                            </div>
+                        </div>
+                    `
+                }
+            },
+            adminKycSubmitted: {
+                fr: {
+                    subject: (data) => `[URGENT KYC] Nouveau dossier soumis - ${data.userData.lastName || data.userData.email}`,
+                    html: (data) => `
+                        <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #eee;">
+                            <h2 style="color: #27ae60;">📄 NOUVEAU DOSSIER KYC SOUMIS</h2>
+                            <p><strong>Client :</strong> ${data.userData.firstName || ''} ${data.userData.lastName || ''} (${data.userData.email})</p>
+                            <p>Un nouveau dossier de vérification d'identité a été soumis et attend votre revue.</p>
+                            <div style="margin-top: 20px;">
+                                <a href="https://invik-admin.vercel.app/users/${data.userData.uid || data.userData.id}" style="background: #27ae60; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Examiner le dossier</a>
+                            </div>
+                        </div>
+                    `
+                }
             }
         }
     };
 
-    // Get template for specified language or fallback to French
     const template = emailTemplates[templateName];
     if (!template) {
         console.error(`Template "${templateName}" not found`);
@@ -540,23 +1364,89 @@ const emailService = {
         }
     },
 
-    /**
-     * Welcome Email after Email Verification
-     */
     sendWelcomeEmail: async (toEmail, name, lang = 'fr') => {
         const template = getEmailTemplate('welcome', lang, { name });
         if (!template) throw new Error('Welcome template not found');
         return emailService.triggerEmail(toEmail, template.subject, template.html);
     },
 
-    /**
-     * Template for Public Loan Lead Confirmation (Prospect)
-     */
     sendPublicLeadConfirmationEmail: async (toEmail, name, leadData) => {
         const lang = leadData.language || 'fr';
         const template = getEmailTemplate('publicLeadConfirmation', lang, { name, ...leadData });
         if (!template) throw new Error('Public lead confirmation template not found');
         return emailService.triggerEmail(toEmail, template.subject, template.html);
+    },
+
+    sendAdminPublicLeadNotification: async (leadData) => {
+        const template = getEmailTemplate('adminPublicLead', 'fr', leadData);
+        if (!template) throw new Error('Admin lead notification template not found');
+        return emailService.triggerEmail(ADMIN_EMAIL, template.subject, template.html);
+    },
+
+    sendTransferSentEmail: async (toEmail, name, amount, beneficiary, ref, lang = 'fr') => {
+        const template = getEmailTemplate('transferInitiated', lang, { name, amount, beneficiary, ref });
+        if (!template) throw new Error('Transfer template not found');
+        return emailService.triggerEmail(toEmail, template.subject, template.html);
+    },
+
+    sendTransferReceivedEmail: async (toEmail, name, amount, sender, ref, lang = 'fr') => {
+        const template = getEmailTemplate('transferPending', lang, { name, amount, sender, ref });
+        if (!template) throw new Error('Transfer received template not found');
+        return emailService.triggerEmail(toEmail, template.subject, template.html);
+    },
+
+    sendTransferInitiatedEmail: async (toEmail, name, amount, beneficiary, ref, lang = 'fr') => {
+        const template = getEmailTemplate('transferInitiated', lang, { name, amount, beneficiary, ref });
+        if (!template) throw new Error('Transfer initiated template not found');
+        return emailService.triggerEmail(toEmail, template.subject, template.html);
+    },
+
+    sendTransferPendingEmail: async (toEmail, name, amount, sender, ref, lang = 'fr') => {
+        const template = getEmailTemplate('transferPending', lang, { name, amount, sender, ref });
+        if (!template) throw new Error('Transfer pending template not found');
+        return emailService.triggerEmail(toEmail, template.subject, template.html);
+    },
+
+    sendCardOrderEmail: async (toEmail, name, cardType, deliveryAddress, lang = 'fr') => {
+        const template = getEmailTemplate('cardOrder', lang, { name, cardType, deliveryAddress });
+        if (!template) throw new Error('Card order template not found');
+        return emailService.triggerEmail(toEmail, template.subject, template.html);
+    },
+
+    sendAdminCardOrderNotification: async (userData, cardType, address) => {
+        const template = getEmailTemplate('adminCardOrder', 'fr', { userData, cardType, address });
+        if (!template) throw new Error('Admin card order template not found');
+        return emailService.triggerEmail(ADMIN_EMAIL, template.subject, template.html);
+    },
+
+    sendLoanRequestEmail: async (toEmail, name, loanDetails, lang = 'fr') => {
+        const template = getEmailTemplate('loanRequest', lang, { name, ...loanDetails });
+        if (!template) throw new Error('Loan request template not found');
+        return emailService.triggerEmail(toEmail, template.subject, template.html);
+    },
+
+    sendAdminLoanRequestNotification: async (userData, loanData) => {
+        const template = getEmailTemplate('adminLoanRequest', 'fr', { userData, loanData });
+        if (!template) throw new Error('Admin loan request template not found');
+        return emailService.triggerEmail(ADMIN_EMAIL, template.subject, template.html);
+    },
+
+    sendVerificationReminderEmail: async (toEmail, name, lang = 'fr') => {
+        const template = getEmailTemplate('verificationReminder', lang, { name });
+        if (!template) throw new Error('Verification reminder template not found');
+        return emailService.triggerEmail(toEmail, template.subject, template.html);
+    },
+
+    sendVerificationInProgressEmail: async (toEmail, name, lang = 'fr') => {
+        const template = getEmailTemplate('verificationInProgress', lang, { name });
+        if (!template) throw new Error('Verification in progress template not found');
+        return emailService.triggerEmail(toEmail, template.subject, template.html);
+    },
+
+    sendAdminKycSubmittedNotification: async (userData) => {
+        const template = getEmailTemplate('adminKycSubmitted', 'fr', { userData });
+        if (!template) throw new Error('Admin KYC template not found');
+        return emailService.triggerEmail(ADMIN_EMAIL, template.subject, template.html);
     }
 };
 

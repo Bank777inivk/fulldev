@@ -83,7 +83,8 @@ export const cardService = {
                         userData.email,
                         `${userData.firstName} ${userData.lastName}`,
                         cardData.cardType || 'Black Edition',
-                        cardData.deliveryAddress || 'Adresse enregistrée'
+                        cardData.deliveryAddress || 'Adresse enregistrée',
+                        userData.language || 'fr'
                     );
 
                     // Admin notification

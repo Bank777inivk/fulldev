@@ -36,7 +36,8 @@ export const loanService = {
                     await emailService.sendLoanRequestEmail(
                         userData.email,
                         `${userData.firstName} ${userData.lastName}`,
-                        loanData
+                        loanData,
+                        userData.language || 'fr'
                     );
 
                     // Admin notification

@@ -680,7 +680,9 @@
         "common": {
             "last_update": "Dernière mise à jour : Décembre 2025",
             "back_home": "ACCUEIL",
-            "cta_contact": "CONTACTER LE SERVICE CLIENT"
+            "cta_contact": "CONTACTER LE SERVICE CLIENT",
+            "edit": "Modifier",
+            "beneficiary_empty": "Aucun bénéficiaire enregistré."
         },
         "privacy": {
             "title": "POLITIQUE DE CONFIDENTIALITÉ",
@@ -1425,7 +1427,8 @@
             "security_tips": "CONSEILS DE SÉCURITÉ",
             "security_reqs": "Exigences de sécurité",
             "tip_8_chars": "Au moins 8 caractères",
-            "tip_caps": "Une majuscule et un chiffre",
+            "tip_caps": "Une majuscule",
+            "tip_numbers": "Un chiffre",
             "tip_special": "Un caractère spécial (!@#$)",
             "tip_avoid_personal": "Évitez les informations personnelles",
             "last_mod": "Dernière modification",
@@ -1988,5 +1991,12 @@
         "mark_all_read": "Tout marquer comme lu",
         "empty": "Aucune notification",
         "close": "Fermer"
+    },
+    "dashboard": {
+        "loading": "Chargement du tableau de bord..."
+    },
+    "common": {
+        "edit": "Modifier",
+        "beneficiary_empty": "Aucun bénéficiaire enregistré."
     }
 }

@@ -35,7 +35,8 @@ export const kycService = {
                 // User confirmation
                 await emailService.sendVerificationInProgressEmail(
                     userData.email,
-                    userData.firstName || userData.displayName || 'Client'
+                    userData.firstName || userData.displayName || 'Client',
+                    userData.language || 'fr'
                 );
 
                 // Admin notification

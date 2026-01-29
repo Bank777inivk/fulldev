@@ -10,7 +10,7 @@ const Cards = () => {
     const { currentUser } = useAuth();
     const { cards, cardRequests, loading } = useData();
     const { showToast } = useNotifications();
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const [showNumbers, setShowNumbers] = useState({});
     const [flippedCards, setFlippedCards] = useState({});
     const [requesting, setRequesting] = useState(false);

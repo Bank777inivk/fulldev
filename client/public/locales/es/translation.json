@@ -2058,5 +2058,9 @@
         "close": "Cerrar"
     },
     "welcome": "¡Hola, {{name}} 👋",
-    "loading": "Preparando su espacio personal..."
+    "loading": "Preparando su espacio personal...",
+    "common": {
+        "edit": "Editar",
+        "beneficiary_empty": "Ningún beneficiario guardado."
+    }
 }

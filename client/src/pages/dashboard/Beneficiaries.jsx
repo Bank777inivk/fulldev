@@ -315,6 +315,9 @@ const MobileView = React.memo(({
                                     placeholder={t('beneficiaries.form.email_placeholder')}
                                 />
                             </div>
+                            <button type="submit" style={styles.mobileSubmitBtn} disabled={submitting}>
+                                {submitting ? <i className="fas fa-spinner fa-spin"></i> : t('beneficiaries.form.confirm_submit')}
+                            </button>
                         </form>
                     </div>
                 </div>

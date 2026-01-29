@@ -1793,7 +1793,8 @@
             "security_tips": "SECURITY TIPS",
             "security_reqs": "Security requirements",
             "tip_8_chars": "At least 8 characters",
-            "tip_caps": "One uppercase and one number",
+            "tip_caps": "One uppercase",
+            "tip_numbers": "One number",
             "tip_special": "One special character (!@#$)",
             "tip_avoid_personal": "Avoid personal information",
             "last_mod": "Last modified",
@@ -2073,5 +2074,12 @@
         "mark_all_read": "Mark all as read",
         "empty": "No notifications",
         "close": "Close"
+    },
+    "dashboard": {
+        "loading": "Loading dashboard..."
+    },
+    "common": {
+        "edit": "Edit",
+        "beneficiary_empty": "No beneficiary saved."
     }
 }

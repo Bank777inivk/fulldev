@@ -171,7 +171,8 @@ export const AuthProvider = ({ children }) => {
                 try {
                     await emailService.sendWelcomeEmail(
                         user.email,
-                        data.firstName || data.displayName || 'Client'
+                        data.firstName || data.displayName || 'Client',
+                        data.language || 'fr'
                     );
 
                     // Mark as sent in Firestore

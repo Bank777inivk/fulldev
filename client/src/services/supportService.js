@@ -63,6 +63,8 @@ export const supportService = {
         return onSnapshot(q, (snapshot) => {
             const tickets = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             callback(tickets);
+        }, (error) => {
+            console.warn("Tickets subscription error:", error);
         });
     },
 
@@ -75,6 +77,8 @@ export const supportService = {
         return onSnapshot(q, (snapshot) => {
             const messages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             callback(messages);
+        }, (error) => {
+            console.warn("Messages subscription error:", error);
         });
     },
 
@@ -125,6 +129,8 @@ export const supportService = {
         );
         return onSnapshot(q, (snapshot) => {
             callback(snapshot.size);
+        }, (error) => {
+            console.warn("Unread count subscription error:", error);
         });
     }
 };

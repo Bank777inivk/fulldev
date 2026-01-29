@@ -127,6 +127,30 @@ const Settings = () => {
         </div>
     );
 
+    const renderTextarea = (label, name, icon, placeholder = '', rows = 2) => (
+        <div style={styles.formGroup}>
+            <label style={styles.label}>{label}</label>
+            <div style={styles.inputWrapper}>
+                {icon && <i className={icon} style={{ ...styles.inputIcon, top: '16px' }}></i>}
+                <textarea
+                    style={{
+                        ...styles.input,
+                        paddingLeft: icon ? '45px' : '16px',
+                        minHeight: `${rows * 2.5}rem`,
+                        resize: 'vertical',
+                        fontFamily: 'inherit',
+                        lineHeight: '1.5'
+                    }}
+                    placeholder={placeholder}
+                    value={editData[name] || ''}
+                    onChange={e => setEditData({ ...editData, [name]: e.target.value })}
+                    rows={rows}
+                />
+            </div>
+        </div>
+    );
+
+
     if (isMobile) {
         return (
             <div style={{ padding: '1rem', paddingBottom: '3rem' }}>
@@ -144,7 +168,7 @@ const Settings = () => {
                             <div style={styles.mobileSectionHeader}>{t('settings.profile.client_folder')}</div>
                             <div style={styles.mobileIdBox}>
                                 <div style={{ fontSize: '0.7rem', color: '#64748b', fontWeight: 'bold' }}>{t('settings.profile.login_id')}</div>
-                                <div style={{ color: '#0f172a', fontWeight: 'bold', wordWrap: 'break-word', overflowWrap: 'break-word', wordBreak: 'break-all' }}>{userData?.email}</div>
+                                <div style={{ color: '#0f172a', fontWeight: 'bold', wordWrap: 'break-word', overflowWrap: 'break-word', wordBreak: 'break-word' }}>{userData?.email}</div>
                             </div>
                             {renderInput(t('settings.profile.first_name'), 'firstName', 'fas fa-user')}
                             {renderInput(t('settings.profile.last_name'), 'lastName', 'fas fa-id-card')}
@@ -152,7 +176,7 @@ const Settings = () => {
                             {renderInput(t('settings.profile.pob'), 'birthPlace', 'fas fa-map-marker-alt')}
                             {renderInput(t('settings.profile.phone'), 'phone', 'fas fa-phone')}
                             <div style={{ ...styles.mobileSectionHeader, marginTop: '20px' }}>{t('settings.profile.location')}</div>
-                            {renderInput(t('settings.profile.address'), 'address', 'fas fa-map-marker-alt')}
+                            {renderTextarea(t('settings.profile.address'), 'address', 'fas fa-map-marker-alt', '123 Rue de la République, Apt 4B', 2)}
                             <div style={{ display: 'flex', gap: '10px' }}>
                                 {renderInput(t('settings.profile.city'), 'city', null)}
                                 {renderInput(t('settings.profile.zip'), 'zipCode', null)}
@@ -378,7 +402,7 @@ const Settings = () => {
                                     {renderInput(t('settings.profile.nationality'), 'nationality', 'fas fa-flag')}
                                     {renderInput(t('settings.profile.dob'), 'dob', 'fas fa-calendar-alt', 'date')}
                                     {renderInput(t('settings.profile.pob'), 'birthPlace', 'fas fa-map-marker-alt')}
-                                    <div style={{ gridColumn: '1 / -1' }}>{renderInput(t('settings.profile.address'), 'address', 'fas fa-map-marked-alt')}</div>
+                                    <div style={{ gridColumn: '1 / -1' }}>{renderTextarea(t('settings.profile.address'), 'address', 'fas fa-map-marked-alt', '123 Rue de la République, Apt 4B', 2)}</div>
                                     {renderInput(t('settings.profile.city'), 'city', null)}
                                     {renderInput(t('settings.profile.zip'), 'zipCode', null)}
                                 </div>

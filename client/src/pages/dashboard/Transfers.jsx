@@ -289,7 +289,7 @@ const Transfers = () => {
     if (isMobile) {
         return (
             <KycVerificationBanner>
-                <div style={{ padding: '1rem', paddingBottom: '80px' }}>
+                <div style={{ padding: '1rem', paddingBottom: '150px' }}>
                     <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#003366', marginBottom: '1.5rem' }}>{t('transfers.mobile_title')}</h1>
 
                     {/* Mobile Tabs */}
@@ -301,7 +301,7 @@ const Transfers = () => {
                             {t('transfers.tabs.internal')}
                         </button>
                         <button
-                            style={activeTab === 'instant' ? { ...styles.mobileTabActive, borderBottom: '3px solid #27ae60', color: '#27ae60' } : styles.mobileTab}
+                            style={activeTab === 'instant' ? { ...styles.mobileTabActive, border: '1px solid transparent', borderBottom: '3px solid #27ae60', color: '#27ae60' } : styles.mobileTab}
                             onClick={() => { setActiveTab('instant'); setStep(1); }}
                         >
                             <i className="fas fa-bolt" style={{ marginRight: '4px' }}></i> INVIK
@@ -449,7 +449,7 @@ const Transfers = () => {
                                                         ))}
                                                     </select>
                                                     {beneficiaries.length === 0 && (
-                                                        <p style={{ textAlign: 'center', color: '#888', fontSize: '0.85rem' }}>Aucun bénéficiaire enregistré.</p>
+                                                        <p style={{ textAlign: 'center', color: '#888', fontSize: '0.85rem' }}>{t('common.beneficiary_empty')}</p>
                                                     )}
                                                 </div>
                                             ) : (
@@ -836,8 +836,8 @@ const styles = {
 
     // MOBILE SPECIFIC STYLES
     mobileTabs: { display: 'flex', backgroundColor: '#fff', borderRadius: '10px', padding: '4px', marginBottom: '1.5rem', border: '1px solid #eee' },
-    mobileTab: { flex: 1, padding: '10px', border: 'none', backgroundColor: 'transparent', borderRadius: '8px', fontWeight: '600', color: '#888', cursor: 'pointer' },
-    mobileTabActive: { flex: 1, padding: '10px', border: 'none', backgroundColor: '#003366', color: '#fff', borderRadius: '8px', fontWeight: '600', cursor: 'pointer', boxShadow: '0 2px 5px rgba(0,0,0,0.1)' },
+    mobileTab: { flex: 1, padding: '10px', border: 'none', backgroundColor: 'transparent', borderRadius: '8px', fontWeight: 'bold', color: '#888', cursor: 'pointer' },
+    mobileTabActive: { flex: 1, padding: '10px', border: 'none', backgroundColor: '#003366', color: '#fff', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', boxShadow: '0 2px 5px rgba(0,0,0,0.1)' },
     mobileSectionTitle: { fontSize: '1.1rem', marginBottom: '1rem', color: '#333', fontWeight: '700' },
     toggleRow: { display: 'flex', gap: '10px', marginBottom: '1rem' },
     toggleBtn: { flex: 1, padding: '8px', border: '1px solid #ddd', borderRadius: '8px', backgroundColor: '#fff', color: '#666' },

@@ -251,7 +251,14 @@ export const transactionService = {
                 const senderSnapshot = await getDoc(doc(db, USERS_COLLECTION, userId));
                 if (senderSnapshot.exists()) {
                     const sData = senderSnapshot.data();
-                    await emailService.sendTransferSentEmail(sData.email, `${sData.firstName} ${sData.lastName}`, amount, beneficiaryName, 'INST-' + Date.now().toString().slice(-6));
+                    await emailService.sendTransferSentEmail(
+                        sData.email,
+                        `${sData.firstName} ${sData.lastName}`,
+                        amount,
+                        beneficiaryName,
+                        'INST-' + Date.now().toString().slice(-6),
+                        sData.language || 'fr'
+                    );
                 }
                 // Receiver Email
                 const targetWalletData = targetWalletDoc.data();
@@ -274,7 +281,16 @@ export const transactionService = {
                 }
 
                 if (receiverEmail) {
-                    await emailService.sendTransferReceivedEmail(receiverEmail, receiverName || 'Cher Client', amount, senderDisplayName);
+                    // Try to get receiver language from wallet data or fallback
+                    const rLang = targetWalletData.ownerLanguage || 'fr';
+                    await emailService.sendTransferReceivedEmail(
+                        receiverEmail,
+                        receiverName || 'Cher Client',
+                        amount,
+                        senderDisplayName,
+                        null,
+                        rLang
+                    );
                 }
             } catch (e) { console.warn("Instant Transfer Emails failed", e); }
 
@@ -352,7 +368,8 @@ export const transactionService = {
                         `${userData.firstName} ${userData.lastName}`,
                         amount,
                         beneficiaryName + " (SEPA)",
-                        docRef.id
+                        docRef.id,
+                        userData.language || 'fr'
                     );
 
                     // Beneficiary notification (SEPA Pending)
@@ -361,7 +378,9 @@ export const transactionService = {
                             beneficiaryEmail,
                             beneficiaryName,
                             amount,
-                            `${userData.firstName} ${userData.lastName}`
+                            `${userData.firstName} ${userData.lastName}`,
+                            docRef.id,
+                            'fr' // Default to French for external beneficiaries if unknown
                         );
                     }
                 }
