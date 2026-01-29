@@ -1505,7 +1505,7 @@
                 "design": "Premium Matt-Schwarz Design"
             },
             "button": {
-                "order_now": "Jetzt bestellen",
+                "order": "Jetzt bestellen",
                 "processing": "Bestellung läuft",
                 "shipped": "Karte versendet",
                 "delivered": "Karte erhalten ✅",

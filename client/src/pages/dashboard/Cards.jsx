@@ -272,7 +272,7 @@ const Cards = () => {
                                                 cardRequest.status === 'delivered' ? t('cards.physical_order.status.delivered') :
                                                     t('cards.physical_order.status.shipped')
                                         ) :
-                                            t('cards.physical_order.button.order_now')}
+                                            t('cards.physical_order.button.order')}
                                 </button>
 
                                 {rejectedRequest && !cardRequest && (
@@ -427,7 +427,7 @@ const Cards = () => {
                                                 cardRequest.status === 'delivered' ? t('cards.physical_order.status.delivered') :
                                                     t('cards.physical_order.status.shipped')
                                         ) :
-                                            t('cards.physical_order.button.order_now')}
+                                            t('cards.physical_order.button.order')}
                                 </button>
 
                                 {rejectedRequest && !cardRequest && (
