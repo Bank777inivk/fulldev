@@ -666,17 +666,38 @@ export const adminService = {
 
     updateLoanStatus: async (loanId, status, reviewNotes = '') => {
         try {
+            // 1. Get initial data and perform queries outside the transaction
+            const loanRef = doc(db, 'loans', loanId);
+            const loanSnapInitial = await getDoc(loanRef);
+            if (!loanSnapInitial.exists()) throw new Error("Prêt non trouvé");
+
+            const loanData = loanSnapInitial.data();
+            const userId = loanData.userId;
+
+            // Resolve Credit Wallet ID if it exists (getDocs is not allowed inside transactions)
+            const walletsQuery = query(collection(db, 'wallets'), where('userId', '==', userId), where('type', '==', 'credit'));
+            const walletsSnap = await getDocs(walletsQuery);
+            const existingWalletId = !walletsSnap.empty ? walletsSnap.docs[0].id : null;
+
             await runTransaction(db, async (transaction) => {
-                const loanRef = doc(db, 'loans', loanId);
-                const loanSnap = await transaction.get(loanRef);
+                // --- ALL READS FIRST ---
+                const currentLoanSnap = await transaction.get(loanRef);
+                const userRef = doc(db, 'users', userId);
+                const userSnap = await transaction.get(userRef);
 
-                if (!loanSnap.exists()) throw new Error("Prêt non trouvé");
+                let walletRef = null;
+                let walletSnap = null;
+                if (existingWalletId) {
+                    walletRef = doc(db, 'wallets', existingWalletId);
+                    walletSnap = await transaction.get(walletRef);
+                }
 
-                const loanData = loanSnap.data();
-                const userId = loanData.userId;
-                const oldStatus = loanData.status;
+                const oldStatus = currentLoanSnap.data().status;
+                const isBeingApproved = (status === 'approved' && oldStatus !== 'approved');
 
-                // 1. Update Loan Status
+                // --- ALL WRITES AFTER ---
+
+                // Update Loan Status
                 transaction.update(loanRef, {
                     status,
                     reviewNotes,
@@ -684,31 +705,22 @@ export const adminService = {
                     updatedAt: serverTimestamp()
                 });
 
-                // 2. If Approved (and wasn't already), credit the account
-                if (status === 'approved' && oldStatus !== 'approved') {
+                if (isBeingApproved) {
                     const amount = parseFloat(loanData.amount || loanData.montant || 0);
                     const currency = loanData.currency || '€';
 
-                    // Find Credit Wallet
-                    const walletsQuery = query(collection(db, 'wallets'), where('userId', '==', userId), where('type', '==', 'credit'));
-                    const walletsSnap = await getDocs(walletsQuery);
-
-                    let walletRef;
-                    let currentWalletBalance = 0;
-
-                    if (!walletsSnap.empty) {
-                        walletRef = doc(db, 'wallets', walletsSnap.docs[0].id);
-                        const walletDoc = await transaction.get(walletRef);
-                        currentWalletBalance = walletDoc.data().balance || 0;
-
+                    // Update or Create Wallet
+                    if (walletSnap && walletSnap.exists()) {
+                        const currentWalletBalance = walletSnap.data().balance || 0;
                         transaction.update(walletRef, {
                             balance: currentWalletBalance + amount,
                             updatedAt: serverTimestamp()
                         });
                     } else {
                         // Create new credit wallet if it doesn't exist
-                        walletRef = doc(collection(db, 'wallets'));
-                        transaction.set(walletRef, {
+                        const newWalletRef = doc(collection(db, 'wallets'));
+                        walletRef = newWalletRef; // Use this for audit record below
+                        transaction.set(newWalletRef, {
                             userId,
                             type: 'credit',
                             currency,
@@ -722,8 +734,6 @@ export const adminService = {
                     }
 
                     // Update User Global Balance
-                    const userRef = doc(db, 'users', userId);
-                    const userSnap = await transaction.get(userRef);
                     if (userSnap.exists()) {
                         const currentGlobal = userSnap.data().balance || 0;
                         transaction.update(userRef, {
@@ -732,7 +742,7 @@ export const adminService = {
                         });
                     }
 
-                    // Create Transaction Record (Audit)
+                    // Create Transaction Record (Audit Trail)
                     const txRef = doc(collection(db, 'transactions'));
                     transaction.set(txRef, {
                         userId,
