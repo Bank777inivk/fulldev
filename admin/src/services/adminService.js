@@ -19,6 +19,58 @@ import {
     serverTimestamp
 } from 'firebase/firestore';
 
+const NOTIF_STRINGS = {
+    fr: {
+        loanApprovedTitle: '💰 Prêt Crédité',
+        loanApprovedMsg: (amount, currency) => `Votre prêt de ${amount.toLocaleString('fr-FR')} ${currency} a été approuvé et les fonds sont désormais disponibles sur votre compte.`,
+        loanRejectedTitle: '❌ Prêt Refusé',
+        loanRejectedMsg: `Votre demande de financement n'a pas pu être approuvée pour le moment. Consultez vos e-mails pour plus de détails.`
+    },
+    en: {
+        loanApprovedTitle: '💰 Loan Credited',
+        loanApprovedMsg: (amount, currency) => `Your loan of ${amount.toLocaleString('en-US')} ${currency} has been approved and the funds are now available in your account.`,
+        loanRejectedTitle: '❌ Loan Rejected',
+        loanRejectedMsg: `Your financing request could not be approved at this time. Check your emails for more details.`
+    },
+    es: {
+        loanApprovedTitle: '💰 Préstamo Acreditado',
+        loanApprovedMsg: (amount, currency) => `Su préstamo de ${amount.toLocaleString('es-ES')} ${currency} ha sido aprobado y los fondos ya están disponibles en su cuenta.`,
+        loanRejectedTitle: '❌ Préstamo Rechazado',
+        loanRejectedMsg: `Su solicitud de financiación no ha podido ser aprobada en este momento. Consulte su correo electrónico para más detalles.`
+    },
+    pt: {
+        loanApprovedTitle: '💰 Empréstimo Creditado',
+        loanApprovedMsg: (amount, currency) => `Seu empréstimo de ${amount.toLocaleString('pt-PT')} ${currency} foi aprovado e os fundos já estão disponíveis em sua conta.`,
+        loanRejectedTitle: '❌ Empréstimo Rejeitado',
+        loanRejectedMsg: `O seu pedido de financiamento não pôde ser aprovado neste momento. Verifique o seu e-mail para mais detalhes.`
+    },
+    it: {
+        loanApprovedTitle: '💰 Prestito Accreditato',
+        loanApprovedMsg: (amount, currency) => `Il tuo prestito di ${amount.toLocaleString('it-IT')} ${currency} è stato approvato e i fondi sono ora disponibili sul tuo conto.`,
+        loanRejectedTitle: '❌ Prestito Rifiutato',
+        loanRejectedMsg: `La vostra richiesta di finanziamento non ha potuto essere approvata in questo momento. Consultate le vostre e-mail per maggiori dettagli.`
+    },
+    de: {
+        loanApprovedTitle: '💰 Kredit Gutgeschrieben',
+        loanApprovedMsg: (amount, currency) => `Ihr Kredit über ${amount.toLocaleString('de-DE')} ${currency} wurde genehmigt und das Guthaben ist nun auf Ihrem Konto verfügbar.`,
+        loanRejectedTitle: '❌ Kredit Abgelehnt',
+        loanRejectedMsg: `Ihr Finanzierungsantrag konnte zum jetzigen Zeitpunkt nicht genehmigt werden. Weitere Einzelheiten finden Sie in Ihren E-Mails.`
+    }
+};
+
+const getLocalizedNotif = (lang = 'en') => {
+    const normalized = (lang || 'en').toString().toLowerCase();
+    const mapping = {
+        'fr': 'fr', 'français': 'fr', 'french': 'fr',
+        'es': 'es', 'español': 'es', 'spanish': 'es',
+        'pt': 'pt', 'português': 'pt', 'portuguese': 'pt',
+        'it': 'it', 'italiano': 'it', 'italian': 'it',
+        'de': 'de', 'deutsch': 'de', 'german': 'de'
+    };
+    const code = mapping[normalized] || 'en';
+    return NOTIF_STRINGS[code] || NOTIF_STRINGS.en;
+};
+
 export const adminService = {
     // Get all users (with optional filtering for non-super admins)
     getAllUsers: async (currentUserIsSuperAdmin = false) => {
@@ -756,13 +808,33 @@ export const adminService = {
                         updatedAt: serverTimestamp()
                     });
 
-                    // Create Notification for client
+                    // Localized Notification Logic
+                    const language = userSnap.exists() ? (userSnap.data().language || 'en') : 'en';
+                    const strings = getLocalizedNotif(language);
+
+                    if (status === 'approved') {
+                        const notifRef = doc(collection(db, 'notifications'));
+                        transaction.set(notifRef, {
+                            userId,
+                            title: strings.loanApprovedTitle,
+                            message: strings.loanApprovedMsg(amount, currency),
+                            type: 'loan_approval',
+                            loanId: loanId,
+                            read: false,
+                            createdAt: serverTimestamp()
+                        });
+                    }
+                } else if (status === 'rejected' && oldStatus !== 'rejected') {
+                    // Localized Notification for Rejection
+                    const language = userSnap.exists() ? (userSnap.data().language || 'en') : 'en';
+                    const strings = getLocalizedNotif(language);
+
                     const notifRef = doc(collection(db, 'notifications'));
                     transaction.set(notifRef, {
                         userId,
-                        title: '💰 Prêt Crédité',
-                        message: `Votre prêt de ${amount.toLocaleString()} ${currency} a été approuvé et les fonds sont désormais disponibles sur votre compte.`,
-                        type: 'loan_approval',
+                        title: strings.loanRejectedTitle,
+                        message: strings.loanRejectedMsg,
+                        type: 'loan_rejection',
                         loanId: loanId,
                         read: false,
                         createdAt: serverTimestamp()
