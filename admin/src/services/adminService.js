@@ -680,13 +680,18 @@ export const adminService = {
                     updatedAt: serverTimestamp()
                 });
 
+
                 // 4. Create Notification for the client
                 if (amount > 0) {
-                    const toWalletData = toWalletDoc.data();
-                    const txCurrency = toWalletData.currency === '€' ? 'EUR' : (toWalletData.currency || 'EUR');
+                    // Fetch wallet and user data within transaction
+                    const walletDoc = await transaction.get(walletRef);
+                    const userDoc = await transaction.get(userRef);
 
-                    const userSnapData = userSnap?.exists() ? userSnap.data() : { language: 'en' };
-                    const strings = getLocalizedNotif(userSnapData.language);
+                    const walletData = walletDoc.data();
+                    const userData = userDoc.data();
+
+                    const txCurrency = walletData.currency === '€' ? 'EUR' : (walletData.currency || 'EUR');
+                    const strings = getLocalizedNotif(userData.language || 'en');
 
                     const notifRef = doc(collection(db, 'notifications'));
                     transaction.set(notifRef, {
@@ -1257,6 +1262,144 @@ export const adminService = {
             } else {
                 throw new Error('Erreur lors du changement de mot de passe: ' + error.message);
             }
+        }
+    },
+
+    // Update transaction status with localized notifications
+    updateTransactionStatus: async (transactionId, newStatus, userId = null) => {
+        try {
+            const txRef = doc(db, 'transactions', transactionId);
+            const txSnap = await getDoc(txRef);
+
+            if (!txSnap.exists()) {
+                throw new Error('Transaction not found');
+            }
+
+            const txData = txSnap.data();
+            const targetUserId = userId || txData.userId;
+
+            // Get user data for language preference
+            const userSnap = await getDoc(doc(db, 'users', targetUserId));
+            const userData = userSnap.exists() ? userSnap.data() : { language: 'en' };
+            const userLanguage = userData.language || 'en';
+            const strings = getLocalizedNotif(userLanguage);
+
+            // Get wallet data for currency
+            let txCurrency = 'EUR';
+            if (txData.walletId) {
+                const walletSnap = await getDoc(doc(db, 'wallets', txData.walletId));
+                if (walletSnap.exists()) {
+                    const walletData = walletSnap.data();
+                    txCurrency = walletData.currency === '€' ? 'EUR' : (walletData.currency || 'EUR');
+                }
+            }
+
+            const amount = Number(txData.amount || 0);
+            const oldStatus = txData.status;
+
+            // Update transaction status
+            await updateDoc(txRef, {
+                status: newStatus,
+                updatedAt: serverTimestamp()
+            });
+
+            // Create localized notification based on status
+            let notificationData = null;
+
+            if (newStatus === 'completed' && oldStatus !== 'completed') {
+                notificationData = {
+                    userId: targetUserId,
+                    title: strings.txValidatedTitle,
+                    message: strings.txValidatedMsg(amount, txCurrency),
+                    type: 'transaction_validated',
+                    transactionId,
+                    read: false,
+                    createdAt: serverTimestamp()
+                };
+
+                // Send email notification
+                try {
+                    await adminEmailService.sendTransactionValidatedEmail(
+                        userData.email,
+                        userData.firstName || 'Client',
+                        amount,
+                        txCurrency,
+                        txData.description || 'Transaction',
+                        userLanguage
+                    );
+                } catch (emailErr) {
+                    console.warn("Failed to send transaction validated email:", emailErr);
+                }
+            } else if (newStatus === 'in_review' && oldStatus !== 'in_review') {
+                notificationData = {
+                    userId: targetUserId,
+                    title: strings.txInReviewTitle,
+                    message: strings.txInReviewMsg(amount, txCurrency),
+                    type: 'transaction_review',
+                    transactionId,
+                    read: false,
+                    createdAt: serverTimestamp()
+                };
+
+                // Send email notification
+                try {
+                    await adminEmailService.sendTransactionInReviewEmail(
+                        userData.email,
+                        userData.firstName || 'Client',
+                        amount,
+                        txCurrency,
+                        txData.description || 'Transaction',
+                        userLanguage
+                    );
+                } catch (emailErr) {
+                    console.warn("Failed to send transaction in review email:", emailErr);
+                }
+            } else if (newStatus === 'rejected' && oldStatus !== 'rejected') {
+                notificationData = {
+                    userId: targetUserId,
+                    title: strings.txStatusUpdatedTitle,
+                    message: strings.txStatusUpdatedMsg(amount, txCurrency, 'rejected'),
+                    type: 'transaction_rejected',
+                    transactionId,
+                    read: false,
+                    createdAt: serverTimestamp()
+                };
+
+                // Send email notification
+                try {
+                    await adminEmailService.sendTransactionRejectedEmail(
+                        userData.email,
+                        userData.firstName || 'Client',
+                        amount,
+                        txCurrency,
+                        'Transaction rejected by security review',
+                        userLanguage
+                    );
+                } catch (emailErr) {
+                    console.warn("Failed to send transaction rejected email:", emailErr);
+                }
+            } else if (oldStatus !== newStatus) {
+                // Generic status update notification
+                notificationData = {
+                    userId: targetUserId,
+                    title: strings.txStatusUpdatedTitle,
+                    message: strings.txStatusUpdatedMsg(amount, txCurrency, newStatus),
+                    type: 'transaction_status_update',
+                    transactionId,
+                    read: false,
+                    createdAt: serverTimestamp()
+                };
+            }
+
+            // Create notification if applicable
+            if (notificationData) {
+                await addDoc(collection(db, 'notifications'), notificationData);
+            }
+
+            return { success: true };
+        } catch (error) {
+            console.error('Error in updateTransactionStatus:', error);
+            throw error;
         }
     }
 };

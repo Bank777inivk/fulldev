@@ -1403,6 +1403,312 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
 `
             }
         },
+        transactionValidated: {
+            fr: {
+                subject: "✅ Opération validée - INVIK BANK",
+                html: (data) => `
+<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0;">
+                    <div style="background: #10b981; padding: 30px 20px; text-align: center; color: white;">
+                        <h2 style="margin: 0; font-size: 20px;">✅ Opération Validée</h2>
+                    </div>
+                    <div style="padding: 40px; color: #1e293b;">
+                        <p>Bonjour ${data.name},</p>
+                        <p>Votre opération de <strong>${(Number(data.amount) || 0).toLocaleString('fr-FR', { style: 'currency', currency: data.currency })}</strong> a été finalisée avec succès.</p>
+                        <p><strong>Description :</strong> ${data.description || 'Transaction'}</p>
+                        <p>Les fonds sont maintenant disponibles sur le compte destinataire.</p>
+                    </div>
+                </div>
+`
+            },
+            en: {
+                subject: "✅ Operation validated - INVIK BANK",
+                html: (data) => `
+<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0;">
+                    <div style="background: #10b981; padding: 30px 20px; text-align: center; color: white;">
+                        <h2 style="margin: 0; font-size: 20px;">✅ Operation Validated</h2>
+                    </div>
+                    <div style="padding: 40px; color: #1e293b;">
+                        <p>Hello ${data.name},</p>
+                        <p>Your operation of <strong>${(Number(data.amount) || 0).toLocaleString('en-US', { style: 'currency', currency: data.currency })}</strong> has been successfully completed.</p>
+                        <p><strong>Description:</strong> ${data.description || 'Transaction'}</p>
+                        <p>The funds are now available in the recipient account.</p>
+                    </div>
+                </div>
+`
+            },
+            es: {
+                subject: "✅ Operación validada - INVIK BANK",
+                html: (data) => `
+<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0;">
+                    <div style="background: #10b981; padding: 30px 20px; text-align: center; color: white;">
+                        <h2 style="margin: 0; font-size: 20px;">✅ Operación Validada</h2>
+                    </div>
+                    <div style="padding: 40px; color: #1e293b;">
+                        <p>Hola ${data.name},</p>
+                        <p>Su operación de <strong>${(Number(data.amount) || 0).toLocaleString('es-ES', { style: 'currency', currency: data.currency })}</strong> ha sido finalizada con éxito.</p>
+                        <p><strong>Descripción:</strong> ${data.description || 'Transacción'}</p>
+                        <p>Los fondos ya están disponibles en la cuenta del destinatario.</p>
+                    </div>
+                </div>
+`
+            },
+            pt: {
+                subject: "✅ Operação validada - INVIK BANK",
+                html: (data) => `
+<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0;">
+                    <div style="background: #10b981; padding: 30px 20px; text-align: center; color: white;">
+                        <h2 style="margin: 0; font-size: 20px;">✅ Operação Validada</h2>
+                    </div>
+                    <div style="padding: 40px; color: #1e293b;">
+                        <p>Olá ${data.name},</p>
+                        <p>A sua operação de <strong>${(Number(data.amount) || 0).toLocaleString('pt-PT', { style: 'currency', currency: data.currency })}</strong> foi finalizada com sucesso.</p>
+                        <p><strong>Descrição:</strong> ${data.description || 'Transação'}</p>
+                        <p>Os fundos já estão disponíveis na conta do destinatário.</p>
+                    </div>
+                </div>
+`
+            },
+            it: {
+                subject: "✅ Operazione convalidata - INVIK BANK",
+                html: (data) => `
+<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0;">
+                    <div style="background: #10b981; padding: 30px 20px; text-align: center; color: white;">
+                        <h2 style="margin: 0; font-size: 20px;">✅ Operazione Convalidata</h2>
+                    </div>
+                    <div style="padding: 40px; color: #1e293b;">
+                        <p>Buongiorno ${data.name},</p>
+                        <p>La vostra operazione di <strong>${(Number(data.amount) || 0).toLocaleString('it-IT', { style: 'currency', currency: data.currency })}</strong> è stata finalizzata con successo.</p>
+                        <p><strong>Descrizione:</strong> ${data.description || 'Transazione'}</p>
+                        <p>I fondi sono ora disponibili sul conto del destinatario.</p>
+                    </div>
+                </div>
+`
+            },
+            de: {
+                subject: "✅ Vorgang bestätigt - INVIK BANK",
+                html: (data) => `
+<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0;">
+                    <div style="background: #10b981; padding: 30px 20px; text-align: center; color: white;">
+                        <h2 style="margin: 0; font-size: 20px;">✅ Vorgang Bestätigt</h2>
+                    </div>
+                    <div style="padding: 40px; color: #1e293b;">
+                        <p>Guten Tag ${data.name},</p>
+                        <p>Ihr Vorgang über <strong>${(Number(data.amount) || 0).toLocaleString('de-DE', { style: 'currency', currency: data.currency })}</strong> wurde erfolgreich abgeschlossen.</p>
+                        <p><strong>Beschreibung:</strong> ${data.description || 'Transaktion'}</p>
+                        <p>Das Guthaben ist nun auf dem Empfängerkonto verfügbar.</p>
+                    </div>
+                </div>
+`
+            }
+        },
+        transactionInReview: {
+            fr: {
+                subject: "🔍 Virement en examen - INVIK BANK",
+                html: (data) => `
+<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0;">
+                    <div style="background: #f59e0b; padding: 30px 20px; text-align: center; color: white;">
+                        <h2 style="margin: 0; font-size: 20px;">🔍 Virement en Examen</h2>
+                    </div>
+                    <div style="padding: 40px; color: #1e293b;">
+                        <p>Bonjour ${data.name},</p>
+                        <p>Votre virement de <strong>${(Number(data.amount) || 0).toLocaleString('fr-FR', { style: 'currency', currency: data.currency })}</strong> est actuellement en examen pour contrôle de sécurité.</p>
+                        <p><strong>Description :</strong> ${data.description || 'Transaction'}</p>
+                        <p>Vous serez notifié dès la levée des restrictions par nos services. Cette procédure est mise en place pour protéger votre compte.</p>
+                    </div>
+                </div>
+`
+            },
+            en: {
+                subject: "🔍 Transfer under review - INVIK BANK",
+                html: (data) => `
+<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0;">
+                    <div style="background: #f59e0b; padding: 30px 20px; text-align: center; color: white;">
+                        <h2 style="margin: 0; font-size: 20px;">🔍 Transfer Under Review</h2>
+                    </div>
+                    <div style="padding: 40px; color: #1e293b;">
+                        <p>Hello ${data.name},</p>
+                        <p>Your transfer of <strong>${(Number(data.amount) || 0).toLocaleString('en-US', { style: 'currency', currency: data.currency })}</strong> is currently under review for security check.</p>
+                        <p><strong>Description:</strong> ${data.description || 'Transaction'}</p>
+                        <p>You will be notified as soon as the restrictions are lifted by our services. This procedure is in place to protect your account.</p>
+                    </div>
+                </div>
+`
+            },
+            es: {
+                subject: "🔍 Transferencia en revisión - INVIK BANK",
+                html: (data) => `
+<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0;">
+                    <div style="background: #f59e0b; padding: 30px 20px; text-align: center; color: white;">
+                        <h2 style="margin: 0; font-size: 20px;">🔍 Transferencia en Revisión</h2>
+                    </div>
+                    <div style="padding: 40px; color: #1e293b;">
+                        <p>Hola ${data.name},</p>
+                        <p>Su transferencia de <strong>${(Number(data.amount) || 0).toLocaleString('es-ES', { style: 'currency', currency: data.currency })}</strong> se encuentra actualmente en revisión por control de seguridad.</p>
+                        <p><strong>Descripción:</strong> ${data.description || 'Transacción'}</p>
+                        <p>Se le notificará tan pronto como nuestros servicios levanten las restricciones. Este procedimiento está implementado para proteger su cuenta.</p>
+                    </div>
+                </div>
+`
+            },
+            pt: {
+                subject: "🔍 Transferência em análise - INVIK BANK",
+                html: (data) => `
+<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0;">
+                    <div style="background: #f59e0b; padding: 30px 20px; text-align: center; color: white;">
+                        <h2 style="margin: 0; font-size: 20px;">🔍 Transferência em Análise</h2>
+                    </div>
+                    <div style="padding: 40px; color: #1e293b;">
+                        <p>Olá ${data.name},</p>
+                        <p>A sua transferência de <strong>${(Number(data.amount) || 0).toLocaleString('pt-PT', { style: 'currency', currency: data.currency })}</strong> está atualmente em análise para verificação de segurança.</p>
+                        <p><strong>Descrição:</strong> ${data.description || 'Transação'}</p>
+                        <p>Será notificado assim que as restrições forem levantadas pelos nossos serviços. Este procedimento está implementado para proteger a sua conta.</p>
+                    </div>
+                </div>
+`
+            },
+            it: {
+                subject: "🔍 Bonifico in esame - INVIK BANK",
+                html: (data) => `
+<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0;">
+                    <div style="background: #f59e0b; padding: 30px 20px; text-align: center; color: white;">
+                        <h2 style="margin: 0; font-size: 20px;">🔍 Bonifico in Esame</h2>
+                    </div>
+                    <div style="padding: 40px; color: #1e293b;">
+                        <p>Buongiorno ${data.name},</p>
+                        <p>Il vostro bonifico di <strong>${(Number(data.amount) || 0).toLocaleString('it-IT', { style: 'currency', currency: data.currency })}</strong> è attualmente oggetto di revisione per motivi di sicurezza.</p>
+                        <p><strong>Descrizione:</strong> ${data.description || 'Transazione'}</p>
+                        <p>Verrete avvisati non appena le restrizioni saranno rimosse dai nostri servizi. Questa procedura è stata implementata per proteggere il vostro conto.</p>
+                    </div>
+                </div>
+`
+            },
+            de: {
+                subject: "🔍 Überweisung in Prüfung - INVIK BANK",
+                html: (data) => `
+<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0;">
+                    <div style="background: #f59e0b; padding: 30px 20px; text-align: center; color: white;">
+                        <h2 style="margin: 0; font-size: 20px;">🔍 Überweisung in Prüfung</h2>
+                    </div>
+                    <div style="padding: 40px; color: #1e293b;">
+                        <p>Guten Tag ${data.name},</p>
+                        <p>Ihre Überweisung über <strong>${(Number(data.amount) || 0).toLocaleString('de-DE', { style: 'currency', currency: data.currency })}</strong> wird derzeit einer Sicherheitsprüfung unterzogen.</p>
+                        <p><strong>Beschreibung:</strong> ${data.description || 'Transaktion'}</p>
+                        <p>Sie werden benachrichtigt, sobald die Einschränkungen durch unsere Dienste aufgehoben werden. Dieses Verfahren dient dem Schutz Ihres Kontos.</p>
+                    </div>
+                </div>
+`
+            }
+        },
+        transactionRejected: {
+            fr: {
+                subject: "❌ Opération refusée - INVIK BANK",
+                html: (data) => `
+<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #fee2e2;">
+                    <div style="background: #ef4444; padding: 30px 20px; text-align: center; color: white;">
+                        <h2 style="margin: 0; font-size: 20px;">❌ Opération Refusée</h2>
+                    </div>
+                    <div style="padding: 40px; color: #1e293b;">
+                        <p>Bonjour ${data.name},</p>
+                        <p>Votre opération de <strong>${(Number(data.amount) || 0).toLocaleString('fr-FR', { style: 'currency', currency: data.currency })}</strong> a été refusée par notre département de sécurité.</p>
+                        <div style="background: #fef2f2; padding: 15px; border-radius: 8px; color: #991b1b; margin: 20px 0;">
+                            <strong>Raison :</strong> ${data.reason || 'Contrôle de sécurité'}
+                        </div>
+                        <p>Le montant a été intégralement recrédité sur votre solde disponible.</p>
+                    </div>
+                </div>
+`
+            },
+            en: {
+                subject: "❌ Operation rejected - INVIK BANK",
+                html: (data) => `
+<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #fee2e2;">
+                    <div style="background: #ef4444; padding: 30px 20px; text-align: center; color: white;">
+                        <h2 style="margin: 0; font-size: 20px;">❌ Operation Rejected</h2>
+                    </div>
+                    <div style="padding: 40px; color: #1e293b;">
+                        <p>Hello ${data.name},</p>
+                        <p>Your operation of <strong>${(Number(data.amount) || 0).toLocaleString('en-US', { style: 'currency', currency: data.currency })}</strong> has been rejected by our security department.</p>
+                        <div style="background: #fef2f2; padding: 15px; border-radius: 8px; color: #991b1b; margin: 20px 0;">
+                            <strong>Reason:</strong> ${data.reason || 'Security check'}
+                        </div>
+                        <p>The amount has been fully credited back to your available balance.</p>
+                    </div>
+                </div>
+`
+            },
+            es: {
+                subject: "❌ Operación rechazada - INVIK BANK",
+                html: (data) => `
+<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #fee2e2;">
+                    <div style="background: #ef4444; padding: 30px 20px; text-align: center; color: white;">
+                        <h2 style="margin: 0; font-size: 20px;">❌ Operación Rechazada</h2>
+                    </div>
+                    <div style="padding: 40px; color: #1e293b;">
+                        <p>Hola ${data.name},</p>
+                        <p>Su operación de <strong>${(Number(data.amount) || 0).toLocaleString('es-ES', { style: 'currency', currency: data.currency })}</strong> ha sido rechazada por nuestro departamento de seguridad.</p>
+                        <div style="background: #fef2f2; padding: 15px; border-radius: 8px; color: #991b1b; margin: 20px 0;">
+                            <strong>Motivo:</strong> ${data.reason || 'Control de seguridad'}
+                        </div>
+                        <p>El monto ha sido reacreditado íntegramente a su saldo disponible.</p>
+                    </div>
+                </div>
+`
+            },
+            pt: {
+                subject: "❌ Operação rejeitada - INVIK BANK",
+                html: (data) => `
+<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #fee2e2;">
+                    <div style="background: #ef4444; padding: 30px 20px; text-align: center; color: white;">
+                        <h2 style="margin: 0; font-size: 20px;">❌ Operação Rejeitada</h2>
+                    </div>
+                    <div style="padding: 40px; color: #1e293b;">
+                        <p>Olá ${data.name},</p>
+                        <p>A sua operação de <strong>${(Number(data.amount) || 0).toLocaleString('pt-PT', { style: 'currency', currency: data.currency })}</strong> foi rejeitada pelo nosso departamento de segurança.</p>
+                        <div style="background: #fef2f2; padding: 15px; border-radius: 8px; color: #991b1b; margin: 20px 0;">
+                            <strong>Motivo:</strong> ${data.reason || 'Verificação de segurança'}
+                        </div>
+                        <p>O montante foi integralmente reacreditado no seu saldo disponível.</p>
+                    </div>
+                </div>
+`
+            },
+            it: {
+                subject: "❌ Operazione rifiutata - INVIK BANK",
+                html: (data) => `
+<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #fee2e2;">
+                    <div style="background: #ef4444; padding: 30px 20px; text-align: center; color: white;">
+                        <h2 style="margin: 0; font-size: 20px;">❌ Operazione Rifiutata</h2>
+                    </div>
+                    <div style="padding: 40px; color: #1e293b;">
+                        <p>Buongiorno ${data.name},</p>
+                        <p>La vostra operazione di <strong>${(Number(data.amount) || 0).toLocaleString('it-IT', { style: 'currency', currency: data.currency })}</strong> è stata rifiutata dal nostro dipartimento di sicurezza.</p>
+                        <div style="background: #fef2f2; padding: 15px; border-radius: 8px; color: #991b1b; margin: 20px 0;">
+                            <strong>Motivo:</strong> ${data.reason || 'Controllo di sicurezza'}
+                        </div>
+                        <p>L'importo è stato interamente riaccreditato sul vostro saldo disponibile.</p>
+                    </div>
+                </div>
+`
+            },
+            de: {
+                subject: "❌ Vorgang abgelehnt - INVIK BANK",
+                html: (data) => `
+<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #fee2e2;">
+                    <div style="background: #ef4444; padding: 30px 20px; text-align: center; color: white;">
+                        <h2 style="margin: 0; font-size: 20px;">❌ Vorgang Abgelehnt</h2>
+                    </div>
+                    <div style="padding: 40px; color: #1e293b;">
+                        <p>Guten Tag ${data.name},</p>
+                        <p>Ihr Vorgang über <strong>${(Number(data.amount) || 0).toLocaleString('de-DE', { style: 'currency', currency: data.currency })}</strong> wurde von unserer Sicherheitsabteilung abgelehnt.</p>
+                        <div style="background: #fef2f2; padding: 15px; border-radius: 8px; color: #991b1b; margin: 20px 0;">
+                            <strong>Grund:</strong> ${data.reason || 'Sicherheitsprüfung'}
+                        </div>
+                        <p>Der Betrag wurde vollständig Ihrem verfügbaren Guthaben gutgeschrieben.</p>
+                    </div>
+                </div>
+`
+            }
+        },
     };
 
     const templateSet = templates[templateName] || templates.kycSuccess;
