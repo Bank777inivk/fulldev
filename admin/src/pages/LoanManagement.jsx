@@ -84,7 +84,12 @@ const LoanManagement = () => {
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.8rem', marginBottom: '1rem', background: '#f8fafc', padding: '0.8rem', borderRadius: '16px' }}>
                                 <div>
                                     <span style={styles.detailLabel}>MONTANT</span>
-                                    <div style={{ fontSize: '1.1rem', fontWeight: '800', color: '#003366' }}>{parseFloat(loan.amount || loan.montant || 0).toLocaleString('fr-FR')} {loan.currency || '€'}</div>
+                                    <div style={{ fontSize: '1.1rem', fontWeight: '800', color: '#003366' }}>
+                                        {parseFloat(loan.amount || loan.montant || 0).toLocaleString('fr-FR', {
+                                            style: 'currency',
+                                            currency: (loan.currency === '€' ? 'EUR' : (loan.currency || 'EUR'))
+                                        })}
+                                    </div>
                                 </div>
                                 <div>
                                     <span style={styles.detailLabel}>DURÉE</span>
@@ -99,7 +104,9 @@ const LoanManagement = () => {
                                 {(loan.mensualite || loan.monthlyPayment) && (
                                     <div>
                                         <span style={styles.detailLabel}>MENSUALITÉ</span>
-                                        <div style={{ fontSize: '1rem', fontWeight: '700', color: '#6366f1' }}>{parseFloat(loan.mensualite || loan.monthlyPayment).toFixed(2)} €</div>
+                                        <div style={{ fontSize: '1rem', fontWeight: '700', color: '#6366f1' }}>
+                                            {parseFloat(loan.mensualite || loan.monthlyPayment || 0).toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}
+                                        </div>
                                     </div>
                                 )}
                                 <div style={{ gridColumn: 'span 2' }}>
@@ -198,7 +205,12 @@ const LoanManagement = () => {
                             <div style={styles.loanDetails}>
                                 <div style={styles.detailRow}>
                                     <span style={styles.detailLabel}>MONTANT</span>
-                                    <span style={styles.detailValue}>{loan.amount?.toLocaleString('fr-FR')} {loan.currency || '€'}</span>
+                                    <span style={styles.detailValue}>
+                                        {parseFloat(loan.amount || loan.montant || 0).toLocaleString('fr-FR', {
+                                            style: 'currency',
+                                            currency: (loan.currency === '€' ? 'EUR' : (loan.currency || 'EUR'))
+                                        })}
+                                    </span>
                                 </div>
                                 <div style={styles.detailRow}>
                                     <span style={styles.detailLabel}>TYPE</span>
@@ -217,7 +229,9 @@ const LoanManagement = () => {
                                 {(loan.mensualite || loan.monthlyPayment) && (
                                     <div style={styles.detailRow}>
                                         <span style={styles.detailLabel}>MENSUALITÉ</span>
-                                        <span style={{ ...styles.detailValue, color: '#6366f1' }}>{parseFloat(loan.mensualite || loan.monthlyPayment).toFixed(2)} €</span>
+                                        <span style={{ ...styles.detailValue, color: '#6366f1' }}>
+                                            {parseFloat(loan.mensualite || loan.monthlyPayment || 0).toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}
+                                        </span>
                                     </div>
                                 )}
                                 <div style={styles.detailRow}>

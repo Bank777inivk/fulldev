@@ -250,7 +250,11 @@ const Dashboard = () => {
                                 <span style={styles.activityDateSmall}>{activity.createdAt?.toDate().toLocaleDateString('fr-FR')}</span>
                             </div>
                             <span style={{ ...styles.activityAmountSmall, color: activity.type === 'credit' ? '#10b981' : '#ef4444' }}>
-                                {activity.amount}€
+                                {activity.type === 'credit' ? '+' : '-'}
+                                {(activity.amount || 0).toLocaleString('fr-FR', {
+                                    style: 'currency',
+                                    currency: (activity.currency === '€' ? 'EUR' : (activity.currency || 'EUR'))
+                                })}
                             </span>
                         </div>
                     ))}
@@ -394,7 +398,11 @@ const Dashboard = () => {
                                         ...styles.activityAmount,
                                         color: activity.type === 'credit' ? '#27ae60' : '#e74c3c'
                                     }}>
-                                        {activity.type === 'credit' ? '+' : '-'}{activity.amount} {activity.currency}
+                                        {activity.type === 'credit' ? '+' : '-'}
+                                        {(activity.amount || 0).toLocaleString('fr-FR', {
+                                            style: 'currency',
+                                            currency: (activity.currency === '€' ? 'EUR' : (activity.currency || 'EUR'))
+                                        })}
                                     </span>
                                 </div>
                             ))

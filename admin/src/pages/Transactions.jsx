@@ -146,11 +146,15 @@ const Transactions = () => {
                                 </div>
                                 <div style={styles.statRowMobile}>
                                     <span style={styles.statLabelMobile}>Entrant</span>
-                                    <span style={{ color: '#10b981', fontWeight: '700' }}>+€{item.totalCredit.toFixed(2)}</span>
+                                    <span style={{ color: '#10b981', fontWeight: '700' }}>
+                                        {item.totalCredit.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}
+                                    </span>
                                 </div>
                                 <div style={styles.statRowMobile}>
                                     <span style={styles.statLabelMobile}>Sortant</span>
-                                    <span style={{ color: '#ef4444', fontWeight: '700' }}>-€{item.totalDebit.toFixed(2)}</span>
+                                    <span style={{ color: '#ef4444', fontWeight: '700' }}>
+                                        -{item.totalDebit.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}
+                                    </span>
                                 </div>
                             </div>
 
@@ -246,10 +250,10 @@ const Transactions = () => {
                                     <span style={styles.countBadge}>{item.count}</span>
                                 </td>
                                 <td style={{ ...styles.td, textAlign: 'right', color: 'var(--success)' }}>
-                                    +€{item.totalCredit.toFixed(2)}
+                                    {item.totalCredit.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}
                                 </td>
                                 <td style={{ ...styles.td, textAlign: 'right', color: 'var(--danger)' }}>
-                                    -€{item.totalDebit.toFixed(2)}
+                                    -{item.totalDebit.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}
                                 </td>
                             </tr>
                         ))

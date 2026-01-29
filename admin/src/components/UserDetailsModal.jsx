@@ -67,7 +67,9 @@ const UserDetailsModal = ({ user, onClose, onAction, transactions = [], kycData 
                             <div style={styles.statsRow}>
                                 <div style={styles.statBox}>
                                     <span style={styles.statLabel}>Solde Actuel</span>
-                                    <span style={styles.statValue}>€{user.balance?.toFixed(2) || '0.00'}</span>
+                                    <span style={styles.statValue}>
+                                        {(user.balance || 0).toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}
+                                    </span>
                                 </div>
                                 <div style={styles.statBox}>
                                     <span style={styles.statLabel}>Transactions</span>

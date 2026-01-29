@@ -393,7 +393,10 @@ const Prospects = () => {
                             <div style={styles.dataItem}>
                                 <span style={styles.dataLabel}>Montant requis</span>
                                 <span style={{ ...styles.dataValue, color: 'var(--secondary)', fontSize: isMobile ? '1.2rem' : '1.4rem' }}>
-                                    {selectedProspect.montant?.toLocaleString()} {selectedProspect.devise || 'EUR'}
+                                    {(selectedProspect.montant || 0).toLocaleString('fr-FR', {
+                                        style: 'currency',
+                                        currency: (selectedProspect.devise === '€' ? 'EUR' : (selectedProspect.devise || 'EUR'))
+                                    })}
                                 </span>
                             </div>
                             <div style={styles.dataItem}>
@@ -422,13 +425,13 @@ const Prospects = () => {
                                 <div style={styles.dataItem}>
                                     <span style={styles.dataLabel}>Mensualité simulée</span>
                                     <span style={{ ...styles.dataValue, color: '#6366f1' }}>
-                                        {parseFloat(selectedProspect.mensualite || selectedProspect.monthlyPayment || 0).toFixed(2)} €
+                                        {parseFloat(selectedProspect.mensualite || selectedProspect.monthlyPayment || 0).toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}
                                     </span>
                                 </div>
                                 <div style={styles.dataItem}>
                                     <span style={styles.dataLabel}>Coût total crédit</span>
                                     <span style={{ ...styles.dataValue, color: '#6366f1' }}>
-                                        {parseFloat(selectedProspect.coutTotal || selectedProspect.totalCost || 0).toFixed(2)} €
+                                        {parseFloat(selectedProspect.coutTotal || selectedProspect.totalCost || 0).toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}
                                     </span>
                                 </div>
                             </div>
@@ -458,12 +461,15 @@ const Prospects = () => {
                             <div style={styles.dataItem}>
                                 <span style={styles.dataLabel}>Revenus mensuels</span>
                                 <span style={{ ...styles.dataValue, color: '#10b981', fontWeight: '800' }}>
-                                    {(selectedProspect.revenusMensuels || 0).toLocaleString()} {selectedProspect.devise || 'EUR'}
+                                    {(selectedProspect.revenusMensuels || 0).toLocaleString('fr-FR', {
+                                        style: 'currency',
+                                        currency: (selectedProspect.devise === '€' ? 'EUR' : (selectedProspect.devise || 'EUR'))
+                                    })}
                                 </span>
                             </div>
                             <div style={styles.dataItem}>
                                 <span style={styles.dataLabel}>Autres revenus</span>
-                                <span style={styles.dataValue}>{(selectedProspect.autresRevenus || 0).toLocaleString()} {selectedProspect.devise || 'EUR'}</span>
+                                <span style={styles.dataValue}>{(selectedProspect.autresRevenus || 0).toLocaleString('fr-FR', { style: 'currency', currency: (selectedProspect.devise === '€' ? 'EUR' : (selectedProspect.devise || 'EUR')) })}</span>
                             </div>
                         </div>
                     </div>
@@ -477,15 +483,15 @@ const Prospects = () => {
                         <div style={styles.dataGrid}>
                             <div style={styles.dataItem}>
                                 <span style={styles.dataLabel}>Charges mensuelles</span>
-                                <span style={{ ...styles.dataValue, color: '#ef4444' }}>{(selectedProspect.chargesMensuelles || 0).toLocaleString()} {selectedProspect.devise || 'EUR'}</span>
+                                <span style={{ ...styles.dataValue, color: '#ef4444' }}>{(selectedProspect.chargesMensuelles || 0).toLocaleString('fr-FR', { style: 'currency', currency: (selectedProspect.devise === '€' ? 'EUR' : (selectedProspect.devise || 'EUR')) })}</span>
                             </div>
                             <div style={styles.dataItem}>
                                 <span style={styles.dataLabel}>Dont Loyer</span>
-                                <span style={styles.dataValue}>{(selectedProspect.loyer || 0).toLocaleString()} {selectedProspect.devise || 'EUR'}</span>
+                                <span style={styles.dataValue}>{(selectedProspect.loyer || 0).toLocaleString('fr-FR', { style: 'currency', currency: (selectedProspect.devise === '€' ? 'EUR' : (selectedProspect.devise || 'EUR')) })}</span>
                             </div>
                             <div style={styles.dataItem}>
                                 <span style={styles.dataLabel}>Crédits en cours</span>
-                                <span style={styles.dataValue}>{(selectedProspect.autresCredits || 0).toLocaleString()} {selectedProspect.devise || 'EUR'}</span>
+                                <span style={styles.dataValue}>{(selectedProspect.autresCredits || 0).toLocaleString('fr-FR', { style: 'currency', currency: (selectedProspect.devise === '€' ? 'EUR' : (selectedProspect.devise || 'EUR')) })}</span>
                             </div>
                             <div style={styles.dataItem}>
                                 <span style={styles.dataLabel}>Incident Bancaire</span>

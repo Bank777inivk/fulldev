@@ -462,7 +462,9 @@ const Users = () => {
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#f8fafc', padding: '0.8rem 1.2rem', borderRadius: '16px' }}>
                                 <div style={styles.infoGroupMobile}>
                                     <span style={{ ...styles.infoLabelMobile, fontSize: '0.6rem' }}>SOLDE</span>
-                                    <span style={{ ...styles.infoValueMobile, fontSize: '1.2rem', color: '#003366' }}>€{user.balance?.toFixed(2) || '0.00'}</span>
+                                    <span style={{ ...styles.infoValueMobile, fontSize: '1.2rem', color: '#003366' }}>
+                                        {(user.balance || 0).toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}
+                                    </span>
                                 </div>
                             </div>
 
@@ -598,7 +600,9 @@ const Users = () => {
                                             {user.accountStatus === 'active' ? 'Actif' : 'Bloqué'}
                                         </span>
                                     </td>
-                                    <td style={{ ...styles.td, textAlign: 'right', fontWeight: '600' }}>€{user.balance?.toFixed(2) || '0.00'}</td>
+                                    <td style={{ ...styles.td, textAlign: 'right', fontWeight: '600' }}>
+                                        {(user.balance || 0).toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}
+                                    </td>
                                     <td style={styles.td}>
                                         {user.createdAt?.toDate().toLocaleDateString('fr-FR')}
                                     </td>

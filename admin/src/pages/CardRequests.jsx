@@ -280,7 +280,7 @@ const CardRequests = () => {
                                     <div style={styles.cardHeader}><div style={styles.cardBrand}>BanK</div><i className="fas fa-check-circle"></i></div>
                                     <div style={styles.cardFooter}><span style={{ letterSpacing: '2px', fontSize: '1.1rem' }}>{card.cardNumber}</span><span style={styles.typeLabel}>{card.type}</span></div>
                                 </div>
-                                <div style={styles.infoRowSmall}><i className="fas fa-calendar-check" style={{ marginRight: '5px' }}></i> {card.expiryDate} | CVV: {card.cvv} | Limite: {card.limit}€</div>
+                                <div style={styles.infoRowSmall}><i className="fas fa-calendar-check" style={{ marginRight: '5px' }}></i> {card.expiryDate} | CVV: {card.cvv} | Limite: {(card.limit || 0).toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}</div>
                                 <div style={styles.actionsSmall}>
                                     <button onClick={() => handleEditCardDetails(card)} style={styles.editBtnSmall}>Modifier</button>
                                     <button onClick={() => handleCardAction(card.id, 'toggle_status', card.status)} style={styles.blockBtnSmall}>{card.status === 'active' ? 'Bloquer' : 'Débloquer'}</button>

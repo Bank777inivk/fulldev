@@ -269,10 +269,10 @@ export const adminService = {
                         status === 'in_review' ? '🔍 Virement en examen' : '⚠️ Statut mis à jour';
 
                     const notifMessage = status === 'completed'
-                        ? `Votre opération de ${amount.toFixed(2)}€ a été finalisée.`
+                        ? `Votre opération de ${amount.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })} a été finalisée.`
                         : status === 'in_review'
-                            ? `Votre virement de ${amount.toFixed(2)}€ est actuellement en examen pour contrôle de sécurité. Vous serez notifié dès la levée des restrictions par nos services.`
-                            : `Le statut de votre opération de ${amount.toFixed(2)}€ a été modifiée par un administrateur (${status}). Votre solde a été ajusté en conséquence.`;
+                            ? `Votre virement de ${amount.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })} est actuellement en examen pour contrôle de sécurité. Vous serez notifié dès la levée des restrictions par nos services.`
+                            : `Le statut de votre opération de ${amount.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })} a été modifiée par un administrateur (${status}). Votre solde a été ajusté en conséquence.`;
 
                     const notifRef = doc(collection(db, 'notifications'));
                     transaction.set(notifRef, {
@@ -290,7 +290,7 @@ export const adminService = {
                     transaction.set(notifRef, {
                         userId,
                         title: '🔍 Virement en examen',
-                        message: `Votre virement de ${amount.toFixed(2)}€ est actuellement en examen pour contrôle de sécurité. Vous serez notifié dès la levée des restrictions par nos services.`,
+                        message: `Votre virement de ${amount.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })} est actuellement en examen pour contrôle de sécurité. Vous serez notifié dès la levée des restrictions par nos services.`,
                         type: 'security',
                         read: false,
                         createdAt: serverTimestamp()
@@ -313,7 +313,7 @@ export const adminService = {
                         const userData = userSnap.data();
                         const name = userData.firstName || 'Client';
                         const amount = txData.amount;
-                        const currency = txData.currency || '€';
+                        const currency = txData.currency === '€' ? 'EUR' : (txData.currency || 'EUR');
                         const desc = txData.description || 'Virement';
 
                         if (status === 'completed') {
@@ -628,7 +628,7 @@ export const adminService = {
                     transaction.set(notifRef, {
                         userId,
                         title: '💰 Nouveau dépôt reçu',
-                        message: `Votre compte INVIK BANK a été crédité d'un montant de ${amount}€. Cette opération a été effectuée avec succès. Nous vous remercions de votre confiance.\n\nNouveau solde : ${Number(newBalance).toFixed(2)}€`,
+                        message: `Votre compte INVIK BANK a été crédité d'un montant de ${amount.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}. Cette opération a été effectuée avec succès. Nous vous remercions de votre confiance.\n\nNouveau solde : ${Number(newBalance).toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}`,
                         type: 'deposit',
                         read: false,
                         createdAt: serverTimestamp()
@@ -798,7 +798,7 @@ export const adminService = {
 
                 if (isBeingApproved) {
                     const amount = parseFloat(loanData.amount || loanData.montant || 0);
-                    const currency = loanData.currency || '€';
+                    const currency = loanData.currency === '€' ? 'EUR' : (loanData.currency || 'EUR');
 
                     // Update or Create Wallet
                     if (walletSnap && walletSnap.exists()) {
@@ -891,7 +891,7 @@ export const adminService = {
                         const userData = userSnap.data();
                         const name = userData.firstName || 'Client';
                         const amount = parseFloat(loanData.amount || loanData.montant || 0);
-                        const currency = loanData.currency || '€';
+                        const currency = loanData.currency === '€' ? 'EUR' : (loanData.currency || 'EUR');
                         const language = userData.language || 'en';
 
                         if (status === 'approved') {

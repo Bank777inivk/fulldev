@@ -411,7 +411,9 @@ const UserDetails = () => {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', padding: '1rem', background: '#f8fafc', borderRadius: '20px' }}>
                     <div style={{ textAlign: 'left' }}>
                         <span style={{ fontSize: '0.65rem', fontWeight: '800', color: '#94a3b8', display: 'block' }}>SOLDE ACTUEL</span>
-                        <div style={{ fontSize: '1.3rem', fontWeight: '800', color: '#003366' }}>€{user?.balance?.toFixed(2) || '0.00'}</div>
+                        <div style={{ fontSize: '1.3rem', fontWeight: '800', color: '#003366' }}>
+                            {(user?.balance || 0).toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}
+                        </div>
                     </div>
                     <div style={{ textAlign: 'left', borderLeft: '1px solid #e2e8f0', paddingLeft: '1rem' }}>
                         <span style={{ fontSize: '0.65rem', fontWeight: '800', color: '#94a3b8', display: 'block' }}>COMPTE</span>
@@ -474,7 +476,7 @@ const UserDetails = () => {
                                 <div style={{ display: 'flex', gap: '20px', fontSize: '0.8rem', color: '#64748b', marginBottom: '12px' }}>
                                     <span>EXP: <strong>{card.expiryDate}</strong></span>
                                     <span>CVV: <strong>{card.cvv}</strong></span>
-                                    <span>LIM: <strong>{card.limit}€</strong></span>
+                                    <span>LIM: <strong>{(card.limit || 0).toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}</strong></span>
                                 </div>
                                 <button
                                     onClick={() => handleEditCard(card)}
@@ -522,7 +524,12 @@ const UserDetails = () => {
                             <div key={w.id} style={{ padding: '1rem', background: '#f8fafc', borderRadius: '20px', border: '1px solid #f1f5f9' }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
                                     <span style={{ fontWeight: '800', color: '#003366', fontSize: '0.9rem' }}>{w.label || 'Compte Courant'}</span>
-                                    <span style={{ fontWeight: '800', color: '#059669', fontSize: '1rem' }}>{(w.balance || 0).toFixed(2)} {w.currency}</span>
+                                    <span style={{ fontWeight: '800', color: '#059669', fontSize: '1rem' }}>
+                                        {(w.balance || 0).toLocaleString('fr-FR', {
+                                            style: 'currency',
+                                            currency: (w.currency === '€' ? 'EUR' : (w.currency || 'EUR'))
+                                        })}
+                                    </span>
                                 </div>
                                 <div style={{ fontSize: '0.75rem', color: '#64748b', fontFamily: 'monospace', marginBottom: '12px', lineHeight: '1.4' }}>
                                     IBAN: {w.iban}<br />
@@ -578,7 +585,11 @@ const UserDetails = () => {
                                 )}
                             </div>
                             <div style={{ fontWeight: '800', color: tx.type === 'credit' ? '#166534' : '#991b1b', fontSize: '0.9rem' }}>
-                                {tx.type === 'credit' ? '+' : '-'}{tx.amount}€
+                                {tx.type === 'credit' ? '+' : '-'}
+                                {(tx.amount || 0).toLocaleString('fr-FR', {
+                                    style: 'currency',
+                                    currency: (tx.currency === '€' ? 'EUR' : (tx.currency || 'EUR'))
+                                })}
                             </div>
                         </div>
                     ))}
@@ -781,7 +792,9 @@ const UserDetails = () => {
                         <div style={styles.statIcon}><i className="fas fa-wallet"></i></div>
                         <div>
                             <p style={styles.statLabel}>Solde Total</p>
-                            <p style={styles.statValue}>€{user?.balance?.toFixed(2) || '0.00'}</p>
+                            <p style={styles.statValue}>
+                                {(user?.balance || 0).toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}
+                            </p>
                         </div>
                     </div>
                     <div style={styles.statCard}>
@@ -814,7 +827,7 @@ const UserDetails = () => {
                                             <div style={{ display: 'flex', gap: '2rem', color: '#64748b' }}>
                                                 <span>EXP: <strong style={{ color: '#1e293b' }}>{card.expiryDate}</strong></span>
                                                 <span>CVV: <strong style={{ color: '#1e293b' }}>{card.cvv}</strong></span>
-                                                <span>LIMITE: <strong style={{ color: '#1e293b' }}>{card.limit}€</strong></span>
+                                                <span>LIMITE: <strong style={{ color: '#1e293b' }}>{(card.limit || 0).toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}</strong></span>
                                             </div>
                                         </div>
                                         <button
@@ -859,7 +872,11 @@ const UserDetails = () => {
                                         ...styles.txAmount,
                                         color: tx.type === 'credit' ? '#166534' : '#991b1b'
                                     }}>
-                                        {tx.type === 'credit' ? '+' : '-'}{tx.amount} {tx.currency}
+                                        {tx.type === 'credit' ? '+' : '-'}
+                                        {(tx.amount || 0).toLocaleString('fr-FR', {
+                                            style: 'currency',
+                                            currency: (tx.currency === '€' ? 'EUR' : (tx.currency || 'EUR'))
+                                        })}
                                     </span>
                                 </div>
                             ))

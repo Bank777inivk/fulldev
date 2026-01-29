@@ -233,7 +233,11 @@ const ManageTransactions = () => {
 
                                         <div style={{ marginTop: '0.75rem', paddingTop: '0.75rem', borderTop: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                             <span style={{ fontSize: '1.1rem', fontWeight: '700', color: tx.type === 'deposit' ? '#10b981' : '#ef4444' }}>
-                                                {tx.type === 'deposit' ? '+' : '-'}{tx.amount} {tx.currency}
+                                                {tx.type === 'deposit' ? '+' : '-'}
+                                                {(tx.amount || 0).toLocaleString('fr-FR', {
+                                                    style: 'currency',
+                                                    currency: (tx.currency === '€' ? 'EUR' : (tx.currency || 'EUR'))
+                                                })}
                                             </span>
 
                                             {tx.status === 'pending' && (
@@ -327,7 +331,11 @@ const ManageTransactions = () => {
                                             </td>
                                             <td style={{ ...styles.td, fontWeight: '700' }}>
                                                 <span style={{ color: tx.type === 'credit' || (tx.type === 'deposit' && tx.status === 'completed') ? 'var(--success)' : (tx.amount < 0 || tx.type.includes('transfer') ? 'var(--danger)' : 'var(--text-main)') }}>
-                                                    {tx.type === 'deposit' ? '+' : (tx.type.includes('transfer') ? '-' : '')}{tx.amount} {tx.currency}
+                                                    {tx.type === 'deposit' ? '+' : (tx.type.includes('transfer') ? '-' : '')}
+                                                    {(tx.amount || 0).toLocaleString('fr-FR', {
+                                                        style: 'currency',
+                                                        currency: (tx.currency === '€' ? 'EUR' : (tx.currency || 'EUR'))
+                                                    })}
                                                 </span>
                                             </td>
                                             <td style={styles.td}>
