@@ -815,6 +815,134 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                         </div>
                     </div>
                 `
+            },
+            de: {
+                subject: "Bestätigung Ihrer Kartenbestellung - INVIK BANK",
+                html: (data) => `
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                        <div style="background: linear-gradient(135deg, #2c3e50 0%, #000000 100%); padding: 35px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
+                            <p style="margin-top: 10px; opacity: 0.9; font-style: italic;">Eleganz in Ihrer Reichweite</p>
+                        </div>
+                        <div style="padding: 40px; color: #333; line-height: 1.6;">
+                            <h2 style="color: #003366; margin-top: 0;">Guten Tag ${data.name},</h2>
+                            <p>wir haben Ihre Bestellung für Ihre neue <strong>INVIK ${data.cardType}</strong> Karte erhalten.</p>
+                            <p>Unsere Teams bereiten derzeit den Versand Ihrer wertvollen Karte vor. Sie erhalten eine Benachrichtigung, sobald Ihr Paket an unseren Versanddienstleister übergeben wurde.</p>
+                            <div style="background: #f8fafc; border-radius: 12px; padding: 25px; margin: 30px 0; border: 1px solid #e2e8f0;">
+                                <div style="margin-bottom: 20px;">
+                                    <span style="display: block; font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: bold; letter-spacing: 1px;">Bestelltes Modell</span>
+                                    <span style="font-size: 18px; color: #1e293b; font-weight: 700;">INVIK BLACK EDITION</span>
+                                </div>
+                                <div style="margin-bottom: 20px;">
+                                    <span style="display: block; font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: bold; letter-spacing: 1px;">Lieferadresse</span>
+                                    <span style="font-size: 15px; color: #1e293b;">${data.deliveryAddress}</span>
+                                </div>
+                                <div>
+                                    <span style="display: block; font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: bold; letter-spacing: 1px;">Geschätzte Lieferzeit</span>
+                                    <span style="font-size: 15px; color: #27ae60; font-weight: 600;">3 bis 5 Werktage</span>
+                                </div>
+                            </div>
+                            <p>In der Zwischenzeit können Sie Ihre Bankdienstleistungen direkt über Ihre mobile App nutzen.</p>
+                            <p style="margin-top: 30px;">Vielen Dank für Ihr Vertrauen,<br><strong>Ihr INVIK BANK Team</strong></p>
+                        </div>
+                    </div>
+                `
+            },
+            es: {
+                subject: "Confirmación de pedido de tarjeta - INVIK BANK",
+                html: (data) => `
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                        <div style="background: linear-gradient(135deg, #2c3e50 0%, #000000 100%); padding: 35px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
+                            <p style="margin-top: 10px; opacity: 0.9; font-style: italic;">Elegancia a su alcance</p>
+                        </div>
+                        <div style="padding: 40px; color: #333; line-height: 1.6;">
+                            <h2 style="color: #003366; margin-top: 0;">Hola ${data.name},</h2>
+                            <p>Hemos recibido el pedido de su nueva tarjeta <strong>INVIK ${data.cardType}</strong>.</p>
+                            <p>Nuestros equipos están preparando el envío de su valiosa tarjeta. Recibirá una notificación tan pronto como su paquete haya sido entregado a nuestro transportista.</p>
+                            <div style="background: #f8fafc; border-radius: 12px; padding: 25px; margin: 30px 0; border: 1px solid #e2e8f0;">
+                                <div style="margin-bottom: 20px;">
+                                    <span style="display: block; font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: bold; letter-spacing: 1px;">Modelo pedido</span>
+                                    <span style="font-size: 18px; color: #1e293b; font-weight: 700;">INVIK BLACK EDITION</span>
+                                </div>
+                                <div style="margin-bottom: 20px;">
+                                    <span style="display: block; font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: bold; letter-spacing: 1px;">Dirección de entrega</span>
+                                    <span style="font-size: 15px; color: #1e293b;">${data.deliveryAddress}</span>
+                                </div>
+                                <div>
+                                    <span style="display: block; font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: bold; letter-spacing: 1px;">Plazo estimado</span>
+                                    <span style="font-size: 15px; color: #27ae60; font-weight: 600;">3 a 5 días hábiles</span>
+                                </div>
+                            </div>
+                            <p>Mientras tanto, puede comenzar a utilizar sus servicios bancarios directamente desde su aplicación móvil.</p>
+                            <p style="margin-top: 30px;">Gracias por su confianza,<br><strong>El equipo de INVIK BANK</strong></p>
+                        </div>
+                    </div>
+                `
+            },
+            it: {
+                subject: "Conferma ordine carta - INVIK BANK",
+                html: (data) => `
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                        <div style="background: linear-gradient(135deg, #2c3e50 0%, #000000 100%); padding: 35px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
+                            <p style="margin-top: 10px; opacity: 0.9; font-style: italic;">L'eleganza a portata di mano</p>
+                        </div>
+                        <div style="padding: 40px; color: #333; line-height: 1.6;">
+                            <h2 style="color: #003366; margin-top: 0;">Buongiorno ${data.name},</h2>
+                            <p>Abbiamo ricevuto l'ordine per la tua nuova carta <strong>INVIK ${data.cardType}</strong>.</p>
+                            <p>I nostri team stanno preparando la spedizione della tua preziosa carta. Riceverai una notifica non appena il tuo pacco sarà stato affidato al nostro corriere.</p>
+                            <div style="background: #f8fafc; border-radius: 12px; padding: 25px; margin: 30px 0; border: 1px solid #e2e8f0;">
+                                <div style="margin-bottom: 20px;">
+                                    <span style="display: block; font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: bold; letter-spacing: 1px;">Modello ordinato</span>
+                                    <span style="font-size: 18px; color: #1e293b; font-weight: 700;">INVIK BLACK EDITION</span>
+                                </div>
+                                <div style="margin-bottom: 20px;">
+                                    <span style="display: block; font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: bold; letter-spacing: 1px;">Indirizzo di consegna</span>
+                                    <span style="font-size: 15px; color: #1e293b;">${data.deliveryAddress}</span>
+                                </div>
+                                <div>
+                                    <span style="display: block; font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: bold; letter-spacing: 1px;">Consegna stimata</span>
+                                    <span style="font-size: 15px; color: #27ae60; font-weight: 600;">3-5 giorni lavorativi</span>
+                                </div>
+                            </div>
+                            <p>Nel frattempo, puoi iniziare a utilizzare i tuoi servizi bancari direttamente dalla tua app mobile.</p>
+                            <p style="margin-top: 30px;">Grazie per la tua fiducia,<br><strong>Il Team INVIK BANK</strong></p>
+                        </div>
+                    </div>
+                `
+            },
+            pt: {
+                subject: "Confirmação de pedido de cartão - INVIK BANK",
+                html: (data) => `
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                        <div style="background: linear-gradient(135deg, #2c3e50 0%, #000000 100%); padding: 35px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
+                            <p style="margin-top: 10px; opacity: 0.9; font-style: italic;">Elegância ao seu alcance</p>
+                        </div>
+                        <div style="padding: 40px; color: #333; line-height: 1.6;">
+                            <h2 style="color: #003366; margin-top: 0;">Olá ${data.name},</h2>
+                            <p>Recebemos o pedido do seu novo cartão <strong>INVIK ${data.cardType}</strong>.</p>
+                            <p>As nossas equipas estão a preparar o envio do seu precioso cartão. Receberá uma notificação assim que a sua encomenda for entregue à nossa transportadora.</p>
+                            <div style="background: #f8fafc; border-radius: 12px; padding: 25px; margin: 30px 0; border: 1px solid #e2e8f0;">
+                                <div style="margin-bottom: 20px;">
+                                    <span style="display: block; font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: bold; letter-spacing: 1px;">Modelo encomendado</span>
+                                    <span style="font-size: 18px; color: #1e293b; font-weight: 700;">INVIK BLACK EDITION</span>
+                                </div>
+                                <div style="margin-bottom: 20px;">
+                                    <span style="display: block; font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: bold; letter-spacing: 1px;">Morada de entrega</span>
+                                    <span style="font-size: 15px; color: #1e293b;">${data.deliveryAddress}</span>
+                                </div>
+                                <div>
+                                    <span style="display: block; font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: bold; letter-spacing: 1px;">Entrega estimada</span>
+                                    <span style="font-size: 15px; color: #27ae60; font-weight: 600;">3 a 5 dias úteis</span>
+                                </div>
+                            </div>
+                            <p>Entretanto, pode começar a utilizar os seus serviços bancários diretamente a partir da sua aplicação móvel.</p>
+                            <p style="margin-top: 30px;">Obrigado pela sua confiança,<br><strong>A Equipa INVIK BANK</strong></p>
+                        </div>
+                    </div>
+                `
             }
         },
 
