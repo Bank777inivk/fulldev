@@ -168,16 +168,16 @@ const Support = () => {
 
                         <h3 style={{ fontSize: '1rem', marginBottom: '1rem' }}>{t('support.tickets.title')}</h3>
                         <div style={styles.mobileTicketList}>
-                            {tickets.slice((currentPage - 1) * ticketsPerPage, currentPage * ticketsPerPage).map(t => (
-                                <div key={t.id} style={styles.mobileTicketItem} onClick={() => setSelectedTicket(t)}>
+                            {tickets.slice((currentPage - 1) * ticketsPerPage, currentPage * ticketsPerPage).map(ticket => (
+                                <div key={ticket.id} style={styles.mobileTicketItem} onClick={() => setSelectedTicket(ticket)}>
                                     <div style={{ flex: 1 }}>
-                                        <div style={{ fontWeight: 'bold' }}>{t.subject}</div>
+                                        <div style={{ fontWeight: 'bold' }}>{ticket.subject}</div>
                                         <div style={{ fontSize: '0.75rem', color: '#888' }}>
-                                            {t.createdAt?.toDate().toLocaleDateString(i18n.language === 'en' ? 'en-US' : 'fr-FR')}
+                                            {ticket.createdAt?.toDate().toLocaleDateString(i18n.language === 'en' ? 'en-US' : 'fr-FR')}
                                         </div>
                                     </div>
-                                    <span style={{ ...styles.statusBadge, background: t.status === 'open' ? 'rgba(0, 204, 255, 0.1)' : '#e8f5e9', color: t.status === 'open' ? '#003366' : '#2e7d32' }}>
-                                        {t.status === 'open' ? t('dashboard.status.pending') : t('dashboard.status.completed')}
+                                    <span style={{ ...styles.statusBadge, background: ticket.status === 'open' ? 'rgba(0, 204, 255, 0.1)' : '#e8f5e9', color: ticket.status === 'open' ? '#003366' : '#2e7d32' }}>
+                                        {ticket.status === 'open' ? t('dashboard.status.pending') : t('dashboard.status.completed')}
                                     </span>
                                 </div>
                             ))}
