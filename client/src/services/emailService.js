@@ -1351,12 +1351,22 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
 const emailService = {
     triggerEmail: async (toEmail, subject, htmlContent) => {
         try {
-            const response = await fetch('https://bank777inivk-fulldev.onrender.com/api/send-email', {
+            const response = await fetch('/api/send-email', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ toEmail, subject, htmlContent })
+                // Map the parameters to what the API expects: { to, subject, html }
+                body: JSON.stringify({
+                    to: toEmail,
+                    subject,
+                    html: htmlContent
+                })
             });
-            if (!response.ok) throw new Error('Email sending failed');
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.error || 'Email sending failed');
+            }
+
             return await response.json();
         } catch (error) {
             console.error('Error sending email:', error);
