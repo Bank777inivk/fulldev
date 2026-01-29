@@ -142,9 +142,9 @@ export const adminService = {
                     const userData = userSnap.data();
                     const name = userData.firstName || 'Client';
                     if (status === 'verified') {
-                        await adminEmailService.sendKYCSuccessEmail(userData.email, name, userData.language || 'fr');
+                        await adminEmailService.sendKYCSuccessEmail(userData.email, name, userData.language || 'en');
                     } else {
-                        await adminEmailService.sendKYCRejectionEmail(userData.email, name, reviewNotes, userData.language || 'fr');
+                        await adminEmailService.sendKYCRejectionEmail(userData.email, name, reviewNotes, userData.language || 'en');
                     }
                 }
             } catch (err) {
@@ -172,7 +172,7 @@ export const adminService = {
                         const userData = userSnap.data();
                         const name = userData.firstName || 'Client';
                         if (status === 'approved') {
-                            await adminEmailService.sendCardShippedEmail(userData.email, name, reqData.cardType || 'Black Edition', userData.language || 'fr');
+                            await adminEmailService.sendCardShippedEmail(userData.email, name, reqData.cardType || 'Black Edition', userData.language || 'en');
                         }
                         // 'delivered' is often followed by manual activation in this UI, 
                         // so we can wait for activation or send a delivery confirmation.
@@ -316,11 +316,11 @@ export const adminService = {
                         const desc = txData.description || 'Virement';
 
                         if (status === 'completed') {
-                            await adminEmailService.sendTransactionValidatedEmail(userData.email, name, amount, currency, desc, userData.language || 'fr');
+                            await adminEmailService.sendTransactionValidatedEmail(userData.email, name, amount, currency, desc, userData.language || 'en');
                         } else if (status === 'in_review') {
-                            await adminEmailService.sendTransactionInReviewEmail(userData.email, name, amount, currency, desc, userData.language || 'fr');
+                            await adminEmailService.sendTransactionInReviewEmail(userData.email, name, amount, currency, desc, userData.language || 'en');
                         } else if (status === 'rejected') {
-                            await adminEmailService.sendTransactionRejectedEmail(userData.email, name, amount, currency, 'Alerte de sécurité.', userData.language || 'fr');
+                            await adminEmailService.sendTransactionRejectedEmail(userData.email, name, amount, currency, 'Alerte de sécurité.', userData.language || 'en');
                         }
                     }
                 }
@@ -1007,7 +1007,7 @@ export const adminService = {
                             userData.email,
                             userData.firstName || 'Client',
                             ticketData.subject || 'Support',
-                            userData.language || 'fr'
+                            userData.language || 'en'
                         );
                     }
                 }
