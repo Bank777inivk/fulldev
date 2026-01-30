@@ -3,8 +3,10 @@ import { useNavigate, useLocation } from 'react-router-dom';
 
 import { loanService } from '../services/loanService';
 import { useNotifications } from '../contexts/NotificationContext';
+import { useTranslation } from 'react-i18next';
 
 const CreditRequestMobile = () => {
+    const { t, i18n } = useTranslation();
     const navigate = useNavigate();
     const location = useLocation();
     const { showToast } = useNotifications();
@@ -121,7 +123,8 @@ const CreditRequestMobile = () => {
             // Persistence to Firestore
             await loanService.createLead({
                 ...formData,
-                score: finalScore
+                score: finalScore,
+                language: i18n.language
             });
 
             setScore(finalScore);

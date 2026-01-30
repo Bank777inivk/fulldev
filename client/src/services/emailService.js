@@ -1771,9 +1771,22 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                                     <p><strong>Type:</strong> ${data.typeCredit || 'Simulation'}</p>
                                     <p><strong>Amount:</strong> ${parseFloat(data.montant).toLocaleString('en-US')} €</p>
                                     <p><strong>Duration:</strong> ${data.duree} months</p>
-                                    <p><strong>Mensualité:</strong> ${parseFloat(data.mensualite || data.monthlyPayment).toLocaleString('en-US')} €</p>
-                                    <p><strong>Language:</strong> ${data.language?.toUpperCase() || 'EN'}</p>
+                                    <p><strong>Rate (APR):</strong> ${data.taux || data.interestRate}%</p>
+                                    <p><strong>Monthly Payment:</strong> ${parseFloat(data.mensualite || data.monthlyPayment).toLocaleString('en-US')} €</p>
+                                    <p><strong>Purpose:</strong> ${data.objet || 'Not specified'}</p>
+                                    <p><strong>Client Language:</strong> ${data.language?.toUpperCase() || 'EN'}</p>
+                                    <p><strong>Auto Score:</strong> <span style="font-weight: bold; color: ${data.score === 'GREEN' ? '#27ae60' : data.score === 'RED' ? '#c0392b' : '#f39c12'}">${data.score || 'N/A'}</span></p>
+
+                                    <h3 style="color: #003366; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 20px;">👤 Identity & Contact</h3>
+                                    <p><strong>Full Name:</strong> ${data.civilite || ''} ${data.prenom || ''} ${data.nom || 'Prospect'}</p>
+                                    <p><strong>Email:</strong> ${data.email}</p>
+                                    <p><strong>Phone:</strong> ${data.telephone || 'Not specified'}</p>
+
+                                    <h3 style="color: #003366; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 20px;">💼 Professional Situation</h3>
+                                    <p><strong>Position:</strong> ${data.posteOccupe || 'N/A'}</p>
+                                    <p><strong>Monthly Income:</strong> ${parseFloat(data.revenusMensuels || 0).toLocaleString('en-US')} €/month</p>
                                 </div>
+                                <p style="color: #666; font-size: 12px;">Full dossier visible in the "Leads" section of your admin panel.</p>
                             </div>
                         </div>
                     `
@@ -1802,6 +1815,7 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                         <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #eee;">
                             <h2 style="color: #003366;">🏦 NOUVELLE DEMANDE DE CRÉDIT</h2>
                             <p><strong>Client :</strong> ${data.userData.firstName} ${data.userData.lastName} (${data.userData.email})</p>
+                            <p><strong>Langue Client :</strong> ${data.userData.language?.toUpperCase() || 'FR'}</p>
                             <p><strong>Projet :</strong> ${data.loanData.type}</p>
                             <p><strong>Montant :</strong> ${parseFloat(data.loanData.amount || data.loanData.montant).toLocaleString('fr-FR')} €</p>
                             <p><strong>Durée :</strong> ${data.loanData.duration || data.loanData.duree} mois</p>
