@@ -8,7 +8,8 @@ const SystemSettings = () => {
     const [saving, setSaving] = useState(false);
     const [status, setStatus] = useState({ type: '', message: '' });
     const [settings, setSettings] = useState({
-        hideLanguageSelector: false
+        hideLanguageSelector: false,
+        maintenanceMode: false
     });
 
     useEffect(() => {
@@ -102,6 +103,30 @@ const SystemSettings = () => {
                 <h3 style={styles.sectionTitle}>
                     <i className="fas fa-globe" style={styles.sectionIcon}></i>
                     Interface Client
+                </h3>
+
+                <div style={styles.settingRow}>
+                    <div style={styles.settingInfo}>
+                        <h4 style={styles.settingLabel}>Mode Maintenance</h4>
+                        <p style={styles.settingDesc}>
+                            Si activé, l'accès au site client sera bloqué et une page de maintenance sera affichée.
+                        </p>
+                    </div>
+                    <label style={styles.switch} className="switch">
+                        <input
+                            type="checkbox"
+                            checked={settings.maintenanceMode}
+                            onChange={() => handleToggle('maintenanceMode')}
+                        />
+                        <span style={styles.slider}></span>
+                    </label>
+                </div>
+
+                <hr style={{ margin: '2rem 0', border: 'none', borderTop: '1px solid #f1f5f9' }} />
+
+                <h3 style={{ ...styles.sectionTitle, marginTop: 0, borderBottom: 'none', paddingBottom: 0, marginBottom: '1.5rem' }}>
+                    <i className="fas fa-language" style={styles.sectionIcon}></i>
+                    Langues & Régions
                 </h3>
 
                 <div style={styles.settingRow}>

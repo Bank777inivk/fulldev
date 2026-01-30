@@ -145,7 +145,38 @@ function AppRoutes() {
   );
 }
 
+// ... imports
+import { db } from './firebase/config';
+import { doc, onSnapshot } from 'firebase/firestore';
+import MaintenancePage from './pages/MaintenancePage';
+
 function App() {
+  const [maintenanceMode, setMaintenanceMode] = React.useState(false);
+  const [loadingSettings, setLoadingSettings] = React.useState(true);
+
+  useEffect(() => {
+    // Listen to global settings for maintenance mode
+    const unsub = onSnapshot(doc(db, 'settings', 'global'), (doc) => {
+      if (doc.exists()) {
+        setMaintenanceMode(doc.data().maintenanceMode || false);
+      }
+      setLoadingSettings(false);
+    }, (error) => {
+      console.error("Error fetching settings:", error);
+      setLoadingSettings(false);
+    });
+
+    return () => unsub();
+  }, []);
+
+  if (loadingSettings) {
+    return <div className="loading-screen"><div className="spinner"></div></div>;
+  }
+
+  if (maintenanceMode) {
+    return <MaintenancePage />;
+  }
+
   return (
     <Router>
       <ScrollToTop />
