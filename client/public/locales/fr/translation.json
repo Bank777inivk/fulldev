@@ -1011,7 +1011,7 @@
         "title": "Espace Virements",
         "subtitle": "Gérez vos transferts en toute simplicité.",
         "tabs": {
-            "internal": "Mes Comptes",
+            "internal": "Comptes",
             "internal_desc": "Virement interne",
             "invik": "Virement INVIK",
             "invik_desc": "Instantané & Gratuit",

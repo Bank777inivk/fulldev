@@ -1400,7 +1400,7 @@
         "title": "Überweisungen",
         "subtitle": "Geld sofort im INVIK-Netzwerk oder per SEPA senden.",
         "tabs": {
-            "internal": "Eigene Konten",
+            "internal": "Konten",
             "internal_desc": "Sofortige Überweisung zwischen Ihren Konten",
             "invik": "INVIK-Mitglied",
             "invik_desc": "Sofort & Kostenlos",
@@ -1430,7 +1430,7 @@
         },
         "beneficiary_type": {
             "select": "Empfängertyp",
-            "internal": "Eigene Konten",
+            "internal": "Konten",
             "external": "Extern (SEPA)",
             "invik": "INVIK-Mitglied",
             "saved": "Gespeicherter Empfänger",

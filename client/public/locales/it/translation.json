@@ -1399,13 +1399,13 @@
         "title": "Area Trasferimenti",
         "subtitle": "Gestisci i tuoi trasferimenti con facilità.",
         "tabs": {
-            "internal": "I miei Conti",
+            "internal": "Conti",
             "internal_desc": "Trasferimento interno",
             "invik": "Trasferimento INVIK",
             "invik_desc": "Istantaneo e Gratuito",
             "sepa": "Trasferimento SEPA",
             "sepa_desc": "Verso un'altra banca",
-            "history": "Tracciamento"
+            "history": "Storico"
         },
         "steps": {
             "accounts": "Conti",

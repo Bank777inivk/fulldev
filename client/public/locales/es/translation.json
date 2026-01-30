@@ -1400,13 +1400,13 @@
         "title": "Área de Transferencias",
         "subtitle": "Gestione sus transferencias con facilidad.",
         "tabs": {
-            "internal": "Mis Cuentas",
+            "internal": "Cuentas",
             "internal_desc": "Transferencia interna",
             "invik": "Transferencia INVIK",
             "invik_desc": "Instantánea y Gratuita",
             "sepa": "Transferencia SEPA",
             "sepa_desc": "A otro banco",
-            "history": "Seguimiento"
+            "history": "Historial"
         },
         "steps": {
             "accounts": "Cuentas",

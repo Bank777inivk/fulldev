@@ -1392,13 +1392,13 @@
         "title": "Transfers Area",
         "subtitle": "Manage your transfers with ease.",
         "tabs": {
-            "internal": "My Accounts",
+            "internal": "Accounts",
             "internal_desc": "Internal transfer",
             "invik": "INVIK Transfer",
             "invik_desc": "Instant & Free",
             "sepa": "SEPA Transfer",
             "sepa_desc": "To another bank",
-            "history": "Tracking"
+            "history": "History"
         },
         "steps": {
             "accounts": "Accounts",
