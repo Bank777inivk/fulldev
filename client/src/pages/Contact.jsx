@@ -31,10 +31,24 @@ const Contact = () => {
         e.preventDefault();
         setIsSubmitting(true);
         try {
-            await contactService.submitContactForm({
+            const submissionData = {
                 ...formData,
-                language: currentLang // Add user's current language
-            });
+                language: currentLang
+            };
+
+            await contactService.submitContactForm(submissionData);
+
+            // Send Emails
+            try {
+                const { default: emailService } = await import('../services/emailService');
+                // Client Confirmation
+                await emailService.sendPublicContactConfirmationEmail(formData.email, formData.name, submissionData);
+                // Admin Notification
+                await emailService.sendAdminContactNotification(submissionData);
+            } catch (emailError) {
+                console.warn("Email notification failed but form was submitted", emailError);
+            }
+
             showToast(t('contact_page.form.success'), 'success');
             setFormData({
                 name: '',

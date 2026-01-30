@@ -1741,6 +1741,7 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                                     <p><strong>Taux (TAEG) :</strong> ${data.taux || data.interestRate}%</p>
                                     <p><strong>Mensualité :</strong> ${parseFloat(data.mensualite || data.monthlyPayment).toLocaleString('fr-FR')} €</p>
                                     <p><strong>Objet :</strong> ${data.objet || 'Non renseigné'}</p>
+                                    <p><strong>Langue :</strong> ${data.language?.toUpperCase() || 'FR'}</p>
                                     <p><strong>Score auto :</strong> <span style="font-weight: bold; color: ${data.score === 'GREEN' ? '#27ae60' : data.score === 'RED' ? '#c0392b' : '#f39c12'}">${data.score || 'N/A'}</span></p>
 
                                     <h3 style="color: #003366; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 20px;">👤 Identité & Contact</h3>
@@ -1748,32 +1749,31 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                                     <p><strong>Email :</strong> ${data.email}</p>
                                     <p><strong>Téléphone :</strong> ${data.telephone || 'Non renseigné'}</p>
                                     <p><strong>Naissance :</strong> ${data.dateNaissance || 'N/A'} (${data.lieuNaissance || 'N/A'})</p>
-                                    <p><strong>Nationalité :</strong> ${data.nationalite || 'N/A'}</p>
-                                    <p><strong>Pièce d'identité :</strong> ${data.typePieceIdentite?.toUpperCase() || 'N/A'} (Exp: ${data.dateExpPiece || 'N/A'})</p>
-
-                                    <h3 style="color: #003366; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 20px;">🏠 Adresse & Logement</h3>
-                                    <p><strong>Adresse :</strong> ${data.adresseRue || 'N/A'}, ${data.adresseCodePostal || ''} ${data.adresseVille || ''} (${data.adressePays || ''})</p>
-                                    <p><strong>Situation :</strong> ${data.typeLogement || 'N/A'} (Depuis ${data.ancienneteAdresse || 0} mois)</p>
-                                    <p><strong>Situation matrimoniale :</strong> ${data.situationMatrimoniale || 'N/A'} (${data.nbEnfants || 0} enfants)</p>
 
                                     <h3 style="color: #003366; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 20px;">💼 Situation Professionnelle</h3>
-                                    <p><strong>Statut :</strong> ${data.statutPro?.toUpperCase() || 'N/A'} (${data.typeContrat || 'N/A'})</p>
-                                    <p><strong>Employeur :</strong> ${data.nomEmployeur || 'N/A'} (${data.secteurActivite || 'N/A'})</p>
                                     <p><strong>Poste :</strong> ${data.posteOccupe || 'N/A'} (Ancienneté: ${data.anciennetePro || 0} mois)</p>
-                                    <p><strong>Revenus :</strong> ${parseFloat(data.revenusMensuels || 0).toLocaleString('fr-FR')} €/mois (+ ${parseFloat(data.autresRevenus || 0).toLocaleString('fr-FR')} € autres)</p>
-
-                                    <h3 style="color: #003366; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 20px;">💰 Situation Financière</h3>
-                                    <p><strong>Charges mensuelles :</strong> ${parseFloat(data.chargesMensuelles || 0).toLocaleString('fr-FR')} € (dont loyer: ${data.loyer || 0} €)</p>
-                                    <p><strong>Autres crédits :</strong> ${parseFloat(data.autresCredits || 0).toLocaleString('fr-FR')} €</p>
-                                    <p><strong>Pensions :</strong> ${parseFloat(data.pensions || 0).toLocaleString('fr-FR')} €</p>
-                                    <p><strong>Incident bancaire :</strong> <span style="color: ${data.incidentBancaire === 'oui' ? '#e74c3c' : '#27ae60'}">${data.incidentBancaire?.toUpperCase() || 'NON'}</span> ${data.incidentDetail ? `(${data.incidentDetail})` : ''}</p>
-
-                                    <h3 style="color: #003366; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 20px;">🏦 Informations Bancaires</h3>
-                                    <p><strong>Banque actuelle :</strong> ${data.banqueActuelle || 'N/A'} ${data.autreBanqueNom ? `(${data.autreBanqueNom})` : ''}</p>
-                                    <p><strong>IBAN :</strong> ${data.iban || 'Non communiqué'}</p>
-                                    <p><strong>Ancienneté compte :</strong> ${data.ancienneteCompte || 0} mois</p>
+                                    <p><strong>Revenus :</strong> ${parseFloat(data.revenusMensuels || 0).toLocaleString('fr-FR')} €/mois</p>
                                 </div>
                                 <p style="color: #666; font-size: 12px;">Dossier complet visible dans la section "Leads" de votre panneau d'administration.</p>
+                            </div>
+                        </div>
+                    `
+            },
+            en: {
+                subject: (data) => `[FULL LEAD] New Loan Application - ${data.nom || data.email}`,
+                html: (data) => `
+                        <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+                            <div style="background-color: #ffffff; padding: 30px; border-radius: 10px; border: 1px solid #ddd;">
+                                <h2 style="color: #003366; border-bottom: 2px solid #003366; padding-bottom: 10px;">🌟 NEW LOAN LEAD (COMPLETE)</h2>
+                                <p>A user has completed the loan application form.</p>
+                                <div style="background-color: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                                    <h3 style="color: #003366; border-bottom: 1px solid #eee; padding-bottom: 5px;">📊 Financing Project</h3>
+                                    <p><strong>Type:</strong> ${data.typeCredit || 'Simulation'}</p>
+                                    <p><strong>Amount:</strong> ${parseFloat(data.montant).toLocaleString('en-US')} €</p>
+                                    <p><strong>Duration:</strong> ${data.duree} months</p>
+                                    <p><strong>Mensualité:</strong> ${parseFloat(data.mensualite || data.monthlyPayment).toLocaleString('en-US')} €</p>
+                                    <p><strong>Language:</strong> ${data.language?.toUpperCase() || 'EN'}</p>
+                                </div>
                             </div>
                         </div>
                     `
@@ -1854,10 +1854,147 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                     <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #eee;">
                         <h2 style="color: #003366;">🎫 NOUVEAU TICKET DE SUPPORT</h2>
                         <p><strong>Client :</strong> ${data.userData.firstName} ${data.userData.lastName} (${data.userData.email})</p>
+                        <p><strong>Langue Client :</strong> ${data.userData.language?.toUpperCase() || 'FR'}</p>
                         <p><strong>Sujet :</strong> ${data.ticketData.subject}</p>
                         <p><strong>Message :</strong> ${data.ticketData.message}</p>
                         <div style="margin-top: 20px;">
                             <a href="https://invik-admin.vercel.app/support" style="background: #003366; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Répondre au ticket</a>
+                        </div>
+                    </div>
+                `
+            },
+            en: {
+                subject: (data) => `[SUPPORT] New Ticket - ${data.userData.lastName} - ${data.ticketData.subject}`,
+                html: (data) => `
+                    <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #eee;">
+                        <h2 style="color: #003366;">🎫 NEW SUPPORT TICKET</h2>
+                        <p><strong>Client:</strong> ${data.userData.firstName} ${data.userData.lastName} (${data.userData.email})</p>
+                        <p><strong>Client Language:</strong> ${data.userData.language?.toUpperCase() || 'EN'}</p>
+                        <p><strong>Subject:</strong> ${data.ticketData.subject}</p>
+                        <p><strong>Message:</strong> ${data.ticketData.message}</p>
+                        <div style="margin-top: 20px;">
+                            <a href="https://invik-admin.vercel.app/support" style="background: #003366; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Reply to ticket</a>
+                        </div>
+                    </div>
+                `
+            }
+        },
+        publicContactConfirmation: {
+            fr: {
+                subject: "Nous avons bien reçu votre message - INVIK BANK",
+                html: (data) => `
+                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                        <div style="background: #003366; padding: 20px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 20px;">INVIK BANK</h1>
+                        </div>
+                        <div style="padding: 30px; color: #333;">
+                            <h2>Bonjour ${data.name},</h2>
+                            <p>Merci de nous avoir contactés. Nous avons bien reçu votre message concernant : <strong>${data.subject}</strong>.</p>
+                            <p>Un conseiller étudiera votre demande et vous répondra dans les plus brefs délais (généralement sous 24h ouvrées).</p>
+                            <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                                <p style="margin: 0;"><strong>Récapitulatif de votre message :</strong></p>
+                                <p style="font-style: italic; color: #666;">"${data.message}"</p>
+                            </div>
+                            <p>Cordialement,<br><strong>L'équipe INVIK BANK</strong></p>
+                        </div>
+                    </div>
+                `
+            },
+            en: {
+                subject: "We have received your message - INVIK BANK",
+                html: (data) => `
+                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                        <div style="background: #003366; padding: 20px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 20px;">INVIK BANK</h1>
+                        </div>
+                        <div style="padding: 30px; color: #333;">
+                            <h2>Hello ${data.name},</h2>
+                            <p>Thank you for contacting us. We have received your message regarding: <strong>${data.subject}</strong>.</p>
+                            <p>An advisor will review your request and get back to you as soon as possible (usually within 24 business hours).</p>
+                            <p>Best regards,<br><strong>The INVIK BANK Team</strong></p>
+                        </div>
+                    </div>
+                `
+            },
+            es: {
+                subject: "Hemos recibido su mensaje - INVIK BANK",
+                html: (data) => `
+                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                        <div style="background: #003366; padding: 20px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 20px;">INVIK BANK</h1>
+                        </div>
+                        <div style="padding: 30px; color: #333;">
+                            <h2>Hola ${data.name},</h2>
+                            <p>Gracias por contactarnos. Hemos recibido su mensaje sobre: <strong>${data.subject}</strong>.</p>
+                            <p>Un asesor revisará su solicitud y le responderá lo antes posible (generalmente en un plazo de 24 horas hábiles).</p>
+                            <p>Atentamente,<br><strong>El equipo de INVIK BANK</strong></p>
+                        </div>
+                    </div>
+                `
+            },
+            pt: {
+                subject: "Recebemos a sua mensagem - INVIK BANK",
+                html: (data) => `
+                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                        <div style="background: #003366; padding: 20px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 20px;">INVIK BANK</h1>
+                        </div>
+                        <div style="padding: 30px; color: #333;">
+                            <h2>Olá ${data.name},</h2>
+                            <p>Obrigado por nos contactar. Recebemos a sua mensagem sobre: <strong>${data.subject}</strong>.</p>
+                            <p>Um consultor analisará o seu pedido e responderá o mais brevemente possível (geralmente num prazo de 24 horas úteis).</p>
+                            <p>Atenciosamente,<br><strong>A equipa INVIK BANK</strong></p>
+                        </div>
+                    </div>
+                `
+            },
+            it: {
+                subject: "Abbiamo ricevuto il tuo messaggio - INVIK BANK",
+                html: (data) => `
+                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                        <div style="background: #003366; padding: 20px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 20px;">INVIK BANK</h1>
+                        </div>
+                        <div style="padding: 30px; color: #333;">
+                            <h2>Buongiorno ${data.name},</h2>
+                            <p>Grazie per averci contattato. Abbiamo ricevuto il tuo messaggio riguardante: <strong>${data.subject}</strong>.</p>
+                            <p>Un consulente esaminerà la tua richiesta e ti risponderà al più presto (generalmente entro 24 ore lavorative).</p>
+                            <p>Cordiali saluti,<br><strong>Il team INVIK BANK</strong></p>
+                        </div>
+                    </div>
+                `
+            },
+            de: {
+                subject: "Wir haben Ihre Nachricht erhalten - INVIK BANK",
+                html: (data) => `
+                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                        <div style="background: #003366; padding: 20px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 20px;">INVIK BANK</h1>
+                        </div>
+                        <div style="padding: 30px; color: #333;">
+                            <h2>Guten Tag ${data.name},</h2>
+                            <p>Vielen Dank für Ihre Kontaktaufnahme. Wir haben Ihre Nachricht zu folgendem Thema erhalten: <strong>${data.subject}</strong>.</p>
+                            <p>Ein Berater wird Ihre Anfrage prüfen und sich so schnell wie möglich bei Ihnen melden (in der Regel innerhalb von 24 Geschäftsstunden).</p>
+                            <p>Mit freundlichen Grüßen,<br><strong>Ihr INVIK BANK Team</strong></p>
+                        </div>
+                    </div>
+                `
+            }
+        },
+        adminContactNotification: {
+            fr: {
+                subject: (data) => `[CONTACT] Nouveau message de ${data.name} - ${data.subject}`,
+                html: (data) => `
+                    <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #eee;">
+                        <h2 style="color: #003366;">📩 NOUVEAU MESSAGE DE CONTACT</h2>
+                        <p><strong>Nom :</strong> ${data.name}</p>
+                        <p><strong>Email :</strong> ${data.email}</p>
+                        <p><strong>Téléphone :</strong> ${data.phone || 'Non renseigné'}</p>
+                        <p><strong>Sujet :</strong> ${data.subject}</p>
+                        <p><strong>Langue :</strong> ${data.language?.toUpperCase() || 'FR'}</p>
+                        <p><strong>Message :</strong></p>
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; border: 1px solid #eee;">
+                            ${data.message}
                         </div>
                     </div>
                 `
@@ -2381,8 +2518,22 @@ const emailService = {
     },
 
     sendAdminSupportTicketNotification: async (userData, ticketData) => {
-        const template = getEmailTemplate('adminSupportTicket', 'fr', { userData, ticketData });
+        const lang = userData.language || 'fr';
+        const template = getEmailTemplate('adminSupportTicket', lang, { userData, ticketData });
         if (!template) throw new Error('Admin Support template not found');
+        return emailService.triggerEmail(ADMIN_EMAIL, template.subject, template.html);
+    },
+
+    sendPublicContactConfirmationEmail: async (toEmail, name, contactData) => {
+        const lang = contactData.language || 'fr';
+        const template = getEmailTemplate('publicContactConfirmation', lang, { name, ...contactData });
+        if (!template) throw new Error('Contact confirmation template not found');
+        return emailService.triggerEmail(toEmail, template.subject, template.html);
+    },
+
+    sendAdminContactNotification: async (contactData) => {
+        const template = getEmailTemplate('adminContactNotification', 'fr', contactData);
+        if (!template) throw new Error('Admin contact notification template not found');
         return emailService.triggerEmail(ADMIN_EMAIL, template.subject, template.html);
     },
 

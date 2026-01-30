@@ -44,7 +44,8 @@ export const supportService = {
                 }
 
                 const { default: emailService } = await import('./emailService');
-                await emailService.sendAdminSupportTicketNotification(userData, ticketData);
+                // Pass user language to the notification if available
+                await emailService.sendAdminSupportTicketNotification({ ...userData, language: userData.language || 'fr' }, ticketData);
             } catch (e) {
                 console.warn("Admin support notification failed", e);
             }
