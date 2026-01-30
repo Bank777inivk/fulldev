@@ -2,7 +2,15 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 const MaintenancePage = () => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
+
+    React.useEffect(() => {
+        const path = window.location.pathname;
+        const langCode = path.split('/')[1];
+        if (langCode && ['fr', 'en', 'es', 'pt', 'it', 'de'].includes(langCode)) {
+            i18n.changeLanguage(langCode);
+        }
+    }, [i18n]);
 
     return (
         <div style={styles.container}>
