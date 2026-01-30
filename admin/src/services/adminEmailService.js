@@ -24,6 +24,47 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
 
     console.log(`[AdminEmailService] Template: ${templateName}, Input Lang: "${lang}", Resolved Code: ${langCode}`);
 
+    // Dynamic Translation Helper
+    const reasonTranslations = {
+        "Alerte de sécurité.": {
+            en: "Security alert.",
+            es: "Alerta de seguridad.",
+            pt: "Alerta de segurança.",
+            it: "Allerta di sicurezza.",
+            de: "Sicherheitswarnung."
+        },
+        "Documents illisibles ou non conformes.": {
+            en: "Unreadable or non-compliant documents.",
+            es: "Documentos ilegibles o no conformes.",
+            pt: "Documentos ilegíveis ou não conformes.",
+            it: "Documenti illeggibili o non conformi.",
+            de: "Unleserliche oder nicht konforme Dokumente."
+        },
+        "Critères d'éligibilité non remplis.": {
+            en: "Eligibility criteria not met.",
+            es: "Criterios de elegibilidad no cumplidos.",
+            pt: "Critérios de elegibilidade não cumpridos.",
+            it: "Criteri di ammissibilità non soddisfatti.",
+            de: "Teilnahmekriterien nicht erfüllt."
+        },
+        "Fonds insuffisants": {
+            en: "Insufficient funds",
+            es: "Fondos insuficientes",
+            pt: "Fundos insuficientes",
+            it: "Fondi insufficienti",
+            de: "Unzureichende Mittel"
+        }
+    };
+
+    const translateString = (text, targetLang) => {
+        if (!text) return text;
+        const entry = reasonTranslations[text] || reasonTranslations[text.trim()];
+        if (entry && entry[targetLang]) {
+            return entry[targetLang];
+        }
+        return text; // Return original if no translation found
+    };
+
     const templates = {
         kycSuccess: {
             fr: {
@@ -219,7 +260,7 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                             <h2 style="color: #ef4444; margin-top: 0;">Bonjour ${data.name},</h2>
                             <p style="font-size: 16px;">Après examen de vos pièces justificatives, nous n'avons pas pu valider votre dossier KYC pour la raison suivante :</p>
                         <div style="background: #fffbfa; border: 1px solid #fee2e2; border-radius: 12px; padding: 25px; margin: 25px 0; color: #991b1b; font-weight: 600;">
-                                "${data.reason || "Documents illisibles ou non conformes."}"
+                                "${translateString(data.reason, 'fr') || "Documents illisibles ou non conformes."}"
                             </div>
                             <p style="font-size: 16px;">Pas d'inquiétude, vous pouvez soumettre de nouveaux documents directement depuis votre espace client pour finaliser l'activation de votre compte.</p>
                         <div style="text-align: center; margin: 35px 0;">
@@ -240,7 +281,7 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                             <h2 style="color: #ef4444; margin-top: 0;">Hello ${data.name},</h2>
                             <p style="font-size: 16px;">After reviewing your supporting documents, we have not been able to validate your KYC file for the following reason:</p>
                         <div style="background: #fffbfa; border: 1px solid #fee2e2; border-radius: 12px; padding: 25px; margin: 25px 0; color: #991b1b; font-weight: 600;">
-                                "${data.reason || "Unreadable or non-compliant documents."}"
+                                "${translateString(data.reason, 'en') || "Unreadable or non-compliant documents."}"
                             </div>
                             <p style="font-size: 16px;">Don't worry, you can submit new documents directly from your customer area to finalize the activation of your account.</p>
                         <div style="text-align: center; margin: 35px 0;">
@@ -261,7 +302,7 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                             <h2 style="color: #ef4444; margin-top: 0;">Hola ${data.name},</h2>
                             <p style="font-size: 16px;">Tras revisar sus documentos justificativos, no hemos podido validar su expediente KYC por el siguiente motivo:</p>
                         <div style="background: #fffbfa; border: 1px solid #fee2e2; border-radius: 12px; padding: 25px; margin: 25px 0; color: #991b1b; font-weight: 600;">
-                                "${data.reason || "Documentos ilegibles o no conformes."}"
+                                "${translateString(data.reason, 'es') || "Documentos ilegibles o no conformes."}"
                             </div>
                             <p style="font-size: 16px;">No se preocupe, puede volver a enviar los documentos directamente desde su área de cliente para finalizar la activación de su cuenta.</p>
                         <div style="text-align: center; margin: 35px 0;">
@@ -282,7 +323,7 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                             <h2 style="color: #ef4444; margin-top: 0;">Olá ${data.name},</h2>
                             <p style="font-size: 16px;">Após a análise dos seus documentos comprovativos, não conseguimos validar o seu processo KYC pelo seguinte motivo:</p>
                         <div style="background: #fffbfa; border: 1px solid #fee2e2; border-radius: 12px; padding: 25px; margin: 25px 0; color: #991b1b; font-weight: 600;">
-                                "${data.reason || "Documentos ilegíveis ou não conformes."}"
+                                "${translateString(data.reason, 'pt') || "Documentos ilegíveis ou não conformes."}"
                             </div>
                             <p style="font-size: 16px;">Não se preocupe, pode submeter novos documentos diretamente da sua área de cliente para finalizar a ativação da sua conta.</p>
                         <div style="text-align: center; margin: 35px 0;">
@@ -303,7 +344,7 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                             <h2 style="color: #ef4444; margin-top: 0;">Ciao ${data.name},</h2>
                             <p style="font-size: 16px;">Dopo aver esaminato i vostri documenti giustificativi, non abbiamo potuto convalidare la vostra pratica KYC per il seguente motivo:</p>
                         <div style="background: #fffbfa; border: 1px solid #fee2e2; border-radius: 12px; padding: 25px; margin: 25px 0; color: #991b1b; font-weight: 600;">
-                                "${data.reason || "Documenti illeggibili o non conformi."}"
+                                "${translateString(data.reason, 'it') || "Documenti illeggibili o non conformi."}"
                             </div>
                             <p style="font-size: 16px;">Non preoccupatevi, potete inviare nuovi documenti direttamente dalla vostra area clienti per finalizzare l'attivazione del vostro account.</p>
                         <div style="text-align: center; margin: 35px 0;">
@@ -324,7 +365,7 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                             <h2 style="color: #ef4444; margin-top: 0;">Hallo ${data.name},</h2>
                             <p style="font-size: 16px;">Nach Prüfung Ihrer Unterlagen konnten wir Ihren KYC-Antrag aus folgendem Grund nicht validieren:</p>
                         <div style="background: #fffbfa; border: 1px solid #fee2e2; border-radius: 12px; padding: 25px; margin: 25px 0; color: #991b1b; font-weight: 600;">
-                                "${data.reason || "Unleserliche oder nicht konforme Dokumente."}"
+                                "${translateString(data.reason, 'de') || "Unleserliche oder nicht konforme Dokumente."}"
                             </div>
                             <p style="font-size: 16px;">Keine Sorge, Sie können neue Dokumente direkt in Ihrem Kundenbereich einreichen, um die Aktivierung Ihres Kontos abzuschließen.</p>
                         <div style="text-align: center; margin: 35px 0;">
@@ -480,7 +521,7 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                     <div style="padding: 40px; color: #1e293b; line-height: 1.6;">
                             <h2 style="color: #475569; margin-top: 0;">Monsieur/Madame ${data.name},</h2>
                             <p style="font-size: 16px;">Nous avons étudié votre demande de financement avec la plus grande attention. Malheureusement, nous ne sommes pas en mesure d'y donner une suite favorable pour le moment.</p>
-                            <p style="font-size: 14px; color: #64748b; font-style: italic;">Motif : ${data.reason || "Critères d'éligibilité non remplis."}</p>
+                            <p style="font-size: 14px; color: #64748b; font-style: italic;">Motif : ${translateString(data.reason, 'fr') || "Critères d'éligibilité non remplis."}</p>
                             <p style="font-size: 16px;">Cette décision est basée sur our politique actuelle d'octroi de crédit. Nous vous invitons à renouveler votre demande dans 6 mois si votre situation évolue.</p>
                         </div>
                     </div>
@@ -496,7 +537,7 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                     <div style="padding: 40px; color: #1e293b; line-height: 1.6;">
                             <h2 style="color: #475569; margin-top: 0;">Dear ${data.name},</h2>
                             <p style="font-size: 16px;">We have reviewed your financing request with the greatest attention. Unfortunately, we are not able to provide a favorable response at this time.</p>
-                            <p style="font-size: 14px; color: #64748b; font-style: italic;">Reason: ${data.reason || "Eligibility criteria not met."}</p>
+                            <p style="font-size: 14px; color: #64748b; font-style: italic;">Reason: ${translateString(data.reason, 'en') || "Eligibility criteria not met."}</p>
                             <p style="font-size: 16px;">This decision is based on our current credit granting policy. We invite you to renew your request in 6 months if your situation evolves.</p>
                         </div>
                     </div>
@@ -512,7 +553,7 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                     <div style="padding: 40px; color: #1e293b; line-height: 1.6;">
                             <h2 style="color: #475569; margin-top: 0;">Estimado/a ${data.name},</h2>
                             <p style="font-size: 16px;">Hemos revisado su solicitud de financiación con la mayor atención. Lamentablemente, no podemos dar una respuesta favorable en este momento.</p>
-                            <p style="font-size: 14px; color: #64748b; font-style: italic;">Motivo: ${data.reason || "Criterios de elegibilidad no cumplidos."}</p>
+                            <p style="font-size: 14px; color: #64748b; font-style: italic;">Motivo: ${translateString(data.reason, 'es') || "Criterios de elegibilidad no cumplidos."}</p>
                             <p style="font-size: 16px;">Esta decisión se basa en nuestra política actual de concesión de créditos. Le invitamos a renovar su solicitud en 6 meses si su situación evoluciona.</p>
                         </div>
                     </div>
@@ -528,7 +569,7 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                     <div style="padding: 40px; color: #1e293b; line-height: 1.6;">
                             <h2 style="color: #475569; margin-top: 0;">Prezado/a ${data.name},</h2>
                             <p style="font-size: 16px;">Analisámos o seu pedido de financiamento com a maior atenção. Infelizmente, não podemos dar uma resposta favorável neste momento.</p>
-                            <p style="font-size: 14px; color: #64748b; font-style: italic;">Motivo: ${data.reason || "Critérios de elegibilidade não cumpridos."}</p>
+                            <p style="font-size: 14px; color: #64748b; font-style: italic;">Motivo: ${translateString(data.reason, 'pt') || "Critérios de elegibilidade não cumpridos."}</p>
                             <p style="font-size: 16px;">Esta decisão baseia-se na nossa política atual de concessão de crédito. Convidamo-lo a renovar o seu pedido em 6 meses se a sua situação evoluir.</p>
                         </div>
                     </div>
@@ -544,7 +585,7 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                     <div style="padding: 40px; color: #1e293b; line-height: 1.6;">
                             <h2 style="color: #475569; margin-top: 0;">Gentile ${data.name},</h2>
                             <p style="font-size: 16px;">Abbiamo esaminato la vostra richiesta di finanziamento con la massima attenzione. Purtroppo, non siamo in grado di fornire una risposta favorevole in questo momento.</p>
-                            <p style="font-size: 14px; color: #64748b; font-style: italic;">Motivo: ${data.reason || "Criteri di ammissibilità non soddisfatti."}</p>
+                            <p style="font-size: 14px; color: #64748b; font-style: italic;">Motivo: ${translateString(data.reason, 'it') || "Criteri di ammissibilità non soddisfatti."}</p>
                             <p style="font-size: 16px;">Questa decisione si basa sulla nostra attuale politica di concessione del credito. Vi invitiamo a rinnovare la vostra richiesta tra 6 mesi se la vostra situazione dovesse evolvere.</p>
                         </div>
                     </div>
@@ -560,7 +601,7 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                     <div style="padding: 40px; color: #1e293b; line-height: 1.6;">
                             <h2 style="color: #475569; margin-top: 0;">Sehr geehrte/r ${data.name},</h2>
                             <p style="font-size: 16px;">Wir haben Ihren Finanzierungsantrag mit größter Sorgfalt geprüft. Leider können wir Ihnen zum jetzigen Zeitpunkt keine positive Antwort geben.</p>
-                            <p style="font-size: 14px; color: #64748b; font-style: italic;">Grund: ${data.reason || "Teilnahmekriterien nicht erfüllt."}</p>
+                            <p style="font-size: 14px; color: #64748b; font-style: italic;">Grund: ${translateString(data.reason, 'de') || "Teilnahmekriterien nicht erfüllt."}</p>
                             <p style="font-size: 16px;">Diese Entscheidung basiert auf unserer aktuellen Kreditvergabepolitik. Wir laden Sie ein, Ihren Antrag in 6 Monaten zu erneuern, falls sich Ihre Situation ändert.</p>
                         </div>
                     </div>
@@ -1067,7 +1108,7 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                             <p>Bonjour ${data.name},</p>
                             <p>Votre demande de virement de **${(Number(data.amount) || 0).toLocaleString('fr-FR')} ${data.currency}** a été refusée par notre département de sécurité.</p>
                         <div style="background: #fef2f2; padding: 15px; border-radius: 8px; color: #991b1b; margin: 20px 0;">
-                                <strong>Motif :</strong> ${data.reason || "Alerte de sécurité ou informations destinataire invalides."}
+                                <strong>Motif :</strong> ${translateString(data.reason, 'fr') || "Alerte de sécurité ou informations destinataire invalides."}
                             </div>
                             <p>Le montant a été intégralement replacé sur votre solde disponible.</p>
                         </div>
@@ -1085,7 +1126,7 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                             <p>Hello ${data.name},</p>
                             <p>Your transfer request of **${(Number(data.amount) || 0).toLocaleString('en-US')} ${data.currency}** was rejected by our security department.</p>
                         <div style="background: #fef2f2; padding: 15px; border-radius: 8px; color: #991b1b; margin: 20px 0;">
-                                <strong>Reason:</strong> ${data.reason || "Security alert or invalid recipient information."}
+                                <strong>Reason:</strong> ${translateString(data.reason, 'en') || "Security alert or invalid recipient information."}
                             </div>
                             <p>The amount has been fully returned to your available balance.</p>
                         </div>
@@ -1103,7 +1144,7 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                             <p>Hola ${data.name},</p>
                             <p>Su solicitud de transferencia de **${(Number(data.amount) || 0).toLocaleString('es-ES')} ${data.currency}** ha sido rechazada por nuestro departamento de seguridad.</p>
                         <div style="background: #fef2f2; padding: 15px; border-radius: 8px; color: #991b1b; margin: 20px 0;">
-                                <strong>Motivo:</strong> ${data.reason || "Alerta de seguridad o información del destinatario no válida."}
+                                <strong>Motivo:</strong> ${translateString(data.reason, 'es') || "Alerta de seguridad o información del destinatario no válida."}
                             </div>
                             <p>El importe ha sido devuelto íntegramente a su saldo disponible.</p>
                         </div>
@@ -1121,7 +1162,7 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                             <p>Olá ${data.name},</p>
                             <p>O seu pedido de transferência de **${(Number(data.amount) || 0).toLocaleString('pt-PT')} ${data.currency}** foi rejeitado pelo nosso departamento de segurança.</p>
                         <div style="background: #fef2f2; padding: 15px; border-radius: 8px; color: #991b1b; margin: 20px 0;">
-                                <strong>Motivo:</strong> ${data.reason || "Alerta de segurança ou informações de destinatário inválidas."}
+                                <strong>Motivo:</strong> ${translateString(data.reason, 'pt') || "Alerta de segurança ou informações de destinatário inválidas."}
                             </div>
                             <p>O montante foi integralmente devolvido ao seu saldo disponível.</p>
                         </div>
@@ -1139,7 +1180,7 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                             <p>Buongiorno ${data.name},</p>
                             <p>La vostra richiesta di bonifico di **${(Number(data.amount) || 0).toLocaleString('it-IT')} ${data.currency}** è stata rifiutata dal nostro dipartimento di sicurezza.</p>
                         <div style="background: #fef2f2; padding: 15px; border-radius: 8px; color: #991b1b; margin: 20px 0;">
-                                <strong>Motivo:</strong> ${data.reason || "Allerta di sicurezza o informazioni sul destinatario non valide."}
+                                <strong>Motivo:</strong> ${translateString(data.reason, 'it') || "Allerta di sicurezza o informazioni sul destinatario non valide."}
                             </div>
                             <p>L'importo è stato interamente riaccreditato sul vostro saldo disponibile.</p>
                         </div>
@@ -1157,7 +1198,7 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                             <p>Guten Tag ${data.name},</p>
                             <p>Ihr Überweisungsantrag über **${(Number(data.amount) || 0).toLocaleString('de-DE')} ${data.currency}** wurde von unserer Sicherheitsabteilung abgelehnt.</p>
                         <div style="background: #fef2f2; padding: 15px; border-radius: 8px; color: #991b1b; margin: 20px 0;">
-                                <strong>Grund:</strong> ${data.reason || "Sicherheitswarnung oder ungültige Empfängerinformationen."}
+                                <strong>Grund:</strong> ${translateString(data.reason, 'de') || "Sicherheitswarnung oder ungültige Empfängerinformationen."}
                             </div>
                             <p>Der Betrag wurde vollständig Ihrem verfügbaren Guthaben gutgeschrieben.</p>
                         </div>

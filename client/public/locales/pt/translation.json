@@ -1378,7 +1378,8 @@
         "deposit": "Depósito",
         "transfer": "Transferência",
         "by_card": "por cartão",
-        "by_transfer": "por transferência"
+        "by_transfer": "por transferência",
+        "review": "Em análise"
     },
     "actions": {
         "title": "Ações Rápidas",
@@ -1455,7 +1456,11 @@
         },
         "history": {
             "title": "Histórico de transferências recentes",
-            "empty": "Nenhuma transferência recente."
+            "empty": "Nenhuma transferência recente.",
+            "transfer_for_check": "Transferência para {{name}} (Controlo INVIK)"
+        },
+        "pagination": {
+            "page": "Página {{current}} de {{total}}"
         },
         "buttons": {
             "next": "Seguinte",

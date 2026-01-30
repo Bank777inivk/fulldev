@@ -1463,7 +1463,11 @@
         },
         "history": {
             "title": "Letzte Überweisungen",
-            "empty": "Keine Transaktionen."
+            "empty": "Keine Transaktionen.",
+            "transfer_for_check": "Überweisung für {{name}} (INVIK Prüfung)"
+        },
+        "pagination": {
+            "page": "Seite {{current}} von {{total}}"
         },
         "buttons": {
             "next": "Weiter",
@@ -1495,9 +1499,6 @@
         },
         "beneficiaries": {
             "empty": "Kein Empfänger gespeichert."
-        },
-        "pagination": {
-            "page": "Seite {{current}} von {{total}}"
         }
     },
     "cards": {

@@ -15,6 +15,16 @@ const Transfers = () => {
     const { showToast } = useNotifications();
     const { t, i18n } = useTranslation(); // Hook initialization
 
+    // Helper to translate legacy/hardcoded transaction descriptions
+    const formatDescription = (description) => {
+        if (!description) return "";
+        const match = description.match(/^Virement pour (.+) \(Contrôle INVIK\)$/);
+        if (match) {
+            return t('transfers.history.transfer_for_check', { name: match[1] });
+        }
+        return description;
+    };
+
     // Filter wallets for display, consistent with Accounts.jsx
     const displayWallets = React.useMemo(() => {
         if (!wallets) return [];
@@ -762,7 +772,7 @@ const Transfers = () => {
                                             <div style={{ flex: 1 }}>
                                                 <div style={{ fontWeight: '600', fontSize: '1rem' }}>{tx.amount} {tx.currency || 'EUR'}</div>
                                                 <div style={{ fontSize: '0.85rem', color: '#666' }}>
-                                                    {new Date(tx.createdAt?.toDate() || tx.createdAt).toLocaleDateString()} — {tx.description}
+                                                    {new Date(tx.createdAt?.toDate() || tx.createdAt).toLocaleDateString()} — {formatDescription(tx.description)}
                                                 </div>
                                             </div>
                                             <span style={{
@@ -777,7 +787,7 @@ const Transfers = () => {
                                                 gap: '6px'
                                             }}>
                                                 {tx.status === 'in_review' && <i className="fas fa-circle-notch fa-spin"></i>}
-                                                {tx.status === 'pending' ? t('status.pending') : (tx.status === 'in_review' ? t('transactions.review') : (tx.status === 'rejected' ? t('status.rejected') : t('status.done')))}
+                                                {tx.status === 'pending' ? t('status.pending') : (tx.status === 'in_review' ? t('transactions.review') : (tx.status === 'rejected' ? t('status.rejected') : t('status.completed')))}
                                             </span>
                                         </div>
                                     ))}

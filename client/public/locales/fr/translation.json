@@ -1063,7 +1063,11 @@
         },
         "history": {
             "title": "Historique des virements récents",
-            "empty": "Aucun virement récent."
+            "empty": "Aucun virement récent.",
+            "transfer_for_check": "Virement pour {{name}} (Contrôle INVIK)"
+        },
+        "pagination": {
+            "page": "Page {{current}} sur {{total}}"
         },
         "buttons": {
             "next": "Suivant",

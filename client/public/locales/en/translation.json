@@ -1444,7 +1444,11 @@
         },
         "history": {
             "title": "Recent transfer history",
-            "empty": "No recent transfers."
+            "empty": "No recent transfers.",
+            "transfer_for_check": "Transfer for {{name}} (INVIK Check)"
+        },
+        "pagination": {
+            "page": "Page {{current}} of {{total}}"
         },
         "buttons": {
             "next": "Next",

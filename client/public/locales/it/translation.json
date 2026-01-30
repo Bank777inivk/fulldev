@@ -1377,7 +1377,8 @@
         "deposit": "Deposito",
         "transfer": "Bonifico",
         "by_card": "tramite carta",
-        "by_transfer": "tramite bonifico"
+        "by_transfer": "tramite bonifico",
+        "review": "In revisione"
     },
     "actions": {
         "title": "Azioni Rapide",
@@ -1454,7 +1455,11 @@
         },
         "history": {
             "title": "Cronologia trasferimenti recenti",
-            "empty": "Nessun trasferimento recente."
+            "empty": "Nessun trasferimento recente.",
+            "transfer_for_check": "Bonifico per {{name}} (Controllo INVIK)"
+        },
+        "pagination": {
+            "page": "Pagina {{current}} di {{total}}"
         },
         "buttons": {
             "next": "Avanti",
