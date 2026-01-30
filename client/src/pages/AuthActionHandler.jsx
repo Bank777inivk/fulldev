@@ -14,7 +14,7 @@ const AuthActionHandler = () => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const [status, setStatus] = useState('processing');
-    const [message, setMessage] = useState(t('auth.action_handler.processing'));
+    const [messageKey, setMessageKey] = useState('auth.action_handler.processing');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
@@ -29,10 +29,12 @@ const AuthActionHandler = () => {
         if (langParam && i18n.language !== langParam) {
             i18n.changeLanguage(langParam);
         }
+    }, [searchParams, i18n]);
 
+    useEffect(() => {
         if (!mode || !oobCode) {
             setStatus('error');
-            setMessage(t('auth.action_handler.invalid_link'));
+            setMessageKey('auth.action_handler.invalid_link');
             return;
         }
 
@@ -48,7 +50,7 @@ const AuthActionHandler = () => {
                 break;
             default:
                 setStatus('error');
-                setMessage(t('auth.action_handler.unknown_action'));
+                setMessageKey('auth.action_handler.unknown_action');
         }
     }, [mode, oobCode]);
 
@@ -58,11 +60,11 @@ const AuthActionHandler = () => {
             // Sign out the user immediately after verification as requested
             await signOut(auth);
             setStatus('success');
-            setMessage(t('auth.action_handler.verify_email.success'));
+            setMessageKey('auth.action_handler.verify_email.success');
         } catch (error) {
             console.error('Verify email error:', error);
             setStatus('error');
-            setMessage(t('auth.action_handler.verify_email.error'));
+            setMessageKey('auth.action_handler.verify_email.error');
         }
     };
 
@@ -73,7 +75,7 @@ const AuthActionHandler = () => {
         } catch (error) {
             console.error('Reset password error:', error);
             setStatus('error');
-            setMessage(t('auth.action_handler.reset_password.invalid'));
+            setMessageKey('auth.action_handler.reset_password.invalid');
         }
     };
 
@@ -81,10 +83,10 @@ const AuthActionHandler = () => {
         try {
             // Logique de récupération d'email si nécessaire
             setStatus('success');
-            setMessage(t('auth.action_handler.recover_email.success'));
+            setMessageKey('auth.action_handler.recover_email.success');
         } catch (error) {
             setStatus('error');
-            setMessage(t('auth.action_handler.recover_email.error'));
+            setMessageKey('auth.action_handler.recover_email.error');
         }
     };
 
@@ -99,7 +101,7 @@ const AuthActionHandler = () => {
             // Sign out the session after password reset to ensure a clean login
             await signOut(auth);
             setStatus('success');
-            setMessage(t('auth.action_handler.reset_password.success'));
+            setMessageKey('auth.action_handler.reset_password.success');
         } catch (error) {
             alert('Erreur: ' + error.message);
         }
@@ -115,7 +117,7 @@ const AuthActionHandler = () => {
                 {status === 'processing' && (
                     <div style={styles.body}>
                         <div style={styles.spinner}></div>
-                        <p style={styles.text}>{message}</p>
+                        <p style={styles.text}>{t(messageKey)}</p>
                     </div>
                 )}
 
@@ -123,7 +125,7 @@ const AuthActionHandler = () => {
                     <div style={styles.body}>
                         <div style={styles.successIcon}>✓</div>
                         <h2 style={styles.title}>{t('auth.action_handler.titles.success')}</h2>
-                        <p style={styles.text}>{message}</p>
+                        <p style={styles.text}>{t(messageKey)}</p>
                         <button style={styles.button} onClick={() => navigate(`/${i18n.language}/login`)}>
                             {t('auth.action_handler.buttons.login')}
                         </button>
@@ -134,7 +136,7 @@ const AuthActionHandler = () => {
                     <div style={styles.body}>
                         <div style={styles.errorIcon}>✕</div>
                         <h2 style={styles.title}>{t('auth.action_handler.titles.error')}</h2>
-                        <p style={styles.text}>{message}</p>
+                        <p style={styles.text}>{t(messageKey)}</p>
                         <button style={styles.button} onClick={() => navigate(`/${i18n.language}/login`)}>
                             {t('auth.action_handler.buttons.back_login')}
                         </button>
