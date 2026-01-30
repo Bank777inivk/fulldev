@@ -12,6 +12,10 @@
         "dashboard": "Tableau de bord"
     },
     "notifications": {
+        "title": "Notifications",
+        "mark_all_read": "Tout marquer comme lu",
+        "empty": "Aucune notification",
+        "close": "Fermer",
         "deposit": {
             "title": "💰 Nouveau dépôt reçu",
             "message": "Votre compte INVIK BANK a été crédité d'un montant de {{amount}} {{currency}}. Nouveau solde : {{newBalance}} {{currency}}",

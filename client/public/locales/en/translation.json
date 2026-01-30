@@ -12,6 +12,10 @@
         "dashboard": "Dashboard"
     },
     "notifications": {
+        "title": "Notifications",
+        "mark_all_read": "Mark all as read",
+        "empty": "No notifications",
+        "close": "Close",
         "deposit": {
             "title": "💰 New Deposit Received",
             "message": "Your INVIK BANK account has been credited with {{amount}} {{currency}}. New balance: {{newBalance}} {{currency}}",
@@ -59,11 +63,7 @@
         "transferPending": {
             "title": "⏳ SEPA transfer pending",
             "message": "Your transfer of {{amount}} {{currency}} to {{beneficiary}} is being processed. Usual delay: 24h-48h."
-        },
-        "title": "Notifications",
-        "mark_all_read": "Mark all as read",
-        "empty": "No new notifications",
-        "close": "Close"
+        }
     },
     "simulator_page": {
         "title": "Credit Simulator",
