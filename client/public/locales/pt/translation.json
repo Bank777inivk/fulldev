@@ -1406,7 +1406,7 @@
             "invik_desc": "Instantânea e Gratuita",
             "sepa": "Transferência SEPA",
             "sepa_desc": "Para outro banco",
-            "history": "Acompanhamento"
+            "history": "Histórico"
         },
         "steps": {
             "accounts": "Contas",

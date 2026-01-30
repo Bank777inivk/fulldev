@@ -845,9 +845,21 @@ const styles = {
     warningBox: { padding: '1.5rem', backgroundColor: '#fff3cd', color: '#856404', borderRadius: '12px', border: '1px solid #ffeeba', display: 'flex', alignItems: 'center', gap: '1rem' },
 
     // MOBILE SPECIFIC STYLES
-    mobileTabs: { display: 'flex', backgroundColor: '#fff', borderRadius: '10px', padding: '4px', marginBottom: '1.5rem', border: '1px solid #eee' },
-    mobileTab: { flex: 1, padding: '10px', border: 'none', backgroundColor: 'transparent', borderRadius: '8px', fontWeight: 'bold', color: '#888', cursor: 'pointer' },
-    mobileTabActive: { flex: 1, padding: '10px', border: 'none', backgroundColor: '#003366', color: '#fff', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', boxShadow: '0 2px 5px rgba(0,0,0,0.1)' },
+    mobileTabs: {
+        display: 'flex',
+        backgroundColor: '#fff',
+        borderRadius: '10px',
+        padding: '4px',
+        marginBottom: '1.5rem',
+        border: '1px solid #eee',
+        overflowX: 'auto',
+        whiteSpace: 'nowrap',
+        WebkitOverflowScrolling: 'touch',
+        msOverflowStyle: 'none',
+        scrollbarWidth: 'none'
+    },
+    mobileTab: { flex: '0 0 auto', minWidth: '80px', padding: '10px 15px', border: 'none', backgroundColor: 'transparent', borderRadius: '8px', fontWeight: 'bold', color: '#888', cursor: 'pointer' },
+    mobileTabActive: { flex: '0 0 auto', minWidth: '80px', padding: '10px 15px', border: 'none', backgroundColor: '#003366', color: '#fff', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', boxShadow: '0 2px 5px rgba(0,0,0,0.1)' },
     mobileSectionTitle: { fontSize: '1.1rem', marginBottom: '1rem', color: '#333', fontWeight: '700' },
     toggleRow: { display: 'flex', gap: '10px', marginBottom: '1rem' },
     toggleBtn: { flex: 1, padding: '8px', border: '1px solid #ddd', borderRadius: '8px', backgroundColor: '#fff', color: '#666' },

@@ -53,16 +53,135 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
             pt: "Fundos insuficientes",
             it: "Fondi insufficienti",
             de: "Unzureichende Mittel"
+        },
+        "Alerte de sécurité ou informations destinataire invalides.": {
+            en: "Security alert or invalid recipient information.",
+            es: "Alerta de seguridad o información del destinatario no válida.",
+            pt: "Alerta de segurança ou informações de destinatário inválidas.",
+            it: "Allerta di sicurezza o informazioni sul destinatario non valide.",
+            de: "Sicherheitswarnung oder ungültige Empfängerinformationen."
+        },
+        "Documents justificatifs insuffisants.": {
+            en: "Insufficient supporting documents.",
+            es: "Documentos justificativos insuficientes.",
+            pt: "Documentos comprovativos insuficientes.",
+            it: "Documentazione di supporto insufficiente.",
+            de: "Unzureichende Belege."
+        }
+    };
+
+    const descriptionTranslations = {
+        "Virement vers Épargne": {
+            en: "Transfer to Savings",
+            es: "Transferencia a Ahorros",
+            pt: "Transferência para Poupança",
+            it: "Bonifico verso Risparmio",
+            de: "Überweisung auf Sparkonto"
+        },
+        "Virement vers Compte principal": {
+            en: "Transfer to Main Account",
+            es: "Transferencia a Cuenta principal",
+            pt: "Transferência para Conta principal",
+            it: "Bonifico verso Conto principale",
+            de: "Überweisung auf Hauptkonto"
+        },
+        "Dépôt INVIK BANK": {
+            en: "INVIK BANK Deposit",
+            es: "Depósito INVIK BANK",
+            pt: "Depósito INVIK BANK",
+            it: "Deposito INVIK BANK",
+            de: "INVIK BANK Einzahlung"
+        },
+        "Ajustement de solde Admin": {
+            en: "Admin Balance Adjustment",
+            es: "Ajuste de saldo de administrador",
+            pt: "Ajuste de saldo do administrador",
+            it: "Rettifica saldo amministratore",
+            de: "Kontostandsanpassung durch Administrator"
+        },
+        "Rechargement par Carte Bancaire": {
+            en: "Topped up by Credit Card",
+            es: "Recarga por Tarjeta Bancaria",
+            pt: "Recarregamento por Cartão Bancário",
+            it: "Ricarica con Carta di Credito",
+            de: "Aufladung per Bankkarte"
+        },
+        "Rechargement par Virement": {
+            en: "Topped up by Transfer",
+            es: "Recarga por Transferencia",
+            pt: "Recarregamento por Transferência",
+            it: "Ricarica tramite Bonifico",
+            de: "Aufladung per Überweisung"
+        },
+        "Contrôle de sécurité": {
+            en: "Security check",
+            es: "Control de seguridad",
+            pt: "Verificação de segurança",
+            it: "Controllo di sicurezza",
+            de: "Sicherheitsprüfung"
         }
     };
 
     const translateString = (text, targetLang) => {
         if (!text) return text;
+        if (targetLang === 'fr') return text;
         const entry = reasonTranslations[text] || reasonTranslations[text.trim()];
         if (entry && entry[targetLang]) {
             return entry[targetLang];
         }
-        return text; // Return original if no translation found
+        return text;
+    };
+
+    const translateTransactionDescription = (desc, targetLang) => {
+        if (!desc) return desc;
+        if (targetLang === 'fr') return desc;
+
+        // Check exact match
+        if (descriptionTranslations[desc] && descriptionTranslations[desc][targetLang]) {
+            return descriptionTranslations[desc][targetLang];
+        }
+
+        // Check patterns like "Virement pour [Name] (Contrôle INVIK)"
+        const virementMatch = desc.match(/^Virement pour (.+) \(Contrôle INVIK\)$/);
+        if (virementMatch) {
+            const name = virementMatch[1];
+            const i18n = {
+                en: `Transfer for ${name} (INVIK Check)`,
+                es: `Transferencia para ${name} (Control INVIK)`,
+                pt: `Transferência para ${name} (Controle INVIK)`,
+                it: `Bonifico per ${name} (Controllo INVIK)`,
+                de: `Überweisung für ${name} (INVIK-Prüfung)`
+            };
+            return i18n[targetLang] || desc;
+        }
+
+        const virementInstantMatch = desc.match(/^Virement instantané vers (.+)$/);
+        if (virementInstantMatch) {
+            const name = virementInstantMatch[1];
+            const i18n = {
+                en: `Instant transfer to ${name}`,
+                es: `Transferencia instantánea a ${name}`,
+                pt: `Transferência instantânea para ${name}`,
+                it: `Bonifico istantaneo verso ${name}`,
+                de: `Sofortüberweisung an ${name}`
+            };
+            return i18n[targetLang] || desc;
+        }
+
+        const receiveInstantMatch = desc.match(/^Transfert instantané reçu de (.+)$/);
+        if (receiveInstantMatch) {
+            const name = receiveInstantMatch[1];
+            const i18n = {
+                en: `Instant transfer received from ${name}`,
+                es: `Transferencia instantánea recibida de ${name}`,
+                pt: `Transferência instantânea recebida de ${name}`,
+                it: `Bonifico istantaneo ricevuto da ${name}`,
+                de: `Sofortüberweisung erhalten von ${name}`
+            };
+            return i18n[targetLang] || desc;
+        }
+
+        return desc;
     };
 
     const templates = {
@@ -389,7 +508,7 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                             <p style="font-size: 16px;">Votre demande de financement a été approuvée par notre comité de crédit.</p>
                         <div style="background: #f0fdf4; border-radius: 12px; padding: 30px; text-align: center; margin: 25px 0; border: 1px solid #dcfce7;">
                                 <span style="display: block; color: #065f46; font-size: 14px; font-weight: 700; text-transform: uppercase;">Montant débloqué</span>
-                                <span style="display: block; color: #059669; font-size: 36px; font-weight: 900;">${(Number(data.amount) || 0).toLocaleString('fr-FR')} ${data.currency}</span>
+                                <span style="display: block; color: #059669; font-size: 36px; font-weight: 900;">${(Number(data.amount) || 0).toLocaleString('fr-FR', { style: 'currency', currency: data.currency || 'EUR' })}</span>
                             </div>
                             <p style="font-size: 16px;">Les fonds seront visibles sur votre compte principal sous un délai de 24h à 48h ouvrés.</p>
                         <div style="text-align: center; margin: 35px 0;">
@@ -411,7 +530,7 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                             <p style="font-size: 16px;">Your financing request has been approved by our credit committee.</p>
                         <div style="background: #f0fdf4; border-radius: 12px; padding: 30px; text-align: center; margin: 25px 0; border: 1px solid #dcfce7;">
                                 <span style="display: block; color: #065f46; font-size: 14px; font-weight: 700; text-transform: uppercase;">Unlocked amount</span>
-                                <span style="display: block; color: #059669; font-size: 36px; font-weight: 900;">${(Number(data.amount) || 0).toLocaleString('en-US')} ${data.currency}</span>
+                                <span style="display: block; color: #059669; font-size: 36px; font-weight: 900;">${(Number(data.amount) || 0).toLocaleString('en-US', { style: 'currency', currency: data.currency || 'EUR' })}</span>
                             </div>
                             <p style="font-size: 16px;">The funds will be visible on your main account within 24 to 48 business hours.</p>
                         <div style="text-align: center; margin: 35px 0;">
@@ -433,7 +552,7 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                             <p style="font-size: 16px;">Su solicitud de financiación ha sido aprobada por nuestro comité de crédito.</p>
                         <div style="background: #f0fdf4; border-radius: 12px; padding: 30px; text-align: center; margin: 25px 0; border: 1px solid #dcfce7;">
                                 <span style="display: block; color: #065f46; font-size: 14px; font-weight: 700; text-transform: uppercase;">Monto desbloqueado</span>
-                                <span style="display: block; color: #059669; font-size: 36px; font-weight: 900;">${(Number(data.amount) || 0).toLocaleString('es-ES')} ${data.currency}</span>
+                                <span style="display: block; color: #059669; font-size: 36px; font-weight: 900;">${(Number(data.amount) || 0).toLocaleString('es-ES', { style: 'currency', currency: data.currency || 'EUR' })}</span>
                             </div>
                             <p style="font-size: 16px;">Los fondos estarán visibles en su cuenta principal en un plazo de 24 a 48 horas hábiles.</p>
                         <div style="text-align: center; margin: 35px 0;">
@@ -455,7 +574,7 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                             <p style="font-size: 16px;">O seu pedido de financiamento foi aprovado pelo nosso comité de crédito.</p>
                         <div style="background: #f0fdf4; border-radius: 12px; padding: 30px; text-align: center; margin: 25px 0; border: 1px solid #dcfce7;">
                                 <span style="display: block; color: #065f46; font-size: 14px; font-weight: 700; text-transform: uppercase;">Montante desbloqueado</span>
-                                <span style="display: block; color: #059669; font-size: 36px; font-weight: 900;">${(Number(data.amount) || 0).toLocaleString('pt-PT')} ${data.currency}</span>
+                                <span style="display: block; color: #059669; font-size: 36px; font-weight: 900;">${(Number(data.amount) || 0).toLocaleString('pt-PT', { style: 'currency', currency: data.currency || 'EUR' })}</span>
                             </div>
                             <p style="font-size: 16px;">Os fundos estarão visíveis na sua conta principal num prazo de 24h a 48h úteis.</p>
                         <div style="text-align: center; margin: 35px 0;">
@@ -477,7 +596,7 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                             <p style="font-size: 16px;">La vostra richiesta di finanziamento è stata approvata dal nostro comitato di credito.</p>
                         <div style="background: #f0fdf4; border-radius: 12px; padding: 30px; text-align: center; margin: 25px 0; border: 1px solid #dcfce7;">
                                 <span style="display: block; color: #065f46; font-size: 14px; font-weight: 700; text-transform: uppercase;">Importo sbloccato</span>
-                                <span style="display: block; color: #059669; font-size: 36px; font-weight: 900;">${(Number(data.amount) || 0).toLocaleString('it-IT')} ${data.currency}</span>
+                                <span style="display: block; color: #059669; font-size: 36px; font-weight: 900;">${(Number(data.amount) || 0).toLocaleString('it-IT', { style: 'currency', currency: data.currency || 'EUR' })}</span>
                             </div>
                             <p style="font-size: 16px;">I fondi saranno visibili sul vostro conto principale entro 24-48 ore lavorative.</p>
                         <div style="text-align: center; margin: 35px 0;">
@@ -499,7 +618,7 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                             <p style="font-size: 16px;">Ihr Finanzierungsantrag wurde von unserem Kreditausschuss genehmigt.</p>
                         <div style="background: #f0fdf4; border-radius: 12px; padding: 30px; text-align: center; margin: 25px 0; border: 1px solid #dcfce7;">
                                 <span style="display: block; color: #065f46; font-size: 14px; font-weight: 700; text-transform: uppercase;">Freigeschalteter Betrag</span>
-                                <span style="display: block; color: #059669; font-size: 36px; font-weight: 900;">${(Number(data.amount) || 0).toLocaleString('de-DE')} ${data.currency}</span>
+                                <span style="display: block; color: #059669; font-size: 36px; font-weight: 900;">${(Number(data.amount) || 0).toLocaleString('de-DE', { style: 'currency', currency: data.currency || 'EUR' })}</span>
                             </div>
                             <p style="font-size: 16px;">Die Mittel werden innerhalb von 24 bis 48 Werksstunden auf Ihrem Hauptkonto sichtbar sein.</p>
                         <div style="text-align: center; margin: 35px 0;">
@@ -858,354 +977,6 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
 `
             }
         },
-        transactionValidated: {
-            fr: {
-                subject: "Confirmation de virement sortant - INVIK BANK",
-                html: (data) => `
-<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0;">
-                    <div style="background: #10b981; padding: 30px 20px; text-align: center; color: white;">
-                            <h2 style="margin: 0; font-size: 20px;">Virement Transmis</h2>
-                        </div>
-                    <div style="padding: 40px; color: #1e293b;">
-                            <p>Bonjour ${data.name},</p>
-                            <p>Votre virement vers l'extérieur a été validé et transmis au réseau bancaire international.</p>
-                        <div style="background: #f8fafc; padding: 20px; border-radius: 12px; margin: 20px 0;">
-                                <table style="width: 100%; border-collapse: collapse;">
-                                    <tr><td style="color: #64748b; padding-bottom: 10px;">Montant</td><td style="text-align: right; font-weight: 700;">${(Number(data.amount) || 0).toLocaleString('fr-FR')} ${data.currency}</td></tr>
-                                    <tr><td style="color: #64748b;">Description</td><td style="text-align: right; font-weight: 700;">${data.description}</td></tr>
-                                </table>
-                            </div>
-                            <p style="font-size: 14px; color: #64748b;">Ce virement devrait atteindre le compte destinataire sous 24h à 72h.</p>
-                        </div>
-                    </div>
-`
-            },
-            en: {
-                subject: "Outgoing transfer confirmation - INVIK BANK",
-                html: (data) => `
-<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0;">
-                    <div style="background: #10b981; padding: 30px 20px; text-align: center; color: white;">
-                            <h2 style="margin: 0; font-size: 20px;">Transfer Transmitted</h2>
-                        </div>
-                    <div style="padding: 40px; color: #1e293b;">
-                            <p>Hello ${data.name},</p>
-                            <p>Your external transfer has been validated and transmitted to the international banking network.</p>
-                        <div style="background: #f8fafc; padding: 20px; border-radius: 12px; margin: 20px 0;">
-                                <table style="width: 100%; border-collapse: collapse;">
-                                    <tr><td style="color: #64748b; padding-bottom: 10px;">Amount</td><td style="text-align: right; font-weight: 700;">${(Number(data.amount) || 0).toLocaleString('en-US')} ${data.currency}</td></tr>
-                                    <tr><td style="color: #64748b;">Description</td><td style="text-align: right; font-weight: 700;">${data.description}</td></tr>
-                                </table>
-                            </div>
-                            <p style="font-size: 14px; color: #64748b;">This transfer should reach the recipient's account within 24 to 72 hours.</p>
-                        </div>
-                    </div>
-`
-            },
-            es: {
-                subject: "Confirmación de transferencia saliente - INVIK BANK",
-                html: (data) => `
-<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0;">
-                    <div style="background: #10b981; padding: 30px 20px; text-align: center; color: white;">
-                            <h2 style="margin: 0; font-size: 20px;">Transferencia Transmitida</h2>
-                        </div>
-                    <div style="padding: 40px; color: #1e293b;">
-                            <p>Hola ${data.name},</p>
-                            <p>Su transferencia externa ha sido validada y transmitida a la red bancaria internacional.</p>
-                        <div style="background: #f8fafc; padding: 20px; border-radius: 12px; margin: 20px 0;">
-                                <table style="width: 100%; border-collapse: collapse;">
-                                    <tr><td style="color: #64748b; padding-bottom: 10px;">Monto</td><td style="text-align: right; font-weight: 700;">${(Number(data.amount) || 0).toLocaleString('es-ES')} ${data.currency}</td></tr>
-                                    <tr><td style="color: #64748b;">Descripción</td><td style="text-align: right; font-weight: 700;">${data.description}</td></tr>
-                                </table>
-                            </div>
-                            <p style="font-size: 14px; color: #64748b;">Esta transferencia debería llegar a la cuenta del destinatario en un plazo de 24 a 72 horas.</p>
-                        </div>
-                    </div>
-`
-            },
-            pt: {
-                subject: "Confirmação de transferência enviada - INVIK BANK",
-                html: (data) => `
-<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0;">
-                    <div style="background: #10b981; padding: 30px 20px; text-align: center; color: white;">
-                            <h2 style="margin: 0; font-size: 20px;">Transferência Transmitida</h2>
-                        </div>
-                    <div style="padding: 40px; color: #1e293b;">
-                            <p>Olá ${data.name},</p>
-                            <p>A sua transferência externa foi validada e transmitida para a rede bancária internacional.</p>
-                        <div style="background: #f8fafc; padding: 20px; border-radius: 12px; margin: 20px 0;">
-                                <table style="width: 100%; border-collapse: collapse;">
-                                    <tr><td style="color: #64748b; padding-bottom: 10px;">Montante</td><td style="text-align: right; font-weight: 700;">${(Number(data.amount) || 0).toLocaleString('pt-PT')} ${data.currency}</td></tr>
-                                    <tr><td style="color: #64748b;">Descrição</td><td style="text-align: right; font-weight: 700;">${data.description}</td></tr>
-                                </table>
-                            </div>
-                            <p style="font-size: 14px; color: #64748b;">Esta transferência deverá chegar à conta do destinatário num prazo de 24h a 72h.</p>
-                        </div>
-                    </div>
-`
-            },
-            it: {
-                subject: "Conferma bonifico in uscita - INVIK BANK",
-                html: (data) => `
-<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0;">
-                    <div style="background: #10b981; padding: 30px 20px; text-align: center; color: white;">
-                            <h2 style="margin: 0; font-size: 20px;">Bonifico Trasmesso</h2>
-                        </div>
-                    <div style="padding: 40px; color: #1e293b;">
-                            <p>Buongiorno ${data.name},</p>
-                            <p>Il vostro bonifico esterno è stato convalidato e trasmesso alla rete bancaria internazionale.</p>
-                        <div style="background: #f8fafc; padding: 20px; border-radius: 12px; margin: 20px 0;">
-                                <table style="width: 100%; border-collapse: collapse;">
-                                    <tr><td style="color: #64748b; padding-bottom: 10px;">Importo</td><td style="text-align: right; font-weight: 700;">${(Number(data.amount) || 0).toLocaleString('it-IT')} ${data.currency}</td></tr>
-                                    <tr><td style="color: #64748b;">Descrizione</td><td style="text-align: right; font-weight: 700;">${data.description}</td></tr>
-                                </table>
-                            </div>
-                            <p style="font-size: 14px; color: #64748b;">Questo bonifico dovrebbe raggiungere il conto del destinatario entro 24-72 ore.</p>
-                        </div>
-                    </div>
-`
-            },
-            de: {
-                subject: "Bestätigung der ausgehenden Überweisung - INVIK BANK",
-                html: (data) => `
-<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0;">
-                    <div style="background: #10b981; padding: 30px 20px; text-align: center; color: white;">
-                            <h2 style="margin: 0; font-size: 20px;">Überweisung Übermittelt</h2>
-                        </div>
-                    <div style="padding: 40px; color: #1e293b;">
-                            <p>Guten Tag ${data.name},</p>
-                            <p>Ihre externe Überweisung wurde validiert und an das internationale Bankennetz übermittelt.</p>
-                        <div style="background: #f8fafc; padding: 20px; border-radius: 12px; margin: 20px 0;">
-                                <table style="width: 100%; border-collapse: collapse;">
-                                    <tr><td style="color: #64748b; padding-bottom: 10px;">Betrag</td><td style="text-align: right; font-weight: 700;">${(Number(data.amount) || 0).toLocaleString('de-DE')} ${data.currency}</td></tr>
-                                    <tr><td style="color: #64748b;">Beschreibung</td><td style="text-align: right; font-weight: 700;">${data.description}</td></tr>
-                                </table>
-                            </div>
-                            <p style="font-size: 14px; color: #64748b;">Diese Überweisung sollte das Empfängerkonto innerhalb von 24 bis 72 Stunden erreichen.</p>
-                        </div>
-                    </div>
-`
-            }
-        },
-        transactionInReview: {
-            fr: {
-                subject: "Vérification en cours sur votre transaction - INVIK BANK",
-                html: (data) => `
-<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0;">
-                    <div style="background: #f59e0b; padding: 30px 20px; text-align: center; color: white;">
-                            <h2 style="margin: 0; font-size: 20px;">Vérification de Sécurité</h2>
-                        </div>
-                    <div style="padding: 40px; color: #1e293b;">
-                            <p>Bonjour ${data.name},</p>
-                            <p>Dans le cadre de nos procédures de sécurité habituelles, votre virement de **${(Number(data.amount) || 0).toLocaleString('fr-FR')} ${data.currency}** est actuellement en cours de vérification approfondie.</p>
-                            <p style="background: #fffbeb; border: 1px solid #fef3c7; padding: 15px; border-radius: 8px; color: #92400e; font-size: 14px;">
-                                <strong>Pourquoi ?</strong> Cette étape permet de protéger votre compte contre toute activité inhabituelle. Un conseiller INVIK BANK peut vous contacter si des informations complémentaires sont nécessaires.
-                            </p>
-                            <p>Le virement sera libéré dès la fin de cet examen (généralement sous quelques heures).</p>
-                        </div>
-                    </div>
-`
-            },
-            en: {
-                subject: "Security check on your transaction - INVIK BANK",
-                html: (data) => `
-<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0;">
-                    <div style="background: #f59e0b; padding: 30px 20px; text-align: center; color: white;">
-                            <h2 style="margin: 0; font-size: 20px;">Security Verification</h2>
-                        </div>
-                    <div style="padding: 40px; color: #1e293b;">
-                            <p>Hello ${data.name},</p>
-                            <p>As part of our standard security procedures, your transfer of **${(Number(data.amount) || 0).toLocaleString('en-US')} ${data.currency}** is currently undergoing an in-depth review.</p>
-                            <p style="background: #fffbeb; border: 1px solid #fef3c7; padding: 15px; border-radius: 8px; color: #92400e; font-size: 14px;">
-                                <strong>Why?</strong> This step helps protect your account from any unusual activity. An INVIK BANK advisor may contact you if additional information is needed.
-                            </p>
-                            <p>The transfer will be released as soon as this review is completed (usually within a few hours).</p>
-                        </div>
-                    </div>
-`
-            },
-            es: {
-                subject: "Verificación en curso de su transacción - INVIK BANK",
-                html: (data) => `
-<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0;">
-                    <div style="background: #f59e0b; padding: 30px 20px; text-align: center; color: white;">
-                            <h2 style="margin: 0; font-size: 20px;">Verificación de Seguridad</h2>
-                        </div>
-                    <div style="padding: 40px; color: #1e293b;">
-                            <p>Hola ${data.name},</p>
-                            <p>Como parte de nuestros procedimientos de seguridad habituales, su transferencia de **${(Number(data.amount) || 0).toLocaleString('es-ES')} ${data.currency}** está siendo objeto de una revisión exhaustiva.</p>
-                            <p style="background: #fffbeb; border: 1px solid #fef3c7; padding: 15px; border-radius: 8px; color: #92400e; font-size: 14px;">
-                                <strong>¿Por qué?</strong> Este paso ayuda a proteger su cuenta de cualquier actividad inusual. Un asesor de INVIK BANK puede ponerse en contacto con usted si se requiere información adicional.
-                            </p>
-                            <p>La transferencia se liberará en cuanto finalice esta revisión (normalmente en unas pocas horas).</p>
-                        </div>
-                    </div>
-`
-            },
-            pt: {
-                subject: "Verificação em curso da sua transação - INVIK BANK",
-                html: (data) => `
-<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0;">
-                    <div style="background: #f59e0b; padding: 30px 20px; text-align: center; color: white;">
-                            <h2 style="margin: 0; font-size: 20px;">Verificação de Segurança</h2>
-                        </div>
-                    <div style="padding: 40px; color: #1e293b;">
-                            <p>Olá ${data.name},</p>
-                            <p>Como parte dos nossos procedimentos de segurança habituais, a sua transferência de **${(Number(data.amount) || 0).toLocaleString('pt-PT')} ${data.currency}** está atualmente a ser submetida a uma revisão minuciosa.</p>
-                            <p style="background: #fffbeb; border: 1px solid #fef3c7; padding: 15px; border-radius: 8px; color: #92400e; font-size: 14px;">
-                                <strong>Porquê?</strong> Esta etapa ajuda a proteger a sua conta de qualquer atividade invulgar. Um consultor do INVIK BANK poderá contactá-lo se forem necessárias informações adicionais.
-                            </p>
-                            <p>A transferência será libertada assim que esta revisão estiver concluída (geralmente em poucas horas).</p>
-                        </div>
-                    </div>
-`
-            },
-            it: {
-                subject: "Verifica in corso sulla vostra transazione - INVIK BANK",
-                html: (data) => `
-<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0;">
-                    <div style="background: #f59e0b; padding: 30px 20px; text-align: center; color: white;">
-                            <h2 style="margin: 0; font-size: 20px;">Verifica di Sicurezza</h2>
-                        </div>
-                    <div style="padding: 40px; color: #1e293b;">
-                            <p>Buongiorno ${data.name},</p>
-                            <p>Nell'ambito delle nostre normali procedure di sicurezza, il vostro bonifico di **${(Number(data.amount) || 0).toLocaleString('it-IT')} ${data.currency}** è attualmente oggetto di una revisione approfondita.</p>
-                            <p style="background: #fffbeb; border: 1px solid #fef3c7; padding: 15px; border-radius: 8px; color: #92400e; font-size: 14px;">
-                                <strong>Perché?</strong> Questo passaggio aiuta a proteggere il vostro account da qualsiasi attività insolita. Un consulente INVIK BANK potrebbe contattarvi se fossero necessarie ulteriori informazioni.
-                            </p>
-                            <p>Il bonifico sarà sbloccato non appena questa verifica sarà completata (solitamente entro poche ore).</p>
-                        </div>
-                    </div>
-`
-            },
-            de: {
-                subject: "Sicherheitsprüfung Ihrer Transaktion - INVIK BANK",
-                html: (data) => `
-<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0;">
-                    <div style="background: #f59e0b; padding: 30px 20px; text-align: center; color: white;">
-                            <h2 style="margin: 0; font-size: 20px;">Sicherheitsüberprüfung</h2>
-                        </div>
-                    <div style="padding: 40px; color: #1e293b;">
-                            <p>Guten Tag ${data.name},</p>
-                            <p>Im Rahmen unserer üblichen Sicherheitsverfahren wird Ihre Überweisung in Höhe von **${(Number(data.amount) || 0).toLocaleString('de-DE')} ${data.currency}** derzeit einer eingehenden Prüfung unterzogen.</p>
-                            <p style="background: #fffbeb; border: 1px solid #fef3c7; padding: 15px; border-radius: 8px; color: #92400e; font-size: 14px;">
-                                <strong>Warum?</strong> Dieser Schritt hilft, Ihr Konto vor ungewöhnlichen Aktivitäten zu schützen. Ein Berater der INVIK BANK kann Sie kontaktieren, falls zusätzliche Informationen benötigt werden.
-                            </p>
-                            <p>Die Überweisung wird freigegeben, sobald diese Prüfung abgeschlossen ist (in der Regel innerhalb einiger Stunden).</p>
-                        </div>
-                    </div>
-`
-            }
-        },
-        transactionRejected: {
-            fr: {
-                subject: "Alerte Sécurité : Virement refusé - INVIK BANK",
-                html: (data) => `
-<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #fee2e2;">
-                    <div style="background: #ef4444; padding: 30px 20px; text-align: center; color: white;">
-                            <h2 style="margin: 0; font-size: 20px;">Virement Refusé</h2>
-                        </div>
-                    <div style="padding: 40px; color: #1e293b;">
-                            <p>Bonjour ${data.name},</p>
-                            <p>Votre demande de virement de **${(Number(data.amount) || 0).toLocaleString('fr-FR')} ${data.currency}** a été refusée par notre département de sécurité.</p>
-                        <div style="background: #fef2f2; padding: 15px; border-radius: 8px; color: #991b1b; margin: 20px 0;">
-                                <strong>Motif :</strong> ${translateString(data.reason, 'fr') || "Alerte de sécurité ou informations destinataire invalides."}
-                            </div>
-                            <p>Le montant a été intégralement replacé sur votre solde disponible.</p>
-                        </div>
-                    </div>
-`
-            },
-            en: {
-                subject: "Security Alert: Transfer rejected - INVIK BANK",
-                html: (data) => `
-<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #fee2e2;">
-                    <div style="background: #ef4444; padding: 30px 20px; text-align: center; color: white;">
-                            <h2 style="margin: 0; font-size: 20px;">Transfer Rejected</h2>
-                        </div>
-                    <div style="padding: 40px; color: #1e293b;">
-                            <p>Hello ${data.name},</p>
-                            <p>Your transfer request of **${(Number(data.amount) || 0).toLocaleString('en-US')} ${data.currency}** was rejected by our security department.</p>
-                        <div style="background: #fef2f2; padding: 15px; border-radius: 8px; color: #991b1b; margin: 20px 0;">
-                                <strong>Reason:</strong> ${translateString(data.reason, 'en') || "Security alert or invalid recipient information."}
-                            </div>
-                            <p>The amount has been fully returned to your available balance.</p>
-                        </div>
-                    </div>
-`
-            },
-            es: {
-                subject: "Alerta de Seguridad: Transferencia rechazada - INVIK BANK",
-                html: (data) => `
-<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #fee2e2;">
-                    <div style="background: #ef4444; padding: 30px 20px; text-align: center; color: white;">
-                            <h2 style="margin: 0; font-size: 20px;">Transferencia Rechazada</h2>
-                        </div>
-                    <div style="padding: 40px; color: #1e293b;">
-                            <p>Hola ${data.name},</p>
-                            <p>Su solicitud de transferencia de **${(Number(data.amount) || 0).toLocaleString('es-ES')} ${data.currency}** ha sido rechazada por nuestro departamento de seguridad.</p>
-                        <div style="background: #fef2f2; padding: 15px; border-radius: 8px; color: #991b1b; margin: 20px 0;">
-                                <strong>Motivo:</strong> ${translateString(data.reason, 'es') || "Alerta de seguridad o información del destinatario no válida."}
-                            </div>
-                            <p>El importe ha sido devuelto íntegramente a su saldo disponible.</p>
-                        </div>
-                    </div>
-`
-            },
-            pt: {
-                subject: "Alerta de Segurança: Transferência rejeitada - INVIK BANK",
-                html: (data) => `
-<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #fee2e2;">
-                    <div style="background: #ef4444; padding: 30px 20px; text-align: center; color: white;">
-                            <h2 style="margin: 0; font-size: 20px;">Transferência Rejeitada</h2>
-                        </div>
-                    <div style="padding: 40px; color: #1e293b;">
-                            <p>Olá ${data.name},</p>
-                            <p>O seu pedido de transferência de **${(Number(data.amount) || 0).toLocaleString('pt-PT')} ${data.currency}** foi rejeitado pelo nosso departamento de segurança.</p>
-                        <div style="background: #fef2f2; padding: 15px; border-radius: 8px; color: #991b1b; margin: 20px 0;">
-                                <strong>Motivo:</strong> ${translateString(data.reason, 'pt') || "Alerta de segurança ou informações de destinatário inválidas."}
-                            </div>
-                            <p>O montante foi integralmente devolvido ao seu saldo disponível.</p>
-                        </div>
-                    </div>
-`
-            },
-            it: {
-                subject: "Avviso di Sicurezza: Bonifico rifiutato - INVIK BANK",
-                html: (data) => `
-<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #fee2e2;">
-                    <div style="background: #ef4444; padding: 30px 20px; text-align: center; color: white;">
-                            <h2 style="margin: 0; font-size: 20px;">Bonifico Rifiutato</h2>
-                        </div>
-                    <div style="padding: 40px; color: #1e293b;">
-                            <p>Buongiorno ${data.name},</p>
-                            <p>La vostra richiesta di bonifico di **${(Number(data.amount) || 0).toLocaleString('it-IT')} ${data.currency}** è stata rifiutata dal nostro dipartimento di sicurezza.</p>
-                        <div style="background: #fef2f2; padding: 15px; border-radius: 8px; color: #991b1b; margin: 20px 0;">
-                                <strong>Motivo:</strong> ${translateString(data.reason, 'it') || "Allerta di sicurezza o informazioni sul destinatario non valide."}
-                            </div>
-                            <p>L'importo è stato interamente riaccreditato sul vostro saldo disponibile.</p>
-                        </div>
-                    </div>
-`
-            },
-            de: {
-                subject: "Sicherheitswarnung: Überweisung abgelehnt - INVIK BANK",
-                html: (data) => `
-<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #fee2e2;">
-                    <div style="background: #ef4444; padding: 30px 20px; text-align: center; color: white;">
-                            <h2 style="margin: 0; font-size: 20px;">Überweisung Abgelehnt</h2>
-                        </div>
-                    <div style="padding: 40px; color: #1e293b;">
-                            <p>Guten Tag ${data.name},</p>
-                            <p>Ihr Überweisungsantrag über **${(Number(data.amount) || 0).toLocaleString('de-DE')} ${data.currency}** wurde von unserer Sicherheitsabteilung abgelehnt.</p>
-                        <div style="background: #fef2f2; padding: 15px; border-radius: 8px; color: #991b1b; margin: 20px 0;">
-                                <strong>Grund:</strong> ${translateString(data.reason, 'de') || "Sicherheitswarnung oder ungültige Empfängerinformationen."}
-                            </div>
-                            <p>Der Betrag wurde vollständig Ihrem verfügbaren Guthaben gutgeschrieben.</p>
-                        </div>
-                    </div>
-`
-            }
-        },
         accountCredited: {
             fr: {
                 subject: "Confirmation de crédit - INVIK BANK",
@@ -1219,8 +990,8 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                         <p>Nous vous confirmons que votre compte a été crédité suite à un virement interne ou un ajustement manuel.</p>
                         <div style="background: #f8fafc; padding: 20px; border-radius: 12px; margin: 20px 0;">
                             <table style="width: 100%; border-collapse: collapse;">
-                                <tr><td style="color: #64748b; padding-bottom: 10px;">Montant</td><td style="text-align: right; font-weight: 700; color: #10b981;">+${(Number(data.amount) || 0).toLocaleString('fr-FR')} ${data.currency}</td></tr>
-                                <tr><td style="color: #64748b;">Nouveau solde</td><td style="text-align: right; font-weight: 700;">${(Number(data.newBalance) || 0).toLocaleString('fr-FR')} ${data.currency}</td></tr>
+                                <tr><td style="color: #64748b; padding-bottom: 10px;">Montant</td><td style="text-align: right; font-weight: 700; color: #10b981;">+${(Number(data.amount) || 0).toLocaleString('fr-FR', { style: 'currency', currency: data.currency || 'EUR' })}</td></tr>
+                                <tr><td style="color: #64748b;">Nouveau solde</td><td style="text-align: right; font-weight: 700;">${(Number(data.newBalance) || 0).toLocaleString('fr-FR', { style: 'currency', currency: data.currency || 'EUR' })}</td></tr>
                             </table>
                         </div>
                         <p>Ces fonds sont immédiatement disponibles sur votre compte INVIK BANK.</p>
@@ -1240,8 +1011,8 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                         <p>We confirm that your account has been credited following an internal transfer or manual adjustment.</p>
                         <div style="background: #f8fafc; padding: 20px; border-radius: 12px; margin: 20px 0;">
                             <table style="width: 100%; border-collapse: collapse;">
-                                <tr><td style="color: #64748b; padding-bottom: 10px;">Amount</td><td style="text-align: right; font-weight: 700; color: #10b981;">+${(Number(data.amount) || 0).toLocaleString('en-US')} ${data.currency}</td></tr>
-                                <tr><td style="color: #64748b;">New Balance</td><td style="text-align: right; font-weight: 700;">${(Number(data.newBalance) || 0).toLocaleString('en-US')} ${data.currency}</td></tr>
+                                <tr><td style="color: #64748b; padding-bottom: 10px;">Amount</td><td style="text-align: right; font-weight: 700; color: #10b981;">+${(Number(data.amount) || 0).toLocaleString('en-US', { style: 'currency', currency: data.currency || 'EUR' })}</td></tr>
+                                <tr><td style="color: #64748b;">New Balance</td><td style="text-align: right; font-weight: 700;">${(Number(data.newBalance) || 0).toLocaleString('en-US', { style: 'currency', currency: data.currency || 'EUR' })}</td></tr>
                             </table>
                         </div>
                         <p>These funds are immediately available in your INVIK BANK account.</p>
@@ -1261,8 +1032,8 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                         <p>Le confirmamos que su cuenta ha sido acreditada tras una transferencia interna o un ajuste manual.</p>
                         <div style="background: #f8fafc; padding: 20px; border-radius: 12px; margin: 20px 0;">
                             <table style="width: 100%; border-collapse: collapse;">
-                                <tr><td style="color: #64748b; padding-bottom: 10px;">Monto</td><td style="text-align: right; font-weight: 700; color: #10b981;">+${(Number(data.amount) || 0).toLocaleString('es-ES')} ${data.currency}</td></tr>
-                                <tr><td style="color: #64748b;">Nuevo saldo</td><td style="text-align: right; font-weight: 700;">${(Number(data.newBalance) || 0).toLocaleString('es-ES')} ${data.currency}</td></tr>
+                                <tr><td style="color: #64748b; padding-bottom: 10px;">Monto</td><td style="text-align: right; font-weight: 700; color: #10b981;">+${(Number(data.amount) || 0).toLocaleString('es-ES', { style: 'currency', currency: data.currency || 'EUR' })}</td></tr>
+                                <tr><td style="color: #64748b;">Nuevo saldo</td><td style="text-align: right; font-weight: 700;">${(Number(data.newBalance) || 0).toLocaleString('es-ES', { style: 'currency', currency: data.currency || 'EUR' })}</td></tr>
                             </table>
                         </div>
                         <p>Estos fondos están disponibles de inmediato en su cuenta de INVIK BANK.</p>
@@ -1282,8 +1053,8 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                         <p>Confirmamos que a sua conta foi creditada na sequência de uma transferência interna ou ajuste manual.</p>
                         <div style="background: #f8fafc; padding: 20px; border-radius: 12px; margin: 20px 0;">
                             <table style="width: 100%; border-collapse: collapse;">
-                                <tr><td style="color: #64748b; padding-bottom: 10px;">Montante</td><td style="text-align: right; font-weight: 700; color: #10b981;">+${(Number(data.amount) || 0).toLocaleString('pt-PT')} ${data.currency}</td></tr>
-                                <tr><td style="color: #64748b;">Novo saldo</td><td style="text-align: right; font-weight: 700;">${(Number(data.newBalance) || 0).toLocaleString('pt-PT')} ${data.currency}</td></tr>
+                                <tr><td style="color: #64748b; padding-bottom: 10px;">Montante</td><td style="text-align: right; font-weight: 700; color: #10b981;">+${(Number(data.amount) || 0).toLocaleString('pt-PT', { style: 'currency', currency: data.currency || 'EUR' })}</td></tr>
+                                <tr><td style="color: #64748b;">Novo saldo</td><td style="text-align: right; font-weight: 700;">${(Number(data.newBalance) || 0).toLocaleString('pt-PT', { style: 'currency', currency: data.currency || 'EUR' })}</td></tr>
                             </table>
                         </div>
                         <p>Estes fundos estão imediatamente disponíveis na sua conta INVIK BANK.</p>
@@ -1303,11 +1074,11 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                         <p>Le confermiamo che il suo conto è stato accreditato a seguito di un bonifico interno o di una rettifica manuale.</p>
                         <div style="background: #f8fafc; padding: 20px; border-radius: 12px; margin: 20px 0;">
                             <table style="width: 100%; border-collapse: collapse;">
-                                <tr><td style="color: #64748b; padding-bottom: 10px;">Importo</td><td style="text-align: right; font-weight: 700; color: #10b981;">+${(Number(data.amount) || 0).toLocaleString('it-IT')} ${data.currency}</td></tr>
-                                <tr><td style="color: #64748b;">Nuovo saldo</td><td style="text-align: right; font-weight: 700;">${(Number(data.newBalance) || 0).toLocaleString('it-IT')} ${data.currency}</td></tr>
+                                <tr><td style="color: #64748b; padding-bottom: 10px;">Importo</td><td style="text-align: right; font-weight: 700; color: #10b981;">+${(Number(data.amount) || 0).toLocaleString('it-IT', { style: 'currency', currency: data.currency || 'EUR' })}</td></tr>
+                                <tr><td style="color: #64748b;">Nuovo saldo</td><td style="text-align: right; font-weight: 700;">${(Number(data.newBalance) || 0).toLocaleString('it-IT', { style: 'currency', currency: data.currency || 'EUR' })}</td></tr>
                             </table>
                         </div>
-                        <p>Questi fundi sono immediatamente disponibili sul suo conto INVIK BANK.</p>
+                        <p>Questi fondi sono immediatamente disponibili sul suo conto INVIK BANK.</p>
                     </div>
                 </div>
 `
@@ -1324,8 +1095,8 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                         <p>Wir bestätigen, dass Ihrem Konto nach einer internen Umbuchung oder einer manuellen Anpassung ein Betrag gutgeschrieben wurde.</p>
                         <div style="background: #f8fafc; padding: 20px; border-radius: 12px; margin: 20px 0;">
                             <table style="width: 100%; border-collapse: collapse;">
-                                <tr><td style="color: #64748b; padding-bottom: 10px;">Betrag</td><td style="text-align: right; font-weight: 700; color: #10b981;">+${(Number(data.amount) || 0).toLocaleString('de-DE')} ${data.currency}</td></tr>
-                                <tr><td style="color: #64748b;">Neuer Kontostand</td><td style="text-align: right; font-weight: 700;">${(Number(data.newBalance) || 0).toLocaleString('de-DE')} ${data.currency}</td></tr>
+                                <tr><td style="color: #64748b; padding-bottom: 10px;">Betrag</td><td style="text-align: right; font-weight: 700; color: #10b981;">+${(Number(data.amount) || 0).toLocaleString('de-DE', { style: 'currency', currency: data.currency || 'EUR' })}</td></tr>
+                                <tr><td style="color: #64748b;">Neuer Kontostand</td><td style="text-align: right; font-weight: 700;">${(Number(data.newBalance) || 0).toLocaleString('de-DE', { style: 'currency', currency: data.currency || 'EUR' })}</td></tr>
                             </table>
                         </div>
                         <p>Dieses Guthaben ist ab sofort auf Ihrem INVIK BANK Konto verfügbar.</p>
@@ -1454,8 +1225,8 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                     </div>
                     <div style="padding: 40px; color: #1e293b;">
                         <p>Bonjour ${data.name},</p>
-                        <p>Votre opération de <strong>${(Number(data.amount) || 0).toLocaleString('fr-FR', { style: 'currency', currency: data.currency })}</strong> a été finalisée avec succès.</p>
-                        <p><strong>Description :</strong> ${data.description || 'Transaction'}</p>
+                        <p>Votre opération de <strong>${(Number(data.amount) || 0).toLocaleString('fr-FR', { style: 'currency', currency: data.currency || 'EUR' })}</strong> a été finalisée avec succès.</p>
+                        <p><strong>Description :</strong> ${translateTransactionDescription(data.description, 'fr')}</p>
                         <p>Les fonds sont maintenant disponibles sur le compte destinataire.</p>
                     </div>
                 </div>
@@ -1470,8 +1241,8 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                     </div>
                     <div style="padding: 40px; color: #1e293b;">
                         <p>Hello ${data.name},</p>
-                        <p>Your operation of <strong>${(Number(data.amount) || 0).toLocaleString('en-US', { style: 'currency', currency: data.currency })}</strong> has been successfully completed.</p>
-                        <p><strong>Description:</strong> ${data.description || 'Transaction'}</p>
+                        <p>Your operation of <strong>${(Number(data.amount) || 0).toLocaleString('en-US', { style: 'currency', currency: data.currency || 'EUR' })}</strong> has been successfully completed.</p>
+                        <p><strong>Description:</strong> ${translateTransactionDescription(data.description, 'en')}</p>
                         <p>The funds are now available in the recipient account.</p>
                     </div>
                 </div>
@@ -1486,8 +1257,8 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                     </div>
                     <div style="padding: 40px; color: #1e293b;">
                         <p>Hola ${data.name},</p>
-                        <p>Su operación de <strong>${(Number(data.amount) || 0).toLocaleString('es-ES', { style: 'currency', currency: data.currency })}</strong> ha sido finalizada con éxito.</p>
-                        <p><strong>Descripción:</strong> ${data.description || 'Transacción'}</p>
+                        <p>Su operación de <strong>${(Number(data.amount) || 0).toLocaleString('es-ES', { style: 'currency', currency: data.currency || 'EUR' })}</strong> ha sido finalizada con éxito.</p>
+                        <p><strong>Descripción:</strong> ${translateTransactionDescription(data.description, 'es')}</p>
                         <p>Los fondos ya están disponibles en la cuenta del destinatario.</p>
                     </div>
                 </div>
@@ -1502,8 +1273,8 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                     </div>
                     <div style="padding: 40px; color: #1e293b;">
                         <p>Olá ${data.name},</p>
-                        <p>A sua operação de <strong>${(Number(data.amount) || 0).toLocaleString('pt-PT', { style: 'currency', currency: data.currency })}</strong> foi finalizada com sucesso.</p>
-                        <p><strong>Descrição:</strong> ${data.description || 'Transação'}</p>
+                        <p>A sua operação de <strong>${(Number(data.amount) || 0).toLocaleString('pt-PT', { style: 'currency', currency: data.currency || 'EUR' })}</strong> foi finalizada com sucesso.</p>
+                        <p><strong>Descrição:</strong> ${translateTransactionDescription(data.description, 'pt')}</p>
                         <p>Os fundos já estão disponíveis na conta do destinatário.</p>
                     </div>
                 </div>
@@ -1518,8 +1289,8 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                     </div>
                     <div style="padding: 40px; color: #1e293b;">
                         <p>Buongiorno ${data.name},</p>
-                        <p>La vostra operazione di <strong>${(Number(data.amount) || 0).toLocaleString('it-IT', { style: 'currency', currency: data.currency })}</strong> è stata finalizzata con successo.</p>
-                        <p><strong>Descrizione:</strong> ${data.description || 'Transazione'}</p>
+                        <p>La vostra operazione di <strong>${(Number(data.amount) || 0).toLocaleString('it-IT', { style: 'currency', currency: data.currency || 'EUR' })}</strong> è stata finalizzata con successo.</p>
+                        <p><strong>Descrizione:</strong> ${translateTransactionDescription(data.description, 'it')}</p>
                         <p>I fondi sono ora disponibili sul conto del destinatario.</p>
                     </div>
                 </div>
@@ -1534,8 +1305,8 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                     </div>
                     <div style="padding: 40px; color: #1e293b;">
                         <p>Guten Tag ${data.name},</p>
-                        <p>Ihr Vorgang über <strong>${(Number(data.amount) || 0).toLocaleString('de-DE', { style: 'currency', currency: data.currency })}</strong> wurde erfolgreich abgeschlossen.</p>
-                        <p><strong>Beschreibung:</strong> ${data.description || 'Transaktion'}</p>
+                        <p>Ihr Vorgang über <strong>${(Number(data.amount) || 0).toLocaleString('de-DE', { style: 'currency', currency: data.currency || 'EUR' })}</strong> wurde erfolgreich abgeschlossen.</p>
+                        <p><strong>Beschreibung:</strong> ${translateTransactionDescription(data.description, 'de')}</p>
                         <p>Das Guthaben ist nun auf dem Empfängerkonto verfügbar.</p>
                     </div>
                 </div>
@@ -1552,8 +1323,8 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                     </div>
                     <div style="padding: 40px; color: #1e293b;">
                         <p>Bonjour ${data.name},</p>
-                        <p>Votre virement de <strong>${(Number(data.amount) || 0).toLocaleString('fr-FR', { style: 'currency', currency: data.currency })}</strong> est actuellement en examen pour contrôle de sécurité.</p>
-                        <p><strong>Description :</strong> ${data.description || 'Transaction'}</p>
+                        <p>Votre virement de <strong>${(Number(data.amount) || 0).toLocaleString('fr-FR', { style: 'currency', currency: data.currency || 'EUR' })}</strong> est actuellement en cours de révision par notre département de sécurité.</p>
+                        <p><strong>Description :</strong> ${translateTransactionDescription(data.description, 'fr')}</p>
                         <p>Vous serez notifié dès la levée des restrictions par nos services. Cette procédure est mise en place pour protéger votre compte.</p>
                     </div>
                 </div>
@@ -1568,8 +1339,8 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                     </div>
                     <div style="padding: 40px; color: #1e293b;">
                         <p>Hello ${data.name},</p>
-                        <p>Your transfer of <strong>${(Number(data.amount) || 0).toLocaleString('en-US', { style: 'currency', currency: data.currency })}</strong> is currently under review for security check.</p>
-                        <p><strong>Description:</strong> ${data.description || 'Transaction'}</p>
+                        <p>Your transfer of <strong>${(Number(data.amount) || 0).toLocaleString('en-US', { style: 'currency', currency: data.currency || 'EUR' })}</strong> is currently being reviewed by our security department.</p>
+                        <p><strong>Description:</strong> ${translateTransactionDescription(data.description, 'en')}</p>
                         <p>You will be notified as soon as the restrictions are lifted by our services. This procedure is in place to protect your account.</p>
                     </div>
                 </div>
@@ -1584,8 +1355,8 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                     </div>
                     <div style="padding: 40px; color: #1e293b;">
                         <p>Hola ${data.name},</p>
-                        <p>Su transferencia de <strong>${(Number(data.amount) || 0).toLocaleString('es-ES', { style: 'currency', currency: data.currency })}</strong> se encuentra actualmente en revisión por control de seguridad.</p>
-                        <p><strong>Descripción:</strong> ${data.description || 'Transacción'}</p>
+                        <p>Su transferencia de <strong>${(Number(data.amount) || 0).toLocaleString('es-ES', { style: 'currency', currency: data.currency || 'EUR' })}</strong> está siendo revisada actualmente por nuestro departamento de seguridad.</p>
+                        <p><strong>Descripción:</strong> ${translateTransactionDescription(data.description, 'es')}</p>
                         <p>Se le notificará tan pronto como nuestros servicios levanten las restricciones. Este procedimiento está implementado para proteger su cuenta.</p>
                     </div>
                 </div>
@@ -1600,8 +1371,8 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                     </div>
                     <div style="padding: 40px; color: #1e293b;">
                         <p>Olá ${data.name},</p>
-                        <p>A sua transferência de <strong>${(Number(data.amount) || 0).toLocaleString('pt-PT', { style: 'currency', currency: data.currency })}</strong> está atualmente em análise para verificação de segurança.</p>
-                        <p><strong>Descrição:</strong> ${data.description || 'Transação'}</p>
+                        <p>A sua transferência de <strong>${(Number(data.amount) || 0).toLocaleString('pt-PT', { style: 'currency', currency: data.currency || 'EUR' })}</strong> está atualmente a ser revista pelo nosso departamento de segurança.</p>
+                        <p><strong>Descrição:</strong> ${translateTransactionDescription(data.description, 'pt')}</p>
                         <p>Será notificado assim que as restrições forem levantadas pelos nossos serviços. Este procedimento está implementado para proteger a sua conta.</p>
                     </div>
                 </div>
@@ -1616,8 +1387,8 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                     </div>
                     <div style="padding: 40px; color: #1e293b;">
                         <p>Buongiorno ${data.name},</p>
-                        <p>Il vostro bonifico di <strong>${(Number(data.amount) || 0).toLocaleString('it-IT', { style: 'currency', currency: data.currency })}</strong> è attualmente oggetto di revisione per motivi di sicurezza.</p>
-                        <p><strong>Descrizione:</strong> ${data.description || 'Transazione'}</p>
+                        <p>Il vostro bonifico di <strong>${(Number(data.amount) || 0).toLocaleString('it-IT', { style: 'currency', currency: data.currency || 'EUR' })}</strong> è attualmente oggetto di revisione da parte del nostro ufficio sicurezza.</p>
+                        <p><strong>Descrizione:</strong> ${translateTransactionDescription(data.description, 'it')}</p>
                         <p>Verrete avvisati non appena le restrizioni saranno rimosse dai nostri servizi. Questa procedura è stata implementata per proteggere il vostro conto.</p>
                     </div>
                 </div>
@@ -1632,8 +1403,8 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                     </div>
                     <div style="padding: 40px; color: #1e293b;">
                         <p>Guten Tag ${data.name},</p>
-                        <p>Ihre Überweisung über <strong>${(Number(data.amount) || 0).toLocaleString('de-DE', { style: 'currency', currency: data.currency })}</strong> wird derzeit einer Sicherheitsprüfung unterzogen.</p>
-                        <p><strong>Beschreibung:</strong> ${data.description || 'Transaktion'}</p>
+                        <p>Ihre Überweisung von <strong>${(Number(data.amount) || 0).toLocaleString('de-DE', { style: 'currency', currency: data.currency || 'EUR' })}</strong> wird derzeit von unserer Sicherheitsabteilung geprüft.</p>
+                        <p><strong>Beschreibung:</strong> ${translateTransactionDescription(data.description, 'de')}</p>
                         <p>Sie werden benachrichtigt, sobald die Einschränkungen durch unsere Dienste aufgehoben werden. Dieses Verfahren dient dem Schutz Ihres Kontos.</p>
                     </div>
                 </div>
@@ -1650,9 +1421,9 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                     </div>
                     <div style="padding: 40px; color: #1e293b;">
                         <p>Bonjour ${data.name},</p>
-                        <p>Votre opération de <strong>${(Number(data.amount) || 0).toLocaleString('fr-FR', { style: 'currency', currency: data.currency })}</strong> a été refusée par notre département de sécurité.</p>
+                        <p>Votre opération de <strong>${(Number(data.amount) || 0).toLocaleString('fr-FR', { style: 'currency', currency: data.currency || 'EUR' })}</strong> a été refusée par notre service de conformité.</p>
                         <div style="background: #fef2f2; padding: 15px; border-radius: 8px; color: #991b1b; margin: 20px 0;">
-                            <strong>Raison :</strong> ${data.reason || 'Contrôle de sécurité'}
+                            <strong>Raison :</strong> ${translateString(data.reason, 'fr')}
                         </div>
                         <p>Le montant a été intégralement recrédité sur votre solde disponible.</p>
                     </div>
@@ -1668,9 +1439,9 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                     </div>
                     <div style="padding: 40px; color: #1e293b;">
                         <p>Hello ${data.name},</p>
-                        <p>Your operation of <strong>${(Number(data.amount) || 0).toLocaleString('en-US', { style: 'currency', currency: data.currency })}</strong> has been rejected by our security department.</p>
+                        <p>Your operation of <strong>${(Number(data.amount) || 0).toLocaleString('en-US', { style: 'currency', currency: data.currency || 'EUR' })}</strong> has been rejected by our compliance department.</p>
                         <div style="background: #fef2f2; padding: 15px; border-radius: 8px; color: #991b1b; margin: 20px 0;">
-                            <strong>Reason:</strong> ${data.reason || 'Security check'}
+                            <strong>Reason:</strong> ${translateString(data.reason, 'en')}
                         </div>
                         <p>The amount has been fully credited back to your available balance.</p>
                     </div>
@@ -1686,9 +1457,9 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                     </div>
                     <div style="padding: 40px; color: #1e293b;">
                         <p>Hola ${data.name},</p>
-                        <p>Su operación de <strong>${(Number(data.amount) || 0).toLocaleString('es-ES', { style: 'currency', currency: data.currency })}</strong> ha sido rechazada por nuestro departamento de seguridad.</p>
+                        <p>Su operación de <strong>${(Number(data.amount) || 0).toLocaleString('es-ES', { style: 'currency', currency: data.currency || 'EUR' })}</strong> ha sido rechazada por nuestro departamento de conformidad.</p>
                         <div style="background: #fef2f2; padding: 15px; border-radius: 8px; color: #991b1b; margin: 20px 0;">
-                            <strong>Motivo:</strong> ${data.reason || 'Control de seguridad'}
+                            <strong>Motivo:</strong> ${translateString(data.reason, 'es')}
                         </div>
                         <p>El monto ha sido reacreditado íntegramente a su saldo disponible.</p>
                     </div>
@@ -1704,9 +1475,9 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                     </div>
                     <div style="padding: 40px; color: #1e293b;">
                         <p>Olá ${data.name},</p>
-                        <p>A sua operação de <strong>${(Number(data.amount) || 0).toLocaleString('pt-PT', { style: 'currency', currency: data.currency })}</strong> foi rejeitada pelo nosso departamento de segurança.</p>
+                        <p>A sua operação de <strong>${(Number(data.amount) || 0).toLocaleString('pt-PT', { style: 'currency', currency: data.currency || 'EUR' })}</strong> foi rejeitada pelo nosso departamento de conformidade.</p>
                         <div style="background: #fef2f2; padding: 15px; border-radius: 8px; color: #991b1b; margin: 20px 0;">
-                            <strong>Motivo:</strong> ${data.reason || 'Verificação de segurança'}
+                            <strong>Motivo:</strong> ${translateString(data.reason, 'pt')}
                         </div>
                         <p>O montante foi integralmente reacreditado no seu saldo disponível.</p>
                     </div>
@@ -1722,9 +1493,9 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                     </div>
                     <div style="padding: 40px; color: #1e293b;">
                         <p>Buongiorno ${data.name},</p>
-                        <p>La vostra operazione di <strong>${(Number(data.amount) || 0).toLocaleString('it-IT', { style: 'currency', currency: data.currency })}</strong> è stata rifiutata dal nostro dipartimento di sicurezza.</p>
+                        <p>La vostra operazione di <strong>${(Number(data.amount) || 0).toLocaleString('it-IT', { style: 'currency', currency: data.currency || 'EUR' })}</strong> è stata rifiutata dal nostro dipartimento di conformità.</p>
                         <div style="background: #fef2f2; padding: 15px; border-radius: 8px; color: #991b1b; margin: 20px 0;">
-                            <strong>Motivo:</strong> ${data.reason || 'Controllo di sicurezza'}
+                            <strong>Motivo:</strong> ${translateString(data.reason, 'it')}
                         </div>
                         <p>L'importo è stato interamente riaccreditato sul vostro saldo disponibile.</p>
                     </div>
@@ -1740,9 +1511,9 @@ const getEmailTemplate = (templateName, lang = 'en', data) => {
                     </div>
                     <div style="padding: 40px; color: #1e293b;">
                         <p>Guten Tag ${data.name},</p>
-                        <p>Ihr Vorgang über <strong>${(Number(data.amount) || 0).toLocaleString('de-DE', { style: 'currency', currency: data.currency })}</strong> wurde von unserer Sicherheitsabteilung abgelehnt.</p>
+                        <p>Ihr Vorgang über <strong>${(Number(data.amount) || 0).toLocaleString('de-DE', { style: 'currency', currency: data.currency || 'EUR' })}</strong> wurde von unserer Compliance-Abteilung abgelehnt.</p>
                         <div style="background: #fef2f2; padding: 15px; border-radius: 8px; color: #991b1b; margin: 20px 0;">
-                            <strong>Grund:</strong> ${data.reason || 'Sicherheitsprüfung'}
+                            <strong>Grund:</strong> ${translateString(data.reason, 'de')}
                         </div>
                         <p>Der Betrag wurde vollständig Ihrem verfügbaren Guthaben gutgeschrieben.</p>
                     </div>
