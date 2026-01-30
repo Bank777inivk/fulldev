@@ -323,17 +323,17 @@ const Support = () => {
                             )}
 
                             <div style={styles.ticketList}>
-                                {tickets.slice((currentPage - 1) * ticketsPerPage, currentPage * ticketsPerPage).map(t => (
-                                    <div key={t.id} style={styles.ticketItem} onClick={() => setSelectedTicket(t)}>
+                                {tickets.slice((currentPage - 1) * ticketsPerPage, currentPage * ticketsPerPage).map(ticket => (
+                                    <div key={ticket.id} style={styles.ticketItem} onClick={() => setSelectedTicket(ticket)}>
                                         <div style={{ flex: 1 }}>
-                                            <div style={{ fontWeight: 'bold', color: '#003366' }}>{t.subject}</div>
+                                            <div style={{ fontWeight: 'bold', color: '#003366' }}>{ticket.subject}</div>
                                             <div style={{ fontSize: '0.8rem', color: '#888' }}>
-                                                {t('common.at')} {t.createdAt?.toDate().toLocaleDateString(i18n.language === 'en' ? 'en-US' : 'fr-FR', { day: 'numeric', month: 'long' })}
+                                                {t('common.at')} {ticket.createdAt?.toDate().toLocaleDateString(i18n.language === 'en' ? 'en-US' : 'fr-FR', { day: 'numeric', month: 'long' })}
                                             </div>
                                         </div>
                                         <div style={{ textAlign: 'right', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                                            <span style={{ ...styles.statusBadge, background: t.status === 'open' ? 'rgba(0, 204, 255, 0.1)' : '#ecfdf5', color: t.status === 'open' ? '#003366' : '#10b981' }}>
-                                                {t.status === 'open' ? t('support.tickets.status.open') : t('support.tickets.status.resolved')}
+                                            <span style={{ ...styles.statusBadge, background: ticket.status === 'open' ? 'rgba(0, 204, 255, 0.1)' : '#ecfdf5', color: ticket.status === 'open' ? '#003366' : '#10b981' }}>
+                                                {ticket.status === 'open' ? t('support.tickets.status.open') : t('support.tickets.status.resolved')}
                                             </span>
                                             <i className="fas fa-chevron-right" style={{ color: '#cbd5e1', fontSize: '0.8rem' }}></i>
                                         </div>

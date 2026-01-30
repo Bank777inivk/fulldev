@@ -350,8 +350,8 @@ const Accounts = () => {
                                     value={requestType}
                                     onChange={e => setRequestType(e.target.value)}
                                 >
-                                    {availableTypes.map(t => (
-                                        <option key={t.value} value={t.value}>{t.label}</option>
+                                    {availableTypes.map(type => (
+                                        <option key={type.value} value={type.value}>{type.label}</option>
                                     ))}
                                 </select>
                             </div>

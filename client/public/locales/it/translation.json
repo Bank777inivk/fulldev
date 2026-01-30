@@ -1,15 +1,61 @@
 {
     "navbar": {
-        "home": "Home",
-        "services": "Nostri Servizi",
+        "home": "Inizio",
+        "services": "I nostri Servizi",
         "cards": "Carte",
         "faq": "FAQ",
         "simulator": "Simulatore",
-        "contact": "Contatti",
+        "contact": "Contatto",
         "about": "Chi siamo",
-        "login": "Accedi",
-        "register": "Apri un conto",
+        "login": "Connessione",
+        "register": "Aprire un conto",
         "dashboard": "Dashboard"
+    },
+    "notifications": {
+        "title": "Notifiche",
+        "mark_all_read": "Segna tutto come letto",
+        "empty": "Nessuna notifica",
+        "close": "Chiudi",
+        "deposit": {
+            "title": "💰 Nuovo deposito ricevuto",
+            "message": "Il tuo conto INVIK BANK è stato accreditato con un importo di {{amount}} {{currency}}. Nuovo saldo: {{newBalance}} {{currency}}"
+        },
+        "transactionValidated": {
+            "title": "✅ Operazione convalidata",
+            "message": "La vostra operazione di {{amount}} {{currency}} è stata finalizzata."
+        },
+        "transactionInReview": {
+            "title": "🔍 Bonifico in esame",
+            "message": "Il vostro bonifico di {{amount}} {{currency}} è attualmente oggetto di revisione per motivi di sicurezza."
+        },
+        "transactionRejected": {
+            "title": "❌ Operazione rifiutata",
+            "message": "La vostra operazione di {{amount}} {{currency}} è stata rifiutata dal nostro ufficio sicurezza."
+        },
+        "transactionStatusUpdated": {
+            "title": "⚠️ Stato aggiornato",
+            "message": "Lo stato della vostra operazione di {{amount}} {{currency}} è stato modificato da un amministratore ({{status}})."
+        },
+        "loanApproved": {
+            "title": "💰 Prestito Accreditato",
+            "message": "Il tuo prestito di {{amount}} {{currency}} è stato approvato e i fondi sono ora disponibili sul tuo conto."
+        },
+        "loanRejected": {
+            "title": "❌ Richiesta rifiutata",
+            "message": "La vostra richiesta di finanziamento non ha potuto essere approvata in questo momento."
+        },
+        "transferSent": {
+            "title": "✅ Bonifico istantaneo inviato",
+            "message": "Hai inviato {{amount}} {{currency}} a {{beneficiary}} tramite la rete INVIK."
+        },
+        "transferReceived": {
+            "title": "💰 Bonifico istantaneo ricevuto",
+            "message": "Hai ricevuto {{amount}} {{currency}} da {{sender}}."
+        },
+        "transferPending": {
+            "title": "⏳ Bonifico SEPA in attesa",
+            "message": "Il tuo bonifico di {{amount}} {{currency}} verso {{beneficiary}} è in corso di elaborazione. Tempi abituali: 24h-48h."
+        }
     },
     "simulator_page": {
         "title": "Simulatore di Credito",
@@ -1097,7 +1143,7 @@
                         },
                         {
                             "title": "Condivisione dei dati",
-                            "text": "INVIK SA non vende i tuoi dati personali. Tuttavia, possono essere comunicati alle seguenti categorie di destinatari:",
+                            "text": "INVIK SA non sells i tuoi dati personali. Tuttavia, possono essere comunicati alle seguenti categorie di destinatari:",
                             "list": [
                                 "Servizi interni di INVIK SA autorizzati a trattare la tua richiesta.",
                                 "Fornitori tecnici e partner che intervengono per conto di INVIK SA (hosting, strumenti di sicurezza).",
@@ -1106,7 +1152,7 @@
                         },
                         {
                             "title": "Misure di sicurezza",
-                            "text": "INVIK SA implementa misure tecniche e organizzative adeguate per proteggere i tuoi dati contro la perdita, l'accesso non autorizzato o la divulgazione:",
+                            "text": "INVIK SA implementa misure tecniche e organizzative adeguate per proteggere i tuoi dati contro la loss, l'accesso non autorizzato o la divulgazione:",
                             "list": [
                                 "Uso di soluzioni di hosting sicure e firewall.",
                                 "Controlli di accesso e limitazione dei dati alle sole persone autorizzate.",
@@ -1138,8 +1184,7 @@
                         }
                     ]
                 }
-            ],
-            "cta": "CONTATTACI RIGUARDO AI TUOI DATI"
+            ]
         },
         "cgu": {
             "title": "CONDIZIONI D'USO",
@@ -1830,7 +1875,6 @@
         "title": "Assistenza & Supporto",
         "subtitle": "Consulta l'aiuto online o chatta con un consulente.",
         "faq": {
-            "title": "FAQ & Aiuto rapido",
             "q1": {
                 "q": "Bonifici non ricevuti",
                 "a": "Un bonifico SEPA classico richiede solitamente 1-2 giorni lavorativi. Se aspetti un bonifico internazionale, possono essere necessari fino a 5 giorni. Verifica che l'IBAN fornito sia corretto."
@@ -1850,7 +1894,8 @@
             "q5": {
                 "q": "Password dimenticata",
                 "a": "Clicca su 'Password dimenticata?' nella pagina di accesso. Ti verrà inviato istantaneamente un link di ripristino via email."
-            }
+            },
+            "title": "FAQ & Aiuto rapido"
         },
         "tickets": {
             "title": "Le mie richieste",
@@ -2044,59 +2089,13 @@
             "in_progress": "Verifica in corso",
             "required": "Verifica Richiesta",
             "motif": "Motivo:",
-            "not_compliant": "Alcuni documenti non sono conformi. Si prega di rinviarli.",
-            "analyzing": "Stiamo analizzando i tuoi documenti. Questa procedura richiede solitamente meno di 24 ore.",
-            "restricted": "Per ragioni di sicurezza e conformità, l'accesso a questa funzione è limitato. Completa la verifica dell'identità per sbloccare il conto.",
+            "not_compliant": "Alcuni documenti non sono conformi. Si prega di inviarli nuovamente.",
+            "analyzing": "Stiamo analizzando i vostri documenti. Questa procedura richiede solitamente meno di 24 ore.",
+            "restricted": "Per motivi di sicurezza e conformità, l'accesso a questa funzione è limitato. Si prega di completare la verifica dell'identità per sbloccare il conto.",
             "waiting": "In attesa di validazione",
             "start": "Inizia verifica",
             "secure": "Dati Criptati e Sicuri"
         }
-    },
-    "notifications": {
-        "deposit": {
-            "title": "💰 Nuovo deposito ricevuto",
-            "message": "Il tuo conto INVIK BANK è stato accreditato di {{amount}} {{currency}}. Nuovo saldo: {{newBalance}} {{currency}}"
-        },
-        "transactionValidated": {
-            "title": "✅ Operazione convalidata",
-            "message": "La tua operazione di {{amount}} {{currency}} è stata completata."
-        },
-        "transactionInReview": {
-            "title": "🔍 Bonifico in revisione",
-            "message": "Il tuo bonifico di {{amount}} {{currency}} è attualmente in fase di revisione per controlli di sicurezza."
-        },
-        "transactionRejected": {
-            "title": "❌ Operazione rifiutata",
-            "message": "La tua operazione di {{amount}} {{currency}} è stata rifiutata dal nostro dipartimento di sicurezza."
-        },
-        "transactionStatusUpdated": {
-            "title": "⚠️ Stato aggiornato",
-            "message": "Lo stato della tua operazione di {{amount}} {{currency}} è stato aggiornato da un amministratore ({{status}})."
-        },
-        "loanApproved": {
-            "title": "💰 Prestito Accreditato",
-            "message": "Il tuo prestito di {{amount}} {{currency}} è stato approvato e i fondi sono ora disponibili sul tuo conto."
-        },
-        "loanRejected": {
-            "title": "❌ Prestito Rifiutato",
-            "message": "La tua richiesta di finanziamento non ha potuto essere approvata al momento."
-        },
-        "transferSent": {
-            "title": "✅ Bonifico istantaneo inviato",
-            "message": "Hai inviato {{amount}} {{currency}} a {{beneficiary}} tramite la rete INVIK."
-        },
-        "transferReceived": {
-            "title": "💰 Bonifico istantaneo ricevuto",
-            "message": "Hai ricevuto {{amount}} {{currency}} da {{sender}}."
-        },
-        "transferPending": {
-            "title": "⏳ Bonifico SEPA in attesa",
-            "message": "Il tuo bonifico di {{amount}} {{currency}} verso {{beneficiary}} è in fase di elaborazione. Ritardo abituale: 24h-48h."
-        },
-        "title": "Notifiche",
-        "mark_all_read": "Segna tutto come letto",
-        "empty": "Nessuna notifica",
-        "close": "Chiudi"
     },
     "welcome": "Buongiorno, {{name}} 👋",
     "loading": "Preparazione del tuo spazio personale...",

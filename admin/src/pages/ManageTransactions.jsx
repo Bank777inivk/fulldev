@@ -44,7 +44,7 @@ const ManageTransactions = () => {
 
         try {
             setActionLoading(transactionId);
-            await adminService.updateTransactionStatus(transactionId, newStatus);
+            await adminService.updateTransactionStatus(transactionId, newStatus, userId);
         } catch (error) {
             console.error('Error updating status:', error);
             alert('Erreur lors de la mise à jour');

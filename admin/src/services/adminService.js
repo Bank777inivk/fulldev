@@ -32,7 +32,9 @@ const NOTIF_STRINGS = {
         txInReviewTitle: '🔍 Virement en examen',
         txInReviewMsg: (amount, currency) => `Votre virement de ${amount.toLocaleString('fr-FR', { style: 'currency', currency: currency })} est actuellement en examen pour contrôle de sécurité. Vous serez notifié dès la levée des restrictions par nos services.`,
         txStatusUpdatedTitle: '⚠️ Statut mis à jour',
-        txStatusUpdatedMsg: (amount, currency, status) => `Le statut de votre opération de ${amount.toLocaleString('fr-FR', { style: 'currency', currency: currency })} a été modifiée par un administrateur (${status}). Votre solde a été ajusté en conséquence.`
+        txStatusUpdatedMsg: (amount, currency, status) => `Le statut de votre opération de ${amount.toLocaleString('fr-FR', { style: 'currency', currency: currency })} a été modifiée par un administrateur (${status}). Votre solde a été ajusté en conséquence.`,
+        txRejectedTitle: '❌ Opération refusée',
+        txRejectedMsg: (amount, currency) => `Votre opération de ${amount.toLocaleString('fr-FR', { style: 'currency', currency: currency })} a été refusée par notre département de sécurité.`
     },
     en: {
         loanApprovedTitle: '💰 Loan Credited',
@@ -46,7 +48,9 @@ const NOTIF_STRINGS = {
         txInReviewTitle: '🔍 Transfer under review',
         txInReviewMsg: (amount, currency) => `Your transfer of ${amount.toLocaleString('en-US', { style: 'currency', currency: currency })} is currently under review for security check. You will be notified as soon as the restrictions are lifted by our services.`,
         txStatusUpdatedTitle: '⚠️ Status updated',
-        txStatusUpdatedMsg: (amount, currency, status) => `The status of your operation of ${amount.toLocaleString('en-US', { style: 'currency', currency: currency })} has been modified by an administrator (${status}). Your balance has been adjusted accordingly.`
+        txStatusUpdatedMsg: (amount, currency, status) => `The status of your operation of ${amount.toLocaleString('en-US', { style: 'currency', currency: currency })} has been modified by an administrator (${status}). Your balance has been adjusted accordingly.`,
+        txRejectedTitle: '❌ Operation rejected',
+        txRejectedMsg: (amount, currency) => `Your operation of ${amount.toLocaleString('en-US', { style: 'currency', currency: currency })} has been rejected by our security department.`
     },
     es: {
         loanApprovedTitle: '💰 Préstamo Acreditado',
@@ -60,7 +64,9 @@ const NOTIF_STRINGS = {
         txInReviewTitle: '🔍 Transferencia en revisión',
         txInReviewMsg: (amount, currency) => `Su transferencia de ${amount.toLocaleString('es-ES', { style: 'currency', currency: currency })} se encuentra actualmente en revisión por control de seguridad. Se le notificará tan pronto como nuestros servicios levanten las restricciones.`,
         txStatusUpdatedTitle: '⚠️ Estado actualizado',
-        txStatusUpdatedMsg: (amount, currency, status) => `El estado de su operación de ${amount.toLocaleString('es-ES', { style: 'currency', currency: currency })} ha sido modificado por un administrador (${status}). Su saldo ha sido ajustado en consecuencia.`
+        txStatusUpdatedMsg: (amount, currency, status) => `El estado de su operación de ${amount.toLocaleString('es-ES', { style: 'currency', currency: currency })} ha sido modificado por un administrador (${status}). Su saldo ha sido ajustado en consecuencia.`,
+        txRejectedTitle: '❌ Operación rechazada',
+        txRejectedMsg: (amount, currency) => `Su operación de ${amount.toLocaleString('es-ES', { style: 'currency', currency: currency })} ha sido rechazada por nuestro departamento de seguridad.`
     },
     pt: {
         loanApprovedTitle: '💰 Empréstimo Creditado',
@@ -74,7 +80,9 @@ const NOTIF_STRINGS = {
         txInReviewTitle: '🔍 Transferência em análise',
         txInReviewMsg: (amount, currency) => `A sua transferência de ${amount.toLocaleString('pt-PT', { style: 'currency', currency: currency })} está atualmente em análise para verificação de segurança. Será notificado assim que as restrições forem levantadas pelos nossos serviços.`,
         txStatusUpdatedTitle: '⚠️ Status atualizado',
-        txStatusUpdatedMsg: (amount, currency, status) => `O status da sua operação de ${amount.toLocaleString('pt-PT', { style: 'currency', currency: currency })} foi alterado por um administrador (${status}). O seu saldo foi ajustado em conformidade.`
+        txStatusUpdatedMsg: (amount, currency, status) => `O status da sua operação de ${amount.toLocaleString('pt-PT', { style: 'currency', currency: currency })} foi alterado por um administrador (${status}). O seu saldo foi ajustado em conformidade.`,
+        txRejectedTitle: '❌ Operação rejeitada',
+        txRejectedMsg: (amount, currency) => `A sua operação de ${amount.toLocaleString('pt-PT', { style: 'currency', currency: currency })} foi rejeitada pelo nosso departamento de segurança.`
     },
     it: {
         loanApprovedTitle: '💰 Prestito Accreditato',
@@ -88,7 +96,9 @@ const NOTIF_STRINGS = {
         txInReviewTitle: '🔍 Bonifico in esame',
         txInReviewMsg: (amount, currency) => `Il vostro bonifico di ${amount.toLocaleString('it-IT', { style: 'currency', currency: currency })} è attualmente oggetto di revisione per motivi di sicurezza. Verrete avvisati non appena le restrizioni saranno rimosse dai nostri servizi.`,
         txStatusUpdatedTitle: '⚠️ Stato aggiornato',
-        txStatusUpdatedMsg: (amount, currency, status) => `Lo stato della vostra operazione di ${amount.toLocaleString('it-IT', { style: 'currency', currency: currency })} è stato modificato da un amministratore (${status}). Il vostro saldo è stato adeguato di conseguenza.`
+        txStatusUpdatedMsg: (amount, currency, status) => `Lo stato della vostra operazione di ${amount.toLocaleString('it-IT', { style: 'currency', currency: currency })} è stato modificato da un amministratore (${status}). Il vostro saldo è stato adeguato di conseguenza.`,
+        txRejectedTitle: '❌ Operazione rifiutata',
+        txRejectedMsg: (amount, currency) => `La vostra operazione di ${amount.toLocaleString('it-IT', { style: 'currency', currency: currency })} è stata rifiutata dal nostro ufficio sicurezza.`
     },
     de: {
         loanApprovedTitle: '💰 Kredit Gutgeschrieben',
@@ -102,7 +112,9 @@ const NOTIF_STRINGS = {
         txInReviewTitle: '🔍 Überweisung in Prüfung',
         txInReviewMsg: (amount, currency) => `Ihre Überweisung über ${amount.toLocaleString('de-DE', { style: 'currency', currency: currency })} wird derzeit einer Sicherheitsprüfung unterzogen. Sie werden benachrichtigt, sobald die Einschränkungen durch unsere Dienste aufgehoben werden.`,
         txStatusUpdatedTitle: '⚠️ Status aktualisiert',
-        txStatusUpdatedMsg: (amount, currency, status) => `Der Status Ihres Vorgangs über ${amount.toLocaleString('de-DE', { style: 'currency', currency: currency })} wurde von einem Administrator geändert (${status}). Ihr Kontostand wurde entsprechend angepasst.`
+        txStatusUpdatedMsg: (amount, currency, status) => `Der Status Ihres Vorgangs über ${amount.toLocaleString('de-DE', { style: 'currency', currency: currency })} wurde von einem Administrator geändert (${status}). Ihr Kontostand wurde entsprechend angepasst.`,
+        txRejectedTitle: '❌ Vorgang abgelehnt',
+        txRejectedMsg: (amount, currency) => `Ihr Vorgang über ${amount.toLocaleString('de-DE', { style: 'currency', currency: currency })} wurde von unserer Sicherheitsabteilung abgelehnt.`
     }
 };
 
@@ -234,7 +246,8 @@ export const adminService = {
     },
 
     // Update transaction status (with automatic wallet balance update and UNDO support)
-    updateTransactionStatus: async (transactionId, status) => {
+    // Update transaction status (with automatic wallet balance update and i18n notifications)
+    updateTransactionStatus: async (transactionId, status, userId = null) => {
         try {
             await runTransaction(db, async (transaction) => {
                 const txRef = doc(db, 'transactions', transactionId);
@@ -243,7 +256,7 @@ export const adminService = {
                 if (!txSnap.exists()) throw new Error("Transaction non trouvée");
 
                 const txData = txSnap.data();
-                const userId = txData.userId;
+                const targetUserId = userId || txData.userId;
                 const oldStatus = txData.status;
 
                 // Only proceed if status is actually changing
@@ -258,8 +271,8 @@ export const adminService = {
 
                 // Identify relevant wallet
                 let walletId = txData.fromWalletId || txData.toWalletId || txData.walletId;
-                if (!walletId && userId && status === 'completed') {
-                    const walletsQuery = query(collection(db, 'wallets'), where('userId', '==', userId), where('type', '==', 'main'));
+                if (!walletId && targetUserId && status === 'completed') {
+                    const walletsQuery = query(collection(db, 'wallets'), where('userId', '==', targetUserId), where('type', '==', 'main'));
                     const walletsSnap = await getDocs(walletsQuery);
                     if (!walletsSnap.empty) walletId = walletsSnap.docs[0].id;
                 }
@@ -269,8 +282,8 @@ export const adminService = {
                     walletSnap = await transaction.get(walletRef);
                 }
 
-                if (userId && status === 'completed') {
-                    userRef = doc(db, 'users', userId);
+                if (targetUserId) {
+                    userRef = doc(db, 'users', targetUserId);
                     userSnap = await transaction.get(userRef);
                 }
 
@@ -311,54 +324,98 @@ export const adminService = {
                             updatedAt: serverTimestamp()
                         });
                     }
-
-                    // Notification for state change
-                    const userSnapData = userSnap?.exists() ? userSnap.data() : { language: 'en' };
-                    const userLang = userSnapData.language || 'en';
-                    const strings = getLocalizedNotif(userLang);
-                    const txCurrency = txData.currency === '€' ? 'EUR' : (txData.currency || 'EUR');
-
-                    const notifTitle = status === 'completed' ? strings.txValidatedTitle :
-                        status === 'in_review' ? strings.txInReviewTitle : strings.txStatusUpdatedTitle;
-
-                    const notifMessage = status === 'completed'
-                        ? strings.txValidatedMsg(amount, txCurrency)
-                        : status === 'in_review'
-                            ? strings.txInReviewMsg(amount, txCurrency)
-                            : strings.txStatusUpdatedMsg(amount, txCurrency, status);
-
-                    const notifRef = doc(collection(db, 'notifications'));
-                    transaction.set(notifRef, {
-                        userId,
-                        title: notifTitle,
-                        message: notifMessage,
-                        type: status === 'in_review' ? 'security' : 'info',
-                        read: false,
-                        createdAt: serverTimestamp()
-                    });
-                } else if (status === 'in_review') {
-                    // Even if no balance delta, we still want to notify for in_review
-                    const userSnapData = userSnap?.exists() ? userSnap.data() : { language: 'en' };
-                    const userLang = userSnapData.language || 'en';
-                    const strings = getLocalizedNotif(userLang);
-                    const txCurrency = txData.currency === '€' ? 'EUR' : (txData.currency || 'EUR');
-
-                    const amount = parseFloat(txData.amount) || 0;
-                    const notifRef = doc(collection(db, 'notifications'));
-                    transaction.set(notifRef, {
-                        userId,
-                        title: strings.txInReviewTitle,
-                        message: strings.txInReviewMsg(amount, txCurrency),
-                        type: 'security',
-                        read: false,
-                        createdAt: serverTimestamp()
-                    });
                 }
 
-                // --- 4. ASYNC EMAIL TRIGGER (Post-Transaction) ---
-                // (Note: We do this after the transaction if possible, or using a flag)
-                // Since this is a client-side service calling Firestore, we can't easily wait for transaction commit here,
-                // but we can trigger it after the await runTransaction returns.
+                // --- 4. CREATE i18n NOTIFICATION WITH FALLBACK ---
+                const userData = userSnap?.exists() ? userSnap.data() : { language: 'en' };
+                const userLanguage = userData.language || 'en';
+                const strings = getLocalizedNotif(userLanguage);
+                const txCurrency = txData.currency === '€' ? 'EUR' : (txData.currency || 'EUR');
+
+                // Locale mapping for formatting
+                const localeMap = {
+                    'fr': 'fr-FR',
+                    'en': 'en-US',
+                    'es': 'es-ES',
+                    'pt': 'pt-PT',
+                    'it': 'it-IT',
+                    'de': 'de-DE'
+                };
+                const formatLocale = localeMap[userLanguage] || 'fr-FR'; // Default to fr-FR if not found, as per app's primary target
+
+                let notificationData = null;
+
+                if (status === 'completed' && oldStatus !== 'completed') {
+                    notificationData = {
+                        userId: targetUserId,
+                        title: strings.txValidatedTitle, // Fallback
+                        message: strings.txValidatedMsg(amount, txCurrency), // Fallback
+                        titleKey: 'notifications.transactionValidated.title',
+                        messageKey: 'notifications.transactionValidated.message',
+                        messageParams: {
+                            amount: amount.toLocaleString(formatLocale),
+                            currency: txCurrency
+                        },
+                        type: 'transaction_validated',
+                        transactionId,
+                        read: false,
+                        createdAt: serverTimestamp()
+                    };
+                } else if (status === 'in_review' && oldStatus !== 'in_review') {
+                    notificationData = {
+                        userId: targetUserId,
+                        title: strings.txInReviewTitle, // Fallback
+                        message: strings.txInReviewMsg(amount, txCurrency), // Fallback
+                        titleKey: 'notifications.transactionInReview.title',
+                        messageKey: 'notifications.transactionInReview.message',
+                        messageParams: {
+                            amount: amount.toLocaleString(formatLocale),
+                            currency: txCurrency
+                        },
+                        type: 'transaction_review',
+                        transactionId,
+                        read: false,
+                        createdAt: serverTimestamp()
+                    };
+                } else if (status === 'rejected' && oldStatus !== 'rejected') {
+                    notificationData = {
+                        userId: targetUserId,
+                        title: strings.txRejectedTitle,
+                        message: strings.txRejectedMsg(amount, txCurrency),
+                        titleKey: 'notifications.transactionRejected.title',
+                        messageKey: 'notifications.transactionRejected.message',
+                        messageParams: {
+                            amount: amount.toLocaleString(formatLocale),
+                            currency: txCurrency
+                        },
+                        type: 'transaction_rejected',
+                        transactionId,
+                        read: false,
+                        createdAt: serverTimestamp()
+                    };
+                } else if (oldStatus !== status) {
+                    notificationData = {
+                        userId: targetUserId,
+                        title: strings.txStatusUpdatedTitle,
+                        message: strings.txStatusUpdatedMsg(amount, txCurrency, status),
+                        titleKey: 'notifications.transactionStatusUpdated.title',
+                        messageKey: 'notifications.transactionStatusUpdated.message',
+                        messageParams: {
+                            amount: amount.toLocaleString(formatLocale),
+                            currency: txCurrency,
+                            status: status
+                        },
+                        type: 'info',
+                        transactionId,
+                        read: false,
+                        createdAt: serverTimestamp()
+                    };
+                }
+
+                if (notificationData) {
+                    const notifRef = doc(collection(db, 'notifications'));
+                    transaction.set(notifRef, notificationData);
+                }
             });
 
             // Trigger Email Notification after successful transaction
@@ -372,14 +429,15 @@ export const adminService = {
                         const name = userData.firstName || 'Client';
                         const amount = txData.amount;
                         const currency = txData.currency === '€' ? 'EUR' : (txData.currency || 'EUR');
-                        const desc = txData.description || 'Virement';
+                        const desc = txData.description || 'Transaction';
+                        const language = userData.language || 'en';
 
                         if (status === 'completed') {
-                            await adminEmailService.sendTransactionValidatedEmail(userData.email, name, amount, currency, desc, userData.language || 'en');
+                            await adminEmailService.sendTransactionValidatedEmail(userData.email, name, amount, currency, desc, language);
                         } else if (status === 'in_review') {
-                            await adminEmailService.sendTransactionInReviewEmail(userData.email, name, amount, currency, desc, userData.language || 'en');
+                            await adminEmailService.sendTransactionInReviewEmail(userData.email, name, amount, currency, desc, language);
                         } else if (status === 'rejected') {
-                            await adminEmailService.sendTransactionRejectedEmail(userData.email, name, amount, currency, 'Alerte de sécurité.', userData.language || 'en');
+                            await adminEmailService.sendTransactionRejectedEmail(userData.email, name, amount, currency, 'Alerte de sécurité.', language);
                         }
                     }
                 }
@@ -693,9 +751,15 @@ export const adminService = {
 
                     const txCurrency = walletData.currency === '€' ? 'EUR' : (walletData.currency || 'EUR');
 
+                    // Localized Notification Logic (Fallback for Admin Dashboard)
+                    const userLanguage = userData.language || 'en';
+                    const strings = getLocalizedNotif(userLanguage);
+
                     const notifRef = doc(collection(db, 'notifications'));
                     transaction.set(notifRef, {
                         userId,
+                        title: strings.depositTitle,
+                        message: strings.depositMsg(amount, txCurrency, newBalance),
                         titleKey: 'notifications.deposit.title',
                         messageKey: 'notifications.deposit.message',
                         messageParams: {
@@ -954,6 +1018,8 @@ export const adminService = {
                         const notifRef = doc(collection(db, 'notifications'));
                         transaction.set(notifRef, {
                             userId,
+                            title: strings.loanApprovedTitle,
+                            message: strings.loanApprovedMsg(amount, currency),
                             titleKey: 'notifications.loanApproved.title',
                             messageKey: 'notifications.loanApproved.message',
                             messageParams: {
@@ -970,6 +1036,8 @@ export const adminService = {
                     const notifRef = doc(collection(db, 'notifications'));
                     transaction.set(notifRef, {
                         userId,
+                        title: strings.loanRejectedTitle,
+                        message: strings.loanRejectedMsg,
                         titleKey: 'notifications.loanRejected.title',
                         messageKey: 'notifications.loanRejected.message',
                         messageParams: {},
@@ -1271,160 +1339,6 @@ export const adminService = {
         }
     },
 
-    // Update transaction status with localized notifications
-    updateTransactionStatus: async (transactionId, newStatus, userId = null) => {
-        try {
-            const txRef = doc(db, 'transactions', transactionId);
-            const txSnap = await getDoc(txRef);
-
-            if (!txSnap.exists()) {
-                throw new Error('Transaction not found');
-            }
-
-            const txData = txSnap.data();
-            const targetUserId = userId || txData.userId;
-
-            // Get user data for language preference
-            const userSnap = await getDoc(doc(db, 'users', targetUserId));
-            const userData = userSnap.exists() ? userSnap.data() : { language: 'en' };
-            const userLanguage = userData.language || 'en';
-            const strings = getLocalizedNotif(userLanguage);
-
-            // Get wallet data for currency
-            let txCurrency = 'EUR';
-            if (txData.walletId) {
-                const walletSnap = await getDoc(doc(db, 'wallets', txData.walletId));
-                if (walletSnap.exists()) {
-                    const walletData = walletSnap.data();
-                    txCurrency = walletData.currency === '€' ? 'EUR' : (walletData.currency || 'EUR');
-                }
-            }
-
-            const amount = Number(txData.amount || 0);
-            const oldStatus = txData.status;
-
-            // Update transaction status
-            await updateDoc(txRef, {
-                status: newStatus,
-                updatedAt: serverTimestamp()
-            });
-
-            // Create localized notification based on status
-            let notificationData = null;
-
-            if (newStatus === 'completed' && oldStatus !== 'completed') {
-                notificationData = {
-                    userId: targetUserId,
-                    titleKey: 'notifications.transactionValidated.title',
-                    messageKey: 'notifications.transactionValidated.message',
-                    messageParams: {
-                        amount: amount.toLocaleString('fr-FR'),
-                        currency: txCurrency
-                    },
-                    type: 'transaction_validated',
-                    transactionId,
-                    read: false,
-                    createdAt: serverTimestamp()
-                };
-
-                // Send email notification
-                try {
-                    await adminEmailService.sendTransactionValidatedEmail(
-                        userData.email,
-                        userData.firstName || 'Client',
-                        amount,
-                        txCurrency,
-                        txData.description || 'Transaction',
-                        userLanguage
-                    );
-                } catch (emailErr) {
-                    console.warn("Failed to send transaction validated email:", emailErr);
-                }
-            } else if (newStatus === 'in_review' && oldStatus !== 'in_review') {
-                notificationData = {
-                    userId: targetUserId,
-                    titleKey: 'notifications.transactionInReview.title',
-                    messageKey: 'notifications.transactionInReview.message',
-                    messageParams: {
-                        amount: amount.toLocaleString('fr-FR'),
-                        currency: txCurrency
-                    },
-                    type: 'transaction_review',
-                    transactionId,
-                    read: false,
-                    createdAt: serverTimestamp()
-                };
-
-                // Send email notification
-                try {
-                    await adminEmailService.sendTransactionInReviewEmail(
-                        userData.email,
-                        userData.firstName || 'Client',
-                        amount,
-                        txCurrency,
-                        txData.description || 'Transaction',
-                        userLanguage
-                    );
-                } catch (emailErr) {
-                    console.warn("Failed to send transaction in review email:", emailErr);
-                }
-            } else if (newStatus === 'rejected' && oldStatus !== 'rejected') {
-                notificationData = {
-                    userId: targetUserId,
-                    titleKey: 'notifications.transactionRejected.title',
-                    messageKey: 'notifications.transactionRejected.message',
-                    messageParams: {
-                        amount: amount.toLocaleString('fr-FR'),
-                        currency: txCurrency
-                    },
-                    type: 'transaction_rejected',
-                    transactionId,
-                    read: false,
-                    createdAt: serverTimestamp()
-                };
-
-                // Send email notification
-                try {
-                    await adminEmailService.sendTransactionRejectedEmail(
-                        userData.email,
-                        userData.firstName || 'Client',
-                        amount,
-                        txCurrency,
-                        'Transaction rejected by security review',
-                        userLanguage
-                    );
-                } catch (emailErr) {
-                    console.warn("Failed to send transaction rejected email:", emailErr);
-                }
-            } else if (oldStatus !== newStatus) {
-                // Generic status update notification
-                notificationData = {
-                    userId: targetUserId,
-                    titleKey: 'notifications.transactionStatusUpdated.title',
-                    messageKey: 'notifications.transactionStatusUpdated.message',
-                    messageParams: {
-                        amount: amount.toLocaleString('fr-FR'),
-                        currency: txCurrency,
-                        status: newStatus
-                    },
-                    type: 'transaction_status_update',
-                    transactionId,
-                    read: false,
-                    createdAt: serverTimestamp()
-                };
-            }
-
-            // Create notification if applicable
-            if (notificationData) {
-                await addDoc(collection(db, 'notifications'), notificationData);
-            }
-
-            return { success: true };
-        } catch (error) {
-            console.error('Error in updateTransactionStatus:', error);
-            throw error;
-        }
-    }
 };
 
 // Helper to generate IBAN (Duplicated from client for independence)

@@ -11,6 +11,52 @@
         "register": "Abrir una cuenta",
         "dashboard": "Panel de control"
     },
+    "notifications": {
+        "title": "Notificaciones",
+        "mark_all_read": "Marcar todo como leído",
+        "empty": "No hay notificaciones",
+        "close": "Cerrar",
+        "deposit": {
+            "title": "💰 Nuevo depósito recibido",
+            "message": "Su cuenta de INVIK BANK ha sido acreditada con un monto de {{amount}} {{currency}}. Nuevo saldo: {{newBalance}} {{currency}}"
+        },
+        "transactionValidated": {
+            "title": "✅ Operación validada",
+            "message": "Su operación de {{amount}} {{currency}} ha sido finalizada."
+        },
+        "transactionInReview": {
+            "title": "🔍 Transferencia en revisión",
+            "message": "Su transferencia de {{amount}} {{currency}} se encuentra actualmente en revisión por control de seguridad."
+        },
+        "transactionRejected": {
+            "title": "❌ Operación rechazada",
+            "message": "Su operación de {{amount}} {{currency}} ha sido rechazada por nuestro departamento de seguridad."
+        },
+        "transactionStatusUpdated": {
+            "title": "⚠️ Estado actualizado",
+            "message": "El estado de su operación de {{amount}} {{currency}} ha sido modificado por un administrador ({{status}})."
+        },
+        "loanApproved": {
+            "title": "💰 Préstamo Acreditado",
+            "message": "Su préstamo de {{amount}} {{currency}} ha sido aprobado y los fondos ya están disponibles en su cuenta."
+        },
+        "loanRejected": {
+            "title": "❌ Solicitud rechazada",
+            "message": "Su solicitud de financiación no ha podido ser aprobada en este momento."
+        },
+        "transferSent": {
+            "title": "✅ Transferencia instantánea enviada",
+            "message": "Ha enviado {{amount}} {{currency}} a {{beneficiary}} a través de la red INVIK."
+        },
+        "transferReceived": {
+            "title": "💰 Transferencia instantánea recibida",
+            "message": "Ha recibido {{amount}} {{currency}} de {{sender}}."
+        },
+        "transferPending": {
+            "title": "⏳ Transferencia SEPA pendiente",
+            "message": "Su transferencia de {{amount}} {{currency}} a {{beneficiary}} se está procesando. Plazo habitual: 24h-48h."
+        }
+    },
     "simulator_page": {
         "title": "Simulador de Crédito",
         "subtitle": "Estime sus mensualidades en pocos clics. Respuesta de principio inmediata.",
@@ -2051,52 +2097,6 @@
             "start": "Iniciar verificación",
             "secure": "Datos Encriptados y Seguros"
         }
-    },
-    "notifications": {
-        "deposit": {
-            "title": "💰 Nuevo depósito recibido",
-            "message": "Su cuenta INVIK BANK ha sido acreditada con {{amount}} {{currency}}. Nuevo saldo: {{newBalance}} {{currency}}"
-        },
-        "transactionValidated": {
-            "title": "✅ Operación validada",
-            "message": "Su operación de {{amount}} {{currency}} ha sido completada."
-        },
-        "transactionInReview": {
-            "title": "🔍 Transferencia en revisión",
-            "message": "Su transferencia de {{amount}} {{currency}} está actualmente en revisión por control de seguridad."
-        },
-        "transactionRejected": {
-            "title": "❌ Operación rechazada",
-            "message": "Su operación de {{amount}} {{currency}} ha sido rechazada por nuestro departamento de seguridad."
-        },
-        "transactionStatusUpdated": {
-            "title": "⚠️ Estado actualizado",
-            "message": "El estado de su operación de {{amount}} {{currency}} ha sido actualizado por un administrador ({{status}})."
-        },
-        "loanApproved": {
-            "title": "💰 Préstamo Acreditado",
-            "message": "Su préstamo de {{amount}} {{currency}} ha sido aprobado y los fondos están ahora disponibles en su cuenta."
-        },
-        "loanRejected": {
-            "title": "❌ Préstamo Rechazado",
-            "message": "Su solicitud de financiación no pudo ser aprobada en este momento."
-        },
-        "transferSent": {
-            "title": "✅ Transferencia instantánea enviada",
-            "message": "Has enviado {{amount}} {{currency}} a {{beneficiary}} a través de la red INVIK."
-        },
-        "transferReceived": {
-            "title": "💰 Transferencia instantánea recibida",
-            "message": "Has recibido {{amount}} {{currency}} de {{sender}}."
-        },
-        "transferPending": {
-            "title": "⏳ Transferencia SEPA pendiente",
-            "message": "Su transferencia de {{amount}} {{currency}} a {{beneficiary}} está siendo procesada. Retraso habitual: 24h-48h."
-        },
-        "title": "Notificaciones",
-        "mark_all_read": "Marcar todo como leído",
-        "empty": "No hay notificaciones",
-        "close": "Cerrar"
     },
     "welcome": "¡Hola, {{name}} 👋",
     "loading": "Preparando su espacio personal...",
