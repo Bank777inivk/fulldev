@@ -2023,6 +2023,46 @@
         }
     },
     "notifications": {
+        "deposit": {
+            "title": "💰 Neue Einzahlung erhalten",
+            "message": "Ihr INVIK BANK Konto wurde mit {{amount}} {{currency}} gutgeschrieben. Neuer Kontostand: {{newBalance}} {{currency}}"
+        },
+        "transactionValidated": {
+            "title": "✅ Transaktion bestätigt",
+            "message": "Ihre Transaktion über {{amount}} {{currency}} wurde abgeschlossen."
+        },
+        "transactionInReview": {
+            "title": "🔍 Überweisung in Prüfung",
+            "message": "Ihre Überweisung von {{amount}} {{currency}} wird derzeit aus Sicherheitsgründen überprüft."
+        },
+        "transactionRejected": {
+            "title": "❌ Transaktion abgelehnt",
+            "message": "Ihre Transaktion über {{amount}} {{currency}} wurde von unserer Sicherheitsabteilung abgelehnt."
+        },
+        "transactionStatusUpdated": {
+            "title": "⚠️ Status aktualisiert",
+            "message": "Der Status Ihrer Transaktion über {{amount}} {{currency}} wurde von einem Administrator aktualisiert ({{status}})."
+        },
+        "loanApproved": {
+            "title": "💰 Kredit genehmigt",
+            "message": "Ihr Kredit über {{amount}} {{currency}} wurde genehmigt und die Gelder sind jetzt auf Ihrem Konto verfügbar."
+        },
+        "loanRejected": {
+            "title": "❌ Kredit abgelehnt",
+            "message": "Ihre Finanzierungsanfrage konnte derzeit nicht genehmigt werden."
+        },
+        "transferSent": {
+            "title": "✅ Echtzeit-Überweisung gesendet",
+            "message": "Sie haben {{amount}} {{currency}} an {{beneficiary}} über das INVIK-Netzwerk gesendet."
+        },
+        "transferReceived": {
+            "title": "💰 Echtzeit-Überweisung erhalten",
+            "message": "Sie haben {{amount}} {{currency}} von {{sender}} erhalten."
+        },
+        "transferPending": {
+            "title": "⏳ SEPA-Überweisung ausstehend",
+            "message": "Ihre Überweisung von {{amount}} {{currency}} an {{beneficiary}} wird bearbeitet. Übliche Verzögerung: 24h-48h."
+        },
         "title": "Benachrichtigungen",
         "mark_all_read": "Alle als gelesen markieren",
         "empty": "Keine Benachrichtigungen",

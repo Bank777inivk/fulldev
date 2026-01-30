@@ -681,6 +681,7 @@ export const adminService = {
                 });
 
 
+
                 // 4. Create Notification for the client
                 if (amount > 0) {
                     // Fetch wallet and user data within transaction
@@ -691,13 +692,17 @@ export const adminService = {
                     const userData = userDoc.data();
 
                     const txCurrency = walletData.currency === '€' ? 'EUR' : (walletData.currency || 'EUR');
-                    const strings = getLocalizedNotif(userData.language || 'en');
 
                     const notifRef = doc(collection(db, 'notifications'));
                     transaction.set(notifRef, {
                         userId,
-                        title: strings.depositTitle,
-                        message: strings.depositMsg(amount, txCurrency, newBalance),
+                        titleKey: 'notifications.deposit.title',
+                        messageKey: 'notifications.deposit.message',
+                        messageParams: {
+                            amount: amount.toLocaleString('fr-FR'),
+                            currency: txCurrency,
+                            newBalance: newBalance.toLocaleString('fr-FR')
+                        },
                         type: 'deposit',
                         read: false,
                         createdAt: serverTimestamp()
@@ -949,8 +954,12 @@ export const adminService = {
                         const notifRef = doc(collection(db, 'notifications'));
                         transaction.set(notifRef, {
                             userId,
-                            title: strings.loanApprovedTitle,
-                            message: strings.loanApprovedMsg(amount, currency),
+                            titleKey: 'notifications.loanApproved.title',
+                            messageKey: 'notifications.loanApproved.message',
+                            messageParams: {
+                                amount: amount.toLocaleString('fr-FR'),
+                                currency: currency
+                            },
                             type: 'loan_approval',
                             loanId: loanId,
                             read: false,
@@ -958,15 +967,12 @@ export const adminService = {
                         });
                     }
                 } else if (status === 'rejected' && oldStatus !== 'rejected') {
-                    // Localized Notification for Rejection
-                    const language = userSnap.exists() ? (userSnap.data().language || 'en') : 'en';
-                    const strings = getLocalizedNotif(language);
-
                     const notifRef = doc(collection(db, 'notifications'));
                     transaction.set(notifRef, {
                         userId,
-                        title: strings.loanRejectedTitle,
-                        message: strings.loanRejectedMsg,
+                        titleKey: 'notifications.loanRejected.title',
+                        messageKey: 'notifications.loanRejected.message',
+                        messageParams: {},
                         type: 'loan_rejection',
                         loanId: loanId,
                         read: false,
@@ -1309,8 +1315,12 @@ export const adminService = {
             if (newStatus === 'completed' && oldStatus !== 'completed') {
                 notificationData = {
                     userId: targetUserId,
-                    title: strings.txValidatedTitle,
-                    message: strings.txValidatedMsg(amount, txCurrency),
+                    titleKey: 'notifications.transactionValidated.title',
+                    messageKey: 'notifications.transactionValidated.message',
+                    messageParams: {
+                        amount: amount.toLocaleString('fr-FR'),
+                        currency: txCurrency
+                    },
                     type: 'transaction_validated',
                     transactionId,
                     read: false,
@@ -1333,8 +1343,12 @@ export const adminService = {
             } else if (newStatus === 'in_review' && oldStatus !== 'in_review') {
                 notificationData = {
                     userId: targetUserId,
-                    title: strings.txInReviewTitle,
-                    message: strings.txInReviewMsg(amount, txCurrency),
+                    titleKey: 'notifications.transactionInReview.title',
+                    messageKey: 'notifications.transactionInReview.message',
+                    messageParams: {
+                        amount: amount.toLocaleString('fr-FR'),
+                        currency: txCurrency
+                    },
                     type: 'transaction_review',
                     transactionId,
                     read: false,
@@ -1357,8 +1371,12 @@ export const adminService = {
             } else if (newStatus === 'rejected' && oldStatus !== 'rejected') {
                 notificationData = {
                     userId: targetUserId,
-                    title: strings.txStatusUpdatedTitle,
-                    message: strings.txStatusUpdatedMsg(amount, txCurrency, 'rejected'),
+                    titleKey: 'notifications.transactionRejected.title',
+                    messageKey: 'notifications.transactionRejected.message',
+                    messageParams: {
+                        amount: amount.toLocaleString('fr-FR'),
+                        currency: txCurrency
+                    },
                     type: 'transaction_rejected',
                     transactionId,
                     read: false,
@@ -1382,8 +1400,13 @@ export const adminService = {
                 // Generic status update notification
                 notificationData = {
                     userId: targetUserId,
-                    title: strings.txStatusUpdatedTitle,
-                    message: strings.txStatusUpdatedMsg(amount, txCurrency, newStatus),
+                    titleKey: 'notifications.transactionStatusUpdated.title',
+                    messageKey: 'notifications.transactionStatusUpdated.message',
+                    messageParams: {
+                        amount: amount.toLocaleString('fr-FR'),
+                        currency: txCurrency,
+                        status: newStatus
+                    },
                     type: 'transaction_status_update',
                     transactionId,
                     read: false,

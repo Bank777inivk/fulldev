@@ -21,61 +21,7 @@ const USERS_COLLECTION = 'users';
 const DAILY_LIMIT = 50000;
 const INVIK_BANK_CODE = '12345';
 
-const NOTIF_STRINGS = {
-    fr: {
-        instantSentTitle: '✅ Virement instantané envoyé',
-        instantSentMsg: (amount, beneficiary) => `Vous avez envoyé ${amount.toFixed(2)}€ à ${beneficiary} via le réseau INVIK.`,
-        instantReceivedTitle: '💰 Virement instantané reçu',
-        instantReceivedMsg: (amount, sender) => `Vous avez reçu ${amount.toFixed(2)}€ de ${sender}.`,
-        externalPendingTitle: '⏳ Virement SEPA en attente',
-        externalPendingMsg: (amount, beneficiary) => `Votre virement de ${amount.toFixed(2)}€ vers ${beneficiary} est en cours de traitement. Délai habituel : 24h-48h.`
-    },
-    en: {
-        instantSentTitle: '✅ Instant transfer sent',
-        instantSentMsg: (amount, beneficiary) => `You have sent ${amount.toFixed(2)}€ to ${beneficiary} via the INVIK network.`,
-        instantReceivedTitle: '💰 Instant transfer received',
-        instantReceivedMsg: (amount, sender) => `You have received ${amount.toFixed(2)}€ from ${sender}.`,
-        externalPendingTitle: '⏳ SEPA transfer pending',
-        externalPendingMsg: (amount, beneficiary) => `Your transfer of ${amount.toFixed(2)}€ to ${beneficiary} is being processed. Usual delay: 24h-48h.`
-    },
-    es: {
-        instantSentTitle: '✅ Transferencia instantánea enviada',
-        instantSentMsg: (amount, beneficiary) => `Has enviado ${amount.toFixed(2)}€ a ${beneficiary} a través de la red INVIK.`,
-        instantReceivedTitle: '💰 Transferencia instantánea recibida',
-        instantReceivedMsg: (amount, sender) => `Has recibido ${amount.toFixed(2)}€ de ${sender}.`,
-        externalPendingTitle: '⏳ Transferencia SEPA pendiente',
-        externalPendingMsg: (amount, beneficiary) => `Su transferencia de ${amount.toFixed(2)}€ a ${beneficiary} está siendo procesada. Retraso habitual: 24h-48h.`
-    },
-    pt: {
-        instantSentTitle: '✅ Transferência instantânea enviada',
-        instantSentMsg: (amount, beneficiary) => `Enviou ${amount.toFixed(2)}€ para ${beneficiary} através da rede INVIK.`,
-        instantReceivedTitle: '💰 Transferência instantânea recebida',
-        instantReceivedMsg: (amount, sender) => `Recebeu ${amount.toFixed(2)}€ de ${sender}.`,
-        externalPendingTitle: '⏳ Transferência SEPA pendente',
-        externalPendingMsg: (amount, beneficiary) => `A sua transferência de ${amount.toFixed(2)}€ para ${beneficiary} está a ser processada. Atraso habitual: 24h-48h.`
-    },
-    it: {
-        instantSentTitle: '✅ Bonifico istantaneo inviato',
-        instantSentMsg: (amount, beneficiary) => `Hai inviato ${amount.toFixed(2)}€ a ${beneficiary} tramite la rete INVIK.`,
-        instantReceivedTitle: '💰 Bonifico istantaneo ricevuto',
-        instantReceivedMsg: (amount, sender) => `Hai ricevuto ${amount.toFixed(2)}€ da ${sender}.`,
-        externalPendingTitle: '⏳ Bonifico SEPA in attesa',
-        externalPendingMsg: (amount, beneficiary) => `Il tuo bonifico di ${amount.toFixed(2)}€ verso ${beneficiary} è in fase di elaborazione. Ritardo abituale: 24h-48h.`
-    },
-    de: {
-        instantSentTitle: '✅ Echtzeit-Überweisung gesendet',
-        instantSentMsg: (amount, beneficiary) => `Sie haben ${amount.toFixed(2)}€ an ${beneficiary} über das INVIK-Netzwerk gesendet.`,
-        instantReceivedTitle: '💰 Echtzeit-Überweisung erhalten',
-        instantReceivedMsg: (amount, sender) => `Sie haben ${amount.toFixed(2)}€ von ${sender} erhalten.`,
-        externalPendingTitle: '⏳ SEPA-Überweisung ausstehend',
-        externalPendingMsg: (amount, beneficiary) => `Ihre Überweisung von ${amount.toFixed(2)}€ an ${beneficiary} wird bearbeitet. Übliche Verzögerung: 24h-48h.`
-    }
-};
 
-const getStrings = (lang = 'fr') => {
-    const code = (lang || 'fr').toLowerCase().split('-')[0];
-    return NOTIF_STRINGS[code] || NOTIF_STRINGS.fr;
-};
 
 export const transactionService = {
     // Utility to detect if an IBAN belongs to INVIK Bank
@@ -183,7 +129,10 @@ export const transactionService = {
                 '💸 Transfert interne effectué',
                 `Votre transfert de ${amount.toFixed(2)}€ a été traité avec succès entre vos comptes.`,
                 'success',
-                { transactionType: 'transfer_internal', amount, fromWalletId, toWalletId }
+                { transactionType: 'transfer_internal', amount, fromWalletId, toWalletId },
+                'notifications.transactionValidated.title',
+                'notifications.transactionValidated.message',
+                { amount: amount.toFixed(2), currency: 'EUR' }
             );
 
             return { success: true, instant: true };
@@ -284,30 +233,36 @@ export const transactionService = {
             });
 
             // Send notifications with user language
-            const senderSnap = await getDoc(doc(db, USERS_COLLECTION, userId));
-            const senderLang = senderSnap.exists() ? senderSnap.data().language : 'fr';
-            const senderStrings = getStrings(senderLang);
+            // const senderSnap = await getDoc(doc(db, USERS_COLLECTION, userId));
+            // const senderLang = senderSnap.exists() ? senderSnap.data().language : 'fr';
+            // const senderStrings = getStrings(senderLang);
 
             await notificationService.addNotification(
                 userId,
-                senderStrings.instantSentTitle,
-                senderStrings.instantSentMsg(amount, beneficiaryName),
+                '✅ Virement instantané envoyé',
+                `Vous avez envoyé ${amount.toFixed(2)}€ à ${beneficiaryName} via le réseau INVIK.`,
                 'success',
-                { transactionType: 'transfer_instant', amount, beneficiaryName, beneficiaryIban: targetIban }
+                { transactionType: 'transfer_instant', amount, beneficiaryName, beneficiaryIban: targetIban },
+                'notifications.transferSent.title',
+                'notifications.transferSent.message',
+                { amount: amount.toFixed(2), currency: 'EUR', beneficiary: beneficiaryName }
             );
 
             // Fetch receiver language
             const receiverUID = targetWalletDoc.data().userId;
-            const receiverSnap = await getDoc(doc(db, USERS_COLLECTION, receiverUID));
-            const receiverLang = receiverSnap.exists() ? receiverSnap.data().language : 'fr';
-            const receiverStrings = getStrings(receiverLang);
+            // const receiverSnap = await getDoc(doc(db, USERS_COLLECTION, receiverUID));
+            // const receiverLang = receiverSnap.exists() ? receiverSnap.data().language : 'fr';
+            // const receiverStrings = getStrings(receiverLang);
 
             await notificationService.addNotification(
                 receiverUID,
-                receiverStrings.instantReceivedTitle,
-                receiverStrings.instantReceivedMsg(amount, senderDisplayName),
+                '💰 Virement instantané reçu',
+                `Vous avez reçu ${amount.toFixed(2)}€ de ${senderDisplayName}.`,
                 'success',
-                { transactionType: 'receive_instant', amount, senderName: senderDisplayName }
+                { transactionType: 'receive_instant', amount, senderName: senderDisplayName },
+                'notifications.transferReceived.title',
+                'notifications.transferReceived.message',
+                { amount: amount.toFixed(2), currency: 'EUR', sender: senderDisplayName }
             );
 
             // Send Emails (Background)
@@ -424,16 +379,19 @@ export const transactionService = {
             });
 
             // Send notification to user with language check
-            const userSnap = await getDoc(doc(db, USERS_COLLECTION, userId));
-            const uLang = userSnap.exists() ? userSnap.data().language : 'fr';
-            const uStrings = getStrings(uLang);
+            // const userSnap = await getDoc(doc(db, USERS_COLLECTION, userId));
+            // const uLang = userSnap.exists() ? userSnap.data().language : 'fr';
+            // const uStrings = getStrings(uLang);
 
             await notificationService.addNotification(
                 userId,
-                uStrings.externalPendingTitle,
-                uStrings.externalPendingMsg(amount, beneficiaryName),
+                '⏳ Virement SEPA en attente',
+                `Votre virement de ${amount.toFixed(2)}€ vers ${beneficiaryName} est en cours de traitement. Délai habituel : 24h-48h.`,
                 'info',
-                { transactionType: 'transfer_external', amount, beneficiaryName, beneficiaryIban: iban }
+                { transactionType: 'transfer_external', amount, beneficiaryName, beneficiaryIban: iban },
+                'notifications.transferPending.title',
+                'notifications.transferPending.message',
+                { amount: amount.toFixed(2), currency: 'EUR', beneficiary: beneficiaryName }
             );
 
             // Send Emails (Background)

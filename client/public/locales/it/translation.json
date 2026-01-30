@@ -2053,6 +2053,46 @@
         }
     },
     "notifications": {
+        "deposit": {
+            "title": "💰 Nuovo deposito ricevuto",
+            "message": "Il tuo conto INVIK BANK è stato accreditato di {{amount}} {{currency}}. Nuovo saldo: {{newBalance}} {{currency}}"
+        },
+        "transactionValidated": {
+            "title": "✅ Operazione convalidata",
+            "message": "La tua operazione di {{amount}} {{currency}} è stata completata."
+        },
+        "transactionInReview": {
+            "title": "🔍 Bonifico in revisione",
+            "message": "Il tuo bonifico di {{amount}} {{currency}} è attualmente in fase di revisione per controlli di sicurezza."
+        },
+        "transactionRejected": {
+            "title": "❌ Operazione rifiutata",
+            "message": "La tua operazione di {{amount}} {{currency}} è stata rifiutata dal nostro dipartimento di sicurezza."
+        },
+        "transactionStatusUpdated": {
+            "title": "⚠️ Stato aggiornato",
+            "message": "Lo stato della tua operazione di {{amount}} {{currency}} è stato aggiornato da un amministratore ({{status}})."
+        },
+        "loanApproved": {
+            "title": "💰 Prestito Accreditato",
+            "message": "Il tuo prestito di {{amount}} {{currency}} è stato approvato e i fondi sono ora disponibili sul tuo conto."
+        },
+        "loanRejected": {
+            "title": "❌ Prestito Rifiutato",
+            "message": "La tua richiesta di finanziamento non ha potuto essere approvata al momento."
+        },
+        "transferSent": {
+            "title": "✅ Bonifico istantaneo inviato",
+            "message": "Hai inviato {{amount}} {{currency}} a {{beneficiary}} tramite la rete INVIK."
+        },
+        "transferReceived": {
+            "title": "💰 Bonifico istantaneo ricevuto",
+            "message": "Hai ricevuto {{amount}} {{currency}} da {{sender}}."
+        },
+        "transferPending": {
+            "title": "⏳ Bonifico SEPA in attesa",
+            "message": "Il tuo bonifico di {{amount}} {{currency}} verso {{beneficiary}} è in fase di elaborazione. Ritardo abituale: 24h-48h."
+        },
         "title": "Notifiche",
         "mark_all_read": "Segna tutto come letto",
         "empty": "Nessuna notifica",

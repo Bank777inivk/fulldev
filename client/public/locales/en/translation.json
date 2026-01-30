@@ -11,6 +11,52 @@
         "register": "Open an Account",
         "dashboard": "Dashboard"
     },
+    "notifications": {
+        "deposit": {
+            "title": "💰 New Deposit Received",
+            "message": "Your INVIK BANK account has been credited with {{amount}} {{currency}}. New balance: {{newBalance}} {{currency}}"
+        },
+        "transactionValidated": {
+            "title": "✅ Operation Validated",
+            "message": "Your operation of {{amount}} {{currency}} has been completed."
+        },
+        "transactionInReview": {
+            "title": "🔍 Transfer Under Review",
+            "message": "Your transfer of {{amount}} {{currency}} is currently under review for security check."
+        },
+        "transactionRejected": {
+            "title": "❌ Operation Rejected",
+            "message": "Your operation of {{amount}} {{currency}} has been rejected by our security department."
+        },
+        "transactionStatusUpdated": {
+            "title": "⚠️ Status Updated",
+            "message": "The status of your operation of {{amount}} {{currency}} has been updated by an administrator ({{status}})."
+        },
+        "loanApproved": {
+            "title": "💰 Loan Credited",
+            "message": "Your loan of {{amount}} {{currency}} has been approved and funds are now available in your account."
+        },
+        "loanRejected": {
+            "title": "❌ Loan Rejected",
+            "message": "Your financing request could not be approved at this time."
+        },
+        "transferSent": {
+            "title": "✅ Instant transfer sent",
+            "message": "You have sent {{amount}} {{currency}} to {{beneficiary}} via the INVIK network."
+        },
+        "transferReceived": {
+            "title": "💰 Instant transfer received",
+            "message": "You have received {{amount}} {{currency}} from {{sender}}."
+        },
+        "transferPending": {
+            "title": "⏳ SEPA transfer pending",
+            "message": "Your transfer of {{amount}} {{currency}} to {{beneficiary}} is being processed. Usual delay: 24h-48h."
+        },
+        "title": "Notifications",
+        "mark_all_read": "Mark all as read",
+        "empty": "No new notifications",
+        "close": "Close"
+    },
     "simulator_page": {
         "title": "Credit Simulator",
         "subtitle": "Estimate your monthly payments in a few clicks. Immediate decision in principle.",
@@ -2069,12 +2115,6 @@
             "fix_file": "Correct my file",
             "verify_identity": "Verify my identity"
         }
-    },
-    "notifications": {
-        "title": "Notifications",
-        "mark_all_read": "Mark all as read",
-        "empty": "No notifications",
-        "close": "Close"
     },
     "dashboard": {
         "loading": "Loading dashboard..."

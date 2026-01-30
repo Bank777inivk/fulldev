@@ -54,8 +54,12 @@ const NotificationDropdown = ({ notifications, onClose }) => {
                                 <i className={`fas ${notif.type === 'deposit' ? 'fa-wallet' : 'fa-bell'}`}></i>
                             </div>
                             <div className="notif-content">
-                                <p className="notif-title">{notif.title}</p>
-                                <p className="notif-message">{notif.message}</p>
+                                <p className="notif-title">
+                                    {notif.titleKey ? t(notif.titleKey) : notif.title}
+                                </p>
+                                <p className="notif-message">
+                                    {notif.messageKey ? t(notif.messageKey, notif.messageParams) : notif.message}
+                                </p>
                                 <span className="notif-time">{formatDate(notif.createdAt)}</span>
                             </div>
                             {!notif.read && <div className="unread-dot"></div>}

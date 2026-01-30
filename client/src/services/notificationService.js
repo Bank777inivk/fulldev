@@ -31,12 +31,15 @@ export const notificationService = {
 
     // send a notification
     // send a notification
-    addNotification: async (userId, title, message, type = 'info', metadata = {}) => {
+    addNotification: async (userId, title, message, type = 'info', metadata = {}, titleKey = null, messageKey = null, messageParams = {}) => {
         try {
             await addDoc(collection(db, 'notifications'), {
                 userId,
                 title,
                 message,
+                titleKey,
+                messageKey,
+                messageParams,
                 type,
                 read: false,
                 createdAt: serverTimestamp(),

@@ -11,6 +11,48 @@
         "register": "Ouvrir un compte",
         "dashboard": "Tableau de bord"
     },
+    "notifications": {
+        "deposit": {
+            "title": "💰 Nouveau dépôt reçu",
+            "message": "Votre compte INVIK BANK a été crédité d'un montant de {{amount}} {{currency}}. Nouveau solde : {{newBalance}} {{currency}}"
+        },
+        "transactionValidated": {
+            "title": "✅ Opération validée",
+            "message": "Votre opération de {{amount}} {{currency}} a été finalisée."
+        },
+        "transactionInReview": {
+            "title": "🔍 Virement en examen",
+            "message": "Votre virement de {{amount}} {{currency}} est actuellement en examen pour contrôle de sécurité."
+        },
+        "transactionRejected": {
+            "title": "❌ Opération refusée",
+            "message": "Votre opération de {{amount}} {{currency}} a été refusée par notre département de sécurité."
+        },
+        "transactionStatusUpdated": {
+            "title": "⚠️ Statut mis à jour",
+            "message": "Le statut de votre opération de {{amount}} {{currency}} a été modifiée par un administrateur ({{status}})."
+        },
+        "loanApproved": {
+            "title": "💰 Prêt Crédité",
+            "message": "Votre prêt de {{amount}} {{currency}} a été approuvé et les fonds sont désormais disponibles sur votre compte."
+        },
+        "loanRejected": {
+            "title": "❌ Demande refusée",
+            "message": "Votre demande de financement n'a pas pu être approuvée pour le moment."
+        },
+        "transferSent": {
+            "title": "✅ Virement instantané envoyé",
+            "message": "Vous avez envoyé {{amount}} {{currency}} à {{beneficiary}} via le réseau INVIK."
+        },
+        "transferReceived": {
+            "title": "💰 Virement instantané reçu",
+            "message": "Vous avez reçu {{amount}} {{currency}} de {{sender}}."
+        },
+        "transferPending": {
+            "title": "⏳ Virement SEPA en attente",
+            "message": "Votre virement de {{amount}} {{currency}} vers {{beneficiary}} est en cours de traitement. Délai habituel : 24h-48h."
+        }
+    },
     "simulator_page": {
         "title": "Simulateur de Crédit",
         "subtitle": "Estimez vos mensualités en quelques clics. Réponse de principe immédiate.",
@@ -1986,12 +2028,6 @@
             "text": "Rejoignez plus de 500 000 clients qui font confiance à INVIK SA pour gérer leurs finances au quotidien.",
             "button": "OUVRIR UN COMPTE GRATUITEMENT"
         }
-    },
-    "notifications": {
-        "title": "Notifications",
-        "mark_all_read": "Tout marquer comme lu",
-        "empty": "Aucune notification",
-        "close": "Fermer"
     },
     "dashboard": {
         "loading": "Chargement du tableau de bord..."

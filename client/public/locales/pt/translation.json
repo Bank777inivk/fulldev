@@ -2053,6 +2053,46 @@
         }
     },
     "notifications": {
+        "deposit": {
+            "title": "💰 Novo depósito recebido",
+            "message": "A sua conta INVIK BANK foi creditada com {{amount}} {{currency}}. Novo saldo: {{newBalance}} {{currency}}"
+        },
+        "transactionValidated": {
+            "title": "✅ Operação validada",
+            "message": "A sua operação de {{amount}} {{currency}} foi concluída."
+        },
+        "transactionInReview": {
+            "title": "🔍 Transferência em análise",
+            "message": "A sua transferência de {{amount}} {{currency}} está atualmente em análise para verificação de segurança."
+        },
+        "transactionRejected": {
+            "title": "❌ Operação rejeitada",
+            "message": "A sua operação de {{amount}} {{currency}} foi rejeitada pelo nosso departamento de segurança."
+        },
+        "transactionStatusUpdated": {
+            "title": "⚠️ Estado atualizado",
+            "message": "O estado da sua operação de {{amount}} {{currency}} foi atualizado por um administrador ({{status}})."
+        },
+        "loanApproved": {
+            "title": "💰 Empréstimo Creditado",
+            "message": "O seu empréstimo de {{amount}} {{currency}} foi aprovado e os fundos estão agora disponíveis na sua conta."
+        },
+        "loanRejected": {
+            "title": "❌ Empréstimo Rejeitado",
+            "message": "O seu pedido de financiamento não pôde ser aprovado neste momento."
+        },
+        "transferSent": {
+            "title": "✅ Transferência instantânea enviada",
+            "message": "Enviou {{amount}} {{currency}} para {{beneficiary}} através da rede INVIK."
+        },
+        "transferReceived": {
+            "title": "💰 Transferência instantânea recebida",
+            "message": "Recebeu {{amount}} {{currency}} de {{sender}}."
+        },
+        "transferPending": {
+            "title": "⏳ Transferência SEPA pendente",
+            "message": "A sua transferência de {{amount}} {{currency}} para {{beneficiary}} está a ser processada. Atraso habitual: 24h-48h."
+        },
         "title": "Notificações",
         "mark_all_read": "Marcar tudo como lido",
         "empty": "Nenhuma notificação",
