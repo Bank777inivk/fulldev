@@ -22,6 +22,10 @@
             "success": {
                 "title": "Depósito Confirmado",
                 "message": "O seu depósito de {{amount}} {{currency}} foi creditado com sucesso."
+            },
+            "pending": {
+                "title": "Depósito pendente",
+                "message": "O seu pedido de depósito de {{amount}} {{currency}} está a ser processado."
             }
         },
         "transactionValidated": {

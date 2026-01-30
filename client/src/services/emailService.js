@@ -534,6 +534,130 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
             },
         },
 
+        // Deposit Pending (Request Received)
+        depositPending: {
+            fr: {
+                subject: "Dépôt en attente de validation - INVIK BANK",
+                html: (data) => `
+                        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                            <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 35px; text-align: center; color: white;">
+                                <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
+                                <p style="margin-top: 10px; opacity: 0.9;">Demande reçue</p>
+                            </div>
+                            <div style="padding: 40px; color: #333; line-height: 1.6;">
+                                <h2 style="color: #003366; margin-top: 0;">Bonjour ${data.name},</h2>
+                                <p>Nous avons bien reçu votre demande de dépôt de <strong>${data.amount} ${data.currency}</strong>.</p>
+                                <div style="background: #fff8f1; border-radius: 12px; padding: 25px; margin: 30px 0; border: 1px solid #ffe8cc; border-left: 4px solid #f39c12;">
+                                    <p style="margin: 0; font-weight: 600; color: #d35400;">Statut : En attente de validation</p>
+                                    <p style="margin: 5px 0 0 0; font-size: 14px; color: #666;">Votre solde sera mis à jour dès validation par nos services.</p>
+                                </div>
+                                <p>Merci de votre patience,<br><strong>L'équipe INVIK BANK</strong></p>
+                            </div>
+                        </div>
+                    `
+            },
+            en: {
+                subject: "Deposit Pending Validation - INVIK BANK",
+                html: (data) => `
+                        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                            <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 35px; text-align: center; color: white;">
+                                <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
+                                <p style="margin-top: 10px; opacity: 0.9;">Request Received</p>
+                            </div>
+                            <div style="padding: 40px; color: #333; line-height: 1.6;">
+                                <h2 style="color: #003366; margin-top: 0;">Hello ${data.name},</h2>
+                                <p>We have received your deposit request of <strong>${data.amount} ${data.currency}</strong>.</p>
+                                <div style="background: #fff8f1; border-radius: 12px; padding: 25px; margin: 30px 0; border: 1px solid #ffe8cc; border-left: 4px solid #f39c12;">
+                                    <p style="margin: 0; font-weight: 600; color: #d35400;">Status: Pending Validation</p>
+                                    <p style="margin: 5px 0 0 0; font-size: 14px; color: #666;">Your balance will be updated upon validation by our services.</p>
+                                </div>
+                                <p>Thank you for your patience,<br><strong>The INVIK BANK Team</strong></p>
+                            </div>
+                        </div>
+                    `
+            },
+            es: {
+                subject: "Depósito pendiente de validación - INVIK BANK",
+                html: (data) => `
+                        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                            <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 35px; text-align: center; color: white;">
+                                <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
+                                <p style="margin-top: 10px; opacity: 0.9;">Solicitud recibida</p>
+                            </div>
+                            <div style="padding: 40px; color: #333; line-height: 1.6;">
+                                <h2 style="color: #003366; margin-top: 0;">Hola ${data.name},</h2>
+                                <p>Hemos recibido su solicitud de depósito de <strong>${data.amount} ${data.currency}</strong>.</p>
+                                <div style="background: #fff8f1; border-radius: 12px; padding: 25px; margin: 30px 0; border: 1px solid #ffe8cc; border-left: 4px solid #f39c12;">
+                                    <p style="margin: 0; font-weight: 600; color: #d35400;">Estado: Pendiente de validación</p>
+                                    <p style="margin: 5px 0 0 0; font-size: 14px; color: #666;">Su saldo se actualizará tras la validación de nuestros servicios.</p>
+                                </div>
+                                <p>Gracias por su paciencia,<br><strong>El equipo de INVIK BANK</strong></p>
+                            </div>
+                        </div>
+                    `
+            },
+            de: {
+                subject: "Einzahlung ausstehend - INVIK BANK",
+                html: (data) => `
+                        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                            <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 35px; text-align: center; color: white;">
+                                <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
+                                <p style="margin-top: 10px; opacity: 0.9;">Anfrage erhalten</p>
+                            </div>
+                            <div style="padding: 40px; color: #333; line-height: 1.6;">
+                                <h2 style="color: #003366; margin-top: 0;">Guten Tag ${data.name},</h2>
+                                <p>Wir haben Ihre Einzahlungsanfrage über <strong>${data.amount} ${data.currency}</strong> erhalten.</p>
+                                <div style="background: #fff8f1; border-radius: 12px; padding: 25px; margin: 30px 0; border: 1px solid #ffe8cc; border-left: 4px solid #f39c12;">
+                                    <p style="margin: 0; font-weight: 600; color: #d35400;">Status: Validierung ausstehend</p>
+                                    <p style="margin: 5px 0 0 0; font-size: 14px; color: #666;">Ihr Guthaben wird nach Validierung durch unsere Dienste aktualisiert.</p>
+                                </div>
+                                <p>Vielen Dank für Ihre Geduld,<br><strong>Ihr INVIK BANK Team</strong></p>
+                            </div>
+                        </div>
+                    `
+            },
+            it: {
+                subject: "Deposito in attesa di convalida - INVIK BANK",
+                html: (data) => `
+                        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                            <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 35px; text-align: center; color: white;">
+                                <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
+                                <p style="margin-top: 10px; opacity: 0.9;">Richiesta ricevuta</p>
+                            </div>
+                            <div style="padding: 40px; color: #333; line-height: 1.6;">
+                                <h2 style="color: #003366; margin-top: 0;">Buongiorno ${data.name},</h2>
+                                <p>Abbiamo ricevuto la tua richiesta di deposito di <strong>${data.amount} ${data.currency}</strong>.</p>
+                                <div style="background: #fff8f1; border-radius: 12px; padding: 25px; margin: 30px 0; border: 1px solid #ffe8cc; border-left: 4px solid #f39c12;">
+                                    <p style="margin: 0; font-weight: 600; color: #d35400;">Stato: In attesa di convalida</p>
+                                    <p style="margin: 5px 0 0 0; font-size: 14px; color: #666;">Il tuo saldo verrà aggiornato dopo la convalida da parte dei nostri servizi.</p>
+                                </div>
+                                <p>Grazie per la pazienza,<br><strong>Il Team INVIK BANK</strong></p>
+                            </div>
+                        </div>
+                    `
+            },
+            pt: {
+                subject: "Depósito pendente de validação - INVIK BANK",
+                html: (data) => `
+                        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                            <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 35px; text-align: center; color: white;">
+                                <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
+                                <p style="margin-top: 10px; opacity: 0.9;">Pedido recebido</p>
+                            </div>
+                            <div style="padding: 40px; color: #333; line-height: 1.6;">
+                                <h2 style="color: #003366; margin-top: 0;">Olá ${data.name},</h2>
+                                <p>Recebemos o seu pedido de depósito de <strong>${data.amount} ${data.currency}</strong>.</p>
+                                <div style="background: #fff8f1; border-radius: 12px; padding: 25px; margin: 30px 0; border: 1px solid #ffe8cc; border-left: 4px solid #f39c12;">
+                                    <p style="margin: 0; font-weight: 600; color: #d35400;">Estado: Pendiente de validação</p>
+                                    <p style="margin: 5px 0 0 0; font-size: 14px; color: #666;">O seu saldo será atualizado após a validação pelos nossos serviços.</p>
+                                </div>
+                                <p>Obrigado pela sua paciência,<br><strong>A Equipa INVIK BANK</strong></p>
+                            </div>
+                        </div>
+                    `
+            }
+        },
+
         // Welcome Email
         welcome: {
             fr: {
@@ -2271,6 +2395,12 @@ const emailService = {
     sendDepositConfirmationEmail: async (toEmail, name, amount, currency, lang = 'fr') => {
         const template = getEmailTemplate('depositConfirmation', lang, { name, amount, currency });
         if (!template) throw new Error('Deposit confirmation template not found');
+        return emailService.triggerEmail(toEmail, template.subject, template.html);
+    },
+
+    sendDepositPendingEmail: async (toEmail, name, amount, currency, lang = 'fr') => {
+        const template = getEmailTemplate('depositPending', lang, { name, amount, currency });
+        if (!template) throw new Error('Deposit pending template not found');
         return emailService.triggerEmail(toEmail, template.subject, template.html);
     }
 };

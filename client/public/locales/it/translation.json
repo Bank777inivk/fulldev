@@ -22,6 +22,10 @@
             "success": {
                 "title": "Deposito confermato",
                 "message": "Il tuo deposito di {{amount}} {{currency}} è stato accreditato con successo."
+            },
+            "pending": {
+                "title": "Deposito in attesa",
+                "message": "La tua richiesta di deposito di {{amount}} {{currency}} è in fase di elaborazione."
             }
         },
         "transactionValidated": {

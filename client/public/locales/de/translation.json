@@ -22,6 +22,10 @@
             "success": {
                 "title": "Einzahlung bestätigt",
                 "message": "Ihre Einzahlung von {{amount}} {{currency}} wurde erfolgreich gutgeschrieben."
+            },
+            "pending": {
+                "title": "Einzahlung ausstehend",
+                "message": "Ihre Einzahlungsanfrage über {{amount}} {{currency}} wird bearbeitet."
             }
         },
         "transactionValidated": {

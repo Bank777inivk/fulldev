@@ -18,6 +18,10 @@
             "success": {
                 "title": "Dépôt confirmé",
                 "message": "Votre dépôt de {{amount}} {{currency}} a été crédité avec succès."
+            },
+            "pending": {
+                "title": "Dépôt en attente",
+                "message": "Votre demande de dépôt de {{amount}} {{currency}} est en cours de traitement."
             }
         },
         "transactionValidated": {

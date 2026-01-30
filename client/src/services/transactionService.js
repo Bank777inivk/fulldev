@@ -545,6 +545,31 @@ export const transactionService = {
                         amount,
                         method
                     );
+
+                    // Client notification for Deposit Request (Pending)
+                    try {
+                        await emailService.sendDepositPendingEmail(
+                            userData.email,
+                            userData.firstName,
+                            parseFloat(amount).toFixed(2),
+                            currency,
+                            userData.language || 'fr'
+                        );
+
+                        // In-app notification
+                        await notificationService.addNotification(
+                            userId,
+                            'Dépôt en attente',
+                            `Votre demande de dépôt de ${parseFloat(amount).toFixed(2)} ${currency} est en cours de traitement.`,
+                            'info',
+                            { type: 'deposit_pending', amount, currency, method },
+                            'notifications.deposit.pending.title',
+                            'notifications.deposit.pending.message',
+                            { amount: parseFloat(amount).toFixed(2), currency }
+                        );
+                    } catch (clientNotifError) {
+                        console.warn("Client deposit pending notification failed", clientNotifError);
+                    }
                 }
             } catch (e) {
                 console.warn("Admin deposit notification failed", e);

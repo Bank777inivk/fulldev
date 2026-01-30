@@ -22,6 +22,10 @@
             "success": {
                 "title": "Depósito confirmado",
                 "message": "Su depósito de {{amount}} {{currency}} ha sido acreditado exitosamente."
+            },
+            "pending": {
+                "title": "Depósito pendiente",
+                "message": "Su solicitud de depósito de {{amount}} {{currency}} está siendo procesada."
             }
         },
         "transactionValidated": {

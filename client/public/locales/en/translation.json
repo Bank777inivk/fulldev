@@ -18,6 +18,10 @@
             "success": {
                 "title": "Deposit Confirmed",
                 "message": "Your deposit of {{amount}} {{currency}} has been successfully credited."
+            },
+            "pending": {
+                "title": "Deposit Pending",
+                "message": "Your deposit request of {{amount}} {{currency}} is being processed."
             }
         },
         "transactionValidated": {
