@@ -677,6 +677,154 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                         </div>
                     </div>
                 `
+            },
+            es: {
+                subject: "Transferencia SEPA en proceso - INVIK BANK",
+                html: (data) => `
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                        <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 30px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 24px; letter-spacing: 1px;">INVIK BANK</h1>
+                            <p style="margin-top: 10px; opacity: 0.8;">Transferencia SEPA iniciada</p>
+                        </div>
+                        <div style="padding: 40px; color: #333; line-height: 1.6;">
+                            <h2 style="color: #003366; margin-top: 0;">Hola ${data.name},</h2>
+                            <p>Su solicitud de transferencia a una cuenta externa ha sido registrada y está siendo procesada por nuestros servicios.</p>
+                            <div style="background: #f8fbff; border-radius: 8px; padding: 20px; margin: 25px 0; border-left: 4px solid #f39c12;">
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #666;">Importe:</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right;">${parseFloat(data.amount).toFixed(2)} €</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #666;">Beneficiario:</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right;">${data.beneficiary}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #666;">Estado:</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right; color: #f39c12;">Pendiente de validación</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #666;">Referencia:</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right; color: #888;">#${data.ref?.substring(0, 8)}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <p>De acuerdo con los plazos interbancarios SEPA, los fondos serán transferidos tras la validación de nuestro servicio de seguridad (normalmente en 24-48 horas laborables).</p>
+                            <p style="margin-top: 30px;">Gracias por su confianza,<br><strong>El equipo de INVIK BANK</strong></p>
+                        </div>
+                    </div>
+                `
+            },
+            de: {
+                subject: "SEPA-Überweisung in Bearbeitung - INVIK BANK",
+                html: (data) => `
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                        <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 30px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 24px; letter-spacing: 1px;">INVIK BANK</h1>
+                            <p style="margin-top: 10px; opacity: 0.8;">SEPA-Überweisung eingeleitet</p>
+                        </div>
+                        <div style="padding: 40px; color: #333; line-height: 1.6;">
+                            <h2 style="color: #003366; margin-top: 0;">Guten Tag ${data.name},</h2>
+                            <p>Ihr Überweisungsauftrag auf ein externes Konto wurde registriert und wird von unseren Diensten bearbeitet.</p>
+                            <div style="background: #f8fbff; border-radius: 8px; padding: 20px; margin: 25px 0; border-left: 4px solid #f39c12;">
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #666;">Betrag:</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right;">${parseFloat(data.amount).toFixed(2)} €</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #666;">Empfänger:</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right;">${data.beneficiary}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #666;">Status:</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right; color: #f39c12;">Warten auf Validierung</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #666;">Referenz:</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right; color: #888;">#${data.ref?.substring(0, 8)}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <p>Gemäß den SEPA-Interbankfristen werden die Gelder nach Validierung durch unseren Sicherheitsdienst überwiesen (normalerweise innerhalb von 24-48 Werktagen).</p>
+                            <p style="margin-top: 30px;">Vielen Dank für Ihr Vertrauen,<br><strong>Ihr INVIK BANK Team</strong></p>
+                        </div>
+                    </div>
+                `
+            },
+            it: {
+                subject: "Bonifico SEPA in elaborazione - INVIK BANK",
+                html: (data) => `
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                        <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 30px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 24px; letter-spacing: 1px;">INVIK BANK</h1>
+                            <p style="margin-top: 10px; opacity: 0.8;">Bonifico SEPA avviato</p>
+                        </div>
+                        <div style="padding: 40px; color: #333; line-height: 1.6;">
+                            <h2 style="color: #003366; margin-top: 0;">Buongiorno ${data.name},</h2>
+                            <p>La tua richiesta di bonifico verso un conto esterno è stata registrata ed è in fase di elaborazione da parte dei nostri servizi.</p>
+                            <div style="background: #f8fbff; border-radius: 8px; padding: 20px; margin: 25px 0; border-left: 4px solid #f39c12;">
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #666;">Importo:</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right;">${parseFloat(data.amount).toFixed(2)} €</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #666;">Beneficiario:</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right;">${data.beneficiary}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #666;">Stato:</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right; color: #f39c12;">In attesa di convalida</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #666;">Riferimento:</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right; color: #888;">#${data.ref?.substring(0, 8)}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <p>Secondo i tempi interbancari SEPA, i fondi saranno trasferiti dopo la convalida del nostro servizio di sicurezza (di solito entro 24-48 ore lavorative).</p>
+                            <p style="margin-top: 30px;">Grazie per la tua fiducia,<br><strong>Il Team INVIK BANK</strong></p>
+                        </div>
+                    </div>
+                `
+            },
+            pt: {
+                subject: "Transferência SEPA em processamento - INVIK BANK",
+                html: (data) => `
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                        <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 30px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 24px; letter-spacing: 1px;">INVIK BANK</h1>
+                            <p style="margin-top: 10px; opacity: 0.8;">Transferência SEPA iniciada</p>
+                        </div>
+                        <div style="padding: 40px; color: #333; line-height: 1.6;">
+                            <h2 style="color: #003366; margin-top: 0;">Olá ${data.name},</h2>
+                            <p>O seu pedido de transferência para uma conta externa foi registado e está a ser processado pelos nossos serviços.</p>
+                            <div style="background: #f8fbff; border-radius: 8px; padding: 20px; margin: 25px 0; border-left: 4px solid #f39c12;">
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #666;">Montante:</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right;">${parseFloat(data.amount).toFixed(2)} €</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #666;">Beneficiário:</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right;">${data.beneficiary}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #666;">Estado:</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right; color: #f39c12;">Pendente de validação</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #666;">Referência:</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right; color: #888;">#${data.ref?.substring(0, 8)}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <p>De acordo com os prazos interbancários SEPA, os fundos serão transferidos após validação do nosso serviço de segurança (normalmente no prazo de 24-48 horas úteis).</p>
+                            <p style="margin-top: 30px;">Obrigado pela sua confiança,<br><strong>A Equipa INVIK BANK</strong></p>
+                        </div>
+                    </div>
+                `
             }
         },
 
@@ -744,6 +892,138 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                             </div>
                             <p>Funds will be credited to your account upon final validation from the SEPA network (usually within 24-48 hours).</p>
                             <p style="margin-top: 30px;">Thank you for your trust,<br><strong>The INVIK BANK Team</strong></p>
+                        </div>
+                    </div>
+                `
+            },
+            es: {
+                subject: "Transferencia entrante - INVIK BANK",
+                html: (data) => `
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                        <div style="background: linear-gradient(135deg, #f39c12 0%, #f1c40f 100%); padding: 30px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 24px; letter-spacing: 1px;">INVIK BANK</h1>
+                            <p style="margin-top: 10px; opacity: 0.9;">Información de transferencia</p>
+                        </div>
+                        <div style="padding: 40px; color: #333; line-height: 1.6;">
+                            <h2 style="color: #003366; margin-top: 0;">Hola ${data.name},</h2>
+                            <p>Le informamos que una transferencia de <strong>${data.sender}</strong> está siendo procesada hacia su cuenta.</p>
+                            <div style="background: #fff9eb; border-radius: 8px; padding: 20px; margin: 25px 0; border-left: 4px solid #f39c12;">
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #666;">Importe esperado:</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right; color: #e67e22; font-size: 18px;">${parseFloat(data.amount).toFixed(2)} €</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #666;">Remitente:</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right;">${data.sender}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #666;">Estado actual:</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right; color: #f39c12;">Transferencia SEPA en curso</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <p>Los fondos se acreditarán en su cuenta tras la validación final de la red SEPA (normalmente en 24-48 horas).</p>
+                            <p style="margin-top: 30px;">Gracias por su confianza,<br><strong>El equipo de INVIK BANK</strong></p>
+                        </div>
+                    </div>
+                `
+            },
+            de: {
+                subject: "Eingehende Überweisung - INVIK BANK",
+                html: (data) => `
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                        <div style="background: linear-gradient(135deg, #f39c12 0%, #f1c40f 100%); padding: 30px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 24px; letter-spacing: 1px;">INVIK BANK</h1>
+                            <p style="margin-top: 10px; opacity: 0.9;">Überweisungsinformation</p>
+                        </div>
+                        <div style="padding: 40px; color: #333; line-height: 1.6;">
+                            <h2 style="color: #003366; margin-top: 0;">Guten Tag ${data.name},</h2>
+                            <p>Wir möchten Sie darüber informieren, dass eine Überweisung von <strong>${data.sender}</strong> derzeit auf Ihr Konto bearbeitet wird.</p>
+                            <div style="background: #fff9eb; border-radius: 8px; padding: 20px; margin: 25px 0; border-left: 4px solid #f39c12;">
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #666;">Erwarteter Betrag:</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right; color: #e67e22; font-size: 18px;">${parseFloat(data.amount).toFixed(2)} €</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #666;">Absender:</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right;">${data.sender}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #666;">Aktueller Status:</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right; color: #f39c12;">SEPA-Überweisung läuft</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <p>Die Gelder werden Ihrem Konto nach der endgültigen Validierung durch das SEPA-Netzwerk gutgeschrieben (normalerweise innerhalb von 24-48 Stunden).</p>
+                            <p style="margin-top: 30px;">Vielen Dank für Ihr Vertrauen,<br><strong>Ihr INVIK BANK Team</strong></p>
+                        </div>
+                    </div>
+                `
+            },
+            it: {
+                subject: "Bonifico in arrivo - INVIK BANK",
+                html: (data) => `
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                        <div style="background: linear-gradient(135deg, #f39c12 0%, #f1c40f 100%); padding: 30px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 24px; letter-spacing: 1px;">INVIK BANK</h1>
+                            <p style="margin-top: 10px; opacity: 0.9;">Informazioni sul bonifico</p>
+                        </div>
+                        <div style="padding: 40px; color: #333; line-height: 1.6;">
+                            <h2 style="color: #003366; margin-top: 0;">Buongiorno ${data.name},</h2>
+                            <p>Ti informiamo che un bonifico da <strong>${data.sender}</strong> è attualmente in fase di elaborazione verso il tuo conto.</p>
+                            <div style="background: #fff9eb; border-radius: 8px; padding: 20px; margin: 25px 0; border-left: 4px solid #f39c12;">
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #666;">Importo previsto:</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right; color: #e67e22; font-size: 18px;">${parseFloat(data.amount).toFixed(2)} €</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #666;">Mittente:</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right;">${data.sender}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #666;">Stato attuale:</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right; color: #f39c12;">Bonifico SEPA in corso</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <p>I fondi saranno accreditati sul tuo conto dopo la convalida finale dalla rete SEPA (di solito entro 24-48 ore).</p>
+                            <p style="margin-top: 30px;">Grazie per la tua fiducia,<br><strong>Il Team INVIK BANK</strong></p>
+                        </div>
+                    </div>
+                `
+            },
+            pt: {
+                subject: "Transferência recebida - INVIK BANK",
+                html: (data) => `
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                        <div style="background: linear-gradient(135deg, #f39c12 0%, #f1c40f 100%); padding: 30px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 24px; letter-spacing: 1px;">INVIK BANK</h1>
+                            <p style="margin-top: 10px; opacity: 0.9;">Informação de transferência</p>
+                        </div>
+                        <div style="padding: 40px; color: #333; line-height: 1.6;">
+                            <h2 style="color: #003366; margin-top: 0;">Olá ${data.name},</h2>
+                            <p>Informamos que uma transferência de <strong>${data.sender}</strong> está atualmente a ser processada para a sua conta.</p>
+                            <div style="background: #fff9eb; border-radius: 8px; padding: 20px; margin: 25px 0; border-left: 4px solid #f39c12;">
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #666;">Montante esperado:</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right; color: #e67e22; font-size: 18px;">${parseFloat(data.amount).toFixed(2)} €</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #666;">Remetente:</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right;">${data.sender}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #666;">Estado atual:</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right; color: #f39c12;">Transferência SEPA em curso</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <p>Os fundos serão creditados na sua conta após a validação final da rede SEPA (normalmente no prazo de 24-48 horas).</p>
+                            <p style="margin-top: 30px;">Obrigado pela sua confiança,<br><strong>A Equipa INVIK BANK</strong></p>
                         </div>
                     </div>
                 `
@@ -994,6 +1274,106 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                                 <li>By phone: +33 1 XX XX XX XX</li>
                             </ul>
                             <p style="margin-top: 30px;">Thank you for your trust,<br><strong>The INVIK BANK Team</strong></p>
+                        </div>
+                    </div>
+                `
+            },
+            es: {
+                subject: "Hemos recibido su mensaje - INVIK BANK",
+                html: (data) => `
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                        <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 30px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 24px; letter-spacing: 1px;">INVIK BANK</h1>
+                            <p style="margin-top: 10px; opacity: 0.8;">Mensaje recibido</p>
+                        </div>
+                        <div style="padding: 40px; color: #333; line-height: 1.6;">
+                            <h2 style="color: #003366; margin-top: 0;">Hola ${data.name},</h2>
+                            <p>Hemos recibido su mensaje a través de nuestro formulario de contacto.</p>
+                            <p>Nuestro equipo le responderá lo antes posible, generalmente en un plazo de 24 horas laborables.</p>
+                            <div style="background: #f8fbff; border-radius: 8px; padding: 20px; margin: 25px 0; border-left: 4px solid #003366;">
+                                <p style="margin: 0; font-size: 14px; color: #666;"><strong>Su solicitud se refiere a:</strong> ${data.subject || 'Consulta general'}</p>
+                            </div>
+                            <p>Si su solicitud es urgente, también puede contactarnos:</p>
+                            <ul style="color: #666;">
+                                <li>Por correo electrónico: <a href="mailto:contact@inviksa.com" style="color: #003366;">contact@inviksa.com</a></li>
+                                <li>Por teléfono: +33 1 XX XX XX XX</li>
+                            </ul>
+                            <p style="margin-top: 30px;">Gracias por su confianza,<br><strong>El equipo de INVIK BANK</strong></p>
+                        </div>
+                    </div>
+                `
+            },
+            de: {
+                subject: "Wir haben Ihre Nachricht erhalten - INVIK BANK",
+                html: (data) => `
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                        <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 30px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 24px; letter-spacing: 1px;">INVIK BANK</h1>
+                            <p style="margin-top: 10px; opacity: 0.8;">Nachricht erhalten</p>
+                        </div>
+                        <div style="padding: 40px; color: #333; line-height: 1.6;">
+                            <h2 style="color: #003366; margin-top: 0;">Guten Tag ${data.name},</h2>
+                            <p>Wir haben Ihre Nachricht über unser Kontaktformular erhalten.</p>
+                            <p>Unser Team wird Ihnen so schnell wie möglich antworten, in der Regel innerhalb von 24 Werktagen.</p>
+                            <div style="background: #f8fbff; border-radius: 8px; padding: 20px; margin: 25px 0; border-left: 4px solid #003366;">
+                                <p style="margin: 0; font-size: 14px; color: #666;"><strong>Ihre Anfrage betrifft:</strong> ${data.subject || 'Allgemeine Anfrage'}</p>
+                            </div>
+                            <p>Wenn Ihre Anfrage dringend ist, können Sie uns auch erreichen:</p>
+                            <ul style="color: #666;">
+                                <li>Per E-Mail: <a href="mailto:contact@inviksa.com" style="color: #003366;">contact@inviksa.com</a></li>
+                                <li>Per Telefon: +33 1 XX XX XX XX</li>
+                            </ul>
+                            <p style="margin-top: 30px;">Vielen Dank für Ihr Vertrauen,<br><strong>Ihr INVIK BANK Team</strong></p>
+                        </div>
+                    </div>
+                `
+            },
+            it: {
+                subject: "Abbiamo ricevuto il tuo messaggio - INVIK BANK",
+                html: (data) => `
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                        <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 30px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 24px; letter-spacing: 1px;">INVIK BANK</h1>
+                            <p style="margin-top: 10px; opacity: 0.8;">Messaggio ricevuto</p>
+                        </div>
+                        <div style="padding: 40px; color: #333; line-height: 1.6;">
+                            <h2 style="color: #003366; margin-top: 0;">Buongiorno ${data.name},</h2>
+                            <p>Abbiamo ricevuto il tuo messaggio tramite il nostro modulo di contatto.</p>
+                            <p>Il nostro team ti risponderà il prima possibile, generalmente entro 24 ore lavorative.</p>
+                            <div style="background: #f8fbff; border-radius: 8px; padding: 20px; margin: 25px 0; border-left: 4px solid #003366;">
+                                <p style="margin: 0; font-size: 14px; color: #666;"><strong>La tua richiesta riguarda:</strong> ${data.subject || 'Richiesta generale'}</p>
+                            </div>
+                            <p>Se la tua richiesta è urgente, puoi anche contattarci:</p>
+                            <ul style="color: #666;">
+                                <li>Via email: <a href="mailto:contact@inviksa.com" style="color: #003366;">contact@inviksa.com</a></li>
+                                <li>Per telefono: +33 1 XX XX XX XX</li>
+                            </ul>
+                            <p style="margin-top: 30px;">Grazie per la tua fiducia,<br><strong>Il Team INVIK BANK</strong></p>
+                        </div>
+                    </div>
+                `
+            },
+            pt: {
+                subject: "Recebemos a sua mensagem - INVIK BANK",
+                html: (data) => `
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                        <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 30px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 24px; letter-spacing: 1px;">INVIK BANK</h1>
+                            <p style="margin-top: 10px; opacity: 0.8;">Mensagem recebida</p>
+                        </div>
+                        <div style="padding: 40px; color: #333; line-height: 1.6;">
+                            <h2 style="color: #003366; margin-top: 0;">Olá ${data.name},</h2>
+                            <p>Recebemos a sua mensagem através do nosso formulário de contacto.</p>
+                            <p>A nossa equipa responderá o mais rapidamente possível, geralmente no prazo de 24 horas úteis.</p>
+                            <div style="background: #f8fbff; border-radius: 8px; padding: 20px; margin: 25px 0; border-left: 4px solid #003366;">
+                                <p style="margin: 0; font-size: 14px; color: #666;"><strong>O seu pedido diz respeito a:</strong> ${data.subject || 'Pedido geral'}</p>
+                            </div>
+                            <p>Se o seu pedido for urgente, também pode contactar-nos:</p>
+                            <ul style="color: #666;">
+                                <li>Por e-mail: <a href="mailto:contact@inviksa.com" style="color: #003366;">contact@inviksa.com</a></li>
+                                <li>Por telefone: +33 1 XX XX XX XX</li>
+                            </ul>
+                            <p style="margin-top: 30px;">Obrigado pela sua confiança,<br><strong>A Equipa INVIK BANK</strong></p>
                         </div>
                     </div>
                 `
