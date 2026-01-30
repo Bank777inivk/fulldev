@@ -2185,5 +2185,10 @@
       "delete_error": "Fehler beim Löschen des Empfängers."
     },
     "confirm_delete": "Möchten Sie diesen Empfänger wirklich löschen?"
+  },
+  "maintenance": {
+    "title": "Wir führen Wartungsarbeiten durch",
+    "message": "Unser technisches Team verbessert derzeit die Plattform, um Ihnen ein besseres Erlebnis zu bieten. Wir sind bald zurück.",
+    "estimated_time": "Geschätzte Rückkehr: Ein paar Minuten"
   }
 }

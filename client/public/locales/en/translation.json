@@ -2173,5 +2173,10 @@
     "loading": "Loading...",
     "error": "An error occurred",
     "client": "Client"
+  },
+  "maintenance": {
+    "title": "We are under maintenance",
+    "message": "Our technical team is currently improving the platform to offer you a better experience. We will be back very soon.",
+    "estimated_time": "Estimated return: A few minutes"
   }
 }

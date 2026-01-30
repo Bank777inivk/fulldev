@@ -2164,5 +2164,10 @@
     "loading": "Cargando...",
     "error": "Ocurrió un error",
     "client": "Cliente"
+  },
+  "maintenance": {
+    "title": "Estamos en mantenimiento",
+    "message": "Nuestro equipo técnico está mejorando actualmente la plataforma para ofrecerle una mejor experiencia. Volveremos muy pronto.",
+    "estimated_time": "Regreso estimado: Unos minutos"
   }
 }
