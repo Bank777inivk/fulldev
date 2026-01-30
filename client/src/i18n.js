@@ -45,6 +45,8 @@ i18n.on('languageChanged', (lng) => {
         auth.languageCode = lng;
         console.log(`Firebase Auth language set to: ${lng}`);
     }
+    // Update HTML lang attribute for accessibility and browser detection
+    document.documentElement.lang = lng;
 });
 
 export default i18n;
