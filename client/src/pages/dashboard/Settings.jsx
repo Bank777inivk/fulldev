@@ -16,6 +16,22 @@ const Settings = () => {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [passStrength, setPassStrength] = useState(0);
 
+    // Helper function to convert old language names to codes
+    const getLanguageCode = (lang) => {
+        const nameToCode = {
+            'Français': 'fr',
+            'English': 'en',
+            'Español': 'es',
+            'Italiano': 'it',
+            'Português': 'pt',
+            'Deutsch': 'de'
+        };
+        // If it's already a code (2 chars), return it
+        if (lang && lang.length === 2) return lang;
+        // If it's a name, convert it
+        return nameToCode[lang] || i18n.language || 'fr';
+    };
+
     const [editData, setEditData] = useState({
         firstName: userData?.firstName || '',
         lastName: userData?.lastName || '',
@@ -29,7 +45,7 @@ const Settings = () => {
         birthPlace: userData?.birthPlace || '',
         gender: userData?.gender || '',
         notificationsEnabled: userData?.notificationsEnabled ?? true,
-        language: userData?.language || (i18n.language === 'fr' ? 'Français' : 'English')
+        language: getLanguageCode(userData?.language)
     });
 
     React.useEffect(() => {
@@ -61,8 +77,17 @@ const Settings = () => {
                 birthPlace: userData.birthPlace || '',
                 gender: userData.gender || '',
                 notificationsEnabled: userData.notificationsEnabled ?? true,
-                language: userData.language || (i18n.language === 'fr' ? 'Français' : 'English')
+                language: getLanguageCode(userData.language)
             });
+
+            // Auto-migrate old language names to codes in the database
+            const currentLang = userData.language;
+            if (currentLang && currentLang.length > 2) {
+                const langCode = getLanguageCode(currentLang);
+                updateUserData({ language: langCode }).catch(err =>
+                    console.warn('Failed to migrate language to code:', err)
+                );
+            }
         }
     }, [userData, i18n.language]);
 
@@ -77,23 +102,12 @@ const Settings = () => {
     };
 
     const handleLanguageChange = async (newLangCode) => {
-        const langMap = {
-            'fr': 'Français',
-            'en': 'English',
-            'es': 'Español',
-            'it': 'Italiano',
-            'pt': 'Português',
-            'de': 'Deutsch'
-        };
-
-        const newLanguageName = langMap[newLangCode] || 'English';
-
         try {
-            // 1. Always update Firestore if the stored language name differs from selection
-            // This fixes cases where Firestore is "Français" but UI is already in another language
-            if (userData?.language !== newLanguageName) {
-                await updateUserData({ language: newLanguageName });
-                console.log(`Synchronisation de la langue vers Firestore : ${newLanguageName}`);
+            // 1. Always update Firestore with the LANGUAGE CODE (not the name)
+            // This ensures email templates work correctly
+            if (userData?.language !== newLangCode) {
+                await updateUserData({ language: newLangCode });
+                console.log(`Synchronisation de la langue vers Firestore : ${newLangCode}`);
             }
 
             // 2. Navigation / UI Update
