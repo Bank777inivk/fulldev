@@ -1,0 +1,27 @@
+🔍 Scanning source code in client/src...
+✅ Found 0 unique translation keys used in code.
+
+--- 1. MISSING IN JSON (Used in code but missing in files) ---
+✨ All keys used in code are defined in all JSON files.
+
+--- 2. CROSS-LANGUAGE INCONSISTENCY ---
+🌍 de: Missing 24 keys defined in OTHER languages.
+🌍 en: Missing 34 keys defined in OTHER languages.
+🌍 es: Missing 43 keys defined in OTHER languages.
+🌍 fr: Missing 10 keys defined in OTHER languages.
+🌍 it: Missing 44 keys defined in OTHER languages.
+🌍 pt: Missing 43 keys defined in OTHER languages.
+
+--- 3. DEAD KEYS (Defined in JSON but never used in code) ---
+💀 Found 1154 unused keys (potential cleanup):
+   - about_page.goals.items.assets.desc
+   - about_page.goals.items.assets.label
+   - about_page.goals.items.assets.number
+   - about_page.goals.items.carbon.desc
+   - about_page.goals.items.carbon.label
+   - about_page.goals.items.carbon.number
+   - about_page.goals.items.clients.desc
+   - about_page.goals.items.clients.label
+   - about_page.goals.items.clients.number
+   - about_page.goals.items.countries.desc
+   ... and 1144 more.

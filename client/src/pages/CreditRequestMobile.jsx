@@ -56,7 +56,34 @@ const CreditRequestMobile = () => {
     });
 
     const [score, setScore] = useState(null);
+    const [interestRate, setInterestRate] = useState(3.0);
+    const [monthlyPayment, setMonthlyPayment] = useState(0);
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    // Dynamic Interest Rate logic (matching desktop version)
+    useEffect(() => {
+        let rate = 3.5;
+        const amt = Number(formData.montant);
+        if (amt > 100000) rate = 1.5;
+        else if (amt > 50000) rate = 2.0;
+        else if (amt > 20000) rate = 2.5;
+        else if (amt > 5000) rate = 3.0;
+
+        setInterestRate(rate);
+    }, [formData.montant]);
+
+    // Monthly Payment Calculation
+    useEffect(() => {
+        const amt = Number(formData.montant);
+        const dur = Number(formData.duree);
+        const r = (interestRate / 100) / 12;
+        if (r === 0) {
+            setMonthlyPayment((amt / dur).toFixed(2));
+        } else {
+            const monthly = (amt * r * Math.pow(1 + r, dur)) / (Math.pow(1 + r, dur) - 1);
+            setMonthlyPayment(monthly.toFixed(2));
+        }
+    }, [formData.montant, formData.duree, interestRate]);
 
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -69,23 +96,23 @@ const CreditRequestMobile = () => {
     const validateStep = () => {
         let newErrors = {};
         if (step === 1) {
-            if (!formData.objet) newErrors.objet = "Obligatoire";
-            if (!formData.montant || formData.montant <= 0) newErrors.montant = "Obligatoire";
+            if (!formData.objet) newErrors.objet = t('credit.validation.required');
+            if (!formData.montant || formData.montant <= 0) newErrors.montant = t('credit.validation.required');
         }
         if (step === 2) {
-            if (!formData.nom) newErrors.nom = "Nom requis";
-            if (!formData.prenom) newErrors.prenom = "Prénom requis";
-            if (!formData.email) newErrors.email = "Email requis";
-            if (!formData.telephone) newErrors.telephone = "Téléphone requis";
-            if (!formData.dateNaissance) newErrors.dateNaissance = "Date requise";
+            if (!formData.nom) newErrors.nom = t('credit.validation.lastname_required');
+            if (!formData.prenom) newErrors.prenom = t('credit.validation.firstname_required');
+            if (!formData.email) newErrors.email = t('credit.validation.email_required');
+            if (!formData.telephone) newErrors.telephone = t('credit.validation.phone_required');
+            if (!formData.dateNaissance) newErrors.dateNaissance = t('credit.validation.date_required');
         }
         if (step === 3) {
-            if (!formData.adresseRue) newErrors.adresseRue = "Rue requise";
-            if (!formData.adresseCodePostal) newErrors.adresseCodePostal = "CP requis";
+            if (!formData.adresseRue) newErrors.adresseRue = t('credit.validation.street_required');
+            if (!formData.adresseCodePostal) newErrors.adresseCodePostal = t('credit.validation.zip_required');
         }
         if (step === 6) {
-            if (!formData.banqueActuelle) newErrors.banqueActuelle = "Sélectionnez une banque";
-            if (!formData.iban) newErrors.iban = "IBAN requis";
+            if (!formData.banqueActuelle) newErrors.banqueActuelle = t('credit.validation.bank_required');
+            if (!formData.iban) newErrors.iban = t('credit.validation.iban_required');
         }
 
         setErrors(newErrors);
@@ -151,7 +178,7 @@ const CreditRequestMobile = () => {
                                 value={formData.objet}
                                 onChange={handleInputChange}
                                 style={{ ...styles.mobileTextarea, borderColor: errors.objet ? '#ff4d4d' : '#d1d5db' }}
-                                placeholder="Ex: Travaux, Achat véhicule, Voyage..."
+                                placeholder={t('credit.placeholders.object_example')}
                             />
                             {errors.objet && <span style={styles.mobileError}>{errors.objet}</span>}
                         </div>
@@ -167,6 +194,47 @@ const CreditRequestMobile = () => {
                             <div style={styles.inputWrapper}>
                                 <input type="number" name="duree" value={formData.duree} onChange={handleInputChange} style={styles.mobileInput} />
                                 <span style={styles.inputIcon}>📅</span>
+                            </div>
+                        </div>
+
+                        {/* Interest Rate Slider */}
+                        <div style={styles.mobileGroup}>
+                            <label style={styles.mobileLabel}>{t('credit.fields.rate')} : {interestRate}%</label>
+                            <input
+                                type="range"
+                                min="1.0"
+                                max="15.0"
+                                step="0.1"
+                                value={interestRate}
+                                onChange={(e) => setInterestRate(Number(e.target.value))}
+                                style={{
+                                    width: '100%',
+                                    height: '8px',
+                                    borderRadius: '10px',
+                                    background: `linear-gradient(to right, #00ccff 0%, #00ccff ${((interestRate - 1) / 14) * 100}%, #e2e8f0 ${((interestRate - 1) / 14) * 100}%, #e2e8f0 100%)`,
+                                    outline: 'none',
+                                    WebkitAppearance: 'none',
+                                    appearance: 'none'
+                                }}
+                            />
+                        </div>
+
+                        {/* Monthly Payment Result Box */}
+                        <div style={{
+                            background: 'linear-gradient(135deg, #f8fbff 0%, #e3f2fd 100%)',
+                            padding: '1.5rem',
+                            borderRadius: '20px',
+                            border: '2px solid #00ccff',
+                            marginTop: '1rem',
+                            boxShadow: '0 8px 20px rgba(0, 204, 255, 0.15)'
+                        }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.8rem' }}>
+                                <span style={{ color: '#64748b', fontSize: '0.85rem', fontWeight: '600' }}>{t('credit.fields.rate')} (TAEG)</span>
+                                <strong style={{ color: '#003366', fontSize: '1rem' }}>{interestRate}%</strong>
+                            </div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <span style={{ color: '#64748b', fontSize: '0.85rem', fontWeight: '600' }}>{t('credit.fields.monthly')}</span>
+                                <strong style={{ color: '#003366', fontSize: '1.6rem', fontWeight: '800' }}>{monthlyPayment} €</strong>
                             </div>
                         </div>
                     </div>
@@ -193,7 +261,7 @@ const CreditRequestMobile = () => {
                         </div>
                         <div style={styles.mobileGroup}>
                             <label style={styles.mobileLabel}>{t('credit.fields.phone')}</label>
-                            <input type="tel" name="telephone" value={formData.telephone} onChange={handleInputChange} style={styles.mobileInput} placeholder="06 00 00 00 00" />
+                            <input type="tel" name="telephone" value={formData.telephone} onChange={handleInputChange} style={styles.mobileInput} placeholder={t('credit.fields.phone_placeholder')} />
                             {errors.telephone && <span style={styles.mobileError}>{errors.telephone}</span>}
                         </div>
                         <div style={styles.mobileGroup}>
@@ -216,12 +284,12 @@ const CreditRequestMobile = () => {
                         <div style={styles.grid2}>
                             <div style={styles.mobileGroup}>
                                 <label style={styles.mobileLabel}>{t('credit.fields.zip')}</label>
-                                <input type="text" name="adresseCodePostal" value={formData.adresseCodePostal} onChange={handleInputChange} style={styles.mobileInput} placeholder="75001" />
+                                <input type="text" name="adresseCodePostal" value={formData.adresseCodePostal} onChange={handleInputChange} style={styles.mobileInput} placeholder={t('credit.fields.zip_placeholder')} />
                                 {errors.adresseCodePostal && <span style={styles.mobileError}>{errors.adresseCodePostal}</span>}
                             </div>
                             <div style={styles.mobileGroup}>
                                 <label style={styles.mobileLabel}>{t('credit.fields.city')}</label>
-                                <input type="text" name="adresseVille" value={formData.adresseVille} onChange={handleInputChange} style={styles.mobileInput} placeholder="Paris" />
+                                <input type="text" name="adresseVille" value={formData.adresseVille} onChange={handleInputChange} style={styles.mobileInput} placeholder={t('credit.fields.city_placeholder')} />
                             </div>
                         </div>
                     </div>
@@ -240,7 +308,7 @@ const CreditRequestMobile = () => {
                         </div>
                         <div style={styles.mobileGroup}>
                             <label style={styles.mobileLabel}>{t('credit.fields.employer')}</label>
-                            <input type="text" name="nomEmployeur" value={formData.nomEmployeur} onChange={handleInputChange} style={styles.mobileInput} placeholder="Entreprise / Auto-enptrise" />
+                            <input type="text" name="nomEmployeur" value={formData.nomEmployeur} onChange={handleInputChange} style={styles.mobileInput} placeholder={t('credit.placeholders.employer_example')} />
                         </div>
                     </div>
                 );
@@ -286,7 +354,7 @@ const CreditRequestMobile = () => {
                         )}
                         <div style={styles.mobileGroup}>
                             <label style={styles.mobileLabel}>{t('credit.fields.iban')}</label>
-                            <input type="text" name="iban" value={formData.iban} onChange={handleInputChange} style={styles.mobileInput} placeholder="FR76 XXXX XXXX XXXX" />
+                            <input type="text" name="iban" value={formData.iban} onChange={handleInputChange} style={styles.mobileInput} placeholder={t('credit.placeholders.iban_example')} />
                             {errors.iban && <span style={styles.mobileError}>{errors.iban}</span>}
                         </div>
                     </div>
