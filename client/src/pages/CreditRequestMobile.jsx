@@ -131,7 +131,7 @@ const CreditRequestMobile = () => {
             setStep(8);
         } catch (error) {
             console.error("Error submitting lead (mobile):", error);
-            showToast("Erreur lors de l'envoi. Veuillez réessayer.", "error");
+            showToast(t('common.error'), "error");
         } finally {
             setIsSubmitting(false);
         }
@@ -143,9 +143,9 @@ const CreditRequestMobile = () => {
                 return (
                     <div style={styles.mobileStep}>
                         <div style={styles.iconCircle}>🎯</div>
-                        <h2 style={styles.mobileTitle}>Votre Projet</h2>
+                        <h2 style={styles.mobileTitle}>{t('credit.steps.general')}</h2>
                         <div style={styles.mobileGroup}>
-                            <label style={styles.mobileLabel}>Quel est l'objet du crédit ?</label>
+                            <label style={styles.mobileLabel}>{t('credit.fields.object')}</label>
                             <textarea
                                 name="objet"
                                 value={formData.objet}
@@ -156,14 +156,14 @@ const CreditRequestMobile = () => {
                             {errors.objet && <span style={styles.mobileError}>{errors.objet}</span>}
                         </div>
                         <div style={styles.mobileGroup}>
-                            <label style={styles.mobileLabel}>Montant souhaité (€)</label>
+                            <label style={styles.mobileLabel}>{t('credit.fields.amount')}</label>
                             <div style={styles.inputWrapper}>
                                 <input type="number" name="montant" value={formData.montant} onChange={handleInputChange} style={styles.mobileInput} />
                                 <span style={styles.inputIcon}>€</span>
                             </div>
                         </div>
                         <div style={styles.mobileGroup}>
-                            <label style={styles.mobileLabel}>Durée du prêt (mois)</label>
+                            <label style={styles.mobileLabel}>{t('credit.fields.duration')}</label>
                             <div style={styles.inputWrapper}>
                                 <input type="number" name="duree" value={formData.duree} onChange={handleInputChange} style={styles.mobileInput} />
                                 <span style={styles.inputIcon}>📅</span>
@@ -175,29 +175,29 @@ const CreditRequestMobile = () => {
                 return (
                     <div style={styles.mobileStep}>
                         <div style={styles.iconCircle}>👤</div>
-                        <h2 style={styles.mobileTitle}>Votre Identité</h2>
+                        <h2 style={styles.mobileTitle}>{t('credit.steps.identity')}</h2>
                         <div style={styles.mobileGroup}>
-                            <label style={styles.mobileLabel}>Nom de famille</label>
-                            <input type="text" name="nom" value={formData.nom} onChange={handleInputChange} style={styles.mobileInput} placeholder="Votre nom" />
+                            <label style={styles.mobileLabel}>{t('credit.fields.lastname')}</label>
+                            <input type="text" name="nom" value={formData.nom} onChange={handleInputChange} style={styles.mobileInput} placeholder={t('credit.fields.lastname')} />
                             {errors.nom && <span style={styles.mobileError}>{errors.nom}</span>}
                         </div>
                         <div style={styles.mobileGroup}>
-                            <label style={styles.mobileLabel}>Prénom</label>
-                            <input type="text" name="prenom" value={formData.prenom} onChange={handleInputChange} style={styles.mobileInput} placeholder="Votre prénom" />
+                            <label style={styles.mobileLabel}>{t('credit.fields.firstname')}</label>
+                            <input type="text" name="prenom" value={formData.prenom} onChange={handleInputChange} style={styles.mobileInput} placeholder={t('credit.fields.firstname')} />
                             {errors.prenom && <span style={styles.mobileError}>{errors.prenom}</span>}
                         </div>
                         <div style={styles.mobileGroup}>
-                            <label style={styles.mobileLabel}>Email</label>
+                            <label style={styles.mobileLabel}>{t('credit.fields.email')}</label>
                             <input type="email" name="email" value={formData.email} onChange={handleInputChange} style={styles.mobileInput} placeholder="votre@email.com" />
                             {errors.email && <span style={styles.mobileError}>{errors.email}</span>}
                         </div>
                         <div style={styles.mobileGroup}>
-                            <label style={styles.mobileLabel}>Téléphone</label>
+                            <label style={styles.mobileLabel}>{t('credit.fields.phone')}</label>
                             <input type="tel" name="telephone" value={formData.telephone} onChange={handleInputChange} style={styles.mobileInput} placeholder="06 00 00 00 00" />
                             {errors.telephone && <span style={styles.mobileError}>{errors.telephone}</span>}
                         </div>
                         <div style={styles.mobileGroup}>
-                            <label style={styles.mobileLabel}>Date de naissance</label>
+                            <label style={styles.mobileLabel}>{t('credit.fields.dob')}</label>
                             <input type="date" name="dateNaissance" value={formData.dateNaissance} onChange={handleInputChange} style={styles.mobileInput} />
                             {errors.dateNaissance && <span style={styles.mobileError}>{errors.dateNaissance}</span>}
                         </div>
@@ -207,20 +207,20 @@ const CreditRequestMobile = () => {
                 return (
                     <div style={styles.mobileStep}>
                         <div style={styles.iconCircle}>📍</div>
-                        <h2 style={styles.mobileTitle}>Votre Adresse</h2>
+                        <h2 style={styles.mobileTitle}>{t('credit.fields.city')}</h2>
                         <div style={styles.mobileGroup}>
-                            <label style={styles.mobileLabel}>N° et Rue</label>
-                            <input type="text" name="adresseRue" value={formData.adresseRue} onChange={handleInputChange} style={styles.mobileInput} placeholder="Ex: 5 Avenue Foch" />
+                            <label style={styles.mobileLabel}>{t('credit.fields.street')}</label>
+                            <input type="text" name="adresseRue" value={formData.adresseRue} onChange={handleInputChange} style={styles.mobileInput} placeholder={t('credit.fields.street_placeholder')} />
                             {errors.adresseRue && <span style={styles.mobileError}>{errors.adresseRue}</span>}
                         </div>
                         <div style={styles.grid2}>
                             <div style={styles.mobileGroup}>
-                                <label style={styles.mobileLabel}>Code Postal</label>
+                                <label style={styles.mobileLabel}>{t('credit.fields.zip')}</label>
                                 <input type="text" name="adresseCodePostal" value={formData.adresseCodePostal} onChange={handleInputChange} style={styles.mobileInput} placeholder="75001" />
                                 {errors.adresseCodePostal && <span style={styles.mobileError}>{errors.adresseCodePostal}</span>}
                             </div>
                             <div style={styles.mobileGroup}>
-                                <label style={styles.mobileLabel}>Ville</label>
+                                <label style={styles.mobileLabel}>{t('credit.fields.city')}</label>
                                 <input type="text" name="adresseVille" value={formData.adresseVille} onChange={handleInputChange} style={styles.mobileInput} placeholder="Paris" />
                             </div>
                         </div>
@@ -230,16 +230,16 @@ const CreditRequestMobile = () => {
                 return (
                     <div style={styles.mobileStep}>
                         <div style={styles.iconCircle}>💼</div>
-                        <h2 style={styles.mobileTitle}>Situation Professionnelle</h2>
+                        <h2 style={styles.mobileTitle}>{t('credit.steps.professional')}</h2>
                         <div style={styles.mobileGroup}>
-                            <label style={styles.mobileLabel}>Revenus nets mensuels (€)</label>
+                            <label style={styles.mobileLabel}>{t('credit.fields.income')}</label>
                             <div style={styles.inputWrapper}>
                                 <input type="number" name="revenusMensuels" value={formData.revenusMensuels} onChange={handleInputChange} style={styles.mobileInput} />
                                 <span style={styles.inputIcon}>€</span>
                             </div>
                         </div>
                         <div style={styles.mobileGroup}>
-                            <label style={styles.mobileLabel}>Nom de l'employeur</label>
+                            <label style={styles.mobileLabel}>{t('credit.fields.employer')}</label>
                             <input type="text" name="nomEmployeur" value={formData.nomEmployeur} onChange={handleInputChange} style={styles.mobileInput} placeholder="Entreprise / Auto-enptrise" />
                         </div>
                     </div>
@@ -248,16 +248,16 @@ const CreditRequestMobile = () => {
                 return (
                     <div style={styles.mobileStep}>
                         <div style={styles.iconCircle}>💰</div>
-                        <h2 style={styles.mobileTitle}>Votre Budget</h2>
+                        <h2 style={styles.mobileTitle}>{t('credit.steps.financial')}</h2>
                         <div style={styles.mobileGroup}>
-                            <label style={styles.mobileLabel}>Loyer ou Prêt Immo / mois (€)</label>
+                            <label style={styles.mobileLabel}>{t('credit.fields.rent')}</label>
                             <div style={styles.inputWrapper}>
                                 <input type="number" name="loyer" value={formData.loyer} onChange={handleInputChange} style={styles.mobileInput} />
                                 <span style={styles.inputIcon}>🏠</span>
                             </div>
                         </div>
                         <div style={styles.mobileGroup}>
-                            <label style={styles.mobileLabel}>Autres crédits en cours (€)</label>
+                            <label style={styles.mobileLabel}>{t('credit.fields.other_credits')}</label>
                             <div style={styles.inputWrapper}>
                                 <input type="number" name="autresCredits" value={formData.autresCredits} onChange={handleInputChange} style={styles.mobileInput} />
                                 <span style={styles.inputIcon}>💳</span>
@@ -269,23 +269,23 @@ const CreditRequestMobile = () => {
                 return (
                     <div style={styles.mobileStep}>
                         <div style={styles.iconCircle}>🏦</div>
-                        <h2 style={styles.mobileTitle}>Infos Bancaires</h2>
+                        <h2 style={styles.mobileTitle}>{t('credit.steps.banking')}</h2>
                         <div style={styles.mobileGroup}>
-                            <label style={styles.mobileLabel}>Votre banque actuelle</label>
+                            <label style={styles.mobileLabel}>{t('credit.fields.current_bank')}</label>
                             <select name="banqueActuelle" value={formData.banqueActuelle} onChange={handleInputChange} style={styles.mobileInput}>
-                                <option value="">Choisir ma banque...</option>
+                                <option value="">{t('credit.options.select_bank')}</option>
                                 {frenchBanks.map(b => <option key={b} value={b}>{b}</option>)}
                             </select>
                             {errors.banqueActuelle && <span style={styles.mobileError}>{errors.banqueActuelle}</span>}
                         </div>
                         {formData.banqueActuelle === 'Autres' && (
                             <div style={styles.mobileGroup}>
-                                <label style={styles.mobileLabel}>Nom de l'établissement</label>
+                                <label style={styles.mobileLabel}>{t('credit.fields.other_bank')}</label>
                                 <input type="text" name="autreBanqueNom" value={formData.autreBanqueNom} onChange={handleInputChange} style={styles.mobileInput} />
                             </div>
                         )}
                         <div style={styles.mobileGroup}>
-                            <label style={styles.mobileLabel}>Votre IBAN</label>
+                            <label style={styles.mobileLabel}>{t('credit.fields.iban')}</label>
                             <input type="text" name="iban" value={formData.iban} onChange={handleInputChange} style={styles.mobileInput} placeholder="FR76 XXXX XXXX XXXX" />
                             {errors.iban && <span style={styles.mobileError}>{errors.iban}</span>}
                         </div>
@@ -295,15 +295,15 @@ const CreditRequestMobile = () => {
                 return (
                     <div style={styles.mobileStep}>
                         <div style={styles.iconCircle}>🛡️</div>
-                        <h2 style={styles.mobileTitle}>Dernière Étape</h2>
-                        <p style={{ color: '#666', fontSize: '0.9rem', marginBottom: '2rem' }}>Confirmations finales avant l'analyse de votre dossier.</p>
+                        <h2 style={styles.mobileTitle}>{t('credit.steps.consent')}</h2>
+                        <p style={{ color: '#666', fontSize: '0.9rem', marginBottom: '2rem' }}>{t('credit.fields.privacy')}</p>
                         <div style={styles.mobileCheckboxCard}>
                             <input type="checkbox" name="certifieBase" checked={formData.certifieBase} onChange={handleInputChange} id="certif" style={styles.checkbox} />
-                            <label htmlFor="certif" style={styles.checkboxLabel}>Je certifie sur l'honneur l'exactitude des informations fournies.</label>
+                            <label htmlFor="certif" style={styles.checkboxLabel}>{t('credit.fields.certify')}</label>
                         </div>
                         <div style={styles.mobileCheckboxCard}>
                             <input type="checkbox" name="autoriseAnalyse" checked={formData.autoriseAnalyse} onChange={handleInputChange} id="auth" style={styles.checkbox} />
-                            <label htmlFor="auth" style={styles.checkboxLabel}>J'autorise INVIK SA à procéder à l'analyse de ma solvabilité.</label>
+                            <label htmlFor="auth" style={styles.checkboxLabel}>{t('credit.fields.authorize')}</label>
                         </div>
                     </div>
                 );
@@ -324,7 +324,7 @@ const CreditRequestMobile = () => {
                         }}>
                             {score === 'GREEN' ? '✅' : score === 'YELLOW' ? '⚠️' : '❌'}
                         </div>
-                        <h2 style={styles.mobileTitle}>Résultat de l'étude</h2>
+                        <h2 style={styles.mobileTitle}>{t('credit.steps.result')}</h2>
                         <div style={{
                             padding: '2rem',
                             borderRadius: '24px',
@@ -339,15 +339,15 @@ const CreditRequestMobile = () => {
                                 color: score === 'GREEN' ? '#065f46' : score === 'YELLOW' ? '#92400e' : '#991b1b',
                                 marginBottom: '0.5rem'
                             }}>
-                                {score === 'GREEN' ? 'Dossier Favorable' : score === 'YELLOW' ? 'Étude manuelle requise' : 'Dossier Refusé'}
+                                {score === 'GREEN' ? t('credit.result.green_title') : score === 'YELLOW' ? t('credit.result.yellow_title') : t('credit.result.red_title')}
                             </p>
                             <p style={{ fontSize: '0.9rem', color: '#666' }}>
-                                {score === 'GREEN' ? 'Votre situation permet de poursuivre les démarches immédiatement.' :
-                                    score === 'YELLOW' ? 'Un conseiller doit valider certains points de votre dossier.' :
-                                        'Malheureusement, votre solvabilité actuelle ne permet pas cet emprunt.'}
+                                {score === 'GREEN' ? t('credit.result.green_desc') :
+                                    score === 'YELLOW' ? t('credit.result.yellow_desc') :
+                                        t('credit.result.red_desc')}
                             </p>
                         </div>
-                        <button onClick={() => navigate('/')} style={styles.mobilePrimaryBtn}>Terminer</button>
+                        <button onClick={() => navigate('/')} style={styles.mobilePrimaryBtn}>{t('credit.result.home_btn')}</button>
                     </div>
                 );
             default: return null;
@@ -358,7 +358,7 @@ const CreditRequestMobile = () => {
         <div style={styles.mobileContainer}>
             <div style={styles.mobileHeader}>
                 <div style={styles.progressHeader}>
-                    <div style={styles.progressInfo}>Étape {step} <span style={{ color: '#ccc', fontWeight: '400' }}>sur 7</span></div>
+                    <div style={styles.progressInfo}>{t('dashboard.pagination.page', { current: step, total: 7 })}</div>
                     <div style={styles.progressTrack}>
                         <div style={{ ...styles.progressFill, width: `${(step / 7) * 100}%` }}></div>
                     </div>
@@ -378,11 +378,11 @@ const CreditRequestMobile = () => {
                     )}
                     {step < 7 ? (
                         <button onClick={nextStep} style={styles.mobilePrimaryBtn}>
-                            Continuer
+                            {t('common.next')}
                         </button>
                     ) : (
                         <button onClick={handleSubmit} style={styles.mobilePrimaryBtn} disabled={isSubmitting}>
-                            {isSubmitting ? 'Analyse en cours...' : 'Finaliser ma demande'}
+                            {isSubmitting ? t('credit.fields.analyzing') : t('credit.fields.submit')}
                         </button>
                     )}
                 </div>
