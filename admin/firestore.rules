@@ -107,12 +107,18 @@ service cloud.firestore {
 
     // Support Tickets
     match /support_tickets/{ticketId} {
+      // Creation accessible à tous les authentifiés (client)
       allow create: if isAuthenticated();
-      allow read, update: if isAuthenticated() && (resource == null || resource.data.userId == request.auth.uid);
+      
+      // Admin: Accès total
+      // Client: Accès si propriétaire
+      allow read, update, delete: if isAdmin() || (isAuthenticated() && (resource == null || resource.data.userId == request.auth.uid));
       
       match /messages/{messageId} {
-        allow read, create: if isAuthenticated() && 
-          get(/databases/$(database)/documents/support_tickets/$(ticketId)).data.userId == request.auth.uid;
+        // Admin: Accès total
+        // Client: Accès si propriétaire du ticket parent
+        allow read, create: if isAdmin() || (isAuthenticated() && 
+          get(/databases/$(database)/documents/support_tickets/$(ticketId)).data.userId == request.auth.uid);
       }
     }
 

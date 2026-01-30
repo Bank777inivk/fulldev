@@ -27,20 +27,24 @@ export const supportService = {
                 clientHasUnread: false,
                 adminHasUnread: true
             };
-            const docRef = await addDoc(collection(db, TICKETS_COLLECTION), ticketDoc);
+            const collectionRef = collection(db, TICKETS_COLLECTION);
+            const docRef = await addDoc(collectionRef, ticketDoc);
 
             // Admin Notification
             try {
-                const userSnapshot = await getDocs(query(collection(db, 'users'), where('uid', '==', userId)));
+                // Use getDoc directly as users can read their own profile
+                const { doc, getDoc } = await import('firebase/firestore');
                 let userData = { id: userId, uid: userId };
-                if (!userSnapshot.empty) {
-                    userData = { ...userData, ...userSnapshot.docs[0].data() };
-                } else {
-                    // try by doc id
-                    const userDoc = await (await import('firebase/firestore')).getDoc((await import('firebase/firestore')).doc(db, 'users', userId));
-                    if (userDoc.exists()) {
-                        userData = { ...userData, ...userDoc.data() };
+
+                try {
+                    const userDocRef = doc(db, 'users', userId);
+                    const userSnapshot = await getDoc(userDocRef);
+
+                    if (userSnapshot.exists()) {
+                        userData = { ...userData, ...userSnapshot.data() };
                     }
+                } catch (err) {
+                    console.warn("Could not fetch user data for notification:", err);
                 }
 
                 const { default: emailService } = await import('./emailService');
