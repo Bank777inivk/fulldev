@@ -748,8 +748,8 @@
     },
     "services_page": {
         "hero": {
-            "title": "Unsere Leistungen",
-            "subtitle": "Banking-Lösungen, die Ihren Alltag erleichtern"
+            "title": "UNSERE BANKDIENSTLEISTUNGEN",
+            "subtitle": "IHR FINANZPARTNER"
         },
         "services_list": [
             {
@@ -892,7 +892,7 @@
             }
         ],
         "features_title": "Hauptfunktionen",
-        "use_cases_title": "Fallstudien",
+        "use_cases_title": "Anwendungsfälle",
         "cta": {
             "title": "Bereit, zur INVIK SA zu kommen?",
             "text": "Eröffnen Sie Ihr Konto in unter 10 Minuten und genießen Sie alle unsere Dienste",
@@ -1036,16 +1036,17 @@
         "info": {
             "title": "Wir sind für Sie da",
             "address": {
-                "title": "Anschrift",
+                "title": "Unser Hauptsitz",
                 "lines": [
-                    "38 Parc d'Activités Capellen",
-                    "L-8308 Capellen, Luxemburg"
+                    "51, Boulevard Grande-Duchesse Charlotte",
+                    "L-1331 Luxemburg"
                 ]
             },
             "contact": {
-                "title": "Telefon & E-Mail",
+                "title": "Direkter Kontakt",
                 "lines": [
-                    "+33 6 46 72 32 86"
+                    "+33 6 46 72 32 86",
+                    "contact@inviksa.com"
                 ]
             }
         }
@@ -1571,7 +1572,7 @@
                 "delivered": "Glückwunsch! Ihre Karte ist da. Genießen Sie Ihre neuen Vorteile! 🎁✨",
                 "shipped": "Ihre Karte ist unterwegs! 🚀 Sie wird in 3-5 Tagen ankommen.",
                 "rejected": "Letzte Bestellung abgelehnt:",
-                "default_reject_reason": "Identitätsnachweis nicht konform.",
+                "default_reject_reason": "Unvollständige oder nicht konforme Ausweisdokumente.",
                 "free": "Kostenlos • In Ihrem Angebot enthalten"
             }
         },
@@ -1766,12 +1767,14 @@
             "transfer_external": "Externe Überw. an {{name}}",
             "operation": "Operation",
             "internal_account": "Internes Konto",
-            "beneficiary": "Empfänger"
+            "beneficiary": "Empfänger",
+            "unknown": "Unbekannt"
         },
         "details": {
             "iban_label": "IBAN: {{iban}}",
             "ref": "Ref:",
-            "sender": "Von {{name}}"
+            "sender": "Von {{name}}",
+            "uncategorized": "Nicht kategorisiert"
         }
     },
     "status": {
@@ -1808,7 +1811,8 @@
             "city": "Stadt",
             "zip": "Postleitzahl",
             "save_btn": "Einstellungen speichern",
-            "update_btn": "Parameter aktualisieren"
+            "update_btn": "Parameter aktualisieren",
+            "not_defined": "Nicht definiert"
         },
         "security": {
             "title": "Authentifizierungssicherheit",
@@ -1849,6 +1853,12 @@
             "title": "Kontopräferenzen",
             "lang_label": "Oberflächensprache",
             "lang_desc": "Sprache für Menüs und Auszüge."
+        },
+        "messages": {
+            "success": "Erfolgreich aktualisiert",
+            "error": "Ein Fehler ist aufgetreten",
+            "pwd_success": "Passwort aktualisiert",
+            "pwd_error": "Fehler beim Aktualisieren"
         }
     },
     "support": {
@@ -2075,19 +2085,35 @@
             "waiting": "Warten auf Validierung",
             "start": "Verifizierung starten",
             "secure": "Verschlüsselte & sichere Daten"
+        },
+        "legacy": {
+            "action_required": "Maßnahme für Ihr KYC erforderlich",
+            "identity_required": "Identitätsprüfung erforderlich",
+            "not_validated": "Ihre Unterlagen konnten in der vorliegenden Form nicht validiert werden.",
+            "complete_kyc": "Um alle Funktionen Ihres Kontos nutzen zu können, füllen Sie bitte Ihre KYC-Prüfung aus.",
+            "fix_file": "Meine Unterlagen korrigieren",
+            "verify_identity": "Meine Identität verifizieren"
         }
     },
     "welcome": "Willkommen bei der INVIK BANK",
     "loading": "Ihr persönlicher Bereich wird vorbereitet...",
     "dashboard": {
-        "loading": "Dashboard wird geladen..."
+        "loading": "Dashboard wird geladen...",
+        "status": {
+            "pending": "Ausstehend",
+            "completed": "Abgeschlossen",
+            "status_label": "Status"
+        }
     },
     "common": {
         "edit": "Bearbeiten",
         "client": "Kunde",
-        "loading": "Laden...",
+        "loading": "Wird geladen...",
         "error": "Ein Fehler ist aufgetreten",
-        "beneficiary_empty": "Kein Empfänger gespeichert."
+        "beneficiary_empty": "Keine Empfänger gespeichert.",
+        "at": "um",
+        "next": "Weiter",
+        "prev": "Zurück"
     },
     "beneficiaries": {
         "title": "Empfänger",

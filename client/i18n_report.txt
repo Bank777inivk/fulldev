@@ -1,0 +1,114 @@
+🔍 Scanning source code in client/src...
+✅ Found 1032 unique translation keys used in code.
+
+--- 1. MISSING IN JSON (Used in code but missing in files) ---
+
+🌍 Language: de (Missing 17 keys)
+   - contact_page.info.address.lines.0
+   - contact_page.info.address.lines.1
+   - contact_page.info.contact.lines.0
+   - credit.fields.phone_placeholder
+   - documents.sections.contract
+   - settings.messages.pwd_mismatch
+   - settings.messages.pwd_short
+   - settings.preferences.personalization
+   - status.title
+   - support.chat.resolved_notice
+   - support.chat.starting
+   - support.chat.support_name
+   - support.messages.error
+   - support.messages.msg_error
+   - support.messages.success
+   ... and 2 more.
+
+🌍 Language: en (Missing 6 keys)
+   - contact_page.info.address.lines.0
+   - contact_page.info.address.lines.1
+   - contact_page.info.contact.lines.0
+   - credit.fields.phone_placeholder
+   - deposit.methods.bank.desc_full
+   - documents.sections.contract
+
+🌍 Language: es (Missing 28 keys)
+   - cards.details.recently
+   - contact_page.info.address.lines.0
+   - contact_page.info.address.lines.1
+   - contact_page.info.contact.lines.0
+   - credit.fields.phone_placeholder
+   - deposit.methods.bank.desc_full
+   - documents.sections.contract
+   - settings.messages.pwd_error
+   - settings.messages.pwd_mismatch
+   - settings.messages.pwd_short
+   - settings.preferences.personalization
+   - settings.profile.client_folder
+   - settings.profile.location
+   - settings.profile.login_id
+   - settings.security.optimal_verified
+   ... and 13 more.
+
+🌍 Language: fr (Missing 6 keys)
+   - contact_page.info.address.lines.0
+   - contact_page.info.address.lines.1
+   - contact_page.info.contact.lines.0
+   - credit.fields.phone_placeholder
+   - deposit.methods.bank.desc_full
+   - documents.sections.contract
+
+🌍 Language: it (Missing 29 keys)
+   - cards.details.recently
+   - contact_page.info.address.lines.0
+   - contact_page.info.address.lines.1
+   - contact_page.info.contact.lines.0
+   - credit.fields.phone_placeholder
+   - deposit.methods.bank.desc_full
+   - documents.sections.contract
+   - legal.privacy.cta
+   - settings.messages.pwd_error
+   - settings.messages.pwd_mismatch
+   - settings.messages.pwd_short
+   - settings.preferences.personalization
+   - settings.profile.client_folder
+   - settings.profile.location
+   - settings.profile.login_id
+   ... and 14 more.
+
+🌍 Language: pt (Missing 28 keys)
+   - cards.details.recently
+   - contact_page.info.address.lines.0
+   - contact_page.info.address.lines.1
+   - contact_page.info.contact.lines.0
+   - credit.fields.phone_placeholder
+   - deposit.methods.bank.desc_full
+   - documents.sections.contract
+   - settings.messages.pwd_error
+   - settings.messages.pwd_mismatch
+   - settings.messages.pwd_short
+   - settings.preferences.personalization
+   - settings.profile.client_folder
+   - settings.profile.location
+   - settings.profile.login_id
+   - settings.security.optimal_verified
+   ... and 13 more.
+
+--- 2. CROSS-LANGUAGE INCONSISTENCY ---
+🌍 de: Missing 24 keys defined in OTHER languages.
+🌍 en: Missing 34 keys defined in OTHER languages.
+🌍 es: Missing 43 keys defined in OTHER languages.
+🌍 fr: Missing 10 keys defined in OTHER languages.
+🌍 it: Missing 44 keys defined in OTHER languages.
+🌍 pt: Missing 43 keys defined in OTHER languages.
+
+--- 3. DEAD KEYS (Defined in JSON but never used in code) ---
+💀 Found 126 unused keys (potential cleanup):
+   - about_page.partners.clients.cta
+   - about_page.vision.phases.p1.items
+   - about_page.vision.phases.p2.items
+   - about_page.vision.phases.p3.items
+   - accounts.rib_modal.copy_toast
+   - accounts.total_balance
+   - auth.register.form.fields.address_placeholder
+   - auth.register.form.fields.city_placeholder
+   - auth.register.form.fields.phone_placeholder
+   - auth.register.form.fields.zip_placeholder
+   ... and 116 more.

@@ -748,8 +748,8 @@
     },
     "services_page": {
         "hero": {
-            "title": "Nuestros Servicios",
-            "subtitle": "Soluciones bancarias diseñadas para simplificar su día a día"
+            "title": "NUESTROS SERVICIOS BANCARIOS",
+            "subtitle": "SU SOCIO FINANCIERO"
         },
         "services_list": [
             {
@@ -891,16 +891,16 @@
                 ]
             }
         ],
-        "features_title": "Funcionalidades Clave",
-        "use_cases_title": "Casos de Estudio",
+        "features_title": "Características principales",
+        "use_cases_title": "Casos de uso",
         "cta": {
             "title": "¿Listo para unirse a INVIK SA?",
             "text": "Abra su cuenta en menos de 10 minutos y disfrute de todos nuestros servicios",
             "button": "Abrir una Cuenta Gratuita"
         },
         "buttons": {
-            "open_account": "Abrir una Cuenta",
-            "simulate": "Simular Préstamo"
+            "open_account": "Abrir una cuenta",
+            "simulate": "Simular un crédito"
         }
     },
     "cards_page": {
@@ -1036,16 +1036,17 @@
         "info": {
             "title": "Estamos aquí para ayudarle",
             "address": {
-                "title": "Dirección",
+                "title": "Nuestra Sede",
                 "lines": [
-                    "38 Parc d'Activités Capellen",
-                    "L-8308 Capellen, Luxemburgo"
+                    "51, Boulevard Grande-Duchesse Charlotte",
+                    "L-1331 Luxemburgo"
                 ]
             },
             "contact": {
-                "title": "Teléfono y Email",
+                "title": "Contacto Directo",
                 "lines": [
-                    "+33 6 46 72 32 86"
+                    "+33 6 46 72 32 86",
+                    "contact@inviksa.com"
                 ]
             }
         }
@@ -1559,7 +1560,8 @@
                 "delivered": "¡Felicidades! Su tarjeta ha llegado. ¡Disfrute de sus nuevas ventajas! 🎁✨",
                 "shipped": "¡Su tarjeta está en camino! 🚀 Llegará en 3 a 5 días.",
                 "rejected": "Última solicitud rechazada:",
-                "free": "Gratis • Incluida en su oferta"
+                "free": "Gratis • Incluida en su oferta",
+                "default_reject_reason": "Documentos de identidad incompletos o no conformes."
             }
         },
         "virtual_promo": {
@@ -1752,12 +1754,14 @@
             "transfer_external": "Transf. Externa a {{name}}",
             "operation": "Operación",
             "internal_account": "Cuenta Interna",
-            "beneficiary": "Beneficiario"
+            "beneficiary": "Beneficiario",
+            "unknown": "Desconocido"
         },
         "details": {
             "iban_label": "IBAN: {{iban}}",
             "ref": "Ref:",
-            "sender": "De {{name}}"
+            "sender": "De {{name}}",
+            "uncategorized": "Sin categoría"
         }
     },
     "status": {
@@ -1841,7 +1845,8 @@
             "city": "Ciudad",
             "zip": "Código Postal",
             "save_btn": "Guardar ajustes",
-            "update_btn": "Actualizar parámetros"
+            "update_btn": "Actualizar parámetros",
+            "not_defined": "No definido"
         },
         "security": {
             "title": "Seguridad de Autenticación",
@@ -2085,6 +2090,14 @@
         "search_placeholder": "Buscar una transacción...",
         "profile_title": "Ajustes de la cuenta"
     },
+    "dashboard": {
+        "loading": "Cargando el panel...",
+        "status": {
+            "pending": "Pendiente",
+            "completed": "Completado",
+            "status_label": "Estado"
+        }
+    },
     "banner": {
         "loading": "Cargando verificación...",
         "toasts": {
@@ -2109,12 +2122,26 @@
             "waiting": "Esperando validación",
             "start": "Iniciar verificación",
             "secure": "Datos Encriptados y Seguros"
+        },
+        "legacy": {
+            "action_required": "Acción requerida en su KYC",
+            "identity_required": "Verificación de identidad requerida",
+            "not_validated": "Su expediente no ha podido ser validado tal cual.",
+            "complete_kyc": "Para acceder a todas las funciones de su cuenta, complete su verificación KYC.",
+            "fix_file": "Corregir mi expediente",
+            "verify_identity": "Verificar mi identidad"
         }
     },
     "welcome": "¡Hola, {{name}} 👋",
     "loading": "Preparando su espacio personal...",
     "common": {
         "edit": "Editar",
-        "beneficiary_empty": "Ningún beneficiario guardado."
+        "beneficiary_empty": "No hay beneficiarios guardados.",
+        "at": "a",
+        "next": "Siguiente",
+        "prev": "Anterior",
+        "loading": "Cargando...",
+        "error": "Ocurrió un error",
+        "client": "Cliente"
     }
 }

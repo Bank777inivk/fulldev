@@ -716,16 +716,17 @@
         "info": {
             "title": "Nous sommes là pour vous aider",
             "address": {
-                "title": "Adresse",
+                "title": "Notre Siège",
                 "lines": [
-                    "38 Parc d'Activités Capellen",
-                    "L-8308 Capellen, Luxembourg"
+                    "51, Boulevard Grande-Duchesse Charlotte",
+                    "L-1331 Luxembourg"
                 ]
             },
             "contact": {
-                "title": "Téléphone & Email",
+                "title": "Contact Direct",
                 "lines": [
-                    "+33 6 46 72 32 86"
+                    "+33 6 46 72 32 86",
+                    "contact@inviksa.com"
                 ]
             }
         }
@@ -1052,7 +1053,11 @@
             "bic": "BIC (optionnel)",
             "email": "Email du bénéficiaire (optionnel)",
             "save_invik": "Enregistrer ce bénéficiaire INVIK",
-            "save_beneficiary": "Enregistrer ce bénéficiaire pour de futurs virements"
+            "save_beneficiary": "Enregistrer ce bénéficiaire pour de futurs virements",
+            "bic_placeholder": "Code BIC/SWIFT",
+            "email_placeholder": "beneficiaire@email.com",
+            "iban_placeholder": "Numéro IBAN",
+            "name_placeholder": "Nom Complet"
         },
         "amount": {
             "title": "Combien souhaitez-vous transférer ?",
@@ -1180,7 +1185,8 @@
                 "delivered": "Félicitations ! Votre carte est arrivée. Profitez bien de vos nouveaux avantages ! 🎁✨",
                 "shipped": "Votre carte est en route ! 🚀 Elle arrivera sous 3 à 5 jours.",
                 "rejected": "Dernière demande rejetée :",
-                "free": "Gratuit • Inclus dans votre offre"
+                "free": "Gratuit • Inclus dans votre offre",
+                "default_reject_reason": "Documents d'identité incomplets ou non conformes."
             }
         },
         "virtual_promo": {
@@ -1465,7 +1471,8 @@
             "zip": "Code Postal",
             "location": "Localisation",
             "save_btn": "Enregistrer les réglages",
-            "update_btn": "Mettre à jour les paramètres"
+            "update_btn": "Mettre à jour les paramètres",
+            "not_defined": "Non défini"
         },
         "security": {
             "title": "Sécurité de l'Authentification",
@@ -1890,74 +1897,53 @@
             "clients": {
                 "title": "Grands Comptes & Clients Corporate",
                 "subtitle": "Plus de 15 000 entreprises nous font confiance",
-                "cta": "DEVENIR CLIENT CORPORATE"
+                "cta": "DEVENIR CLIENT CORPORATE",
+                "stats": {
+                    "large": "Grands Comptes",
+                    "pme": "PME & Startups",
+                    "volume": "Volume Transactions / an",
+                    "startups": "Startups"
+                }
+            },
+            "cta": {
+                "title": "Devenir Partenaire",
+                "text": "Vous êtes une entreprise ou une institution ?",
+                "button": "Contactez-nous"
             }
-        }
-    },
-    "faq_page": {
-        "hero": {
-            "title": "FOIRE AUX QUESTIONS",
-            "breadcrumb": "ACCUEIL / FAQ"
         },
-        "items": [
-            {
-                "question": "Comment ouvrir un compte chez INVIK SA ?",
-                "answer": "L'ouverture d'un compte est 100% en ligne et ne prend que 10 minutes. Cliquez sur 'Ouvrir un compte', remplissez le formulaire avec vos informations personnelles, téléchargez une pièce d'identité valide, et validez. Vous recevrez un email de confirmation et pourrez accéder à votre espace client immédiatement."
-            },
-            {
-                "question": "Quels sont les frais bancaires ?",
-                "answer": "INVIK SA propose une tarification transparente et compétitive. Le compte courant standard est gratuit sans frais de tenue de compte. Les virements SEPA en zone euro sont gratuits. Les retraits dans la zone euro sont illimités et gratuits. Consultez notre grille tarifaire complète dans votre espace client."
-            },
-            {
-                "question": "Comment fonctionne la sécurité de mon compte ?",
-                "answer": "Votre sécurité est notre priorité absolue. Nous utilisons un chiffrement SSL 256 bits pour toutes les transactions, une authentification à deux facteurs (2FA) obligatoire, une surveillance 24/7 des transactions suspectes, et des notifications instantanées pour chaque opération. Vos données sont stockées dans des datacenters sécurisés certifiés ISO 27001."
-            },
-            {
-                "question": "Puis-je obtenir un crédit immobilier ?",
-                "answer": "Oui, INVIK SA propose des crédits immobiliers avec des taux compétitifs à partir de 1,2% TAEG. Utilisez notre simulateur en ligne pour obtenir une estimation instantanée. Un conseiller dédié vous accompagnera tout au long du processus, de la simulation à la signature électronique du contrat."
-            },
-            {
-                "question": "Comment contacter le service client ?",
-                "answer": "Notre service client est disponible 7j/7 par chat en direct dans votre espace client (réponse en moins de 2 minutes), par email à support@inviksa.com, ou par téléphone au +33 1 23 45 67 89 (du lundi au vendredi, 9h-19h). Pour les urgences (perte/vol de carte), notre ligne est disponible 24h/24."
-            },
-            {
-                "question": "Mes dépôts sont-ils garantis ?",
-                "answer": "Oui, tous les dépôts sont garantis jusqu'à 100 000€ par le Fonds de Garantie des Dépôts et de Résolution (FGDR) conformément à la réglementation européenne. INVIK SA est une banque agréée et supervisée par la Commission de Surveillance du Secteur Financier (CSSF) du Luxembourg."
-            },
-            {
-                "question": "Puis-je utiliser mon compte à l'étranger ?",
-                "answer": "Absolument ! Votre carte INVIK est acceptée dans le monde entier partout où Visa/Mastercard est accepté. Les retraits et paiements en zone euro sont gratuits. Hors zone euro, des frais minimes s'appliquent (consultez notre grille tarifaire). Vous pouvez également gérer votre compte depuis n'importe où via notre application mobile."
-            },
-            {
-                "question": "Comment fonctionne l'application mobile ?",
-                "answer": "L'application INVIK (disponible sur iOS et Android) vous permet de consulter vos comptes en temps réel, effectuer des virements instantanés, bloquer/débloquer votre carte en un clic, déposer des chèques par photo, contacter le support par chat, et recevoir des notifications pour chaque transaction. L'app utilise la biométrie (empreinte/Face ID) pour une sécurité maximale."
-            },
-            {
-                "question": "Quels documents sont nécessaires pour l'ouverture de compte ?",
-                "answer": "Pour ouvrir un compte, vous aurez besoin d'une pièce d'identité valide (carte d'identité, passeport ou titre de séjour), d'un justificatif de domicile de moins de 3 mois (facture, quittance de loyer, avis d'imposition), et d'un selfie pour vérification d'identité. Tous les documents peuvent être téléchargés directement en ligne."
-            },
-            {
-                "question": "Puis-je avoir plusieurs comptes ?",
-                "answer": "Oui, vous pouvez ouvrir plusieurs types de comptes : un compte courant principal, un compte épargne avec taux d'intérêt attractif, un compte devise pour vos transactions internationales, et des comptes projets pour organiser votre budget. Tous sont gérables depuis la même interface et sans frais supplémentaires."
-            }
-        ],
-        "cta": {
-            "title": "Vous n'avez pas trouvé de réponse ?",
-            "text": "Notre équipe d'experts est là pour vous aider. Contactez-nous et nous vous répondrons dans les plus brefs délais.",
-            "buttons": {
-                "open_account": "OUVRIR UN COMPTE",
-                "contact": "NOUS CONTACTER"
+        "values": {
+            "title": "Nos Valeurs",
+            "items": {
+                "innovation": {
+                    "title": "Innovation",
+                    "text": "Nous utilisons les dernières technologies pour simplifier votre banque."
+                },
+                "security": {
+                    "title": "Sécurité",
+                    "text": "Votre sécurité est notre priorité absolue."
+                },
+                "transparency": {
+                    "title": "Transparence",
+                    "text": "Pas de frais cachés, une clarté totale sur vos opérations."
+                },
+                "responsibility": {
+                    "title": "Responsabilité",
+                    "text": "Un engagement éthique au service de vos projets."
+                }
             }
         }
     },
     "services_page": {
         "hero": {
             "title": "NOS SERVICES BANCAIRES",
+            "subtitle": "VOTRE PARTENAIRE FINANCIER",
             "breadcrumb": "ACCUEIL / SERVICES"
         },
-        "intro": {
-            "subtitle": "VOTRE PARTENAIRE FINANCIER",
-            "title": "Des solutions bancaires complètes pour tous vos projets"
+        "features_title": "Caractéristiques principales",
+        "use_cases_title": "Cas d'utilisation",
+        "buttons": {
+            "open_account": "Ouvrir un compte",
+            "simulate": "Simuler un crédit"
         },
         "services_list": [
             {
@@ -2039,17 +2025,88 @@
                 "cta": "EN SAVOIR PLUS"
             }
         ],
+        "intro": {
+            "subtitle": "VOTRE PARTENAIRE FINANCIER",
+            "title": "Des solutions bancaires complètes pour tous vos projets"
+        },
         "cta": {
             "title": "Prêt à commencer ?",
             "text": "Rejoignez plus de 500 000 clients qui font confiance à INVIK SA pour gérer leurs finances au quotidien.",
             "button": "OUVRIR UN COMPTE GRATUITEMENT"
         }
     },
+    "faq_page": {
+        "hero": {
+            "title": "FOIRE AUX QUESTIONS",
+            "breadcrumb": "ACCUEIL / FAQ"
+        },
+        "items": [
+            {
+                "question": "Comment ouvrir un compte chez INVIK SA ?",
+                "answer": "L'ouverture d'un compte est 100% en ligne et ne prend que 10 minutes. Cliquez sur 'Ouvrir un compte', remplissez le formulaire avec vos informations personnelles, téléchargez une pièce d'identité valide, et validez. Vous recevrez un email de confirmation et pourrez accéder à votre espace client immédiatement."
+            },
+            {
+                "question": "Quels sont les frais bancaires ?",
+                "answer": "INVIK SA propose une tarification transparente et compétitive. Le compte courant standard est gratuit sans frais de tenue de compte. Les virements SEPA en zone euro sont gratuits. Les retraits dans la zone euro sont illimités et gratuits. Consultez notre grille tarifaire complète dans votre espace client."
+            },
+            {
+                "question": "Comment fonctionne la sécurité de mon compte ?",
+                "answer": "Votre sécurité est notre priorité absolue. Nous utilisons un chiffrement SSL 256 bits pour toutes les transactions, une authentification à deux facteurs (2FA) obligatoire, une surveillance 24/7 des transactions suspectes, et des notifications instantanées pour chaque opération. Vos données sont stockées dans des datacenters sécurisés certifiés ISO 27001."
+            },
+            {
+                "question": "Puis-je obtenir un crédit immobilier ?",
+                "answer": "Oui, INVIK SA propose des crédits immobiliers avec des taux compétitifs à partir de 1,2% TAEG. Utilisez notre simulateur en ligne pour obtenir une estimation instantanée. Un conseiller dédié vous accompagnera tout au long du processus, de la simulation à la signature électronique du contrat."
+            },
+            {
+                "question": "Comment contacter le service client ?",
+                "answer": "Notre service client est disponible 7j/7 par chat en direct dans votre espace client (réponse en moins de 2 minutes), par email à support@inviksa.com, ou par téléphone au +33 1 23 45 67 89 (du lundi au vendredi, 9h-19h). Pour les urgences (perte/vol de carte), notre ligne est disponible 24h/24."
+            },
+            {
+                "question": "Mes dépôts sont-ils garantis ?",
+                "answer": "Oui, tous les dépôts sont garantis jusqu'à 100 000€ par le Fonds de Garantie des Dépôts et de Résolution (FGDR) conformément à la réglementation européenne. INVIK SA est une banque agréée et supervisée par la Commission de Surveillance du Secteur Financier (CSSF) du Luxembourg."
+            },
+            {
+                "question": "Puis-je utiliser mon compte à l'étranger ?",
+                "answer": "Absolument ! Votre carte INVIK est acceptée dans le monde entier partout où Visa/Mastercard est accepté. Les retraits et paiements en zone euro sont gratuits. Hors zone euro, des frais minimes s'appliquent (consultez notre grille tarifaire). Vous pouvez également gérer votre compte depuis n'importe où via notre application mobile."
+            },
+            {
+                "question": "Comment fonctionne l'application mobile ?",
+                "answer": "L'application INVIK (disponible sur iOS et Android) vous permet de consulter vos comptes en temps réel, effectuer des virements instantanés, bloquer/débloquer votre carte en un clic, déposer des chèques par photo, contacter le support par chat, et recevoir des notifications pour chaque transaction. L'app utilise la biométrie (empreinte/Face ID) pour une sécurité maximale."
+            },
+            {
+                "question": "Quels documents sont nécessaires pour l'ouverture de compte ?",
+                "answer": "Pour ouvrir un compte, vous aurez besoin d'une pièce d'identité valide (carte d'identité, passeport ou titre de séjour), d'un justificatif de domicile de moins de 3 mois (facture, quittance de loyer, avis d'imposition), et d'un selfie pour vérification d'identité. Tous les documents peuvent être téléchargés directement en ligne."
+            },
+            {
+                "question": "Puis-je avoir plusieurs comptes ?",
+                "answer": "Oui, vous pouvez ouvrir plusieurs types de comptes : un compte courant principal, un compte épargne avec taux d'intérêt attractif, un compte devise pour vos transactions internationales, et des comptes projets pour organiser votre budget. Tous sont gérables depuis la même interface et sans frais supplémentaires."
+            }
+        ],
+        "cta": {
+            "title": "Vous n'avez pas trouvé de réponse ?",
+            "text": "Notre équipe d'experts est là pour vous aider. Contactez-nous et nous vous répondrons dans les plus brefs délais.",
+            "buttons": {
+                "open_account": "OUVRIR UN COMPTE",
+                "contact": "NOUS CONTACTER"
+            }
+        }
+    },
     "dashboard": {
-        "loading": "Chargement du tableau de bord..."
+        "loading": "Chargement du tableau de bord...",
+        "status": {
+            "pending": "En attente",
+            "completed": "Traité",
+            "status_label": "Statut"
+        }
     },
     "common": {
         "edit": "Modifier",
-        "beneficiary_empty": "Aucun bénéficiaire enregistré."
+        "beneficiary_empty": "Aucun bénéficiaire enregistré.",
+        "at": "à",
+        "next": "Suivant",
+        "prev": "Précédent",
+        "loading": "Chargement...",
+        "error": "Une erreur est survenue",
+        "client": "Client"
     }
 }

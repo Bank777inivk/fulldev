@@ -725,7 +725,7 @@
             }
         },
         "values": {
-            "title": "Os Nossos Valores",
+            "title": "Nossos Valores",
             "items": {
                 "security": {
                     "title": "Segurança Absoluta",
@@ -748,8 +748,8 @@
     },
     "services_page": {
         "hero": {
-            "title": "Os Nossos Serviços",
-            "subtitle": "Soluções bancárias concebidas para simplificar o seu dia-a-dia"
+            "title": "NOSSOS SERVIÇOS BANCÁRIOS",
+            "subtitle": "O SEU PARCEIRO FINANCEIRO"
         },
         "services_list": [
             {
@@ -891,16 +891,16 @@
                 ]
             }
         ],
-        "features_title": "Funcionalidades Chave",
-        "use_cases_title": "Casos de Estudo",
+        "features_title": "Principais características",
+        "use_cases_title": "Casos de uso",
         "cta": {
             "title": "Pronto para se juntar à INVIK SA?",
             "text": "Abra a sua conta em menos de 10 minutos e desfrute de todos os nossos serviços",
             "button": "Abrir uma Conta Gratuita"
         },
         "buttons": {
-            "open_account": "Abrir uma Conta",
-            "simulate": "Simular Empréstimo"
+            "open_account": "Abrir uma conta",
+            "simulate": "Simular um crédito"
         }
     },
     "cards_page": {
@@ -1036,16 +1036,17 @@
         "info": {
             "title": "Estamos aqui para ajudar",
             "address": {
-                "title": "Endereço",
+                "title": "Nossa Sede",
                 "lines": [
-                    "38 Parc d'Activités Capellen",
-                    "L-8308 Capellen, Luxemburgo"
+                    "51, Boulevard Grande-Duchesse Charlotte",
+                    "L-1331 Luxemburgo"
                 ]
             },
             "contact": {
-                "title": "Telefone & Email",
+                "title": "Contacto Direto",
                 "lines": [
-                    "+33 6 46 72 32 86"
+                    "+33 6 46 72 32 86",
+                    "contact@inviksa.com"
                 ]
             }
         }
@@ -1559,7 +1560,8 @@
                 "delivered": "Parabéns! O seu cartão chegou. Desfrute das suas novas vantagens! 🎁✨",
                 "shipped": "O seu cartão está a caminho! 🚀 Chegará em 3 a 5 dias.",
                 "rejected": "Último pedido rejeitado:",
-                "free": "Gratuito • Incluído na sua oferta"
+                "free": "Gratuito • Incluído na sua oferta",
+                "default_reject_reason": "Documentos de identidade incompletos ou não conformes."
             }
         },
         "virtual_promo": {
@@ -1752,12 +1754,14 @@
             "transfer_external": "Transf. Externa para {{name}}",
             "operation": "Operação",
             "internal_account": "Conta Interna",
-            "beneficiary": "Beneficiário"
+            "beneficiary": "Beneficiário",
+            "unknown": "Desconhecido"
         },
         "details": {
             "iban_label": "IBAN: {{iban}}",
             "ref": "Ref:",
-            "sender": "De {{name}}"
+            "sender": "De {{name}}",
+            "uncategorized": "Sem categoria"
         }
     },
     "status": {
@@ -1841,7 +1845,8 @@
             "city": "Cidade",
             "zip": "Código Postal",
             "save_btn": "Guardar ajustes",
-            "update_btn": "Actualizar parâmetros"
+            "update_btn": "Actualizar parâmetros",
+            "not_defined": "Não definido"
         },
         "security": {
             "title": "Segurança de Autenticação",
@@ -2085,6 +2090,14 @@
         "search_placeholder": "Procurar uma transação...",
         "profile_title": "Ajustes da conta"
     },
+    "dashboard": {
+        "loading": "A carregar o painel...",
+        "status": {
+            "pending": "Pendente",
+            "completed": "Concluído",
+            "status_label": "Status"
+        }
+    },
     "banner": {
         "loading": "Carregando verificação...",
         "toasts": {
@@ -2109,12 +2122,26 @@
             "waiting": "A aguardar validação",
             "start": "Iniciar verificação",
             "secure": "Dados Encriptados e Seguros"
+        },
+        "legacy": {
+            "action_required": "Ação necessária no seu KYC",
+            "identity_required": "Verificação de identidade necessária",
+            "not_validated": "O seu processo não pôde ser validado como está.",
+            "complete_kyc": "Para aceder a todas as funcionalidades da sua conta, por favor complete a sua verificação KYC.",
+            "fix_file": "Corrigir o meu processo",
+            "verify_identity": "Verificar a minha identidade"
         }
     },
     "welcome": "Olá, {{name}} 👋",
     "loading": "Preparando o seu espaço pessoal...",
     "common": {
         "edit": "Editar",
-        "beneficiary_empty": "Nenhum bénéficiaire guardado."
+        "beneficiary_empty": "Nenhum beneficiário salvo.",
+        "at": "as",
+        "next": "Próximo",
+        "prev": "Anterior",
+        "loading": "A carregar...",
+        "error": "Ocorreu um erro",
+        "client": "Cliente"
     }
 }

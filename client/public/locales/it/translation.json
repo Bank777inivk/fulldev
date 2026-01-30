@@ -748,8 +748,8 @@
     },
     "services_page": {
         "hero": {
-            "title": "I Nostri Servizi",
-            "subtitle": "Soluzioni bancarie progettate per semplificare la tua vita quotidiana"
+            "title": "I NOSTRI SERVIZI BANCARI",
+            "subtitle": "IL VOSTRO PARTNER FINANZIARIO"
         },
         "services_list": [
             {
@@ -891,16 +891,16 @@
                 ]
             }
         ],
-        "features_title": "Funzionalità Chiave",
-        "use_cases_title": "Casi Studio",
+        "features_title": "Caratteristiche principali",
+        "use_cases_title": "Casi d'uso",
         "cta": {
             "title": "Pronto a unirti a INVIK SA?",
             "text": "Apri il tuo conto in meno di 10 minuti e goditi tutti i nostri servizi",
             "button": "Apri un Conto Gratuito"
         },
         "buttons": {
-            "open_account": "Apri un Conto",
-            "simulate": "Simula Prestito"
+            "open_account": "Apri un conto",
+            "simulate": "Simula un credito"
         }
     },
     "cards_page": {
@@ -1036,16 +1036,17 @@
         "info": {
             "title": "Siamo qui per aiutarti",
             "address": {
-                "title": "Indirizzo",
+                "title": "La Nostra Sede",
                 "lines": [
-                    "38 Parc d'Activités Capellen",
-                    "L-8308 Capellen, Lussemburgo"
+                    "51, Boulevard Grande-Duchesse Charlotte",
+                    "L-1331 Lussemburgo"
                 ]
             },
             "contact": {
-                "title": "Telefono & Email",
+                "title": "Contatto Diretto",
                 "lines": [
-                    "+33 6 46 72 32 86"
+                    "+33 6 46 72 32 86",
+                    "contact@inviksa.com"
                 ]
             }
         }
@@ -1558,7 +1559,8 @@
                 "delivered": "Congratulazioni! La tua carta è arrivata. Goditi i tuoi nuovi vantaggi! 🎁✨",
                 "shipped": "La tua carta è in viaggio! 🚀 Arriverà entro 3-5 giorni.",
                 "rejected": "Ultima richiesta rifiutata:",
-                "free": "Gratuita • Inclusa nella tua offerta"
+                "free": "Gratuita • Inclusa nella tua offerta",
+                "default_reject_reason": "Documenti d'identità incompleti o non conformi."
             }
         },
         "virtual_promo": {
@@ -1751,12 +1753,14 @@
             "transfer_external": "Trasf. Esterno a {{name}}",
             "operation": "Operazione",
             "internal_account": "Conto Interno",
-            "beneficiary": "Beneficiario"
+            "beneficiary": "Beneficiario",
+            "unknown": "Sconosciuto"
         },
         "details": {
             "iban_label": "IBAN: {{iban}}",
             "ref": "Ref:",
-            "sender": "Da {{name}}"
+            "sender": "Da {{name}}",
+            "uncategorized": "Non categorizzato"
         }
     },
     "status": {
@@ -1840,7 +1844,8 @@
             "city": "Città",
             "zip": "Codice Postale",
             "save_btn": "Salva impostazioni",
-            "update_btn": "Aggiorna parametri"
+            "update_btn": "Aggiorna parametri",
+            "not_defined": "Non definito"
         },
         "security": {
             "title": "Sicurezza di Autenticazione",
@@ -2084,6 +2089,14 @@
         "search_placeholder": "Cerca una transazione...",
         "profile_title": "Impostazioni account"
     },
+    "dashboard": {
+        "loading": "Caricamento del dashboard...",
+        "status": {
+            "pending": "In attesa",
+            "completed": "Completato",
+            "status_label": "Stato"
+        }
+    },
     "banner": {
         "loading": "Caricamento verifica...",
         "toasts": {
@@ -2108,12 +2121,26 @@
             "waiting": "In attesa di validazione",
             "start": "Inizia verifica",
             "secure": "Dati Criptati e Sicuri"
+        },
+        "legacy": {
+            "action_required": "Azione richiesta sul tuo KYC",
+            "identity_required": "Verifica dell'identità richiesta",
+            "not_validated": "Il tuo fascicolo non ha potuto essere convalidato così com'è.",
+            "complete_kyc": "Per accedere a tutte le funzioni del tuo account, completa la verifica KYC.",
+            "fix_file": "Correggi il mio fascicolo",
+            "verify_identity": "Verifica la mia identità"
         }
     },
     "welcome": "Buongiorno, {{name}} 👋",
     "loading": "Preparazione del tuo spazio personale...",
     "common": {
         "edit": "Modifica",
-        "beneficiary_empty": "Nessun beneficiario salvato."
+        "beneficiary_empty": "Nessun beneficiario salvato.",
+        "at": "a",
+        "next": "Avanti",
+        "prev": "Precedente",
+        "loading": "Caricamento...",
+        "error": "Si è verificato un errore",
+        "client": "Cliente"
     }
 }

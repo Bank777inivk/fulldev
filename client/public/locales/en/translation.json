@@ -739,8 +739,8 @@
     },
     "services_page": {
         "hero": {
-            "title": "Our Services",
-            "subtitle": "Banking solutions designed to simplify your daily life"
+            "title": "OUR BANKING SERVICES",
+            "subtitle": "YOUR FINANCIAL PARTNER"
         },
         "services_list": [
             {
@@ -882,16 +882,16 @@
                 ]
             }
         ],
-        "features_title": "Key Features",
-        "use_cases_title": "Case Studies",
+        "features_title": "Main Features",
+        "use_cases_title": "Use Cases",
         "cta": {
             "title": "Ready to join INVIK SA?",
             "text": "Open your account in under 10 minutes and enjoy all our services",
             "button": "Open a Free Account"
         },
         "buttons": {
-            "open_account": "Open an Account",
-            "simulate": "Simulate Loan"
+            "open_account": "Open an account",
+            "simulate": "Simulate a credit"
         }
     },
     "cards_page": {
@@ -1027,16 +1027,17 @@
         "info": {
             "title": "We are here to help you",
             "address": {
-                "title": "Address",
+                "title": "Our Headquarters",
                 "lines": [
-                    "38 Parc d'Activités Capellen",
-                    "L-8308 Capellen, Luxembourg"
+                    "51, Boulevard Grande-Duchesse Charlotte",
+                    "L-1331 Luxembourg"
                 ]
             },
             "contact": {
-                "title": "Phone & Email",
+                "title": "Direct Contact",
                 "lines": [
-                    "+33 6 46 72 32 86"
+                    "+33 6 46 72 32 86",
+                    "contact@inviksa.com"
                 ]
             }
         }
@@ -1429,7 +1430,11 @@
             "bic": "BIC (optional)",
             "email": "Beneficiary Email (optional)",
             "save_invik": "Save this INVIK beneficiary",
-            "save_beneficiary": "Save this beneficiary for future transfers"
+            "save_beneficiary": "Save this beneficiary for future transfers",
+            "bic_placeholder": "BIC/SWIFT Code",
+            "email_placeholder": "beneficiary@email.com",
+            "iban_placeholder": "IBAN Number",
+            "name_placeholder": "Full Name"
         },
         "amount": {
             "title": "How much would you like to transfer?",
@@ -1549,7 +1554,8 @@
                 "delivered": "Congratulations! Your card has arrived. Enjoy your new benefits! 🎁✨",
                 "shipped": "Your card is on its way! 🚀 It will arrive within 3 to 5 days.",
                 "rejected": "Last request rejected:",
-                "free": "Free • Included in your offer"
+                "free": "Free • Included in your offer",
+                "default_reject_reason": "Incomplete or non-compliant identity documents."
             }
         },
         "virtual_promo": {
@@ -1831,7 +1837,8 @@
             "zip": "Zip Code",
             "location": "Location",
             "save_btn": "Save settings",
-            "update_btn": "Update parameters"
+            "update_btn": "Update parameters",
+            "not_defined": "Not defined"
         },
         "security": {
             "title": "Authentication Security",
@@ -2129,10 +2136,21 @@
         }
     },
     "dashboard": {
-        "loading": "Loading dashboard..."
+        "loading": "Loading dashboard...",
+        "status": {
+            "pending": "Pending",
+            "completed": "Completed",
+            "status_label": "Status"
+        }
     },
     "common": {
         "edit": "Edit",
-        "beneficiary_empty": "No beneficiary saved."
+        "beneficiary_empty": "No beneficiary saved.",
+        "at": "at",
+        "next": "Next",
+        "prev": "Previous",
+        "loading": "Loading...",
+        "error": "An error occurred",
+        "client": "Client"
     }
 }
