@@ -80,6 +80,8 @@ const Login = () => {
                                 <label style={styles.label}>{t('auth.login.identifier')}</label>
                                 <input
                                     type="email"
+                                    name="email"
+                                    autoComplete="username"
                                     placeholder={t('auth.login.email_placeholder')}
                                     style={styles.input}
                                     value={email}
@@ -95,6 +97,8 @@ const Login = () => {
                                         <div style={{ position: 'relative' }}>
                                             <input
                                                 type={showPassword ? "text" : "password"}
+                                                name="password"
+                                                autoComplete="current-password"
                                                 placeholder={t('auth.login.password_placeholder')}
                                                 style={{ ...styles.input, paddingRight: '3.5rem' }}
                                                 value={password}

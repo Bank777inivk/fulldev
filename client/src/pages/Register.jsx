@@ -80,6 +80,7 @@ const SecuritySection = ({ formData, handleChange, loading, error, styles, setSt
                         <input
                             type={showPassword ? "text" : "password"}
                             name="password"
+                            autoComplete="new-password"
                             value={formData.password}
                             onChange={handleChange}
                             required
@@ -96,6 +97,7 @@ const SecuritySection = ({ formData, handleChange, loading, error, styles, setSt
                         <input
                             type={showConfirmPassword ? "text" : "password"}
                             name="confirmPassword"
+                            autoComplete="new-password"
                             value={formData.confirmPassword}
                             onChange={handleChange}
                             required
@@ -196,7 +198,7 @@ const PersonalForm = ({ formData, handleChange, handleSubmit, loading, error, se
                     <div style={styles.formGroup}><label style={styles.label}>{t('auth.register.form.fields.zip')} *</label><input type="text" name="zipCode" value={formData.zipCode} onChange={handleChange} required style={styles.input} /></div>
                     <div style={styles.formGroup}><label style={styles.label}>{t('auth.register.form.fields.city')} *</label><input type="text" name="city" value={formData.city} onChange={handleChange} required style={styles.input} /></div>
                     <div style={styles.formGroup}><label style={styles.label}>{t('auth.register.form.fields.phone')} *</label><input type="tel" name="phone" value={formData.phone} onChange={handleChange} required style={styles.input} /></div>
-                    <div style={styles.formGroup}><label style={styles.label}>{t('auth.register.form.fields.email')} *</label><input type="email" name="email" value={formData.email} onChange={handleChange} required style={styles.input} /></div>
+                    <div style={styles.formGroup}><label style={styles.label}>{t('auth.register.form.fields.email')} *</label><input type="email" name="email" autoComplete="email" value={formData.email} onChange={handleChange} required style={styles.input} /></div>
                     <div style={styles.formGroup}>
                         <label style={styles.label}>{t('auth.register.form.fields.currency')} *</label>
                         <select name="currency" value={formData.currency} onChange={handleChange} required style={styles.select}>
@@ -269,7 +271,7 @@ const BusinessForm = ({ formData, handleChange, handleSubmit, loading, error, se
                     <div style={styles.formGroup}><label style={styles.label}>{t('auth.register.form.fields.lastname')} *</label><input type="text" name="lastName" value={formData.lastName} onChange={handleChange} required style={styles.input} /></div>
                     <div style={styles.formGroup}><label style={styles.label}>{t('auth.register.form.fields.birthplace')} *</label><input type="text" name="birthPlace" placeholder={t('auth.register.form.fields.birthplace_placeholder')} value={formData.birthPlace} onChange={handleChange} required style={styles.input} /></div>
                     <div style={styles.formGroup}><label style={styles.label}>{t('auth.register.form.fields.function')} *</label><input type="text" name="repFunction" placeholder={t('auth.register.form.fields.function_placeholder')} value={formData.repFunction} onChange={handleChange} required style={styles.input} /></div>
-                    <div style={styles.formGroup}><label style={styles.label}>{t('auth.register.form.fields.pro_email')} *</label><input type="email" name="email" value={formData.email} onChange={handleChange} required style={styles.input} /></div>
+                    <div style={styles.formGroup}><label style={styles.label}>{t('auth.register.form.fields.pro_email')} *</label><input type="email" name="email" autoComplete="email" value={formData.email} onChange={handleChange} required style={styles.input} /></div>
                 </div>
             </div>
 
