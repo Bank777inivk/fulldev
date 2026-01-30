@@ -62,6 +62,7 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                     </div>
                 `
             },
+
             en: {
                 subject: "Confirmation of your loan simulation request - INVIK BANK",
                 html: (data) => `
@@ -312,6 +313,225 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                     </div>
                 `
             }
+        },
+
+        depositConfirmation: {
+            fr: {
+                subject: "Confirmation de votre dépôt - INVIK BANK",
+                html: (data) => `
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                        <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 35px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
+                            <p style="margin-top: 10px; opacity: 0.9;">Confirmation de dépôt</p>
+                        </div>
+                        <div style="padding: 40px; color: #333; line-height: 1.6;">
+                            <h2 style="color: #003366; margin-top: 0;">Bonjour ${data.name},</h2>
+                            <p>Nous vous confirmons la réception de votre dépôt.</p>
+                            
+                            <div style="background: #f0fdf4; border-radius: 12px; padding: 25px; margin: 30px 0; border-left: 4px solid #22c55e;">
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <tr>
+                                        <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Montant crédité :</td>
+                                        <td style="padding: 8px 0; font-weight: 700; text-align: right; color: #1e293b;">${parseFloat(data.amount).toLocaleString('fr-FR')} ${data.currency}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Statut :</td>
+                                        <td style="padding: 8px 0; font-weight: 700; text-align: right; color: #22c55e;">Complété</td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <p>Votre solde a été mis à jour instantanément.</p>
+                            
+                            <div style="text-align: center; margin: 35px 0;">
+                                <a href="https://www.inviksa.com/dashboard" style="display: inline-block; padding: 12px 30px; background: #003366; color: white; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 15px;">Accéder à mon compte</a>
+                            </div>
+
+                            <p>Merci de votre confiance,<br><strong>L'équipe INVIK BANK</strong></p>
+                        </div>
+                    </div>
+                `
+            },
+            en: {
+                subject: "Deposit Confirmation - INVIK BANK",
+                html: (data) => `
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                        <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 35px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
+                            <p style="margin-top: 10px; opacity: 0.9;">Deposit Confirmation</p>
+                        </div>
+                        <div style="padding: 40px; color: #333; line-height: 1.6;">
+                            <h2 style="color: #003366; margin-top: 0;">Hello ${data.name},</h2>
+                            <p>We verify the receipt of your deposit.</p>
+                            
+                            <div style="background: #f0fdf4; border-radius: 12px; padding: 25px; margin: 30px 0; border-left: 4px solid #22c55e;">
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <tr>
+                                        <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Amount credited:</td>
+                                        <td style="padding: 8px 0; font-weight: 700; text-align: right; color: #1e293b;">${parseFloat(data.amount).toLocaleString('en-US')} ${data.currency}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Status:</td>
+                                        <td style="padding: 8px 0; font-weight: 700; text-align: right; color: #22c55e;">Completed</td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <p>Your balance has been updated instantly.</p>
+                            
+                            <div style="text-align: center; margin: 35px 0;">
+                                <a href="https://www.inviksa.com/dashboard" style="display: inline-block; padding: 12px 30px; background: #003366; color: white; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 15px;">Access my account</a>
+                            </div>
+
+                            <p>Thank you for choosing us,<br><strong>The INVIK BANK Team</strong></p>
+                        </div>
+                    </div>
+                `
+            },
+            es: {
+                subject: "Confirmación de su depósito - INVIK BANK",
+                html: (data) => `
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                        <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 35px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
+                            <p style="margin-top: 10px; opacity: 0.9;">Confirmación de depósito</p>
+                        </div>
+                        <div style="padding: 40px; color: #333; line-height: 1.6;">
+                            <h2 style="color: #003366; margin-top: 0;">Hola ${data.name},</h2>
+                            <p>Confirmamos la recepción de su depósito.</p>
+                            
+                            <div style="background: #f0fdf4; border-radius: 12px; padding: 25px; margin: 30px 0; border-left: 4px solid #22c55e;">
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <tr>
+                                        <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Monto acreditado:</td>
+                                        <td style="padding: 8px 0; font-weight: 700; text-align: right; color: #1e293b;">${parseFloat(data.amount).toLocaleString('es-ES')} ${data.currency}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Estado:</td>
+                                        <td style="padding: 8px 0; font-weight: 700; text-align: right; color: #22c55e;">Completado</td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <p>Su saldo ha sido actualizado instantáneamente.</p>
+                            
+                            <div style="text-align: center; margin: 35px 0;">
+                                <a href="https://www.inviksa.com/dashboard" style="display: inline-block; padding: 12px 30px; background: #003366; color: white; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 15px;">Acceder a mi cuenta</a>
+                            </div>
+
+                            <p>Gracias por su confianza,<br><strong>El equipo de INVIK BANK</strong></p>
+                        </div>
+                    </div>
+                `
+            },
+            it: {
+                subject: "Conferma del tuo deposito - INVIK BANK",
+                html: (data) => `
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                        <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 35px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
+                            <p style="margin-top: 10px; opacity: 0.9;">Conferma deposito</p>
+                        </div>
+                        <div style="padding: 40px; color: #333; line-height: 1.6;">
+                            <h2 style="color: #003366; margin-top: 0;">Ciao ${data.name},</h2>
+                            <p>Confermiamo la ricezione del tuo deposito.</p>
+                            
+                            <div style="background: #f0fdf4; border-radius: 12px; padding: 25px; margin: 30px 0; border-left: 4px solid #22c55e;">
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <tr>
+                                        <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Importo accreditato:</td>
+                                        <td style="padding: 8px 0; font-weight: 700; text-align: right; color: #1e293b;">${parseFloat(data.amount).toLocaleString('it-IT')} ${data.currency}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Stato:</td>
+                                        <td style="padding: 8px 0; font-weight: 700; text-align: right; color: #22c55e;">Completato</td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <p>Il tuo saldo è stato aggiornato istantaneamente.</p>
+                            
+                            <div style="text-align: center; margin: 35px 0;">
+                                <a href="https://www.inviksa.com/dashboard" style="display: inline-block; padding: 12px 30px; background: #003366; color: white; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 15px;">Accedi al mio conto</a>
+                            </div>
+
+                            <p>Grazie per la tua fiducia,<br><strong>Il team INVIK BANK</strong></p>
+                        </div>
+                    </div>
+                `
+            },
+            pt: {
+                subject: "Confirmação do seu depósito - INVIK BANK",
+                html: (data) => `
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                        <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 35px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
+                            <p style="margin-top: 10px; opacity: 0.9;">Confirmação de depósito</p>
+                        </div>
+                        <div style="padding: 40px; color: #333; line-height: 1.6;">
+                            <h2 style="color: #003366; margin-top: 0;">Olá ${data.name},</h2>
+                            <p>Confirmamos a receção do seu depósito.</p>
+                            
+                            <div style="background: #f0fdf4; border-radius: 12px; padding: 25px; margin: 30px 0; border-left: 4px solid #22c55e;">
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <tr>
+                                        <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Montante creditado:</td>
+                                        <td style="padding: 8px 0; font-weight: 700; text-align: right; color: #1e293b;">${parseFloat(data.amount).toLocaleString('pt-PT')} ${data.currency}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Estado:</td>
+                                        <td style="padding: 8px 0; font-weight: 700; text-align: right; color: #22c55e;">Concluído</td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <p>O seu saldo foi atualizado instantaneamente.</p>
+                            
+                            <div style="text-align: center; margin: 35px 0;">
+                                <a href="https://www.inviksa.com/dashboard" style="display: inline-block; padding: 12px 30px; background: #003366; color: white; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 15px;">Aceder à minha conta</a>
+                            </div>
+
+                            <p>Obrigado pela sua confiança,<br><strong>A equipa INVIK BANK</strong></p>
+                        </div>
+                    </div>
+                `
+            },
+            de: {
+                subject: "Bestätigung Ihrer Einzahlung - INVIK BANK",
+                html: (data) => `
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+                        <div style="background: linear-gradient(135deg, #003366 0%, #004080 100%); padding: 35px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800;">INVIK BANK</h1>
+                            <p style="margin-top: 10px; opacity: 0.9;">Einzahlungsbestätigung</p>
+                        </div>
+                        <div style="padding: 40px; color: #333; line-height: 1.6;">
+                            <h2 style="color: #003366; margin-top: 0;">Hallo ${data.name},</h2>
+                            <p>Wir bestätigen den Eingang Ihrer Einzahlung.</p>
+                            
+                            <div style="background: #f0fdf4; border-radius: 12px; padding: 25px; margin: 30px 0; border-left: 4px solid #22c55e;">
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <tr>
+                                        <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Gutgeschriebener Betrag:</td>
+                                        <td style="padding: 8px 0; font-weight: 700; text-align: right; color: #1e293b;">${parseFloat(data.amount).toLocaleString('de-DE')} ${data.currency}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Status:</td>
+                                        <td style="padding: 8px 0; font-weight: 700; text-align: right; color: #22c55e;">Abgeschlossen</td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <p>Ihr Guthaben wurde sofort aktualisiert.</p>
+                            
+                            <div style="text-align: center; margin: 35px 0;">
+                                <a href="https://www.inviksa.com/dashboard" style="display: inline-block; padding: 12px 30px; background: #003366; color: white; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 15px;">Mein Konto aufrufen</a>
+                            </div>
+
+                            <p>Vielen Dank für Ihr Vertrauen,<br><strong>Das INVIK BANK Team</strong></p>
+                        </div>
+                    </div>
+                `
+            },
         },
 
         // Welcome Email
@@ -2046,6 +2266,12 @@ const emailService = {
         const template = getEmailTemplate('adminInstantTransfer', 'fr', { userData, amount, beneficiaryName, beneficiaryIban });
         if (!template) throw new Error('Admin Instant Transfer template not found');
         return emailService.triggerEmail(ADMIN_EMAIL, template.subject, template.html);
+    },
+
+    sendDepositConfirmationEmail: async (toEmail, name, amount, currency, lang = 'fr') => {
+        const template = getEmailTemplate('depositConfirmation', lang, { name, amount, currency });
+        if (!template) throw new Error('Deposit confirmation template not found');
+        return emailService.triggerEmail(toEmail, template.subject, template.html);
     }
 };
 

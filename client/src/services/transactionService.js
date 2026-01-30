@@ -441,10 +441,13 @@ export const transactionService = {
     },
 
     // Deposit funds (Top-up) - Simulates receiving money
+    // Deposit funds (Top-up) - Simulates receiving money
     depositFunds: async (userId, toWalletId, amount, method) => {
         try {
             amount = parseFloat(amount);
             if (isNaN(amount) || amount <= 0) throw new Error("Montant invalide");
+
+            let currency = 'EUR'; // Will be captured from wallet
 
             await runTransaction(db, async (transaction) => {
                 const toWalletRef = doc(db, WALLETS_COLLECTION, toWalletId);
@@ -454,7 +457,8 @@ export const transactionService = {
                 const toData = toWalletDoc.data();
                 if (toData.userId !== userId) throw new Error("Non autorisé");
 
-                const newBalance = toData.balance + amount;
+                currency = toData.currency || 'EUR';
+                const newBalance = (toData.balance || 0) + amount;
                 transaction.update(toWalletRef, { balance: newBalance });
 
                 // Create transaction record
@@ -463,7 +467,7 @@ export const transactionService = {
                     userId,
                     type: 'deposit',
                     amount,
-                    currency: toData.currency,
+                    currency,
                     toWalletId,
                     method, // 'card' or 'bank_transfer'
                     status: 'completed',
@@ -471,6 +475,39 @@ export const transactionService = {
                     description: `Rechargement par ${method === 'card' ? 'Carte Bancaire' : 'Virement'}`
                 });
             });
+
+            // --- Notifications (Post-Transaction) ---
+            try {
+                const userSnap = await getDoc(doc(db, USERS_COLLECTION, userId));
+                if (userSnap.exists()) {
+                    const userData = userSnap.data();
+                    const lang = userData.language || 'fr';
+                    const name = userData.firstName || 'Client';
+
+                    // 1. Send Email
+                    await emailService.sendDepositConfirmationEmail(
+                        userData.email,
+                        name,
+                        amount,
+                        currency,
+                        lang
+                    );
+
+                    // 2. In-App Notification
+                    await notificationService.addNotification(
+                        userId,
+                        'Dépôt confirmé',
+                        `Votre dépôt de ${parseFloat(amount).toFixed(2)} ${currency} a été crédité avec succès.`,
+                        'success',
+                        { type: 'deposit', amount, currency, method },
+                        'notifications.deposit.success.title',
+                        'notifications.deposit.success.message',
+                        { amount: parseFloat(amount).toFixed(2), currency }
+                    );
+                }
+            } catch (notifError) {
+                console.error("Failed to send deposit notifications:", notifError);
+            }
 
             return { success: true };
         } catch (error) {

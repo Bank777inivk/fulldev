@@ -18,7 +18,11 @@
         "close": "Schließen",
         "deposit": {
             "title": "💰 Neue Einzahlung erhalten",
-            "message": "Ihrem INVIK BANK Konto wurde ein Betrag von {{amount}} {{currency}} gutgeschrieben. Neuer Kontostand: {{newBalance}} {{currency}}"
+            "message": "Ihrem INVIK BANK Konto wurde ein Betrag von {{amount}} {{currency}} gutgeschrieben. Neuer Kontostand: {{newBalance}} {{currency}}",
+            "success": {
+                "title": "Einzahlung bestätigt",
+                "message": "Ihre Einzahlung von {{amount}} {{currency}} wurde erfolgreich gutgeschrieben."
+            }
         },
         "transactionValidated": {
             "title": "✅ Vorgang bestätigt",

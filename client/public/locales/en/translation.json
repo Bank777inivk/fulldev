@@ -14,7 +14,11 @@
     "notifications": {
         "deposit": {
             "title": "💰 New Deposit Received",
-            "message": "Your INVIK BANK account has been credited with {{amount}} {{currency}}. New balance: {{newBalance}} {{currency}}"
+            "message": "Your INVIK BANK account has been credited with {{amount}} {{currency}}. New balance: {{newBalance}} {{currency}}",
+            "success": {
+                "title": "Deposit Confirmed",
+                "message": "Your deposit of {{amount}} {{currency}} has been successfully credited."
+            }
         },
         "transactionValidated": {
             "title": "✅ Operation Validated",

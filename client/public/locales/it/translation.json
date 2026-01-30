@@ -18,7 +18,11 @@
         "close": "Chiudi",
         "deposit": {
             "title": "💰 Nuovo deposito ricevuto",
-            "message": "Il tuo conto INVIK BANK è stato accreditato con un importo di {{amount}} {{currency}}. Nuovo saldo: {{newBalance}} {{currency}}"
+            "message": "Il tuo conto INVIK BANK è stato accreditato con un importo di {{amount}} {{currency}}. Nuovo saldo: {{newBalance}} {{currency}}",
+            "success": {
+                "title": "Deposito confermato",
+                "message": "Il tuo deposito di {{amount}} {{currency}} è stato accreditato con successo."
+            }
         },
         "transactionValidated": {
             "title": "✅ Operazione convalidata",
