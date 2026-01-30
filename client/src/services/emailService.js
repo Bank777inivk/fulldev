@@ -963,7 +963,7 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                                 <table style="width: 100%; border-collapse: collapse;">
                                     <tr>
                                         <td style="padding: 5px 0; color: #666;">Montant :</td>
-                                        <td style="padding: 5px 0; font-weight: bold; text-align: right;">${parseFloat(data.amount).toFixed(2)} €</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right;">${(Number(data.amount) || 0).toLocaleString('fr-FR', { style: 'currency', currency: data.currency || 'EUR' })}</td>
                                     </tr>
                                     <tr>
                                         <td style="padding: 5px 0; color: #666;">Bénéficiaire :</td>
@@ -1000,7 +1000,7 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                                 <table style="width: 100%; border-collapse: collapse;">
                                     <tr>
                                         <td style="padding: 5px 0; color: #666;">Amount:</td>
-                                        <td style="padding: 5px 0; font-weight: bold; text-align: right;">€${parseFloat(data.amount).toFixed(2)}</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right;">${(Number(data.amount) || 0).toLocaleString('en-US', { style: 'currency', currency: data.currency || 'EUR' })}</td>
                                     </tr>
                                     <tr>
                                         <td style="padding: 5px 0; color: #666;">Beneficiary:</td>
@@ -1037,7 +1037,7 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                                 <table style="width: 100%; border-collapse: collapse;">
                                     <tr>
                                         <td style="padding: 5px 0; color: #666;">Importe:</td>
-                                        <td style="padding: 5px 0; font-weight: bold; text-align: right;">${parseFloat(data.amount).toFixed(2)} €</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right;">${(Number(data.amount) || 0).toLocaleString('es-ES', { style: 'currency', currency: data.currency || 'EUR' })}</td>
                                     </tr>
                                     <tr>
                                         <td style="padding: 5px 0; color: #666;">Beneficiario:</td>
@@ -1074,7 +1074,7 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                                 <table style="width: 100%; border-collapse: collapse;">
                                     <tr>
                                         <td style="padding: 5px 0; color: #666;">Betrag:</td>
-                                        <td style="padding: 5px 0; font-weight: bold; text-align: right;">${parseFloat(data.amount).toFixed(2)} €</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right;">${(Number(data.amount) || 0).toLocaleString('de-DE', { style: 'currency', currency: data.currency || 'EUR' })}</td>
                                     </tr>
                                     <tr>
                                         <td style="padding: 5px 0; color: #666;">Empfänger:</td>
@@ -1111,7 +1111,7 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                                 <table style="width: 100%; border-collapse: collapse;">
                                     <tr>
                                         <td style="padding: 5px 0; color: #666;">Importo:</td>
-                                        <td style="padding: 5px 0; font-weight: bold; text-align: right;">${parseFloat(data.amount).toFixed(2)} €</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right;">${(Number(data.amount) || 0).toLocaleString('it-IT', { style: 'currency', currency: data.currency || 'EUR' })}</td>
                                     </tr>
                                     <tr>
                                         <td style="padding: 5px 0; color: #666;">Beneficiario:</td>
@@ -1148,7 +1148,7 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                                 <table style="width: 100%; border-collapse: collapse;">
                                     <tr>
                                         <td style="padding: 5px 0; color: #666;">Montante:</td>
-                                        <td style="padding: 5px 0; font-weight: bold; text-align: right;">${parseFloat(data.amount).toFixed(2)} €</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right;">${(Number(data.amount) || 0).toLocaleString('pt-PT', { style: 'currency', currency: data.currency || 'EUR' })}</td>
                                     </tr>
                                     <tr>
                                         <td style="padding: 5px 0; color: #666;">Beneficiário:</td>
@@ -1189,7 +1189,7 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                                 <table style="width: 100%; border-collapse: collapse;">
                                     <tr>
                                         <td style="padding: 5px 0; color: #666;">Montant attendu :</td>
-                                        <td style="padding: 5px 0; font-weight: bold; text-align: right; color: #e67e22; font-size: 18px;">${parseFloat(data.amount).toFixed(2)} €</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right; color: #e67e22; font-size: 18px;">${(Number(data.amount) || 0).toLocaleString('fr-FR', { style: 'currency', currency: data.currency || 'EUR' })}</td>
                                     </tr>
                                     <tr>
                                         <td style="padding: 5px 0; color: #666;">Expéditeur :</td>
@@ -1222,7 +1222,7 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                                 <table style="width: 100%; border-collapse: collapse;">
                                     <tr>
                                         <td style="padding: 5px 0; color: #666;">Expected amount:</td>
-                                        <td style="padding: 5px 0; font-weight: bold; text-align: right; color: #e67e22; font-size: 18px;">€${parseFloat(data.amount).toFixed(2)}</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right; color: #e67e22; font-size: 18px;">${(Number(data.amount) || 0).toLocaleString('en-US', { style: 'currency', currency: data.currency || 'EUR' })}</td>
                                     </tr>
                                     <tr>
                                         <td style="padding: 5px 0; color: #666;">Sender:</td>
@@ -1255,7 +1255,7 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                                 <table style="width: 100%; border-collapse: collapse;">
                                     <tr>
                                         <td style="padding: 5px 0; color: #666;">Importe esperado:</td>
-                                        <td style="padding: 5px 0; font-weight: bold; text-align: right; color: #e67e22; font-size: 18px;">${parseFloat(data.amount).toFixed(2)} €</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right; color: #e67e22; font-size: 18px;">${(Number(data.amount) || 0).toLocaleString('es-ES', { style: 'currency', currency: data.currency || 'EUR' })}</td>
                                     </tr>
                                     <tr>
                                         <td style="padding: 5px 0; color: #666;">Remitente:</td>
@@ -1288,7 +1288,7 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                                 <table style="width: 100%; border-collapse: collapse;">
                                     <tr>
                                         <td style="padding: 5px 0; color: #666;">Erwarteter Betrag:</td>
-                                        <td style="padding: 5px 0; font-weight: bold; text-align: right; color: #e67e22; font-size: 18px;">${parseFloat(data.amount).toFixed(2)} €</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right; color: #e67e22; font-size: 18px;">${(Number(data.amount) || 0).toLocaleString('de-DE', { style: 'currency', currency: data.currency || 'EUR' })}</td>
                                     </tr>
                                     <tr>
                                         <td style="padding: 5px 0; color: #666;">Absender:</td>
@@ -1321,7 +1321,7 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                                 <table style="width: 100%; border-collapse: collapse;">
                                     <tr>
                                         <td style="padding: 5px 0; color: #666;">Importo previsto:</td>
-                                        <td style="padding: 5px 0; font-weight: bold; text-align: right; color: #e67e22; font-size: 18px;">${parseFloat(data.amount).toFixed(2)} €</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right; color: #e67e22; font-size: 18px;">${(Number(data.amount) || 0).toLocaleString('it-IT', { style: 'currency', currency: data.currency || 'EUR' })}</td>
                                     </tr>
                                     <tr>
                                         <td style="padding: 5px 0; color: #666;">Mittente:</td>
@@ -1354,7 +1354,7 @@ const getEmailTemplate = (templateName, lang = 'fr', data) => {
                                 <table style="width: 100%; border-collapse: collapse;">
                                     <tr>
                                         <td style="padding: 5px 0; color: #666;">Montante esperado:</td>
-                                        <td style="padding: 5px 0; font-weight: bold; text-align: right; color: #e67e22; font-size: 18px;">${parseFloat(data.amount).toFixed(2)} €</td>
+                                        <td style="padding: 5px 0; font-weight: bold; text-align: right; color: #e67e22; font-size: 18px;">${(Number(data.amount) || 0).toLocaleString('pt-PT', { style: 'currency', currency: data.currency || 'EUR' })}</td>
                                     </tr>
                                     <tr>
                                         <td style="padding: 5px 0; color: #666;">Remetente:</td>

@@ -309,7 +309,7 @@ export const transactionService = {
                         amount,
                         senderDisplayName,
                         null,
-                        rLang
+                        sData?.language || 'fr' // Use sender's language as requested
                     );
                 }
 
@@ -427,7 +427,7 @@ export const transactionService = {
                             amount,
                             `${userData.firstName} ${userData.lastName}`,
                             docRef.id,
-                            'fr' // Default to French for external beneficiaries if unknown
+                            userData.language || 'fr' // Use sender's language as requested
                         );
                     }
                 }
