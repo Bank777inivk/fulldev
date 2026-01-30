@@ -363,7 +363,7 @@ const Transfers = () => {
                                             gap: '4px'
                                         }}>
                                             {tx.status === 'in_review' && <i className="fas fa-circle-notch fa-spin"></i>}
-                                            {tx.status === 'pending' ? t('status.pending') : (tx.status === 'in_review' ? t('transactions.review') : (tx.status === 'rejected' ? t('status.rejected') : t('status.completed')))}
+                                            {tx.status === 'pending' ? t('status.pending') : (tx.status === 'in_review' ? t('status.in_review') : (tx.status === 'rejected' ? t('status.rejected') : t('status.completed')))}
                                         </span>
                                     </div>
                                 ))}
@@ -787,7 +787,7 @@ const Transfers = () => {
                                                 gap: '6px'
                                             }}>
                                                 {tx.status === 'in_review' && <i className="fas fa-circle-notch fa-spin"></i>}
-                                                {tx.status === 'pending' ? t('status.pending') : (tx.status === 'in_review' ? t('transactions.review') : (tx.status === 'rejected' ? t('status.rejected') : t('status.completed')))}
+                                                {tx.status === 'pending' ? t('status.pending') : (tx.status === 'in_review' ? t('status.in_review') : (tx.status === 'rejected' ? t('status.rejected') : t('status.completed')))}
                                             </span>
                                         </div>
                                     ))}

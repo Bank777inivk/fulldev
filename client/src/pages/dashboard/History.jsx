@@ -50,7 +50,7 @@ const History = () => {
             const methodKey = method === 'card' ? 'transactions.by_card' : 'transactions.by_transfer';
             const methodText = t(methodKey);
             const targetAcc = getWalletName(tx.toWalletId);
-            const statusText = tx.status === 'in_review' ? ` (${t('transactions.review')})` : '';
+            const statusText = tx.status === 'in_review' ? ` (${t('status.in_review')})` : '';
             return `${t('transactions.deposit')} ${methodText} → ${targetAcc}${statusText}`;
         }
 

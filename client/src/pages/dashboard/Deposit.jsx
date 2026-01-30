@@ -549,10 +549,20 @@ const Deposit = () => {
                                     borderRadius: '50px',
                                     fontSize: '0.75rem',
                                     fontWeight: 'bold',
-                                    backgroundColor: tx.status === 'pending' ? '#fff3cd' : (tx.status === 'rejected' ? '#ffebee' : '#e8f5e9'),
-                                    color: tx.status === 'pending' ? '#856404' : (tx.status === 'rejected' ? '#c62828' : '#2e7d32')
+                                    backgroundColor: tx.status === 'pending' ? '#fff3cd' :
+                                        (tx.status === 'in_review' ? '#e8eaf6' :
+                                            (tx.status === 'rejected' ? '#ffebee' : '#e8f5e9')),
+                                    color: tx.status === 'pending' ? '#856404' :
+                                        (tx.status === 'in_review' ? '#283593' :
+                                            (tx.status === 'rejected' ? '#c62828' : '#2e7d32')),
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '4px'
                                 }}>
-                                    {tx.status === 'pending' ? t('status.pending') : (tx.status === 'rejected' ? t('status.rejected') : t('status.completed'))}
+                                    {(tx.status === 'pending' || tx.status === 'in_review') && <i className="fas fa-circle-notch fa-spin" style={{ fontSize: '0.7rem' }}></i>}
+                                    {tx.status === 'pending' ? t('status.pending') :
+                                        (tx.status === 'in_review' ? t('status.in_review') :
+                                            (tx.status === 'rejected' ? t('status.rejected') : t('status.completed')))}
                                 </span>
                             </div>
                         ))}
