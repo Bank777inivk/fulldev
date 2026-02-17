@@ -125,8 +125,7 @@ const KycVerification = () => {
 
     const [docTypes, setDocTypes] = useState({
         id1: '',
-        address: '',
-        income: ''
+        address: ''
     });
 
     const [files, setFiles] = useState({
@@ -134,9 +133,7 @@ const KycVerification = () => {
         id1Back: null,
         selfie: null,
         selfieWithId: null,
-        addressProof: null,
-        incomeProof: null,
-        rib: null
+        addressProof: null
     });
 
     const [previews, setPreviews] = useState({
@@ -144,9 +141,7 @@ const KycVerification = () => {
         id1Back: null,
         selfie: null,
         selfieWithId: null,
-        addressProof: null,
-        incomeProof: null,
-        rib: null
+        addressProof: null
     });
 
     const [uploading, setUploading] = useState(false);
@@ -217,9 +212,9 @@ const KycVerification = () => {
             return;
         }
 
-        const requiredFiles = ['id1Front', 'selfie', 'selfieWithId', 'addressProof', 'incomeProof'];
+        const requiredFiles = ['id1Front', 'selfie', 'selfieWithId', 'addressProof'];
         const missingFiles = requiredFiles.filter(key => !files[key]);
-        const missingTypes = ['address', 'income'].filter(key => !docTypes[key]);
+        const missingTypes = ['address'].filter(key => !docTypes[key]);
 
         if (missingFiles.length > 0 || missingTypes.length > 0) {
             showToast(t('kyc.messages.missing_files'), "warning");
@@ -284,15 +279,7 @@ const KycVerification = () => {
         { value: 'hosting_cert', label: t('kyc.types.address.hosting') }
     ];
 
-    const incomeOptions = [
-        { value: 'payslip', label: t('kyc.types.income.payslip') },
-        { value: 'work_contract', label: t('kyc.types.income.contract') },
-        { value: 'tax_notice_income', label: t('kyc.types.income.tax') },
-        { value: 'kbis', label: t('kyc.types.income.kbis') },
-        { value: 'pension', label: t('kyc.types.income.pension') },
-        { value: 'pole_emploi', label: t('kyc.types.income.unemployment') },
-        { value: 'bank_statement', label: t('kyc.types.income.statement') }
-    ];
+
 
     return (
         <div style={styles.container}>
@@ -412,52 +399,7 @@ const KycVerification = () => {
                     )}
                 </Section>
 
-                <Section
-                    title={t('kyc.sections.income')}
-                    icon="fas fa-briefcase"
-                    subtitle={t('kyc.sections.income_sub')}
-                >
-                    <TypeSelector
-                        id="income"
-                        label={t('kyc.labels.type_doc')}
-                        options={incomeOptions}
-                        value={docTypes.income}
-                        onChange={handleTypeChange}
-                        disabled={uploading}
-                    />
-                    {docTypes.income && (
-                        <UploadBox
-                            id="incomeProof"
-                            label={t('kyc.sections.income')}
-                            icon="fas fa-file-signature"
-                            description={t('kyc.labels.load_doc')}
-                            preview={previews.incomeProof}
-                            uploading={uploading}
-                            onFileChange={handleFileChange}
-                        />
-                    )}
-                </Section>
 
-                <Section
-                    title={t('kyc.sections.bank')}
-                    icon="fas fa-university"
-                    subtitle={t('kyc.sections.bank_sub')}
-                    required={false}
-                >
-                    <div style={styles.noticeBox}>
-                        <i className="fas fa-info-circle"></i>
-                        <p>{t('kyc.sections.bank_notice')}</p>
-                    </div>
-                    <UploadBox
-                        id="rib"
-                        label={t('kyc.sections.bank')}
-                        icon="fas fa-university"
-                        description={t('kyc.labels.load_doc')}
-                        preview={previews.rib}
-                        uploading={uploading}
-                        onFileChange={handleFileChange}
-                    />
-                </Section>
 
                 {uploading && (
                     <div style={styles.progressContainer}>
