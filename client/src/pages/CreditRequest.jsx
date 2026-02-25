@@ -202,6 +202,14 @@ const CreditRequest = () => {
                 language: i18n.language // Add user's language
             });
 
+            // Google Ads Conversion tracking
+            if (window.gtag) {
+                window.gtag('event', 'conversion', {
+                    'send_to': 'AW-17959732906',
+                    'event_callback': () => console.log('Credit Request (Desktop) conversion sent')
+                });
+            }
+
             setScore(finalScore);
             setStep(8); // Success/Result step
         } catch (error) {

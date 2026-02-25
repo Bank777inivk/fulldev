@@ -85,7 +85,7 @@ const History = () => {
     const totalPages = Math.ceil(transactions.length / itemsPerPage);
     const currentTransactions = transactions.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-    const PaginationControls = () => {
+    const renderPagination = () => {
         if (totalPages <= 1) return null;
         return (
             <div style={isMobile ? styles.mobilePagination : styles.desktopPagination}>
@@ -227,7 +227,7 @@ const History = () => {
                                 );
                             })}
                         </div>
-                        <PaginationControls />
+                        {renderPagination()}
                     </>
                 )}
             </div>

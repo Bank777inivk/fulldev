@@ -6,7 +6,6 @@ import { useNotifications } from '../../contexts/NotificationContext';
 import { useTranslation } from 'react-i18next';
 
 const KycVerificationBanner = ({ children, variant = 'default', style = {} }) => {
-    const { userData } = useAuth();
     const { kycStatus, loading } = useData();
     const { showToast } = useNotifications();
     const navigate = useNavigate();

@@ -389,6 +389,14 @@ const Register = () => {
                 displayName: userType === 'personal' ? `${formData.firstName} ${formData.lastName}` : formData.companyName
             });
 
+            // Google Ads Conversion tracking
+            if (window.gtag) {
+                window.gtag('event', 'conversion', {
+                    'send_to': 'AW-17959732906',
+                    'event_callback': () => console.log('Registration conversion sent')
+                });
+            }
+
             showToast(t('auth.register.form.success'), 'success');
             navigate(`/${i18n.language}/email-verification-pending`);
         } catch (err) {

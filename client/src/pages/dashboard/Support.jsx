@@ -56,16 +56,17 @@ const Support = () => {
     }, [currentUser]);
 
     useEffect(() => {
-        if (selectedTicket) {
-            const unsubMessages = supportService.subscribeToTicketMessages(selectedTicket.id, (data) => {
-                setMessages(data);
-            });
-            // Mark as seen when opening the chat
-            supportService.markAsSeen(selectedTicket.id);
-            return () => unsubMessages();
-        } else {
-            setMessages([]);
+        if (!selectedTicket) {
+            setMessages(prev => prev.length === 0 ? prev : []);
+            return;
         }
+
+        const unsubMessages = supportService.subscribeToTicketMessages(selectedTicket.id, (data) => {
+            setMessages(data);
+        });
+        // Mark as seen when opening the chat
+        supportService.markAsSeen(selectedTicket.id);
+        return () => unsubMessages();
     }, [selectedTicket]);
 
     useEffect(() => {
@@ -97,6 +98,7 @@ const Support = () => {
                 showToast(t('support.messages.success'), "success");
             }
         } catch (err) {
+            console.error("Create ticket error:", err);
             showToast(t('support.messages.error'), "error");
         }
     };

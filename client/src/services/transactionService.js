@@ -309,7 +309,7 @@ export const transactionService = {
                         amount,
                         senderDisplayName,
                         null,
-                        sData?.language || 'fr' // Use sender's language as requested
+                        'fr' // Fallback to fr, sender data might not be available
                     );
                 }
 

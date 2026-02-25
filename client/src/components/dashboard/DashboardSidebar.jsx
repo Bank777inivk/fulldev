@@ -9,7 +9,6 @@ const DashboardSidebar = ({ isOpen, toggleSidebar }) => {
     const [unreadSupport, setUnreadSupport] = useState(0);
     const navigate = useNavigate();
     const { t, i18n } = useTranslation();
-    const isMobile = window.innerWidth < 768;
 
     useEffect(() => {
         if (!currentUser) return;

@@ -55,11 +55,10 @@ export const AuthProvider = ({ children }) => {
             updatedAt: serverTimestamp()
         });
 
-        // Create initial wallets/accounts
         const wallets = await walletService.createInitialWallets(
             user.uid,
             user.email,
-            profileData.displayName || (userType === 'personal' ? `${profileData.firstName} ${profileData.lastName}` : profileData.companyName),
+            profileData.displayName || (profileData.userType === 'personal' ? `${profileData.firstName} ${profileData.lastName}` : profileData.companyName),
             profileData.accountType || 'standard',
             profileData.mainCurrency || 'EUR'
         );

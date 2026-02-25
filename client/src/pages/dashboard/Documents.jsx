@@ -300,7 +300,7 @@ const Documents = () => {
     }
 
     // --- DESKTOP VIEW ---
-    const DesktopView = () => (
+    const desktopView = (
         <div style={styles.container}>
             <header style={styles.header}>
                 <h1 style={styles.title}>{t('documents.title')}</h1>
@@ -422,7 +422,7 @@ const Documents = () => {
     );
 
     // --- MOBILE VIEW ---
-    const MobileView = () => (
+    const mobileView = (
         <div style={styles.mobileContainer}>
             <div style={styles.mobileHeader}>
                 <h1>{t('sidebar.nav.documents')}</h1>
@@ -472,7 +472,7 @@ const Documents = () => {
         </div>
     );
 
-    return <KycVerificationBanner>{isMobile ? <MobileView /> : <DesktopView />}</KycVerificationBanner>;
+    return <KycVerificationBanner>{isMobile ? mobileView : desktopView}</KycVerificationBanner>;
 };
 
 const styles = {

@@ -1,0 +1,321 @@
+﻿
+> client@0.0.0 lint
+> eslint .
+
+
+C:\Users\tesla\Videos\Nouvelle aventure\BanK\client\src\App.jsx
+  2:50  error  'useLocation' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\tesla\Videos\Nouvelle aventure\BanK\client\src\components\dashboard\KycVerificationBanner.jsx
+  3:10  error  'useAuth' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\tesla\Videos\Nouvelle aventure\BanK\client\src\contexts\AuthContext.jsx
+  21:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+C:\Users\tesla\Videos\Nouvelle aventure\BanK\client\src\contexts\DataContext.jsx
+  14:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  react-refresh/only-export-components
+  31:13  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  29 |     useEffect(() => {
+  30 |         if (!currentUser) {
+> 31 |             setWallets([]);
+     |             ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  32 |             setTransactions([]);
+  33 |             setKycStatus(null);
+  34 |             setBeneficiaries([]);  react-hooks/set-state-in-effect
+
+C:\Users\tesla\Videos\Nouvelle aventure\BanK\client\src\contexts\NotificationContext.jsx
+  5:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+C:\Users\tesla\Videos\Nouvelle aventure\BanK\client\src\pages\AuthActionHandler.jsx
+  59:39  error  'code' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  no-unused-vars
+  64:18  error  'error' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 no-unused-vars
+  72:13  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  70 |     useEffect(() => {
+  71 |         if (!mode || !oobCode) {
+> 72 |             setStatus('error');
+     |             ^^^^^^^^^ Avoid calling setState() directly within an effect
+  73 |             setMessageKey('auth.action_handler.invalid_link');
+  74 |             return;
+  75 |         }  react-hooks/set-state-in-effect
+
+C:\Users\tesla\Videos\Nouvelle aventure\BanK\client\src\pages\EmailVerificationPending.jsx
+  27:8   warning  React Hook useEffect has a missing dependency: 'i18n.language'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  49:18  error    'error' is defined but never used                                                                                 no-unused-vars
+
+C:\Users\tesla\Videos\Nouvelle aventure\BanK\client\src\pages\EmailVerificationSuccess.jsx
+  52:8  warning  React Hook useEffect has a missing dependency: 'i18n.language'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\tesla\Videos\Nouvelle aventure\BanK\client\src\pages\Home.jsx
+   36:29   error    'interestRate' is not defined                                                                                                                                                                                                                                          no-undef
+   37:17   error    'amount' is not defined                                                                                                                                                                                                                                                no-undef
+   37:73   error    'duration' is not defined                                                                                                                                                                                                                                              no-undef
+   38:8    warning  React Hook React.useMemo has unnecessary dependencies: 'amount', 'duration', and 'interestRate'. Either exclude them or remove the dependency array. Outer scope values like 'amount' aren't valid dependencies because mutating them doesn't re-render the component  react-hooks/exhaustive-deps
+   38:9    error    'amount' is not defined                                                                                                                                                                                                                                                no-undef
+   38:17   error    'duration' is not defined                                                                                                                                                                                                                                              no-undef
+   38:27   error    'interestRate' is not defined                                                                                                                                                                                                                                          no-undef
+  160:103  error    'amount' is not defined                                                                                                                                                                                                                                                no-undef
+  164:48   error    'amount' is not defined                                                                                                                                                                                                                                                no-undef
+  164:73   error    'setAmount' is not defined                                                                                                                                                                                                                                             no-undef
+  171:105  error    'duration' is not defined                                                                                                                                                                                                                                              no-undef
+  171:157  error    'duration' is not defined                                                                                                                                                                                                                                              no-undef
+  175:48   error    'duration' is not defined                                                                                                                                                                                                                                              no-undef
+  175:75   error    'setDuration' is not defined                                                                                                                                                                                                                                           no-undef
+  182:101  error    'interestRate' is not defined                                                                                                                                                                                                                                          no-undef
+  185:48   error    'interestRate' is not defined                                                                                                                                                                                                                                          no-undef
+  186:58   error    'setInterestRate' is not defined                                                                                                                                                                                                                                       no-undef
+  189:42   error    'rates' is not defined                                                                                                                                                                                                                                                 no-undef
+  206:46   error    'amount' is not defined                                                                                                                                                                                                                                                no-undef
+  206:54   error    'duration' is not defined                                                                                                                                                                                                                                              no-undef
+  206:64   error    'interestRate' is not defined                                                                                                                                                                                                                                          no-undef
+  255:95   error    'amount' is not defined                                                                                                                                                                                                                                                no-undef
+  259:40   error    'amount' is not defined                                                                                                                                                                                                                                                no-undef
+  259:65   error    'setAmount' is not defined                                                                                                                                                                                                                                             no-undef
+  266:97   error    'duration' is not defined                                                                                                                                                                                                                                              no-undef
+  266:149  error    'duration' is not defined                                                                                                                                                                                                                                              no-undef
+  270:40   error    'duration' is not defined                                                                                                                                                                                                                                              no-undef
+  270:67   error    'setDuration' is not defined                                                                                                                                                                                                                                           no-undef
+  277:93   error    'interestRate' is not defined                                                                                                                                                                                                                                          no-undef
+  280:40   error    'interestRate' is not defined                                                                                                                                                                                                                                          no-undef
+  281:50   error    'setInterestRate' is not defined                                                                                                                                                                                                                                       no-undef
+  284:34   error    'rates' is not defined                                                                                                                                                                                                                                                 no-undef
+  301:38   error    'amount' is not defined                                                                                                                                                                                                                                                no-undef
+  301:46   error    'duration' is not defined                                                                                                                                                                                                                                              no-undef
+  301:56   error    'interestRate' is not defined                                                                                                                                                                                                                                          no-undef
+
+C:\Users\tesla\Videos\Nouvelle aventure\BanK\client\src\pages\Login.jsx
+  31:18  error  'err' is defined but never used  no-unused-vars
+
+C:\Users\tesla\Videos\Nouvelle aventure\BanK\client\src\pages\PrivacyPolicy.jsx
+  6:16  error  'i18n' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\tesla\Videos\Nouvelle aventure\BanK\client\src\pages\Register.jsx
+  384:38  error  'confirmPassword' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+  384:55  error  'termsAccepted' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u    no-unused-vars
+
+C:\Users\tesla\Videos\Nouvelle aventure\BanK\client\src\pages\Simulator.jsx
+  1:27  error  'useEffect' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\tesla\Videos\Nouvelle aventure\BanK\client\src\pages\dashboard\Accounts.jsx
+  253:18  error  'error' is defined but never used  no-unused-vars
+
+C:\Users\tesla\Videos\Nouvelle aventure\BanK\client\src\pages\dashboard\Beneficiaries.jsx
+   65:18  error    'err' is defined but never used                                                                         no-unused-vars
+   70:8   warning  React Hook useCallback has a missing dependency: 't'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+   78:22  error    'err' is defined but never used                                                                         no-unused-vars
+  333:28  error    'handleDelete' is defined but never used                                                                no-unused-vars
+  333:42  error    'handleQuickTransfer' is defined but never used                                                         no-unused-vars
+
+C:\Users\tesla\Videos\Nouvelle aventure\BanK\client\src\pages\dashboard\Credits.jsx
+    5:10  error  'notificationService' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+    6:10  error  'walletService' is defined but never used. Allowed unused vars must match /^[A-Z_]/u        no-unused-vars
+  139:18  error  'err' is defined but never used                                                             no-unused-vars
+
+C:\Users\tesla\Videos\Nouvelle aventure\BanK\client\src\pages\dashboard\Deposit.jsx
+  63:16  error    'i18n' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                               no-unused-vars
+  77:8   warning  React Hook useEffect has a missing dependency: 'selectedWallet'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\tesla\Videos\Nouvelle aventure\BanK\client\src\pages\dashboard\Documents.jsx
+    6:10  error  'ribService' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         no-unused-vars
+   11:13  error  'currentUser' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               no-unused-vars
+   60:18  error  'e' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             no-unused-vars
+  475:48  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  473 |     );
+  474 |
+> 475 |     return <KycVerificationBanner>{isMobile ? <MobileView /> : <DesktopView />}</KycVerificationBanner>;
+      |                                                ^^^^^^^^^^ This component is created during render
+  476 | };
+  477 |
+  478 | const styles = {
+
+  423 |
+  424 |     // --- MOBILE VIEW ---
+> 425 |     const MobileView = () => (
+      |                        ^^^^^^^
+> 426 |         <div style={styles.mobileContainer}>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 427 |             <div style={styles.mobileHeader}>
+      ÔÇª
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 472 |         </div>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 473 |     );
+      | ^^^^^^ The component is created during render here
+  474 |
+  475 |     return <KycVerificationBanner>{isMobile ? <MobileView /> : <DesktopView />}</KycVerificationBanner>;
+  476 | };  react-hooks/static-components
+  475:65  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  473 |     );
+  474 |
+> 475 |     return <KycVerificationBanner>{isMobile ? <MobileView /> : <DesktopView />}</KycVerificationBanner>;
+      |                                                                 ^^^^^^^^^^^ This component is created during render
+  476 | };
+  477 |
+  478 | const styles = {
+
+  301 |
+  302 |     // --- DESKTOP VIEW ---
+> 303 |     const DesktopView = () => (
+      |                         ^^^^^^^
+> 304 |         <div style={styles.container}>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 305 |             <header style={styles.header}>
+      ÔÇª
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 421 |         </div>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 422 |     );
+      | ^^^^^^ The component is created during render here
+  423 |
+  424 |     // --- MOBILE VIEW ---
+  425 |     const MobileView = () => (                                                          react-hooks/static-components
+
+C:\Users\tesla\Videos\Nouvelle aventure\BanK\client\src\pages\dashboard\History.jsx
+    7:13  error  'currentUser' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  no-unused-vars
+  230:26  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  228 |                             })}
+  229 |                         </div>
+> 230 |                         <PaginationControls />
+      |                          ^^^^^^^^^^^^^^^^^^ This component is created during render
+  231 |                     </>
+  232 |                 )}
+  233 |             </div>
+
+   86 |     const currentTransactions = transactions.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+   87 |
+>  88 |     const PaginationControls = () => {
+      |                                ^^^^^^^
+>  89 |         if (totalPages <= 1) return null;
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>  90 |         return (
+      ÔÇª
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 108 |         );
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 109 |     };
+      | ^^^^^^ The component is created during render here
+  110 |
+  111 |     if (loading && transactions.length === 0) return <div style={styles.loading}>{t('loading')}</div>;
+  112 |                                                                      react-hooks/static-components
+  357:18  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  355 |                 </table>
+  356 |                 {transactions.length === 0 && <div style={{ padding: '3rem', textAlign: 'center', color: '#888' }}>{t('history.empty')}</div>}
+> 357 |                 <PaginationControls />
+      |                  ^^^^^^^^^^^^^^^^^^ This component is created during render
+  358 |             </div>
+  359 |         </div>
+  360 |     );
+
+   86 |     const currentTransactions = transactions.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+   87 |
+>  88 |     const PaginationControls = () => {
+      |                                ^^^^^^^
+>  89 |         if (totalPages <= 1) return null;
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>  90 |         return (
+      ÔÇª
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 108 |         );
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 109 |     };
+      | ^^^^^^ The component is created during render here
+  110 |
+  111 |     if (loading && transactions.length === 0) return <div style={styles.loading}>{t('loading')}</div>;
+  112 |  react-hooks/static-components
+
+C:\Users\tesla\Videos\Nouvelle aventure\BanK\client\src\pages\dashboard\KycVerification.jsx
+  230:19  error  'step' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\tesla\Videos\Nouvelle aventure\BanK\client\src\pages\dashboard\Settings.jsx
+   67:13  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  65 |     useEffect(() => {
+  66 |         if (userData) {
+> 67 |             setEditData({
+     |             ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  68 |                 firstName: userData.firstName || '',
+  69 |                 lastName: userData.lastName || '',
+  70 |                 phone: userData.phone || '',  react-hooks/set-state-in-effect
+   92:8   warning  React Hook useEffect has missing dependencies: 'getLanguageCode' and 'updateUserData'. Either include them or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    react-hooks/exhaustive-deps
+   99:18  error    'err' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              no-unused-vars
+  154:18  error    'err' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              no-unused-vars
+
+C:\Users\tesla\Videos\Nouvelle aventure\BanK\client\src\pages\dashboard\Support.jsx
+  67:13  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  65 |             return () => unsubMessages();
+  66 |         } else {
+> 67 |             setMessages([]);
+     |             ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  68 |         }
+  69 |     }, [selectedTicket]);
+  70 |  react-hooks/set-state-in-effect
+  99:18  error  'err' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             no-unused-vars
+
+C:\Users\tesla\Videos\Nouvelle aventure\BanK\client\src\pages\dashboard\Transfers.jsx
+    5:10  error  'walletService' is defined but never used. Allowed unused vars must match /^[A-Z_]/u           no-unused-vars
+   16:16  error  'i18n' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u           no-unused-vars
+   52:11  error  'navigate' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u       no-unused-vars
+   77:12  error  'searchTerm' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u     no-unused-vars
+   77:24  error  'setSearchTerm' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+   90:12  error  'error' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u          no-unused-vars
+   90:19  error  'setError' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u       no-unused-vars
+  150:27  error  'result' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u         no-unused-vars
+
+C:\Users\tesla\Videos\Nouvelle aventure\BanK\client\src\services\emailService.js
+  2320:9  error  Duplicate key 'adminSEPATransfer'    no-dupe-keys
+  2350:9  error  Duplicate key 'adminDepositRequest'  no-dupe-keys
+
+C:\Users\tesla\Videos\Nouvelle aventure\BanK\client\src\services\emailService_BACKUP.js
+  1102:19  error  Parsing error: Unexpected token style
+
+C:\Users\tesla\Videos\Nouvelle aventure\BanK\client\src\services\transactionService.js
+  180:22  error  'e' is defined but never used                                                          no-unused-vars
+  305:27  error  'rLang' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+  312:25  error  'sData' is not defined                                                                 no-undef
+
+C:\Users\tesla\Videos\Nouvelle aventure\BanK\client\src\services\userService.js
+  9:5  error  'deleteDoc' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\tesla\Videos\Nouvelle aventure\BanK\client\src\services\walletService.js
+  8:5  error  'setDoc' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+Ô£û 94 problems (88 errors, 6 warnings)
+

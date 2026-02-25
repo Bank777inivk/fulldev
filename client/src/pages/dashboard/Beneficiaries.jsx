@@ -63,11 +63,12 @@ const Beneficiaries = () => {
             setShowForm(false);
             showToast(t('beneficiaries.toasts.add_success'), "success");
         } catch (err) {
+            console.error("Add beneficiary error:", err);
             showToast(t('beneficiaries.toasts.add_error'), "error");
         } finally {
             setSubmitting(false);
         }
-    }, [iban, name, bic, email, currentUser.uid, showToast]);
+    }, [iban, name, bic, email, currentUser.uid, showToast, t]);
 
     const handleDelete = useCallback(async (id) => {
         const confirmed = await showConfirm(t('beneficiaries.confirm_delete'));
@@ -76,6 +77,7 @@ const Beneficiaries = () => {
                 await beneficiaryService.deleteBeneficiary(currentUser.uid, id);
                 showToast(t('beneficiaries.toasts.delete_success'), "info");
             } catch (err) {
+                console.error("Delete beneficiary error:", err);
                 showToast(t('beneficiaries.toasts.delete_error'), "error");
             }
         }
@@ -459,6 +461,21 @@ const DesktopView = React.memo(({
                                                 </div>
                                             )}
                                         </div>
+                                    </div>
+                                    <div style={styles.desktopCardActions}>
+                                        <button
+                                            style={styles.desktopActionBtn}
+                                            onClick={() => handleQuickTransfer(b)}
+                                        >
+                                            <i className="fas fa-paper-plane"></i>
+                                            {t('beneficiaries.card.actions.transfer')}
+                                        </button>
+                                        <button
+                                            style={styles.desktopDeleteBtn}
+                                            onClick={() => handleDelete(b.id)}
+                                        >
+                                            <i className="fas fa-trash-alt"></i>
+                                        </button>
                                     </div>
                                 </div>
                             ))

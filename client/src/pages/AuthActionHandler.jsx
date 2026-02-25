@@ -13,8 +13,16 @@ const AuthActionHandler = () => {
     const { t, i18n } = useTranslation();
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
-    const [status, setStatus] = useState('processing');
-    const [messageKey, setMessageKey] = useState('auth.action_handler.processing');
+    const [status, setStatus] = useState(() => {
+        const m = searchParams.get('mode');
+        const c = searchParams.get('oobCode');
+        return (!m || !c) ? 'error' : 'processing';
+    });
+    const [messageKey, setMessageKey] = useState(() => {
+        const m = searchParams.get('mode');
+        const c = searchParams.get('oobCode');
+        return (!m || !c) ? 'auth.action_handler.invalid_link' : 'auth.action_handler.processing';
+    });
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
@@ -31,12 +39,45 @@ const AuthActionHandler = () => {
         }
     }, [searchParams, i18n]);
 
-    useEffect(() => {
-        if (!mode || !oobCode) {
+    const handleVerifyEmail = async (code) => {
+        try {
+            await applyActionCode(auth, code);
+            // Sign out the user immediately after verification as requested
+            await signOut(auth);
+            setStatus('success');
+            setMessageKey('auth.action_handler.verify_email.success');
+        } catch (err) {
+            console.error('Verify email error:', err);
             setStatus('error');
-            setMessageKey('auth.action_handler.invalid_link');
-            return;
+            setMessageKey('auth.action_handler.verify_email.error');
         }
+    };
+
+    const handleResetPassword = async (code) => {
+        try {
+            await verifyPasswordResetCode(auth, code);
+            setStatus('password-reset');
+        } catch (err) {
+            console.error('Reset password error:', err);
+            setStatus('error');
+            setMessageKey('auth.action_handler.reset_password.invalid');
+        }
+    };
+
+    const handleRecoverEmail = () => {
+        try {
+            // Logique de récupération d'email si nécessaire
+            setStatus('success');
+            setMessageKey('auth.action_handler.recover_email.success');
+        } catch (err) {
+            console.error('Recover email error:', err);
+            setStatus('error');
+            setMessageKey('auth.action_handler.recover_email.error');
+        }
+    };
+
+    useEffect(() => {
+        if (!mode || !oobCode) return;
 
         switch (mode) {
             case 'verifyEmail':
@@ -52,43 +93,8 @@ const AuthActionHandler = () => {
                 setStatus('error');
                 setMessageKey('auth.action_handler.unknown_action');
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mode, oobCode]);
-
-    const handleVerifyEmail = async (code) => {
-        try {
-            await applyActionCode(auth, code);
-            // Sign out the user immediately after verification as requested
-            await signOut(auth);
-            setStatus('success');
-            setMessageKey('auth.action_handler.verify_email.success');
-        } catch (error) {
-            console.error('Verify email error:', error);
-            setStatus('error');
-            setMessageKey('auth.action_handler.verify_email.error');
-        }
-    };
-
-    const handleResetPassword = async (code) => {
-        try {
-            await verifyPasswordResetCode(auth, code);
-            setStatus('password-reset');
-        } catch (error) {
-            console.error('Reset password error:', error);
-            setStatus('error');
-            setMessageKey('auth.action_handler.reset_password.invalid');
-        }
-    };
-
-    const handleRecoverEmail = async (code) => {
-        try {
-            // Logique de récupération d'email si nécessaire
-            setStatus('success');
-            setMessageKey('auth.action_handler.recover_email.success');
-        } catch (error) {
-            setStatus('error');
-            setMessageKey('auth.action_handler.recover_email.error');
-        }
-    };
 
     const onPasswordSubmit = async (e) => {
         e.preventDefault();

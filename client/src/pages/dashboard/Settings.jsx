@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTranslation } from 'react-i18next';
 import { settingsService } from '../../services/settingsService';
@@ -84,12 +84,10 @@ const Settings = () => {
             const currentLang = userData.language;
             if (currentLang && currentLang.length > 2) {
                 const langCode = getLanguageCode(currentLang);
-                updateUserData({ language: langCode }).catch(err =>
-                    console.warn('Failed to migrate language to code:', err)
-                );
+                updateUserData({ language: langCode }).catch(() => { });
             }
         }
-    }, [userData, i18n.language]);
+    }, [userData]); // Removed i18n.language to prevent unnecessary triggers
 
     const handleSave = async () => {
         try {
@@ -97,6 +95,7 @@ const Settings = () => {
             setStatus({ type: 'success', text: t('settings.messages.success') });
             setTimeout(() => setStatus({ type: '', text: '' }), 5000);
         } catch (err) {
+            console.error("Settings save error:", err);
             setStatus({ type: 'error', text: t('settings.messages.error') });
         }
     };

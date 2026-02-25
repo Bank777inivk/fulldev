@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation, Navigate, Outlet, useParams } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, Outlet, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -64,11 +64,12 @@ const PublicLayout = ({ children }) => {
 
 
 
+const validLangs = ['fr', 'en', 'es', 'it', 'pt', 'de'];
+
 // Helper to sync URL lang with i18n
 const LanguageWrapper = () => {
   const { lang } = useParams();
   const { i18n } = useTranslation();
-  const validLangs = ['fr', 'en', 'es', 'it', 'pt', 'de'];
 
   useEffect(() => {
     if (validLangs.includes(lang)) {
@@ -86,8 +87,6 @@ const LanguageWrapper = () => {
 };
 
 function AppRoutes() {
-  const location = useLocation();
-  // const isDashboard = location.pathname.startsWith('/dashboard'); // Logic might need update if dashboard is inside :lang
 
   return (
     <Routes>

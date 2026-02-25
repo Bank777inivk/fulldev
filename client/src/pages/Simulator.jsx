@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNotifications } from '../contexts/NotificationContext';
 import { loanService } from '../services/loanService';
 import { useTranslation } from 'react-i18next';
@@ -10,27 +10,22 @@ const Simulator = () => {
     const [amount, setAmount] = useState(10000);
     const [duration, setDuration] = useState(24);
     const [email, setEmail] = useState('');
-    const [interestRate, setInterestRate] = useState(3.0);
-    const [monthlyPayment, setMonthlyPayment] = useState(0);
-    const [totalCost, setTotalCost] = useState(0);
-
-    // Calculate rate based on amount tiers
-    useEffect(() => {
+    const interestRate = React.useMemo(() => {
         let rate = 3.5;
         if (amount > 50000) rate = 2.0;
         else if (amount > 20000) rate = 2.5;
         else if (amount > 5000) rate = 3.0;
-
-        setInterestRate(rate);
+        return rate;
     }, [amount]);
 
-    // Calculate monthly payment and total
-    useEffect(() => {
+    const monthlyPayment = React.useMemo(() => {
         const monthlyRate = interestRate / 100 / 12;
-        const payment = (amount * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -duration));
-        setMonthlyPayment(payment);
-        setTotalCost(payment * duration);
+        return (amount * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -duration));
     }, [amount, duration, interestRate]);
+
+    const totalCost = React.useMemo(() => {
+        return monthlyPayment * duration;
+    }, [monthlyPayment, duration]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -50,6 +45,15 @@ const Simulator = () => {
             };
 
             await loanService.createLead(leadData);
+
+            // Google Ads Conversion tracking
+            if (window.gtag) {
+                window.gtag('event', 'conversion', {
+                    'send_to': 'AW-17959732906',
+                    'event_callback': () => console.log('Simulator lead conversion sent')
+                });
+            }
+
             showToast(t('simulator_page.success', { email }), 'success');
         } catch (error) {
             console.error("Simulator lead error:", error);

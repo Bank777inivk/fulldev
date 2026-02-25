@@ -5,7 +5,6 @@ import {
     query,
     where,
     onSnapshot,
-    orderBy,
     doc
 } from 'firebase/firestore';
 import { useAuth } from './AuthContext';
@@ -14,35 +13,45 @@ const DataContext = createContext();
 
 export const useData = () => useContext(DataContext);
 
+const initialState = {
+    wallets: [],
+    transactions: [],
+    kycStatus: null,
+    beneficiaries: [],
+    cards: [],
+    cardRequests: [],
+    loans: [],
+    ribs: [],
+    accountRequests: [],
+    loading: true
+};
+
+function dataReducer(state, action) {
+    switch (action.type) {
+        case 'SET_DATA':
+            return { ...state, [action.field]: action.value, loading: action.field === 'wallets' ? false : state.loading };
+        case 'SET_MULTIPLE':
+            return { ...state, ...action.payload };
+        case 'RESET':
+            return { ...initialState, loading: false };
+        case 'SET_LOADING':
+            return { ...state, loading: action.value };
+        default:
+            return state;
+    }
+}
+
 export const DataProvider = ({ children }) => {
     const { currentUser } = useAuth();
-    const [wallets, setWallets] = useState([]);
-    const [transactions, setTransactions] = useState([]);
-    const [kycStatus, setKycStatus] = useState(null);
-    const [beneficiaries, setBeneficiaries] = useState([]);
-    const [cards, setCards] = useState([]);
-    const [cardRequests, setCardRequests] = useState([]);
-    const [loans, setLoans] = useState([]);
-    const [ribs, setRibs] = useState([]);
-    const [accountRequests, setAccountRequests] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [state, dispatch] = React.useReducer(dataReducer, initialState);
 
     useEffect(() => {
         if (!currentUser) {
-            setWallets([]);
-            setTransactions([]);
-            setKycStatus(null);
-            setBeneficiaries([]);
-            setCards([]);
-            setCardRequests([]);
-            setLoans([]);
-            setRibs([]);
-            setAccountRequests([]);
-            setLoading(false);
+            dispatch({ type: 'RESET' });
             return;
         }
 
-        setLoading(true);
+        dispatch({ type: 'SET_LOADING', value: true });
 
         // Listen for Wallets
         const qWallets = query(
@@ -55,11 +64,10 @@ export const DataProvider = ({ children }) => {
                 id: doc.id,
                 ...doc.data()
             }));
-            setWallets(walletData);
-            setLoading(false);
+            dispatch({ type: 'SET_DATA', field: 'wallets', value: walletData });
         }, (error) => {
             console.error("Error listening to wallets:", error);
-            setLoading(false);
+            dispatch({ type: 'SET_LOADING', value: false });
         });
 
         // Listen for Transactions
@@ -73,20 +81,19 @@ export const DataProvider = ({ children }) => {
                 id: doc.id,
                 ...doc.data()
             }));
-            // Sort client-side to avoid index requirements
             const sortedTx = txData.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
-            setTransactions(sortedTx);
+            dispatch({ type: 'SET_DATA', field: 'transactions', value: sortedTx });
         });
 
         // Listen for KYC Status
         const unsubscribeKyc = onSnapshot(doc(db, 'kyc', currentUser.uid), (snapshot) => {
             if (snapshot.exists()) {
-                setKycStatus({ id: snapshot.id, ...snapshot.data() });
+                dispatch({ type: 'SET_DATA', field: 'kycStatus', value: { id: snapshot.id, ...snapshot.data() } });
             } else {
-                setKycStatus({ status: 'not_started' });
+                dispatch({ type: 'SET_DATA', field: 'kycStatus', value: { status: 'not_started' } });
             }
-        }, (error) => {
-            console.error("Error listening to KYC:", error);
+        }, (err) => {
+            console.error("Error listening to KYC:", err);
         });
 
         // Listen for Beneficiaries (Sub-collection)
@@ -99,11 +106,10 @@ export const DataProvider = ({ children }) => {
                 id: doc.id,
                 ...doc.data()
             }));
-            // Sort client-side
             const sortedBen = benData.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
-            setBeneficiaries(sortedBen);
-        }, (error) => {
-            console.error("Error listening to beneficiaries:", error);
+            dispatch({ type: 'SET_DATA', field: 'beneficiaries', value: sortedBen });
+        }, (err) => {
+            console.error("Error listening to beneficiaries:", err);
         });
 
         // Listen for Cards
@@ -117,9 +123,9 @@ export const DataProvider = ({ children }) => {
                 id: doc.id,
                 ...doc.data()
             }));
-            setCards(cardData);
-        }, (error) => {
-            console.error("Error listening to cards:", error);
+            dispatch({ type: 'SET_DATA', field: 'cards', value: cardData });
+        }, (err) => {
+            console.error("Error listening to cards:", err);
         });
 
         // Listen for Card Requests
@@ -133,9 +139,9 @@ export const DataProvider = ({ children }) => {
                 id: doc.id,
                 ...doc.data()
             }));
-            setCardRequests(reqData);
-        }, (error) => {
-            console.error("Error listening to card requests:", error);
+            dispatch({ type: 'SET_DATA', field: 'cardRequests', value: reqData });
+        }, (err) => {
+            console.error("Error listening to card requests:", err);
         });
 
         // Listen for Loans
@@ -149,11 +155,10 @@ export const DataProvider = ({ children }) => {
                 id: doc.id,
                 ...doc.data()
             }));
-            // Sort client-side to avoid index requirements
             const sortedLoans = loanData.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
-            setLoans(sortedLoans);
-        }, (error) => {
-            console.error("Error listening to loans:", error);
+            dispatch({ type: 'SET_DATA', field: 'loans', value: sortedLoans });
+        }, (err) => {
+            console.error("Error listening to loans:", err);
         });
 
         // Listen for RIBs
@@ -167,9 +172,9 @@ export const DataProvider = ({ children }) => {
                 id: doc.id,
                 ...doc.data()
             }));
-            setRibs(ribData);
-        }, (error) => {
-            console.error("Error listening to RIBs:", error);
+            dispatch({ type: 'SET_DATA', field: 'ribs', value: ribData });
+        }, (err) => {
+            console.error("Error listening to RIBs:", err);
         });
 
         // Listen for Account Requests
@@ -183,7 +188,7 @@ export const DataProvider = ({ children }) => {
                 id: doc.id,
                 ...doc.data()
             }));
-            setAccountRequests(reqData);
+            dispatch({ type: 'SET_DATA', field: 'accountRequests', value: reqData });
         });
 
         return () => {
@@ -200,20 +205,11 @@ export const DataProvider = ({ children }) => {
     }, [currentUser]);
 
     const value = {
-        wallets,
-        transactions,
-        kycStatus,
-        beneficiaries,
-        cards,
-        cardRequests,
-        loans,
-        ribs,
-        accountRequests,
-        loading,
+        ...state,
         // Helper getters
-        getMainWallet: () => wallets.find(w => w.type === 'main'),
-        getSavingsWallet: () => wallets.find(w => w.type === 'savings'),
-        getTransactionsByType: (types) => transactions.filter(t =>
+        getMainWallet: () => state.wallets.find(w => w.type === 'main'),
+        getSavingsWallet: () => state.wallets.find(w => w.type === 'savings'),
+        getTransactionsByType: (types) => state.transactions.filter(t =>
             Array.isArray(types) ? types.includes(t.type) : t.type === types
         )
     };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
@@ -7,9 +7,9 @@ const Home = () => {
     const currentLang = i18n.language;
     const [currentSlide, setCurrentSlide] = useState(0);
 
-    const getPath = (path) => `/${currentLang}${path}`;
+    const getPath = useCallback((path) => `/${currentLang}${path}`, [currentLang]);
 
-    const slides = [
+    const slides = useMemo(() => [
         {
             image: '/banner-6.jpg',
             title: t('home.slides.0.title'),
@@ -30,25 +30,19 @@ const Home = () => {
             title: t('home.slides.0.title'), // Reusing slide 0 text for banner 9 as in original
             subtitle: t('home.slides.0.subtitle')
         }
-    ];
+    ], [t]);
 
-    // --- Simulator State & Logic ---
-    const [amount, setAmount] = useState(150000);
+    const [amount, setAmount] = useState(100000);
     const [duration, setDuration] = useState(120);
-    const [interestRate, setInterestRate] = useState(2.99);
-    const [monthlyPayment, setMonthlyPayment] = useState(0);
+    const [interestRate, setInterestRate] = useState(2.5);
+    const rates = [1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0];
 
-    const rates = [
-        1.99, 2.50, 2.99, 3.50, 3.99, 4.50, 4.99, 5.50, 5.99, 6.50, 7.00
-    ];
-
-    useEffect(() => {
+    const monthlyPayment = React.useMemo(() => {
         const monthlyRate = interestRate / 100 / 12;
-        const payment = (amount * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -duration));
-        setMonthlyPayment(payment);
+        return (amount * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -duration));
     }, [amount, duration, interestRate]);
 
-    const services = [
+    const services = useMemo(() => [
         {
             title: t('home.services.items.current_account.title'),
             icon: "💳",
@@ -94,7 +88,7 @@ const Home = () => {
             icon: "🛡️",
             features: t('home.services.items.insurance.features', { returnObjects: true })
         }
-    ];
+    ], [t]);
 
     // Note: Testimonials are kept static for now as they are specific people, but could be translated if needed.
     // Testimonials images mapping (order must match translation file)
@@ -117,10 +111,12 @@ const Home = () => {
     const testimonialData = t('home.testimonials.items', { returnObjects: true });
 
     // Merge translations with images
-    const testimonials = Array.isArray(testimonialData) ? testimonialData.map((item, index) => ({
-        ...item,
-        image: testimonialImages[index] || "/avatar-male.png"
-    })) : [];
+    const testimonials = useMemo(() => {
+        return Array.isArray(testimonialData) ? testimonialData.map((item, index) => ({
+            ...item,
+            image: testimonialImages[index] || "/avatar-male.png"
+        })) : [];
+    }, [testimonialData, testimonialImages]);
 
     useEffect(() => {
         const timer = setInterval(() => {

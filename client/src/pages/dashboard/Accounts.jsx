@@ -9,7 +9,7 @@ import { ribService } from '../../services/ribService';
 import KycVerificationBanner from '../../components/dashboard/KycVerificationBanner';
 import { useTranslation } from 'react-i18next';
 
-const RibModal = ({ isOpen, onClose, rib, wallet, showToast }) => {
+const RibModal = ({ isOpen, onClose, rib, showToast }) => {
     const { t } = useTranslation();
     if (!isOpen || !rib) return null;
 
@@ -190,7 +190,7 @@ const Accounts = () => {
     const { wallets, accountRequests, ribs, loading } = useData();
     const { showToast } = useNotifications();
     const navigate = useNavigate();
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
 
     const [selectedRib, setSelectedRib] = useState(null);
     const [isRibModalOpen, setIsRibModalOpen] = useState(false);
@@ -236,7 +236,7 @@ const Accounts = () => {
             const hasPending = (accountRequests || []).some(r => r.type === t.value && r.status === 'pending');
             return !hasWallet && !hasPending;
         });
-    }, [wallets, accountRequests]);
+    }, [wallets, accountRequests, t]);
 
     const canRequest = availableTypes.length > 0;
 

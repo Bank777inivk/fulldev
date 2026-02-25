@@ -38,6 +38,14 @@ const Contact = () => {
 
             await contactService.submitContactForm(submissionData);
 
+            // Google Ads Conversion tracking
+            if (window.gtag) {
+                window.gtag('event', 'conversion', {
+                    'send_to': 'AW-17959732906',
+                    'event_callback': () => console.log('Contact conversion sent')
+                });
+            }
+
             // Send Emails
             try {
                 const { default: emailService } = await import('../services/emailService');
