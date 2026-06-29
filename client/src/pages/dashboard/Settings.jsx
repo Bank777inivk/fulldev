@@ -54,7 +54,7 @@ const Settings = () => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    useEffect(() => {
+    React.useEffect(() => {
         const unsubscribe = settingsService.subscribeToGlobalSettings((settings) => {
             setGlobalSettings(settings);
         });
@@ -62,8 +62,9 @@ const Settings = () => {
     }, []);
 
     // Sync userData to local editData state when it loads
-    useEffect(() => {
+    React.useEffect(() => {
         if (userData) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setEditData({
                 firstName: userData.firstName || '',
                 lastName: userData.lastName || '',

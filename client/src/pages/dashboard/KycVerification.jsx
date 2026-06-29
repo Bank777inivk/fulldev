@@ -56,7 +56,7 @@ const TypeSelector = ({ id, options, label, value, onChange, disabled }) => {
     );
 };
 
-const UploadBox = ({ label, id, icon, description, hint, preview, uploading, onFileChange, guideImage, onViewGuide }) => {
+const UploadBox = ({ label, id, icon, description, hint, preview, uploading, onFileChange, guideImage, onViewGuide, accept }) => {
     const isImage = preview && preview.startsWith('data:image');
     const { t } = useTranslation();
 
@@ -87,6 +87,7 @@ const UploadBox = ({ label, id, icon, description, hint, preview, uploading, onF
                     onChange={(e) => onFileChange(e, id)}
                     style={styles.fileInput}
                     disabled={uploading}
+                    accept={accept}
                 />
             </div>
             {guideImage && (
@@ -213,6 +214,9 @@ const KycVerification = () => {
         }
 
         const requiredFiles = ['id1Front', 'selfie', 'selfieWithId', 'addressProof'];
+        if (docTypes.id1 !== 'passport') {
+            requiredFiles.push('id1Back');
+        }
         const missingFiles = requiredFiles.filter(key => !files[key]);
         const missingTypes = ['address'].filter(key => !docTypes[key]);
 
@@ -324,6 +328,7 @@ const KycVerification = () => {
                                 onFileChange={handleFileChange}
                                 guideImage="/kyc  (2).jpeg"
                                 onViewGuide={setSelectedGuide}
+                                accept="image/png, image/jpeg, image/jpg"
                             />
                             {docTypes.id1 !== 'passport' && (
                                 <UploadBox
@@ -334,6 +339,7 @@ const KycVerification = () => {
                                     preview={previews.id1Back}
                                     uploading={uploading}
                                     onFileChange={handleFileChange}
+                                    accept="image/png, image/jpeg, image/jpg"
                                 />
                             )}
                         </div>
@@ -357,6 +363,7 @@ const KycVerification = () => {
                             preview={previews.selfie}
                             uploading={uploading}
                             onFileChange={handleFileChange}
+                            accept="image/png, image/jpeg, image/jpg"
                         />
                         <UploadBox
                             id="selfieWithId"
@@ -369,6 +376,7 @@ const KycVerification = () => {
                             onFileChange={handleFileChange}
                             guideImage="/kyc  (4).jpeg"
                             onViewGuide={setSelectedGuide}
+                            accept="image/png, image/jpeg, image/jpg"
                         />
                     </div>
                 </Section>
@@ -395,6 +403,7 @@ const KycVerification = () => {
                             preview={previews.addressProof}
                             uploading={uploading}
                             onFileChange={handleFileChange}
+                            accept="image/png, image/jpeg, image/jpg, application/pdf"
                         />
                     )}
                 </Section>

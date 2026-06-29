@@ -28,7 +28,7 @@ import CreditRequest from './pages/CreditRequest';
 import CreditRequestMobile from './pages/CreditRequestMobile';
 import About from './pages/About';
 import Reviews from './pages/Reviews';
-import PrivacyPolicy from './pages/PrivacyPolicy';
+import PrivacyPolicy from './pages/Privacy';
 import CGU from './pages/CGU';
 import MentionsLegales from './pages/MentionsLegales';
 import ProtectedRoute from './components/ProtectedRoute';
