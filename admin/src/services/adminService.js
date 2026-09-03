@@ -261,8 +261,6 @@ export const adminService = {
 
                 // Only proceed if status is actually changing
                 if (oldStatus === status) return;
-                if (oldStatus === 'completed') throw new Error("Cette transaction est déjà finalisée.");
-
                 // --- 1. COLLECT ALL READS FIRST ---
                 let walletSnap = null;
                 let userSnap = null;
@@ -271,13 +269,13 @@ export const adminService = {
 
                 // Identify relevant wallet
                 let walletId = txData.fromWalletId || txData.toWalletId || txData.walletId;
-                if (!walletId && targetUserId && status === 'completed') {
+                if (!walletId && targetUserId && (status === 'completed' || oldStatus === 'completed')) {
                     const walletsQuery = query(collection(db, 'wallets'), where('userId', '==', targetUserId), where('type', '==', 'main'));
                     const walletsSnap = await getDocs(walletsQuery);
                     if (!walletsSnap.empty) walletId = walletsSnap.docs[0].id;
                 }
 
-                if (walletId && status === 'completed') {
+                if (walletId && (status === 'completed' || oldStatus === 'completed')) {
                     walletRef = doc(db, 'wallets', walletId);
                     walletSnap = await transaction.get(walletRef);
                 }
@@ -295,9 +293,14 @@ export const adminService = {
                 let balanceDelta = 0;
 
                 // Transaction becomes COMPLETED (Impact balance normally)
-                if (status === 'completed') {
+                if (status === 'completed' && oldStatus !== 'completed') {
                     if (isDebit) balanceDelta = -amount;
                     else if (isCredit) balanceDelta = +amount;
+                }
+                // Transaction is REVERTED from COMPLETED (Reverse balance)
+                else if (oldStatus === 'completed' && status !== 'completed') {
+                    if (isDebit) balanceDelta = +amount;
+                    else if (isCredit) balanceDelta = -amount;
                 }
 
                 // --- 3. PERFORM ALL WRITES ---
@@ -707,48 +710,51 @@ export const adminService = {
     },
 
     // Create a deposit with transaction logging and client notification
-    createAdminDeposit: async (userId, walletId, amount, newBalance) => {
+    createAdminDeposit: async (userId, walletId, amount, newBalance, customDescription) => {
         try {
             await runTransaction(db, async (transaction) => {
                 const walletRef = doc(db, 'wallets', walletId);
                 const userRef = doc(db, 'users', userId);
 
-                // 1. Update Wallet Balance
+                // --- 1. READS (Must come before writes) ---
+                let walletData = null;
+                let userData = null;
+                if (amount > 0) {
+                    const walletDoc = await transaction.get(walletRef);
+                    const userDoc = await transaction.get(userRef);
+                    walletData = walletDoc.data();
+                    userData = userDoc.data();
+                }
+
+                // --- 2. WRITES ---
+                // Update Wallet Balance
                 transaction.update(walletRef, {
                     balance: Number(newBalance),
                     updatedAt: serverTimestamp()
                 });
 
-                // 2. Update User Global Balance (source of truth for some views)
+                // Update User Global Balance (source of truth for some views)
                 transaction.update(userRef, {
                     balance: Number(newBalance),
                     updatedAt: serverTimestamp()
                 });
 
-                // 3. Create Transaction Record
+                // Create Transaction Record
                 const txRef = doc(collection(db, 'transactions'));
+                const txDescription = customDescription || (amount >= 0 ? 'Dépôt INVIK BANK' : 'Ajustement de solde Admin');
                 transaction.set(txRef, {
                     userId,
                     walletId,
                     type: amount >= 0 ? 'credit' : 'debit',
                     amount: Math.abs(amount),
                     status: 'completed',
-                    description: amount >= 0 ? 'Dépôt INVIK BANK' : 'Ajustement de solde Admin',
+                    description: txDescription,
                     createdAt: serverTimestamp(),
                     updatedAt: serverTimestamp()
                 });
 
-
-
-                // 4. Create Notification for the client
-                if (amount > 0) {
-                    // Fetch wallet and user data within transaction
-                    const walletDoc = await transaction.get(walletRef);
-                    const userDoc = await transaction.get(userRef);
-
-                    const walletData = walletDoc.data();
-                    const userData = userDoc.data();
-
+                // Create Notification for the client
+                if (amount > 0 && walletData && userData) {
                     const txCurrency = walletData.currency === '€' ? 'EUR' : (walletData.currency || 'EUR');
 
                     // Localized Notification Logic (Fallback for Admin Dashboard)

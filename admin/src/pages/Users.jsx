@@ -375,6 +375,15 @@ const Users = () => {
         const matchesStatus = filterStatus === 'all' || user.accountStatus === filterStatus;
 
         return matchesSearch && matchesStatus;
+    }).sort((a, b) => {
+        const getMillis = (dateObj) => {
+            if (!dateObj) return 0;
+            if (dateObj.toMillis) return dateObj.toMillis();
+            if (dateObj.seconds) return dateObj.seconds * 1000;
+            const time = new Date(dateObj).getTime();
+            return isNaN(time) ? 0 : time;
+        };
+        return getMillis(b.createdAt) - getMillis(a.createdAt);
     });
 
     // Pagination Logic

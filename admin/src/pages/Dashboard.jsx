@@ -324,7 +324,7 @@ const Dashboard = () => {
                         <button style={styles.actionBtn}><i className="fas fa-ellipsis-h"></i></button>
                     </div>
                     <div style={{ width: '100%', height: 300 }}>
-                        <ResponsiveContainer minWidth={0}>
+                        <ResponsiveContainer minWidth={0} minHeight={0}>
                             <AreaChart data={chartData}>
                                 <defs>
                                     <linearGradient id="colorTrans" x1="0" y1="0" x2="0" y2="1">
@@ -350,7 +350,7 @@ const Dashboard = () => {
                         <button style={styles.actionBtn}><i className="fas fa-ellipsis-h"></i></button>
                     </div>
                     <div style={{ width: '100%', height: 300 }}>
-                        <ResponsiveContainer minWidth={0}>
+                        <ResponsiveContainer minWidth={0} minHeight={0}>
                             <BarChart data={chartData}>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8' }} />

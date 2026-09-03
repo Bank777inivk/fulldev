@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { adminService } from '../services/adminService';
+import TransactionModal from '../components/TransactionModal';
 
 const WalletManagement = () => {
     const [users, setUsers] = useState({});
@@ -8,6 +9,13 @@ const WalletManagement = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [filterStatus, setFilterStatus] = useState('all');
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [selectedTransactionConfig, setSelectedTransactionConfig] = useState(null); // { user, wallet }
+    const ITEMS_PER_PAGE = 5;
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchTerm, filterStatus]);
 
     useEffect(() => {
         const handleResize = () => setIsMobile(window.innerWidth <= 1024);
@@ -28,19 +36,21 @@ const WalletManagement = () => {
         return () => { unsubscribeUsers(); unsubscribeWallets(); };
     }, []);
 
-    const handleUpdateBalance = async (userId, walletId, currentBalance) => {
-        const newBalanceInput = window.prompt("Nouveau solde (€) :", currentBalance);
-        if (newBalanceInput === null || isNaN(newBalanceInput)) return;
+    const handleUpdateBalance = (user, wallet) => {
+        setSelectedTransactionConfig({ user, wallet });
+    };
 
-        const newBalance = Number(newBalanceInput);
-        const amount = newBalance - Number(currentBalance);
-
+    const handleTransactionSubmit = async (txData) => {
         try {
-            await adminService.createAdminDeposit(userId, walletId, amount, newBalance);
-            alert('Solde mis à jour avec succès');
-        } catch (e) {
-            console.error(e);
-            alert('Erreur lors de la mise à jour du solde');
+            await adminService.createAdminDeposit(
+                txData.userId, 
+                txData.walletId, 
+                txData.amount, 
+                txData.newBalance,
+                txData.description
+            );
+        } catch (error) {
+            throw error; // Re-thrown to be caught by the modal
         }
     };
 
@@ -84,6 +94,20 @@ const WalletManagement = () => {
         return acc;
     }, {});
 
+    const sortedUserEntries = Object.entries(walletsByUser).sort((a, b) => {
+        const getMillis = (data) => {
+            if (data.user?.createdAt?.toMillis) return data.user.createdAt.toMillis();
+            if (data.user?.createdAt?.seconds) return data.user.createdAt.seconds * 1000;
+            if (data.wallets?.[0]?.createdAt?.toMillis) return data.wallets[0].createdAt.toMillis();
+            if (data.wallets?.[0]?.createdAt?.seconds) return data.wallets[0].createdAt.seconds * 1000;
+            return 0;
+        };
+        return getMillis(b[1]) - getMillis(a[1]);
+    });
+
+    const totalPages = Math.ceil(sortedUserEntries.length / ITEMS_PER_PAGE);
+    const currentEntries = sortedUserEntries.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+
     // --- MOBILE VIEW ---
     const MobileView = () => (
         <div style={{ padding: '0.75rem' }} className="animate-fade-in">
@@ -111,7 +135,7 @@ const WalletManagement = () => {
             </header>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                {Object.entries(walletsByUser).map(([userId, data]) => (
+                {currentEntries.map(([userId, data]) => (
                     <div key={userId} style={{ background: 'white', borderRadius: '24px', padding: '1rem', border: '1px solid #f1f5f9', boxShadow: '0 4px 12px rgba(0,0,0,0.02)' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.2rem', paddingBottom: '1rem', borderBottom: '1px solid #f8fafc' }}>
                             <div style={{ ...styles.avatar, width: '45px', height: '45px', fontSize: '1.1rem' }}>
@@ -128,8 +152,8 @@ const WalletManagement = () => {
                                 <div key={wallet.id} style={{ ...styles.walletCard, padding: '1rem' }}>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                                         <span style={styles.walletType}>{wallet.type?.toUpperCase()}</span>
-                                        <div style={{ ...styles.statusBadge, backgroundColor: wallet.status === 'active' ? '#dcfce7' : '#fee2e2', color: wallet.status === 'active' ? '#15803d' : '#b91c1c' }}>
-                                            {wallet.status === 'active' ? 'ACTIF' : 'BLOQUÉ'}
+                                        <div style={{ ...styles.statusBadge, backgroundColor: wallet.status === 'blocked' ? '#fee2e2' : '#dcfce7', color: wallet.status === 'blocked' ? '#b91c1c' : '#15803d' }}>
+                                            {wallet.status === 'blocked' ? 'BLOQUÉ' : 'ACTIF'}
                                         </div>
                                     </div>
 
@@ -156,7 +180,7 @@ const WalletManagement = () => {
 
                                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                                         <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                            <button onClick={() => handleUpdateBalance(wallet.userId, wallet.id, wallet.balance)} style={{ ...styles.actionBtn, padding: '12px' }}>
+                                            <button onClick={() => handleUpdateBalance(data.user, wallet)} style={{ ...styles.actionBtn, padding: '12px' }}>
                                                 <i className="fas fa-coins"></i> SOLDE
                                             </button>
                                             <button onClick={() => handleEditDetails(wallet)} style={{ ...styles.actionBtn, padding: '12px' }}>
@@ -164,11 +188,11 @@ const WalletManagement = () => {
                                             </button>
                                         </div>
                                         <button
-                                            onClick={() => handleToggleStatus(wallet.id, wallet.status)}
-                                            style={{ ...styles.actionBtn, padding: '12px', color: wallet.status === 'active' ? '#ef4444' : '#10b981', borderColor: wallet.status === 'active' ? '#ef4444' : '#10b981' }}
+                                            onClick={() => handleToggleStatus(wallet.id, wallet.status || 'active')}
+                                            style={{ ...styles.actionBtn, padding: '12px', color: wallet.status !== 'blocked' ? '#ef4444' : '#10b981', borderColor: wallet.status !== 'blocked' ? '#ef4444' : '#10b981' }}
                                         >
-                                            <i className={wallet.status === 'active' ? 'fas fa-lock' : 'fas fa-lock-open'}></i>
-                                            {wallet.status === 'active' ? 'BLOQUER LE COMPTE' : 'DÉBLOQUER LE COMPTE'}
+                                            <i className={wallet.status !== 'blocked' ? 'fas fa-lock' : 'fas fa-lock-open'}></i>
+                                            {wallet.status !== 'blocked' ? 'BLOQUER LE COMPTE' : 'DÉBLOQUER LE COMPTE'}
                                         </button>
                                         <button
                                             onClick={() => handleDeleteWallet(wallet.id)}
@@ -183,6 +207,26 @@ const WalletManagement = () => {
                     </div>
                 ))}
             </div>
+
+            {totalPages > 1 && (
+                <div style={styles.pagination}>
+                    <button 
+                        onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                        disabled={currentPage === 1}
+                        style={{ ...styles.pageBtn, opacity: currentPage === 1 ? 0.5 : 1 }}
+                    >
+                        Précédent
+                    </button>
+                    <span style={styles.pageInfo}>Page {currentPage} sur {totalPages}</span>
+                    <button 
+                        onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                        disabled={currentPage === totalPages}
+                        style={{ ...styles.pageBtn, opacity: currentPage === totalPages ? 0.5 : 1 }}
+                    >
+                        Suivant
+                    </button>
+                </div>
+            )}
 
             {Object.keys(walletsByUser).length === 0 && (
                 <div style={{ ...styles.emptyState, padding: '3rem 1rem' }}>
@@ -222,7 +266,7 @@ const WalletManagement = () => {
             </header>
 
             <div style={styles.userList}>
-                {Object.entries(walletsByUser).map(([userId, data]) => (
+                {currentEntries.map(([userId, data]) => (
                     <div key={userId} style={styles.userBlock}>
                         <div style={styles.userInfoHeader}>
                             <div style={styles.avatar}>
@@ -239,8 +283,8 @@ const WalletManagement = () => {
                                 <div key={wallet.id} style={styles.walletCard}>
                                     <div style={styles.walletHeader}>
                                         <span style={styles.walletType}>{wallet.type?.toUpperCase() || 'COMPTE'}</span>
-                                        <div style={{ ...styles.statusBadge, backgroundColor: wallet.status === 'active' ? '#dcfce7' : '#fee2e2', color: wallet.status === 'active' ? '#15803d' : '#b91c1c' }}>
-                                            {wallet.status === 'active' ? 'ACTIF' : 'BLOQUÉ'}
+                                        <div style={{ ...styles.statusBadge, backgroundColor: wallet.status === 'blocked' ? '#fee2e2' : '#dcfce7', color: wallet.status === 'blocked' ? '#b91c1c' : '#15803d' }}>
+                                            {wallet.status === 'blocked' ? 'BLOQUÉ' : 'ACTIF'}
                                         </div>
                                     </div>
                                     <div style={styles.balanceSection}>
@@ -263,9 +307,9 @@ const WalletManagement = () => {
                                         </div>
                                     </div>
                                     <div style={styles.actions}>
-                                        <button onClick={() => handleUpdateBalance(wallet.userId, wallet.id, wallet.balance)} style={styles.actionBtn}><i className="fas fa-coins"></i> Solde</button>
+                                        <button onClick={() => handleUpdateBalance(data.user, wallet)} style={styles.actionBtn}><i className="fas fa-coins"></i> Solde</button>
                                         <button onClick={() => handleEditDetails(wallet)} style={styles.actionBtn}><i className="fas fa-edit"></i> RIB</button>
-                                        <button onClick={() => handleToggleStatus(wallet.id, wallet.status)} style={{ ...styles.actionBtn, color: wallet.status === 'active' ? '#ef4444' : '#10b981' }}><i className={wallet.status === 'active' ? 'fas fa-lock' : 'fas fa-lock-open'}></i> {wallet.status === 'active' ? 'Bloquer' : 'Débloquer'}</button>
+                                        <button onClick={() => handleToggleStatus(wallet.id, wallet.status || 'active')} style={{ ...styles.actionBtn, color: wallet.status !== 'blocked' ? '#ef4444' : '#10b981' }}><i className={wallet.status !== 'blocked' ? 'fas fa-lock' : 'fas fa-lock-open'}></i> {wallet.status !== 'blocked' ? 'Bloquer' : 'Débloquer'}</button>
                                         <button onClick={() => handleDeleteWallet(wallet.id)} style={{ ...styles.actionBtn, color: '#991b1b', background: '#fee2e2', borderColor: '#fecaca' }}><i className="fas fa-trash"></i></button>
                                     </div>
                                 </div>
@@ -274,12 +318,44 @@ const WalletManagement = () => {
                     </div>
                 ))}
             </div>
+
+            {totalPages > 1 && (
+                <div style={styles.pagination}>
+                    <button 
+                        onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                        disabled={currentPage === 1}
+                        style={{ ...styles.pageBtn, opacity: currentPage === 1 ? 0.5 : 1 }}
+                    >
+                        Précédent
+                    </button>
+                    <span style={styles.pageInfo}>Page {currentPage} sur {totalPages}</span>
+                    <button 
+                        onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                        disabled={currentPage === totalPages}
+                        style={{ ...styles.pageBtn, opacity: currentPage === totalPages ? 0.5 : 1 }}
+                    >
+                        Suivant
+                    </button>
+                </div>
+            )}
         </div>
     );
 
     if (loading) return <div style={styles.loading}>Chargement...</div>;
 
-    return isMobile ? <MobileView /> : <DesktopView />;
+    return (
+        <>
+            {isMobile ? <MobileView /> : <DesktopView />}
+            
+            <TransactionModal 
+                isOpen={!!selectedTransactionConfig}
+                onClose={() => setSelectedTransactionConfig(null)}
+                wallet={selectedTransactionConfig?.wallet}
+                user={selectedTransactionConfig?.user}
+                onSubmit={handleTransactionSubmit}
+            />
+        </>
+    );
 };
 
 const styles = {
@@ -312,7 +388,10 @@ const styles = {
     ribValue: { fontSize: '0.85rem', color: '#1e293b', wordBreak: 'break-all', fontFamily: 'monospace' },
     actions: { display: 'flex', gap: '10px', marginTop: 'auto' },
     actionBtn: { flex: 1, padding: '10px', borderRadius: '10px', border: '1px solid #e2e8f0', background: 'white', color: '#003366', fontWeight: 'bold', cursor: 'pointer', fontSize: '0.8rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', transition: 'all 0.2s' },
-    emptyState: { textAlign: 'center', padding: '5rem 2rem', background: 'white', borderRadius: '24px', border: '2px dashed #e2e8f0', color: '#64748b' }
+    emptyState: { textAlign: 'center', padding: '5rem 2rem', background: 'white', borderRadius: '24px', border: '2px dashed #e2e8f0', color: '#64748b' },
+    pagination: { display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1.5rem', marginTop: '2rem', padding: '1rem' },
+    pageBtn: { padding: '10px 20px', borderRadius: '12px', border: '1px solid #e2e8f0', background: 'white', color: '#003366', fontWeight: 'bold', cursor: 'pointer', transition: 'all 0.2s' },
+    pageInfo: { fontSize: '0.9rem', color: '#64748b', fontWeight: '600' }
 };
 
 export default WalletManagement;

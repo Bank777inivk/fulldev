@@ -129,6 +129,7 @@ export const walletService = {
                 type,
                 currency,
                 balance: amount,
+                status: 'active',
                 iban: generateIBAN(type, userId),
                 bic: 'INVKFR2P',
                 createdAt: serverTimestamp()
