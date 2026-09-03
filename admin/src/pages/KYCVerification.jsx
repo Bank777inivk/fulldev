@@ -317,6 +317,18 @@ const KYCVerification = () => {
         if (filterStatus === 'verified') return status === 'verified';
         if (filterStatus === 'unverified') return status === 'unverified';
         return status === filterStatus;
+    }).sort((a, b) => {
+        const getMillis = (dateObj) => {
+            if (!dateObj) return 0;
+            if (dateObj.toMillis) return dateObj.toMillis();
+            if (dateObj.seconds) return dateObj.seconds * 1000;
+            const time = new Date(dateObj).getTime();
+            return isNaN(time) ? 0 : time;
+        };
+        // Use updatedAt or createdAt, whichever is more recent, or fallback to the other
+        const dateA = a.updatedAt || a.createdAt;
+        const dateB = b.updatedAt || b.createdAt;
+        return getMillis(dateB) - getMillis(dateA);
     });
 
     return (
