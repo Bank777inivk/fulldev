@@ -354,7 +354,7 @@ const History = () => {
                     </tbody>
                 </table>
                 {transactions.length === 0 && <div style={{ padding: '3rem', textAlign: 'center', color: '#888' }}>{t('history.empty')}</div>}
-                <PaginationControls />
+                {renderPagination()}
             </div>
         </div>
     );
